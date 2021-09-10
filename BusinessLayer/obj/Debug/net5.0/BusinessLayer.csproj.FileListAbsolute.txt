@@ -1,0 +1,17 @@
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.deps.json
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\ref\BusinessLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\DataAccessLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\EntityLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\DataAccessLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\EntityLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.csproj.AssemblyReference.cache
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.AssemblyInfoInputs.cache
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.AssemblyInfo.cs
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.csproj.CoreCompileInputs.cache
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.csproj.CopyComplete
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\ref\BusinessLayer.dll
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.pdb

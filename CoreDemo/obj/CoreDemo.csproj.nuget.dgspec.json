@@ -4,6 +4,72 @@
     "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\CoreDemo\\CoreDemo.csproj": {}
   },
   "projects": {
+    "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
+        "projectName": "BusinessLayer",
+        "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
+        "packagesPath": "C:\\Users\\Burak\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj"
+              },
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\CoreDemo\\CoreDemo.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -12,6 +78,189 @@
         "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\CoreDemo\\CoreDemo.csproj",
         "packagesPath": "C:\\Users\\Burak\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\CoreDemo\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj"
+              },
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj"
+              },
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[5.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectName": "DataAccessLayer",
+        "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj",
+        "packagesPath": "C:\\Users\\Burak\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+                "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj",
+        "projectName": "EntityLayer",
+        "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj",
+        "packagesPath": "C:\\Users\\Burak\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -44,12 +293,6 @@
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
-          "dependencies": {
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-              "target": "Package",
-              "version": "[5.0.2, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -61,9 +304,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
