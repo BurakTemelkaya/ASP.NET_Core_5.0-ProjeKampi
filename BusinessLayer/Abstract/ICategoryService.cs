@@ -14,7 +14,5 @@ namespace BusinessLayer.Abstract
         void CategoryUpdate(Category category);
         List<Category> GetList();
         Category GetByID(int id);
-        
-
     }
 }
