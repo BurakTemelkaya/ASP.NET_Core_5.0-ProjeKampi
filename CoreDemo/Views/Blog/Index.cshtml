@@ -17,13 +17,11 @@
                             <a href="single.html">
                                 <img src="@item.BlogImage" class="card-img-top img-fluid" alt="">
                             </a>
-
-
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
                                     <li>
                                         <a href="#">
-                                            <i class="far fa-calendar-alt"></i> @item.BlogCreateDate
+                                            <i class="far fa-calendar-alt"></i> @(((DateTime)item.BlogCreateDate).ToString("dd.MM.yyyy"))
                                         </a>
                                     </li>
                                     <li class="mx-2">
@@ -32,20 +30,27 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
-                                            <i class="fas fa-eye"></i> @item.CategoryID
+                                        <a href="#/@item.BlogID">
+                                            <i class="fas fa-eye"></i> @item.Category.CategoryName
                                         </a>
                                     </li>
 
                                 </ul>
                                 <h5 class="card-title">
-                                    <a href="single.html">@item.BlogName</a>
+                                    <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogName</a>
                                 </h5>
-                                <p class="card-text mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit sedc dnmo eiusmod tempor incididunt.. </p>
-                                <a href="single.html" class="btn btn-primary read-m">Read More</a>
+                                <p class="card-text mb-3">
+                                    @if (item.BlogContent != null && item.BlogContent.Length > 130)
+                                    {
+                                        @item.BlogContent.Substring(0, item.BlogContent.Substring(0, 130).LastIndexOf(" "))
+                                    }
+                                    else
+                                    {
+                                        @item.BlogContent
+                                    }
+                                </p>
+                                <a href="/Blog/BlogReadAll/@item.BlogID" class="btn btn-primary read-m">Devamını Oku</a>
                             </div>
-
-
                         </div>
                     }
                 </div>
