@@ -1,0 +1,69 @@
+﻿@model EntityLayer.Concrete.Writer
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+<script src="~/CoreBlogTema/js/jquery-2.2.3.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<section class="main-content-w3layouts-agileits">
+    <div class="container">
+        <h3 class="tittle">Yazar Kayıt Sayfası</h3>
+        <div class="inner-sec">
+            <div class="login p-5 bg-light mx-auto mw-100">
+                @using (Html.BeginForm("Index", "Register", FormMethod.Post))
+                {
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Adınız Soyadınız</label>
+                            @Html.TextBoxFor(x => x.WriterName, new { @class = "form-control", @id = "validationDefault01", @placeholder = "Adınızı Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.WriterName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom02">Mail Adresisiniz</label>
+                            @Html.TextBoxFor(x => x.WriterMail, new { @class = "form-control", @id = "validationDefault02", @placeholder = "Soyadınızı Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.WriterMail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputPassword1 mb-2">Parola</label>
+                            @Html.PasswordFor(x => x.WriterPassword, new { @class = "form-control", @id = "password1", @placeholder = "Şifre Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.WriterPassword, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputPassword2 mb-2">Parolanızı Tekrar Giriniz</label>
+                            <input type="password" name="PasswordAgain" class="form-control" id="password2" placeholder="Şifrenizi Tekrar Giriniz" required=""/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputPassword2 mb-2">Görsel Dosya Yolu</label>
+                            <input type="text" name="WriterImage" class="form-control" id="password2" required="">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary submit mb-4">Kayıt Ol</button>
+                    <p>
+                        <a href="#" id="btn1">Tüm şartları okudum ve kabul ediyorum.</a>
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+    <br />
+    <button class="btn btn-info" id="btn1">Button1</button>
+
+    <script>
+        $('#btn1').click(function () {
+            Swal.fire(
+                'Sözleşme Koşulları',
+                'Sitemize verdiğiniz mail adresi üzerinden bilgi ve haber e-postaları ' +
+                'spam ölçüsüne varnadab gönderilmeye devam edicektir!.' +
+                'Eğer e - posta bülteninden çıkmak isterseniz mail ileti dizisinden durdurabilirsiniz ' +
+                'şifre ve mail adresleriniz şifrelenmiş formatte herhangi bir kullanıcının ' +
+                'göremeyeceği şekilde veritabanında depolanmaktadır',
+                'Bilgilendirme Mesajı'
+            )
+        })
+    </script>
+</section>
+
