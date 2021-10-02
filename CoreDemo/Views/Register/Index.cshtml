@@ -32,13 +32,17 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword2 mb-2">Parolanızı Tekrar Giriniz</label>
-                            <input type="password" name="PasswordAgain" class="form-control" id="password2" placeholder="Şifrenizi Tekrar Giriniz" required=""/>
+                            <input type="password" name="PasswordAgain" class="form-control" id="password2" placeholder="Şifrenizi Tekrar Giriniz" required="" />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword2 mb-2">Görsel Dosya Yolu</label>
                             <input type="text" name="WriterImage" class="form-control" id="password2" required="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputPassword2 mb-2">Şehir</label>
+                            @Html.DropDownList("cities", (ViewBag.Cities), "", new { @class = "form-control dropdown" })
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Kayıt Ol</button>
@@ -50,7 +54,6 @@
         </div>
     </div>
     <br />
-    <button class="btn btn-info" id="btn1">Button1</button>
 
     <script>
         $('#btn1').click(function () {

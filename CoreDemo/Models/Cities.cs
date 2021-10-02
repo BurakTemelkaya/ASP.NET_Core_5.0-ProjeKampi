@@ -7,7 +7,6 @@ namespace CoreDemo.Models
 {
     public class Cities
     {
-        public int CityID { get; set; }
         public string CityName { get; set; }
     }
 }

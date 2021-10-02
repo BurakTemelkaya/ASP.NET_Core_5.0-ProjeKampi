@@ -19,10 +19,11 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewBag.Cities = GetCityList();
             return View();
         }
         [HttpPost]
-        public IActionResult Index(Writer writer,string passwordAgain)
+        public IActionResult Index(Writer writer,string passwordAgain,string cities)
         {
             WriterValidator wv = new WriterValidator();
             ValidationResult results = wv.Validate(writer);
@@ -30,7 +31,7 @@ namespace CoreDemo.Controllers
             {
                 writer.WriterStatus = true;
                 writer.WriterAbout = "Deneme test";
-                wm.WriterAdd(writer);
+                wm.WriterAdd(writer);                
                 return RedirectToAction("Index", "Blog");
             }
             else if(!results.IsValid)
@@ -46,19 +47,21 @@ namespace CoreDemo.Controllers
             }
             return View();
         }
-        public List<SelectListItem> GetCity()
+        public List<SelectListItem> GetCityList()
         {
-            List<string> roles = new List<string>();
-            roles.Add("İstanbul");
-            roles.Add("İzmir");
-            roles.Add("Ankara");
-            List<SelectListItem> adminRole = (from x in roles
+            List<string> CitiesList = new List<string>(GetCity());//arrayi liste çevirme
+            List<SelectListItem> adminRole = (from x in CitiesList
                                               select new SelectListItem
                                               {
                                                   Text = x,
                                                   Value = x
                                               }).ToList();
             return adminRole;
+        }
+        public string[] GetCity()
+        {
+            return new String[] { "Adana", "Adıyaman", "Afyon", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin", "Aydın", "Bartın", "Batman", "Balıkesir", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İçel", "İstanbul", "İzmir", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kırıkkale", "Kırklareli", "Kırşehir", "Kilis", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Şırnak", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak" };
+            //şehirleri list şeklinde bulamadığımdan array şeklinde alıp bunu listeye çevirdim
         }
     }
 }
