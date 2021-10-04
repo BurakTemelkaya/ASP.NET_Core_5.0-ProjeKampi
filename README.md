@@ -1,6 +1,8 @@
 # ASP.NET_Core_5.0-ProjeKampi
 Projede ASP.NET Core MVC 5.0 teknolojisi &amp; N Tier Architecture kullanıldı.
 
+Ödevler:
+
 Video 20: Projeyi GitHuba yüklemek.--> Yapıldı
 
 Video 25 : Eager Loading ve Lazy loading araştırılacak.
