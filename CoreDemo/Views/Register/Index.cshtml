@@ -1,4 +1,4 @@
-﻿@model EntityLayer.Concrete.Writer
+﻿@model CoreDemo.Models.WritersAndCities
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -15,20 +15,20 @@
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Adınız Soyadınız</label>
-                            @Html.TextBoxFor(x => x.WriterName, new { @class = "form-control", @id = "validationDefault01", @placeholder = "Adınızı Giriniz", @required = "" })
-                            @Html.ValidationMessageFor(x => x.WriterName, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(x => x.Writers.WriterName, new { @class = "form-control", @id = "validationDefault01", @placeholder = "Adınızı Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.Writers.WriterName, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom02">Mail Adresisiniz</label>
-                            @Html.TextBoxFor(x => x.WriterMail, new { @class = "form-control", @id = "validationDefault02", @placeholder = "Soyadınızı Giriniz", @required = "" })
-                            @Html.ValidationMessageFor(x => x.WriterMail, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(x => x.Writers.WriterMail, new { @class = "form-control", @id = "validationDefault02", @placeholder = "Soyadınızı Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.Writers.WriterMail, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword1 mb-2">Parola</label>
-                            @Html.PasswordFor(x => x.WriterPassword, new { @class = "form-control", @id = "password1", @placeholder = "Şifre Giriniz", @required = "" })
-                            @Html.ValidationMessageFor(x => x.WriterPassword, "", new { @class = "text-danger" })
+                            @Html.PasswordFor(x => x.Writers.WriterPassword, new { @class = "form-control", @id = "password1", @placeholder = "Şifre Giriniz", @required = "" })
+                            @Html.ValidationMessageFor(x => x.Writers.WriterPassword, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword2 mb-2">Parolanızı Tekrar Giriniz</label>
@@ -38,11 +38,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword2 mb-2">Görsel Dosya Yolu</label>
-                            <input type="text" name="WriterImage" class="form-control" id="password2" required="">
+                            @Html.TextBoxFor(x => x.Writers.WriterImage, new { @class = "form-control", @id = "validationDefault02", @placeholder = "Soyadınızı Giriniz", @required = "" })
+
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword2 mb-2">Şehir</label>
-                            @Html.DropDownList("cities", (ViewBag.Cities), "", new { @class = "form-control dropdown" })
+                            @Html.DropDownList("cities", (Model.Cities), "", new { @class = "form-control dropdown" })
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Kayıt Ol</button>

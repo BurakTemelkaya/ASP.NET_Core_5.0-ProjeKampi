@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -19,19 +20,20 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Cities = GetCityList();
-            return View();
+            WritersAndCities writersAndCities = new WritersAndCities();
+            writersAndCities.Cities = GetCityList();
+            return View(writersAndCities);
         }
         [HttpPost]
-        public IActionResult Index(Writer writer,string passwordAgain,string cities)
+        public IActionResult Index(WritersAndCities writersAndCities,string passwordAgain)//,string cities ileride kullanılabilecek parametre
         {
             WriterValidator wv = new WriterValidator();
-            ValidationResult results = wv.Validate(writer);
-            if (results.IsValid && writer.WriterPassword == passwordAgain)
+            ValidationResult results = wv.Validate(writersAndCities.Writers);
+            if (results.IsValid && writersAndCities.Writers.WriterPassword == passwordAgain)
             {
-                writer.WriterStatus = true;
-                writer.WriterAbout = "Deneme test";
-                wm.WriterAdd(writer);                
+                writersAndCities.Writers.WriterStatus = true;
+                writersAndCities.Writers.WriterAbout = "Deneme test";
+                wm.WriterAdd(writersAndCities.Writers);                
                 return RedirectToAction("Index", "Blog");
             }
             else if(!results.IsValid)
