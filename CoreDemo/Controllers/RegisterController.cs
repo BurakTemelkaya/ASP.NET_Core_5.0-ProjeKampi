@@ -20,12 +20,12 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            WritersAndCities writersAndCities = new WritersAndCities();
+            WriterAndCities writersAndCities = new WriterAndCities();
             writersAndCities.Cities = GetCityList();
             return View(writersAndCities);
         }
         [HttpPost]
-        public IActionResult Index(WritersAndCities writersAndCities,string passwordAgain)//,string cities ileride kullanılabilecek parametre
+        public IActionResult Index(WriterAndCities writersAndCities,string passwordAgain)//,string cities ileride kullanılabilecek parametre
         {
             WriterValidator wv = new WriterValidator();
             ValidationResult results = wv.Validate(writersAndCities.Writers);
