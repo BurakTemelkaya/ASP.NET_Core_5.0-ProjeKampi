@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.Models
 {
-    public class WriterAndCities
+    public class WriterAndCity
     {
         public List<SelectListItem> Cities { get; set; }
-        public Writer Writers { get; set; }
+        public string City { get; set; }
+        public Writer Writer { get; set; }
     }
 }
