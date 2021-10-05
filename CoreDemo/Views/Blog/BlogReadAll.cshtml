@@ -54,8 +54,6 @@
                     }
                     @await Component.InvokeAsync("CommentListByBlog", new { id = ViewBag.i })
 
-                    @*@await Html.PartialAsync("~/Views/Comment/CommentListByBlog.cshtml")*@
-
                     @await Html.PartialAsync("~/Views/Comment/PartialAddComment.cshtml")
 
                 </div>
@@ -64,18 +62,9 @@
                 <!--right-->
                 <aside class="col-lg-4 agileits-w3ls-right-blog-con text-right">
                     <div class="right-blog-info text-left">
-                        <div class="tech-btm">
-                            <img src="images/banner1.jpg" class="img-fluid" alt="">
-                        </div>
-                        <div class="tech-btm">
-                            <h4>Sign up to our newsletter</h4>
-                            <p>Pellentesque dui, non felis. Maecenas male </p>
-                            <form action="#" method="post">
-                                <input type="email" placeholder="Email" required="">
-                                <input type="submit" value="Subscribe">
-                            </form>
-
-                        </div>
+                        
+                        
+                        @await Html.PartialAsync("~/Views/NewsLetter/SubscribeMail.cshtml")
 
                         @await Component.InvokeAsync("CategoryList")
 

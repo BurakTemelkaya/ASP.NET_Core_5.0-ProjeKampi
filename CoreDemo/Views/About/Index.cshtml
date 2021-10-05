@@ -1,0 +1,47 @@
+﻿@using EntityLayer.Concrete
+@model List<About>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+<body>
+    <section class="main-content-w3layouts-agileits">
+        <div class="container">
+            <h3 class="tittle">Hakkımızda</h3>
+            <div class="row inner-sec">
+                <!--left-->
+                <div class="col-lg-8 left-blog-info-w3layouts-agileits text-left">
+                    <div class="blog-grid-top">
+
+                        <div class="blog_info_left_grid">
+                            <img src="~/CoreBlogTema/images/b5.jpg" class="img-fluid" alt="">
+                        </div>
+                        <h3>
+                            Biz Kimiz &Aacute; Misyonumuz &Aacute; Vizyonumuz
+                        </h3>
+                        @foreach (var item in Model)
+                        {
+                            <p>@item.AboutDetails1</p>
+                        }
+
+                        <a href="single.html" class="btn btn-primary read-m">Read More</a>
+                    </div>
+                    
+                </div>
+                <!--//left-->
+                <!--right-->
+                <aside class="col-lg-4 agileits-w3ls-right-blog-con text-right">
+                    <div class="right-blog-info text-left">
+                        @await Html.PartialAsync("~/Views/NewsLetter/SubscribeMail.cshtml")
+
+                        @await Html.PartialAsync("~/Views/About/SocialMediaAbout.cshtml")
+
+                        @await Component.InvokeAsync("WriterLastBlog")                      
+                        
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+</body>
+
