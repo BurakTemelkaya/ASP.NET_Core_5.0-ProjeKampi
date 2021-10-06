@@ -3,12 +3,12 @@ Projede ASP.NET Core MVC 5.0 teknolojisi &amp; N Tier Architecture kullanıldı.
 
 Ödevler:
 
-Video 20: Projeyi GitHuba yüklemek.--> Yapıldı
+Video 20: Projeyi GitHuba yüklemek.
 
 Video 25 : Eager Loading ve Lazy loading araştırılacak.
-(Videonun yorumlarında cevaplar var) --> Yapıldı
+(Videonun yorumlarında cevaplar var)
 
-Video 30 : View Component ile Partial view arasındaki fark araştırılacak.(Videonun yorumlarında cevaplar var) --> Yapıldı
+Video 30 : View Component ile Partial view arasındaki fark araştırılacak.(Videonun yorumlarında cevaplar var)
 
 Video 32: Eğer Blogta Hiç Yorum yoksa ilk yorumu siz yazın diye yazdırılacak. --> Yapıldı
 
