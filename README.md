@@ -17,3 +17,7 @@ Video 33: Parolanın 2 kez girilip onaylanması. --> Yapıldı
 Video 34: Kayıt olma sayfasında değerlerini view modelde tutucağımız bir şehir seçimi. --> Yapıldı
 
 Video 35: Fluent Validationda Kullanıcının parolası en az bir büyük harf, en az bir küçük harf ve en az 1 sayı olacak. --> Yapıldı
+
+Video 39: Partial viewlerin formu post ederken başka bir sayfaya gitmesine gerek kalmadan post işlemini yaptırma.
+
+Video 40: GitHub repoları güncellenecek.
