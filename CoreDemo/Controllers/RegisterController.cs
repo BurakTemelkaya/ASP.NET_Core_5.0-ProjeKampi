@@ -48,7 +48,7 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError("WriterPassword", "Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
             }
-            writersAndCities.Cities = GetCityList();            
+            writersAndCities.Cities = GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim            
             return View(writersAndCities);
         }
         public List<SelectListItem> GetCityList()
