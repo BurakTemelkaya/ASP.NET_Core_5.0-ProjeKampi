@@ -21,3 +21,5 @@ Video 35: Fluent Validationda Kullanıcının parolası en az bir büyük harf, 
 Video 39: Partial viewlerin formu post ederken başka bir sayfaya gitmesine gerek kalmadan post işlemini yaptırma.
 
 Video 40: GitHub repoları güncellenecek.
+
+Video 48: ClaimsIdentity'de 2. parametre neden verilmeli ? Araştırılacak.
