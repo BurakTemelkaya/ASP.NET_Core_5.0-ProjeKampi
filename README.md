@@ -24,4 +24,4 @@ Video 40: GitHub repoları güncellenecek.
 
 Video 48: ClaimsIdentity'de 2. parametre neden verilmeli ? Araştırılacak.
 
-Video 52: Mesajların 24 saatlik dilim içinde ise ne kadar süre önce gönderildiği yazdırılacak.
+Video 52: Mesajların 24 saatlik dilim içinde gönderilmiş ise ne kadar süre önce gönderildiği yazdırılacak.
