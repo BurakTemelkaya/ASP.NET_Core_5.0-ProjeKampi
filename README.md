@@ -23,3 +23,5 @@ Video 39: Partial viewlerin formu post ederken başka bir sayfaya gitmesine gere
 Video 40: GitHub repoları güncellenecek.
 
 Video 48: ClaimsIdentity'de 2. parametre neden verilmeli ? Araştırılacak.
+
+Video 52: Mesajların 24 saatlik dilim içinde ise ne kadar süre önce gönderildiği yazdırılacak.
