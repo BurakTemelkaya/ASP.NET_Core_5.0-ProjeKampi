@@ -20,20 +20,20 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            WriterAndCity writersAndCities = new WriterAndCity();
-            writersAndCities.Cities = GetCityList();
-            return View(writersAndCities);
+            ViewBag.Cities = GetCityList();
+            return View();
         }
         [HttpPost]
-        public IActionResult Index(WriterAndCity writersAndCities, string passwordAgain)
+        public IActionResult Index(Writer writer, string passwordAgain)
         {            
             WriterValidator wv = new WriterValidator();
-            ValidationResult results = wv.Validate(writersAndCities.Writer);
-            if (results.IsValid && writersAndCities.Writer.WriterPassword == passwordAgain)
+            ValidationResult results = wv.Validate(writer);
+            if (results.IsValid && writer.WriterPassword == passwordAgain)
             {
-                writersAndCities.Writer.WriterStatus = true;
-                writersAndCities.Writer.WriterAbout = "Deneme test";
-                wm.WriterAdd(writersAndCities.Writer);
+                writer.WriterStatus = true;
+                writer.WriterAbout = "Deneme test";
+                writer.WriterRegisterDate = DateTime.Now;
+                wm.WriterAdd(writer);
                 //writersAndCities.City;
                 return RedirectToAction("Index", "Blog");
             }
@@ -44,12 +44,12 @@ namespace CoreDemo.Controllers
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
             }
-            else if (writersAndCities.Writer.WriterPassword != passwordAgain)
+            else if (writer.WriterPassword != passwordAgain)
             {
                 ModelState.AddModelError("WriterPassword", "Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
             }
-            writersAndCities.Cities = GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim            
-            return View(writersAndCities);
+            ViewBag.Cities = GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim            
+            return View();
         }
         public List<SelectListItem> GetCityList()
         {
