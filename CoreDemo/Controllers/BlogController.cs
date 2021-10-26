@@ -97,6 +97,7 @@ namespace CoreDemo.Controllers
                 blog.WriterID = 1;
                 blog.BlogCreateDate = value.BlogCreateDate;
                 bm.TUpdate(blog);
+                return RedirectToAction("BlogListByWriter");
             }
             else
             {
@@ -105,8 +106,8 @@ namespace CoreDemo.Controllers
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
             }
-
-            return RedirectToAction("BlogListByWriter");
+            GetCategoryList();
+            return View();
         }
     }
 }
