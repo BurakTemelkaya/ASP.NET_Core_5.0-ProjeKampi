@@ -14,3 +14,4 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\De
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\ref\BusinessLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.csproj.CopyComplete

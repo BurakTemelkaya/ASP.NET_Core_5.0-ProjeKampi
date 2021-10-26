@@ -71,7 +71,7 @@ namespace CoreDemo.Controllers
                                                        Text = x.CategoryName,
                                                        Value = x.CategoryID.ToString()
                                                    }).ToList();
-            ViewBag.cv = CategoryValues;
+            ViewBag.CategoryList = CategoryValues;
         }
         public IActionResult DeleteBlog(int id)
         {
@@ -95,7 +95,6 @@ namespace CoreDemo.Controllers
             {
                 var value = bm.TGetByID(blog.BlogID);
                 blog.WriterID = 1;
-                blog.BlogID = value.BlogID;
                 blog.BlogCreateDate = value.BlogCreateDate;
                 bm.TUpdate(blog);
             }
