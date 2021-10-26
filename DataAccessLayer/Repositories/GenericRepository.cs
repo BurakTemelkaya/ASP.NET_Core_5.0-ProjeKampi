@@ -14,7 +14,7 @@ namespace DataAccessLayer.Repositories
         public void Delete(T t)
         {
             using var c = new Context();
-            c.Add(t);
+            c.Remove(t);
             c.SaveChanges();
         }
 

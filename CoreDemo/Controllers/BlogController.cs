@@ -73,5 +73,41 @@ namespace CoreDemo.Controllers
                                                    }).ToList();
             ViewBag.cv = CategoryValues;
         }
+        public IActionResult DeleteBlog(int id)
+        {
+            var blogValue = bm.TGetByID(id);
+            bm.TDelete(blogValue);
+            return RedirectToAction("BlogListByWriter");
+        }
+        [HttpGet]
+        public IActionResult EditBlog(int id)
+        {
+            var blogValue = bm.TGetByID(id);
+            GetCategoryList();
+            return View(blogValue);
+        }
+        [HttpPost]
+        public IActionResult EditBlog(Blog blog)
+        {
+            BlogValidator bv = new BlogValidator();
+            ValidationResult results = bv.Validate(blog);
+            if (results.IsValid)
+            {
+                var value = bm.TGetByID(blog.BlogID);
+                blog.WriterID = 1;
+                blog.BlogID = value.BlogID;
+                blog.BlogCreateDate = value.BlogCreateDate;
+                bm.TUpdate(blog);
+            }
+            else
+            {
+                foreach (var item in results.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+
+            return RedirectToAction("BlogListByWriter");
+        }
     }
 }
