@@ -95,10 +95,11 @@ namespace CoreDemo.Controllers
             ValidationResult results = bv.Validate(blog);
             if (results.IsValid)
             {
-                var value = bm.TGetByID(blog.BlogID);
-                blog.WriterID = 1;
-                blog.BlogCreateDate = value.BlogCreateDate;
-                bm.TUpdate(blog);                
+                var value = bm.TGetByID(blog.BlogID);//eski değeri getirme
+                blog.WriterID = 1;//authorization işlemi yapıldığında değişecek
+                blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
+                blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
+                bm.TUpdate(blog);//update işlemi
                 return RedirectToAction("BlogListByWriter");
             }
             else
