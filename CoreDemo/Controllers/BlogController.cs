@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -77,6 +78,7 @@ namespace CoreDemo.Controllers
         {
             var blogValue = bm.TGetByID(id);
             bm.TDelete(blogValue);
+            Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         [HttpGet]
@@ -96,7 +98,7 @@ namespace CoreDemo.Controllers
                 var value = bm.TGetByID(blog.BlogID);
                 blog.WriterID = 1;
                 blog.BlogCreateDate = value.BlogCreateDate;
-                bm.TUpdate(blog);
+                bm.TUpdate(blog);                
                 return RedirectToAction("BlogListByWriter");
             }
             else
