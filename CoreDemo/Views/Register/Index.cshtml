@@ -43,8 +43,9 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="validationCustom01 mb-2">Şehir</label>
-                            @Html.DropDownListFor(x => x.WriterCity, (List<SelectListItem>) ViewBag.Cities, new { @class = "form-control dropdown" })
+                            @Html.DropDownListFor(x => x.WriterCity, (List<SelectListItem>)ViewBag.Cities, new { @class = "form-control dropdown" })
                         </div>
+                        @Html.ValidationMessage("ErrorMessage", "", new { @class = "text-danger" })
                     </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Kayıt Ol</button>
                     <p>

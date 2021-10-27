@@ -25,10 +25,11 @@ namespace CoreDemo.Controllers
         }
         [HttpPost]
         public IActionResult Index(Writer writer, string passwordAgain)
-        {            
+        {
             WriterValidator wv = new WriterValidator();
             ValidationResult results = wv.Validate(writer);
-            if (results.IsValid && writer.WriterPassword == passwordAgain)
+            var validateWriter = wm.GetWriterByMail(writer.WriterMail);
+            if (results.IsValid && writer.WriterPassword == passwordAgain && validateWriter == null)
             {
                 writer.WriterStatus = true;
                 writer.WriterAbout = "Deneme test";
@@ -47,6 +48,10 @@ namespace CoreDemo.Controllers
             else if (writer.WriterPassword != passwordAgain)
             {
                 ModelState.AddModelError("WriterPassword", "Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
+            }
+            else if (validateWriter != null)
+            {
+                ModelState.AddModelError("ErrorMessage", "Girdiğiniz E-Mail Adresini Kullanan Bir Hesap Mevcut");
             }
             ViewBag.Cities = GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim            
             return View();

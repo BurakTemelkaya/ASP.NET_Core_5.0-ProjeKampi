@@ -18,6 +18,11 @@ namespace BusinessLayer.Concrete
             _writerDal = writerDal;
         }
 
+        public Writer GetWriterByMail(string mail)
+        {
+            return _writerDal.GetWriterByMail(mail);
+        }
+
         public void WriterAdd(Writer writer)
         {
             _writerDal.Insert(writer);
