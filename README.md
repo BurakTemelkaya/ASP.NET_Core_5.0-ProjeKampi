@@ -30,6 +30,6 @@ Video 54: Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu koyun.
 
 Video 57: Durum kısmında true yerine aktif false yerine pasif yazdırılacak. --> Yapıldı
 
-Video 58: Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.
+Video 58: Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun. --> Yapıldı
 
 Video 60: Blogu güncellerken createDate'in değişmemesini sağlama. --> Yapıldı
