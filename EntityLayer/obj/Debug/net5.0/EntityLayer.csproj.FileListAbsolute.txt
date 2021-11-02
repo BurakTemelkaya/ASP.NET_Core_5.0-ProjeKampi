@@ -9,3 +9,4 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debu
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\ref\EntityLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.csproj.AssemblyReference.cache

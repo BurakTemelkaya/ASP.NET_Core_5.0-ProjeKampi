@@ -81,6 +81,21 @@ namespace CoreDemo.Controllers
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
+        public IActionResult ChangeStatusBlog(int id)
+        {
+            var blogValue = bm.TGetByID(id);
+            if (blogValue.BlogStatus)
+            {
+                blogValue.BlogStatus = false;
+            }
+            else
+            {
+                blogValue.BlogStatus = true;
+            }
+            bm.TUpdate(blogValue);
+            Thread.Sleep(2000);
+            return RedirectToAction("BlogListByWriter");
+        }
         [HttpGet]
         public IActionResult EditBlog(int id)
         {
