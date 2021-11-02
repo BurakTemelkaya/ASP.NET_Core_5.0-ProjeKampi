@@ -28,7 +28,7 @@ Video 52: Mesajların 24 saatlik dilim içinde gönderilmiş ise ne kadar süre 
 
 Video 54: <del>Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu koyun.</del> --> Yapıldı
 
-logo.PNG
+https://raw.githubusercontent.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/main/CoreDemo/HomeWork/logo.PNG
 
 Video 57: <del>Durum kısmında true yerine aktif false yerine pasif yazdırılacak.</del> --> Yapıldı
 
