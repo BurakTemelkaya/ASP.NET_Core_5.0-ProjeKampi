@@ -38,6 +38,8 @@ Video 57: <del>Durum kısmında true yerine aktif false yerine pasif yazdırıla
 
 Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.</del> --> Yapıldı
 
+![Video58](https://user-images.githubusercontent.com/70866473/139940296-27395ce4-5482-4c55-8e51-ef21663c5cdd.PNG)
+
 Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del> --> Yapıldı
 
 Video 66: <del>Blog Raytinglerinin ortalamasını al.</del> --> Yapıldı
