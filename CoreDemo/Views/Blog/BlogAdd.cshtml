@@ -8,8 +8,8 @@
 @using (Html.BeginForm("BlogAdd", "Blog", FormMethod.Post))
 {
     @Html.Label("Blog Başlığı")
-    @Html.TextBoxFor(x => x.BlogName, new { @class = "form-control" })
-    @Html.ValidationMessageFor(x => x.BlogName, "", new { @class = "text-danger" })
+    @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.BlogTitle, "", new { @class = "text-danger" })
     <br />
     <br />
     @Html.Label("Blog İçeriği")

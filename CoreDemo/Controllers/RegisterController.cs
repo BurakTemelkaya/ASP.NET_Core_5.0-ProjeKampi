@@ -34,7 +34,7 @@ namespace CoreDemo.Controllers
                 writer.WriterStatus = true;
                 writer.WriterAbout = "Deneme test";
                 writer.WriterRegisterDate = DateTime.Now;
-                wm.WriterAdd(writer);
+                wm.TAdd(writer);
                 //writersAndCities.City;
                 return RedirectToAction("Index", "Blog");
             }

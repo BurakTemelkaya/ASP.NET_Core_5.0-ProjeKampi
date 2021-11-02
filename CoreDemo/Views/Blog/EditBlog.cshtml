@@ -11,8 +11,8 @@
     @Html.HiddenFor(x => x.BlogID, new { @class = "form-control" })
     <br />
     @Html.Label("Blog Başlığı")
-    @Html.TextBoxFor(x => x.BlogName, new { @class = "form-control" })
-    @Html.ValidationMessageFor(x => x.BlogName, "", new { @class = "text-danger" })
+    @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.BlogTitle, "", new { @class = "text-danger" })
     <br />
     @Html.Label("Blog Küçük Resmi")
     @Html.TextBoxFor(x => x.BlogThumbnailImage, new { @class = "form-control" })

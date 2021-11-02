@@ -65,13 +65,13 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("BlogImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BlogName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("BlogStatus")
                         .HasColumnType("bit");
 
                     b.Property<string>("BlogThumbnailImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BlogTitle")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryID")
@@ -87,6 +87,30 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("WriterID");
 
                     b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.BlogRayting", b =>
+                {
+                    b.Property<int>("BlogRaytingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlogID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("BlogRaytingAverag")
+                        .HasColumnType("float");
+
+                    b.Property<int>("BlogRaytingCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BlogTotalScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogRaytingID");
+
+                    b.ToTable("BlogRaytings");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Category", b =>
@@ -118,6 +142,9 @@ namespace DataAccessLayer.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("BlogID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BlogScore")
                         .HasColumnType("int");
 
                     b.Property<string>("CommentContent")
