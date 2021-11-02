@@ -26,10 +26,14 @@ Video 48: <del>ClaimsIdentity'de 2. parametre neden verilmeli ? Araştırılacak
 
 Video 52: Mesajların 24 saatlik dilim içinde gönderilmiş ise ne kadar süre önce gönderildiği yazdırılacak.
 
-Video 54: Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu koyun.
+Video 54: <del>Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu koyun.</del> --> Yapıldı
+
+logo.PNG
 
 Video 57: <del>Durum kısmında true yerine aktif false yerine pasif yazdırılacak.</del> --> Yapıldı
 
 Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.</del> --> Yapıldı
 
 Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del> --> Yapıldı
+
+Video 66: <del>Blog Raytinglerinin ortalamasını al.</del> --> Yapıldı
