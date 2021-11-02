@@ -34,6 +34,8 @@ Video 54: <del>Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu ko
 
 Video 57: <del>Durum kısmında true yerine aktif false yerine pasif yazdırılacak.</del> --> Yapıldı
 
+![Video57](https://user-images.githubusercontent.com/70866473/139940108-bcbf499e-ab72-4bc9-9328-ca0547697bbe.PNG)
+
 Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.</del> --> Yapıldı
 
 Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del> --> Yapıldı
