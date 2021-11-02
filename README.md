@@ -12,6 +12,8 @@ Video 30 : <del>View Component ile Partial view arasındaki fark araştırılaca
 
 Video 32: <del> Eğer Blogta Hiç Yorum yoksa ilk yorumu siz yazın diye yazdırılacak.</del> --> Yapıldı
 
+![odev](https://user-images.githubusercontent.com/70866473/139933654-78208b55-9633-483e-9f9e-0d75e7440422.PNG)
+
 Video 33: <del>Parolanın 2 kez girilip onaylanması.</del> --> Yapıldı
 
 Video 34: <del>Kayıt olma sayfasında değerlerini view modelde tutucağımız bir şehir seçimi.</del> --> Yapıldı
