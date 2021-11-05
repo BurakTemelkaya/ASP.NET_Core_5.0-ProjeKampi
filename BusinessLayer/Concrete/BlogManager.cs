@@ -4,6 +4,7 @@ using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,6 +64,11 @@ namespace BusinessLayer.Concrete
         public void TUpdate(Blog t)
         {
             _blogDal.Update(t);
+        }
+
+        public Blog TGetByFilter(Expression<Func<Blog, bool>> filter)
+        {
+            return _blogDal.GetByFilter(filter);
         }
     }
 }

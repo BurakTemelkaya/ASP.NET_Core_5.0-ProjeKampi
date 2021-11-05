@@ -10,8 +10,7 @@
         <h3 class="tittle">Yazar Kayıt Sayfası</h3>
         <div class="inner-sec">
             <div class="login p-5 bg-light mx-auto mw-100">
-                @using (Html.BeginForm("Index", "Register", FormMethod.Post))
-                {
+                <form class="form-group" method="post" enctype="multipart/form-data">
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Adınız Soyadınız</label>
@@ -38,20 +37,27 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="validationCustom01 mb-2">Görsel Dosya Yolu</label>
-                            @Html.TextBoxFor(x => x.WriterImage, new { @class = "form-control", @id = "validationDefault02", @placeholder = "Resim Yolu Giriniz", @required = "" })
+                            <label for="validationCustom01 mb-2">Görsel</label>
+                            <input type="file" class="form-control-file" name="imageFile" />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="validationCustom01 mb-2">Şehir</label>
                             @Html.DropDownListFor(x => x.WriterCity, (List<SelectListItem>)ViewBag.Cities, new { @class = "form-control dropdown" })
                         </div>
-                        @Html.ValidationMessage("ErrorMessage", "", new { @class = "text-danger" })
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="validationCustom01 mb-2">Hakkınızda Yazmak İstedikleriniz</label>
+                            @Html.TextAreaFor(x => x.WriterAbout, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    @Html.ValidationMessage("ErrorMessage", "", new { @class = "text-danger" })
+
                     <button type="submit" class="btn btn-primary submit mb-4">Kayıt Ol</button>
                     <p>
                         <a href="#" id="btn1">Tüm şartları okudum ve kabul ediyorum.</a>
                     </p>
-                }
+                </form>
             </div>
         </div>
     </div>

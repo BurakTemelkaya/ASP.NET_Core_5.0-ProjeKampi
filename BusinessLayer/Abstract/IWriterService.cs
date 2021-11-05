@@ -9,7 +9,6 @@ namespace BusinessLayer.Abstract
 {
     public interface IWriterService : IGenericService<Writer>
     {
-        Writer GetWriterByMail(string mail);
         List<Writer> GetWriterByID(int id);
     }
 }
