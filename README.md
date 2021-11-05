@@ -36,14 +36,14 @@ Video 57: <del>Durum kısmında true yerine aktif false yerine pasif yazdırıla
 
 ![Video57](https://user-images.githubusercontent.com/70866473/139940108-bcbf499e-ab72-4bc9-9328-ca0547697bbe.PNG)
 
-Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.</del> --> Yapıldı
+Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj açılsın ve gerçekten silmek istediğinizden emin misiniz ? Diye sorsun.</del>
 
 ![Video58](https://user-images.githubusercontent.com/70866473/139940296-27395ce4-5482-4c55-8e51-ef21663c5cdd.PNG)
 
-Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del> --> Yapıldı
+Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del>
 
-Video 66: <del>Blog Raytinglerinin ortalamasını al.</del> --> Yapıldı
+Video 66: <del>Blog Raytinglerinin ortalamasını al.</del>
 
-Video 70: <del>Dashboard Controllerdaki LINQ Sorguları SOLID'i ezmeden mimariye taşıma.</del> --> Yapıldı
+Video 70: <del>Dashboard Controllerdaki LINQ Sorguları SOLID'i ezmeden mimariye taşıma.</del>
 
-Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce parolanın 2 kez girip doğrulanacak.</del> --> Yapıldı
+Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce parolanın 2 kez girip doğrulanacak.</del>
