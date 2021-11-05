@@ -43,3 +43,7 @@ Video 58: <del>Blog silme işlemi yapmadan önce bir tane pop-up yada mesaj aç�
 Video 60: <del>Blogu güncellerken createDate'in değişmemesini sağlama.</del> --> Yapıldı
 
 Video 66: <del>Blog Raytinglerinin ortalamasını al.</del> --> Yapıldı
+
+Video 70: <del>Dashboard Controllerdaki LINQ Sorguları SOLID'i ezmeden mimariye taşıma.</del> --> Yapıldı
+
+Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce parolanın 2 kez girip doğrulanacak.</del> --> Yapıldı
