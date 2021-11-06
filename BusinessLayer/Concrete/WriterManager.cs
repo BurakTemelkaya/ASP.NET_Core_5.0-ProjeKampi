@@ -24,6 +24,11 @@ namespace BusinessLayer.Concrete
             return _writerDal.GetListAll();
         }
 
+        public List<Writer> GetList(Expression<Func<Writer, bool>> filter)
+        {
+            return _writerDal.GetListAll(filter);
+        }
+
         public List<Writer> GetWriterByID(int id)
         {
             return _writerDal.GetListAll(x => x.WriterID == id);

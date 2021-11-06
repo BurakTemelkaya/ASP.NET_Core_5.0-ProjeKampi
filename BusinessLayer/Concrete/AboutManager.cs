@@ -24,11 +24,6 @@ namespace BusinessLayer.Concrete
             throw new NotImplementedException();
         }
 
-        public List<About> GetList()
-        {
-            return _aboutDal.GetListAll();
-        }
-
         public void TAdd(About t)
         {
             throw new NotImplementedException();
@@ -48,5 +43,15 @@ namespace BusinessLayer.Concrete
         {
             throw new NotImplementedException();
         }
+        public List<About> GetList()
+        {
+            return _aboutDal.GetListAll();
+        }
+        public List<About> GetList(Expression<Func<About, bool>> filter)
+        {
+            return _aboutDal.GetListAll(filter);
+        }
+
+
     }
 }

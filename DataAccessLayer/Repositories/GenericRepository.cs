@@ -23,11 +23,14 @@ namespace DataAccessLayer.Repositories
             using var c = new Context();
             return c.Set<T>().Find(id);
         }
-
-        public List<T> GetListAll()
+        public List<T> GetListAll(Expression<Func<T, bool>> filter = null)
         {
-            using var c = new Context();
-            return c.Set<T>().ToList();
+            using (var c = new Context())
+            {
+                return filter == null ?
+                    c.Set<T>().ToList() ://null ise
+                    c.Set<T>().Where(filter).ToList();//null değilse
+            }
         }
 
         public void Insert(T t)
@@ -37,15 +40,14 @@ namespace DataAccessLayer.Repositories
             c.SaveChanges();
         }
 
-        public List<T> GetListAll(Expression<Func<T, bool>> filter)
+        public T GetByFilter(Expression<Func<T, bool>> filter = null)
         {
             using var c = new Context();
-            return c.Set<T>().Where(filter).ToList();
-        }
-        public T GetByFilter(Expression<Func<T, bool>> filter)
-        {
-            using var c = new Context();
-            return c.Set<T>().Where(filter).FirstOrDefault();
+            if (filter == null)
+                return c.Set<T>().FirstOrDefault();
+            else
+                return c.Set<T>().FirstOrDefault(filter);
+            //return c.Set<T>().Where(filter).FirstOrDefault();
         }
 
         public void Update(T t)

@@ -17,7 +17,7 @@ namespace CoreDemo.Controllers
         {
             BlogManager blogManager = new BlogManager(new EfBlogRepository());
             CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
-            ViewBag.ToplamBlogSayisi = blogManager.GetList().Count();
+            ViewBag.ToplamBlogSayisi = blogManager.GetList(x => x.BlogStatus == true).Count();
             ViewBag.YazarinBlogSayisi = blogManager.GetBlogByWriter(3).Count();
             ViewBag.KategoriSayisi = categoryManager.GetList().Count();
             return View();

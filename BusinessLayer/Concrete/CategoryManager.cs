@@ -26,11 +26,6 @@ namespace BusinessLayer.Concrete
             return _categoryDal.GetByID(id);
         }
 
-        public List<Category> GetList()
-        {
-            return _categoryDal.GetListAll();
-        }
-
         public void TAdd(Category t)
         {
             _categoryDal.Insert(t);
@@ -46,9 +41,18 @@ namespace BusinessLayer.Concrete
             _categoryDal.Update(t);
         }
 
-        public Category TGetByFilter(Expression<Func<Category, bool>> filter)
+        public List<Category> GetList(Expression<Func<Category, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return filter == null ?
+                _categoryDal.GetListAll() :
+                _categoryDal.GetListAll(filter);
+        }
+
+        public Category TGetByFilter(Expression<Func<Category, bool>> filter = null)
+        {
+            return filter == null ?
+                _categoryDal.GetByFilter() :
+                _categoryDal.GetByFilter(filter);
         }
     }
 }

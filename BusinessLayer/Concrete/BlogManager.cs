@@ -35,15 +35,15 @@ namespace BusinessLayer.Concrete
         {
             return _blogDal.GetListAll(x => x.BlogID == id);
         }
-
-        public List<Blog> GetList()
+        public List<Blog> GetList(Expression<Func<Blog, bool>> filter)
         {
-            return _blogDal.GetListAll();
+            return _blogDal.GetListAll(filter);
         }
 
-        public List<Blog> GetLast3Blog()
+        public List<Blog> GetLast3Blog(int number)
         {
-            return _blogDal.GetListAll().OrderByDescending(x=>x.BlogID).Take(3).ToList();
+            //return _blogDal.GetListAll().OrderByDescending(x => x.BlogID).Take(3).ToList();
+            return _blogDal.GetListAll().TakeLast(number).ToList();
         }
 
         public List<Blog> GetBlogByWriter(int id)
@@ -70,5 +70,6 @@ namespace BusinessLayer.Concrete
         {
             return _blogDal.GetByFilter(filter);
         }
+
     }
 }
