@@ -32,7 +32,6 @@ namespace CoreDemo.Controllers
             AddProfileImage addProfileImage = new AddProfileImage();
             ValidationResult results = wv.Validate(writer);
             var validateWriter = wm.TGetByFilter(x => x.WriterMail == writer.WriterMail);
-            var validateUserName = wm.TGetByFilter(x => x.WriterName == writer.WriterName);
             if (results.IsValid && writer.WriterPassword == passwordAgain && validateWriter == null)
             {
                 writer.WriterStatus = true;

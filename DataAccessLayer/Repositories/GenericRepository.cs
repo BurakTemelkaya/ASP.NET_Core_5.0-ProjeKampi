@@ -47,7 +47,6 @@ namespace DataAccessLayer.Repositories
                 return c.Set<T>().FirstOrDefault();
             else
                 return c.Set<T>().FirstOrDefault(filter);
-            //return c.Set<T>().Where(filter).FirstOrDefault();
         }
 
         public void Update(T t)
