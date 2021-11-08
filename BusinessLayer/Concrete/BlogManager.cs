@@ -42,7 +42,6 @@ namespace BusinessLayer.Concrete
 
         public List<Blog> GetLastBlog(int number)
         {
-            //return _blogDal.GetListAll().OrderByDescending(x => x.BlogID).Take(3).ToList();
             return _blogDal.GetListAll().TakeLast(number).ToList();
         }
 
