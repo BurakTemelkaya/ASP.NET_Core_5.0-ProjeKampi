@@ -47,3 +47,5 @@ Video 66: <del>Blog Raytinglerinin ortalamasını al.</del>
 Video 70: <del>Dashboard Controllerdaki LINQ Sorguları SOLID'i ezmeden mimariye taşıma.</del>
 
 Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce parolanın 2 kez girip doğrulanacak.</del>
+
+ Video 76: <del>Yazar'ın Bildirimler kısmında bütün bildirimler gözükmesin sadece durumu aktif olanlar gözüksün.</del>
