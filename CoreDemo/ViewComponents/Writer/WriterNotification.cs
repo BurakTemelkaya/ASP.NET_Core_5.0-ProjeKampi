@@ -10,9 +10,16 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterNotification : ViewComponent
     {
+        NotificationManager notificationManager = new NotificationManager(new EfNotificationRepository());
         public IViewComponentResult Invoke()
         {
-            return View();
-        }    
+            var values = notificationManager.GetList(x => x.NotificationStatus == true
+            && x.NotificationStatus == true);
+            if (values.Count() > 3)
+            {
+                values = values.Take(3).ToList();
+            }
+            return View(values);
+        }
     }
 }

@@ -9,3 +9,4 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\ref\CoreLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.pdb
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.csproj.AssemblyReference.cache

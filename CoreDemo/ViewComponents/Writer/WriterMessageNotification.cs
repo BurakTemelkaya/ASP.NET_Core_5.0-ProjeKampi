@@ -10,10 +10,17 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
     {
-        CommentManager cm = new CommentManager(new EfCommentRepository());
+        MessageManager notificationManager = new MessageManager(new EfMessageRepository());
         public IViewComponentResult Invoke()
         {
-            return View();
+            var values = notificationManager.
+                GetList(x => x.ReceiverMail == "temelkayaburak@gmail.com" &&
+                x.MessageStatus == true);
+            if (values.Count() > 3)
+            {
+                values = values.Take(3).ToList();
+            }
+            return View(values);
         }
     }
 }
