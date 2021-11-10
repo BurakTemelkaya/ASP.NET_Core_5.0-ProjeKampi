@@ -15,7 +15,7 @@ namespace CoreDemo.ViewComponents.Writer
         {
             var values = notificationManager.
                 GetList(x => x.ReceiverMail == "temelkayaburak@gmail.com" &&
-                x.MessageStatus == true);
+                x.MessageStatus == true && x.MessageDate.Day == DateTime.Now.Day);
             if (values.Count() > 3)
             {
                 values = values.Take(3).ToList();
