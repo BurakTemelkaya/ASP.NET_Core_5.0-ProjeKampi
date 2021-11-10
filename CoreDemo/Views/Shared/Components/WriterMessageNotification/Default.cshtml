@@ -4,7 +4,18 @@
     <h6 class="p-3 mb-0">Mesajlar</h6>
     @foreach (var item in Model)
     {
-        TimeSpan zaman = DateTime.Now - item.MessageDate;
+        DateTime now = DateTime.Now;
+        TimeSpan zaman = now.Subtract(item.MessageDate);
+        string sure;
+        if (now.Day == item.MessageDate.Day)
+        {
+            sure = new DateTime(zaman.Ticks).ToString("H 'saat' m 'dakika' ss 'saniye'");
+
+        }
+        else
+        {
+            sure = new DateTime(zaman.Ticks).ToString("dd 'Gün' H 'saat' m 'dakika' ss 'saniye'");
+        }
         <div class="dropdown-divider"></div>
         <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
@@ -12,7 +23,10 @@
             </div>
             <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                 <h6 class="preview-subject ellipsis mb-1 font-weight-normal">@item.SenderMail sana mesaj gönderdi</h6>
-                <p class="text-gray mb-0">@DateTime.Parse(zaman.ToString()).ToString("H 'Saat' m 'Dakika' ss 'Saniye'") önce gönderildi </p>
+                <p class="text-gray mb-0">
+                    @*@item.MessageDate.ToString("dd 'gün' H 'saat' m 'dakika' ss 'saniye'")*@
+                    @sure &nbsp; önce gönderildi
+                </p>
             </div>
         </a>
     }
