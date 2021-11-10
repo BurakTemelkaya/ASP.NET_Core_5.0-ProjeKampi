@@ -26,7 +26,7 @@ Video 40: <del> GitHub repoları güncellenecek.</del>
 
 Video 48: <del>ClaimsIdentity'de 2. parametre neden verilmeli ? Araştırılacak.</del>
 
-Video 52: Mesajların 24 saatlik dilim içinde gönderilmiş ise ne kadar süre önce gönderildiği yazdırılacak.
+Video 52: <del>Mesajların 24 saatlik dilim içinde gönderilmiş ise ne kadar süre önce gönderildiği yazdırılacak.</del>
 
 Video 54: <del>Yazar panelinde Purple logosu yerine kendi blogunuzun logosunu koyun.</del>
 
@@ -47,3 +47,5 @@ Video 66: <del>Blog Raytinglerinin ortalamasını al.</del>
 Video 70: <del>Dashboard Controllerdaki LINQ Sorguları SOLID'i ezmeden mimariye taşıma.</del>
 
 Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce parolanın 2 kez girip doğrulanacak.</del>
+
+ Video 76: <del>Yazar'ın Bildirimler kısmında bütün bildirimler gözükmesin sadece durumu aktif olanlar gözüksün.</del>
