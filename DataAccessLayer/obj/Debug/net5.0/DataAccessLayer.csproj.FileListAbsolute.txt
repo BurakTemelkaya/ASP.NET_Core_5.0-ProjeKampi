@@ -15,3 +15,4 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\DataAccessLayer\obj\
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\DataAccessLayer\obj\Debug\net5.0\ref\DataAccessLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\DataAccessLayer\obj\Debug\net5.0\DataAccessLayer.pdb
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\DataAccessLayer\obj\Debug\net5.0\DataAccessLayer.genruntimeconfig.cache
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\DataAccessLayer\obj\Debug\net5.0\DataAccessLayer.csproj.CopyComplete
