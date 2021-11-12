@@ -18,7 +18,7 @@ namespace CoreDemo.ViewComponents.Writer
                 x.MessageStatus == true);
             if (values.Count() > 3)
             {
-                values = values.Take(3).ToList();
+                values = values.TakeLast(3).ToList();
             }
             return View(values);
         }
