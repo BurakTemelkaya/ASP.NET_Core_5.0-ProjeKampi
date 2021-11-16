@@ -10,12 +10,11 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
     {
-        MessageManager notificationManager = new MessageManager(new EfMessageRepository());
+        Message2Manager notificationManager = new Message2Manager(new EfMessage2Repository());
         public IViewComponentResult Invoke()
         {
             var values = notificationManager.
-                GetList(x => x.ReceiverMail == "temelkayaburak@gmail.com" &&
-                x.MessageStatus == true);
+                GetList(x => x.ReceiverID == 1 && x.MessageStatus == true);
             if (values.Count() > 3)
             {
                 values = values.TakeLast(3).ToList();

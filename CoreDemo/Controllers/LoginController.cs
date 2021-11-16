@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Concrete;
+﻿using BusinessLayer.Concrete;
+using DataAccessLayer.Concrete;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +26,9 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Writer writer)
         {
-            Context c = new Context();
-            var dataValue = c.Writers.FirstOrDefault(x => x.WriterMail == writer.WriterMail && x.WriterPassword == writer.WriterPassword);
-            if (dataValue!=null)
+            WriterManager writermanager = new WriterManager(new EfWriterRepository());
+            var dataValue = writermanager.TGetByFilter(x => x.WriterMail == writer.WriterMail && x.WriterPassword == writer.WriterPassword);
+            if (dataValue != null)
             {
                 var claims = new List<Claim>
                 {
@@ -42,17 +44,5 @@ namespace CoreDemo.Controllers
                 return View();
             }
         }
-        //Context c = new Context();
-        //var dataValue = c.Writers.FirstOrDefault(x => x.WriterMail == writer.WriterMail &&
-        //x.WriterPassword == writer.WriterPassword);
-        //if (dataValue != null)
-        //{
-        //    HttpContext.Session.SetString("username", writer.WriterMail);
-        //    return RedirectToAction("Index", "Writer");
-        //}
-        //else
-        //{
-        //    return View();
-        //}
     }
 }

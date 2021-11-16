@@ -20,5 +20,7 @@ namespace EntityLayer.Concrete
         public string WriterCity { get; set; }
         public DateTime WriterRegisterDate { get; set; }
         public List<Blog> Blogs { get; set; }
+        public virtual ICollection<Message2> WriterSender { get; set; }
+        public virtual ICollection<Message2> WriterReceiver { get; set; }
     }
 }
