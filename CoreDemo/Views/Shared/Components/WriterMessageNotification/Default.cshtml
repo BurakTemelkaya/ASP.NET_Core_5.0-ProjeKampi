@@ -10,33 +10,30 @@
     {
         TimeSpan zaman = now.Subtract(item.MessageDate);
 
-        if (zaman.Days < 2)
+        if (zaman.Days == 0)
         {
-            if (zaman.Hours < 24)
+            if (zaman.Minutes == 0 && zaman.Hours == 0)
             {
-                if (zaman.Minutes == 0 && zaman.Hours == 0)
-                {
-                    sure = "Şimdi";
-                }
-                else if (zaman.Minutes > 0 && zaman.Hours == 0)
-                {
-                    sure = new DateTime(zaman.Ticks).ToString("m 'dakika önce'");
-                }
-                else
-                {
-                    sure = new DateTime(zaman.Ticks).ToString("H 'saat' m 'dakika önce'");
-                }
+                sure = "Şimdi";
+            }
+            else if (zaman.Minutes > 0 && zaman.Hours == 0)
+            {
+                sure = zaman.Minutes + " dakika önce";
+            }
+            else
+            {
+                sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
             }
         }
         else
         {
             if (zaman.Hours == 0)
             {
-                sure = new DateTime(zaman.Ticks).ToString("d 'Gün önce' ");
+                sure = zaman.Days + " gün önce";
             }
             else
             {
-                sure = new DateTime(zaman.Ticks).ToString("d 'Gün' H 'saat önce'");
+                sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
             }
         }
         <div class="dropdown-divider"></div>
