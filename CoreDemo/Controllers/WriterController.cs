@@ -18,8 +18,12 @@ namespace CoreDemo.Controllers
     {
         WriterManager writerManager = new WriterManager(new EfWriterRepository());
         WriterCity writerCity = new WriterCity();
+        [Authorize]
         public IActionResult Index()
         {
+            string mail = User.Identity.Name;
+            ViewBag.mail = mail;
+            ViewBag.Name = writerManager.TGetByFilter(x => x.WriterMail == mail).WriterName;
             return View();
         }
         public IActionResult WriterProfile()
@@ -44,15 +48,13 @@ namespace CoreDemo.Controllers
         {
             return PartialView();
         }
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult WriterEditProfile()
         {
             ViewBag.Cities = writerCity.GetCityList();
-            var writerValues = writerManager.TGetByID(10);
+            var writerValues = writerManager.TGetByFilter(x => x.WriterMail == User.Identity.Name);
             return View(writerValues);
         }
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult WriterEditProfile(Writer writer, string passwordAgain, IFormFile imageFile)
         {

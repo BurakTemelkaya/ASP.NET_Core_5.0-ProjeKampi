@@ -18,6 +18,7 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         BlogManager bm = new BlogManager(new EfBlogRepository());
+        WriterManager wm = new WriterManager(new EfWriterRepository());
         public IActionResult Index()
         {
             var values = bm.GetBlogListWithCategory();
@@ -31,7 +32,8 @@ namespace CoreDemo.Controllers
         }
         public IActionResult BlogListByWriter()
         {
-            var values = bm.GetListWithCategoryByWriterBm(1);
+            int id = wm.TGetByFilter(x => x.WriterMail== User.Identity.Name).WriterID;
+            var values = bm.GetListWithCategoryByWriterBm(id);
             return View(values);
         }
         [HttpGet]
@@ -49,7 +51,7 @@ namespace CoreDemo.Controllers
             {
                 blog.BlogStatus = true;
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = 1;
+                blog.WriterID = wm.TGetByFilter(x => x.WriterMail == User.Identity.Name).WriterID;
                 bm.TAdd(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
             }
@@ -111,7 +113,7 @@ namespace CoreDemo.Controllers
             if (results.IsValid)
             {
                 var value = bm.TGetByID(blog.BlogID);//eski değeri getirme
-                blog.WriterID = 1;//authorization işlemi yapıldığında değişecek
+                blog.WriterID = wm.TGetByFilter(x => x.WriterMail == User.Identity.Name).WriterID;
                 blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
                 blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
                 bm.TUpdate(blog);//update işlemi
