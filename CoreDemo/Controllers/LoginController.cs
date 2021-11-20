@@ -32,7 +32,8 @@ namespace CoreDemo.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, writer.WriterMail)
+                    new Claim(ClaimTypes.Email, dataValue.WriterMail),
+                    new Claim(ClaimTypes.Name,  dataValue.WriterID.ToString())
                 };
                 var userIdentity = new ClaimsIdentity(claims, "a");
                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);

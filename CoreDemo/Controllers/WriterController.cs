@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -21,7 +22,9 @@ namespace CoreDemo.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            string mail = User.Identity.Name;
+            string mail = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email).Value.ToString();
+            string id = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value;
+            ViewBag.id = id;
             ViewBag.mail = mail;
             ViewBag.Name = writerManager.TGetByFilter(x => x.WriterMail == mail).WriterName;
             return View();
@@ -52,7 +55,7 @@ namespace CoreDemo.Controllers
         public IActionResult WriterEditProfile()
         {
             ViewBag.Cities = writerCity.GetCityList();
-            var writerValues = writerManager.TGetByFilter(x => x.WriterMail == User.Identity.Name);
+            var writerValues = writerManager.TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name));
             return View(writerValues);
         }
         [HttpPost]
@@ -60,7 +63,7 @@ namespace CoreDemo.Controllers
         {
             WriterValidator validations = new WriterValidator();
             AddProfileImage addProfileImage = new AddProfileImage();
-            var oldValues = writerManager.TGetByID(writer.WriterID);
+            var oldValues = writerManager.TGetByID(int.Parse(User.Identity.Name));
             if (writer.WriterPassword == null)
             {
                 writer.WriterPassword = oldValues.WriterPassword;
