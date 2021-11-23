@@ -196,3 +196,7 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\n
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Notification\AllNotification.cshtml.g.cs
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Message\Inbox.cshtml.g.cs
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Message\MessageDetails.cshtml.g.cs
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\AdminLayout.cshtml.g.cs
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Admin\Index.cshtml.g.cs
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Admin\AdminNavbarPartial.cshtml.g.cs
+C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\Category\Index.cshtml.g.cs

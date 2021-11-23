@@ -20,6 +20,7 @@ namespace CoreDemo.ViewComponents.Writer
             {
                 values = values.TakeLast(3).ToList();
             }
+            ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
             return View(values);
         }
     }
