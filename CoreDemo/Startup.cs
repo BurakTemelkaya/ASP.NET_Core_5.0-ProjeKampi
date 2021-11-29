@@ -76,13 +76,23 @@ namespace CoreDemo
 
             app.UseEndpoints(endpoints =>
             {
+
+
+                //endpoints.MapControllerRoute(
+                //    name: "Admin",
+                //    pattern: "{area:exist}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                    areaName: "Admin",
+                    pattern: "/admin/{controller=Home}/{action=Index}/{id?}"
+                    );
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
+
+                
             });
 
 

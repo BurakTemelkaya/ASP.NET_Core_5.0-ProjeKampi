@@ -13,7 +13,6 @@ using X.PagedList;
 namespace CoreDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("Admin/[Controller]/[Action]/{id?}")]
     public class CategoryController : Controller
     {
         CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
