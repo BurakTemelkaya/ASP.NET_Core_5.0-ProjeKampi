@@ -19,6 +19,8 @@ namespace CoreDemo.Controllers
     {
         WriterManager writerManager = new WriterManager(new EfWriterRepository());
         WriterCity writerCity = new WriterCity();
+        UserInfo userinfo = new UserInfo();
+        
         [Authorize]
         public IActionResult Index()
         {
@@ -55,7 +57,7 @@ namespace CoreDemo.Controllers
         public IActionResult WriterEditProfile()
         {
             ViewBag.Cities = writerCity.GetCityList();
-            var writerValues = writerManager.TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name));
+            var writerValues = writerManager.TGetByFilter(x => x.WriterID == userinfo.GetID(User));
             return View(writerValues);
         }
         [HttpPost]
@@ -63,7 +65,7 @@ namespace CoreDemo.Controllers
         {
             WriterValidator validations = new WriterValidator();
             AddProfileImage addProfileImage = new AddProfileImage();
-            var oldValues = writerManager.TGetByID(int.Parse(User.Identity.Name));
+            var oldValues = writerManager.TGetByID(userinfo.GetID(User));
             if (writer.WriterPassword == null)
             {
                 writer.WriterPassword = oldValues.WriterPassword;
@@ -101,6 +103,6 @@ namespace CoreDemo.Controllers
             }
             ViewBag.Cities = writerCity.GetCityList();
             return View();
-        }
+        }      
     }
 }

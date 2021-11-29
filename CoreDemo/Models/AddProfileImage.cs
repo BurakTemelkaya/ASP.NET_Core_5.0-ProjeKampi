@@ -17,7 +17,7 @@ namespace CoreDemo.Models
                 newImageName);
             var stream = new FileStream(location, FileMode.Create);
             image.CopyTo(stream);
-            fileName = image.FileName;
+            fileName = newImageName;
         }
     }
 }

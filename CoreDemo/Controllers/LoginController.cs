@@ -42,8 +42,15 @@ namespace CoreDemo.Controllers
             }
             else
             {
+                TempData["ErrorMessage"] = "Kullanıcı adı veya şifreniz yanlış";
                 return View();
             }
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
         }
     }
 }

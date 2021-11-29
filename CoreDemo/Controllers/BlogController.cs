@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -9,16 +10,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
 {
+    
     [AllowAnonymous]
     public class BlogController : Controller
     {
         BlogManager bm = new BlogManager(new EfBlogRepository());
         WriterManager wm = new WriterManager(new EfWriterRepository());
+        UserInfo userInfo = new UserInfo();
         public IActionResult Index()
         {
             var values = bm.GetBlogListWithCategory();
@@ -32,8 +36,7 @@ namespace CoreDemo.Controllers
         }
         public IActionResult BlogListByWriter()
         {
-            int id = wm.TGetByFilter(x => x.WriterMail== User.Identity.Name).WriterID;
-            var values = bm.GetListWithCategoryByWriterBm(id);
+            var values = bm.GetListWithCategoryByWriterBm(userInfo.GetID(User));
             return View(values);
         }
         [HttpGet]
@@ -51,7 +54,7 @@ namespace CoreDemo.Controllers
             {
                 blog.BlogStatus = true;
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = wm.TGetByFilter(x => x.WriterMail == User.Identity.Name).WriterID;
+                blog.WriterID = userInfo.GetID(User);
                 bm.TAdd(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
             }
@@ -113,7 +116,7 @@ namespace CoreDemo.Controllers
             if (results.IsValid)
             {
                 var value = bm.TGetByID(blog.BlogID);//eski değeri getirme
-                blog.WriterID = wm.TGetByFilter(x => x.WriterMail == User.Identity.Name).WriterID;
+                blog.WriterID = userInfo.GetID(User);
                 blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
                 blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
                 bm.TUpdate(blog);//update işlemi
