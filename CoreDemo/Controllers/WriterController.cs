@@ -20,13 +20,14 @@ namespace CoreDemo.Controllers
     {
         private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
+        private readonly WriterCity _writerCity;
 
-        public WriterController(IWriterService writerService, UserInfo userInfo)
+        public WriterController(IWriterService writerService, UserInfo userInfo, WriterCity writerCity)
         {
             _writerService = writerService;
             _userInfo = userInfo;
+            _writerCity = writerCity;
         }
-        WriterCity writerCity = new WriterCity();
 
         [Authorize]
         public IActionResult Index()
@@ -63,7 +64,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult WriterEditProfile()
         {
-            ViewBag.Cities = writerCity.GetCityList();
+            ViewBag.Cities = _writerCity.GetCityList();
             var writerValues = _writerService.TGetByFilter(x => x.WriterID == _userInfo.GetID(User));
             return View(writerValues);
         }
@@ -99,7 +100,7 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("PasswordAgainMessage",
                     "Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
             }
-            ViewBag.Cities = writerCity.GetCityList();
+            ViewBag.Cities = _writerCity.GetCityList();
             return View();
         }      
     }

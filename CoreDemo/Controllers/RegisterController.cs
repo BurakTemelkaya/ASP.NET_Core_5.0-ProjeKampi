@@ -19,17 +19,18 @@ namespace CoreDemo.Controllers
     {
         private readonly IWriterService _writerService;
 
-        WriterCity writerCity = new WriterCity();
+        private readonly WriterCity _writerCity;
 
-        public RegisterController(IWriterService writerService)
+        public RegisterController(IWriterService writerService, WriterCity writerCity)
         {
             _writerService = writerService;
+            _writerCity = writerCity;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Cities = writerCity.GetCityList();
+            ViewBag.Cities = _writerCity.GetCityList();
             return View();
         }
         [HttpPost]
@@ -55,7 +56,7 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError("ErrorMessage", "Girdiğiniz E-Mail Adresini Kullanan Bir Hesap Mevcut");
             }
-            ViewBag.Cities = writerCity.GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim
+            ViewBag.Cities = _writerCity.GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim
             return View(writer);
         }
 

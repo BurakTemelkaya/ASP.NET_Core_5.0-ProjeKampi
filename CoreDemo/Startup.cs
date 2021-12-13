@@ -54,27 +54,6 @@ namespace CoreDemo
                 }
             );
 
-            //services.AddSingleton<IAboutDal>(new EfAboutRepository());
-
-            //services.AddSingleton<IBlogDal>(new EfBlogRepository());
-
-            //services.AddSingleton<ICategoryDal>(new EfCategoryRepository());
-
-            //services.AddSingleton<ICommentDal>(new EfCommentRepository());
-
-            //services.AddSingleton<IContactDal>(new EfContactRepository());
-
-            //services.AddSingleton<IMessage2Dal>(new EfMessage2Repository());
-
-            //services.AddSingleton<INewsLetterDal>(new EfNewsLetterRepository());
-
-            //services.AddSingleton<INotificationDal>(new EfNotificationRepository());
-
-            //services.AddSingleton<IWriterDal>(new EfWriterRepository());
-
-            //services.AddSingleton<IAdminDal>(new EfAdminRepository());
-
-
             services.AddSingleton<IAboutService>(new AboutManager(new EfAboutRepository()));
 
             services.AddSingleton<IBlogService>(new BlogManager(new EfBlogRepository()));
@@ -95,7 +74,9 @@ namespace CoreDemo
 
             services.AddSingleton<IAdminService>(new AdminManager(new EfAdminRepository()));
 
-            services.AddSingleton (new UserInfo());
+            services.AddSingleton(new UserInfo());
+
+            services.AddSingleton(new WriterCity());
 
             services.AddControllersWithViews().AddFluentValidation(x =>
             x.RegisterValidatorsFromAssemblyContaining<BlogValidator>());
@@ -145,7 +126,7 @@ namespace CoreDemo
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-                
+
             });
 
 
