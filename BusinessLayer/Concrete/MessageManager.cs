@@ -12,11 +12,16 @@ namespace BusinessLayer.Concrete
 {
     public class MessageManager : IMessageService
     {
-        IMessageDal _messageDal;
+        private readonly IMessageDal _messageDal;
 
         public MessageManager(IMessageDal messageDal)
         {
             _messageDal = messageDal;
+        }
+
+        public int GetCount(Expression<Func<Message, bool>> filter = null)
+        {
+            throw new NotImplementedException();
         }
 
         public List<Message> GetList(Expression<Func<Message, bool>> filter = null)

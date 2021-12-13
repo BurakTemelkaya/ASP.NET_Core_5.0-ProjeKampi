@@ -15,5 +15,6 @@ namespace BusinessLayer.Abstract
         List<T> GetList(Expression<Func<T, bool>> filter = null);
         T TGetByID(int id);
         T TGetByFilter(Expression<Func<T, bool>> filter = null);
+        int GetCount(Expression<Func<T, bool>> filter = null);
     }
 }

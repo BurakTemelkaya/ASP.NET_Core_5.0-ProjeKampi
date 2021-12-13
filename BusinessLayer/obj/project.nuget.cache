@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HnY06RpctkXuNwTQ5Eb5kdxdvo7dE+43VbmWlgjERaPmW0KxSPIFHIqpj3qBr+KW1I+MFlKeIybKZzkGjXou/g==",
+  "dgSpecHash": "do0pL0lUVVLyLAq1tgmjhnO0Xjy3x/O4jLRwMl3la30hMGE+TvYHEz/Mv4lKLUz867m5lQ8ZnMhkxXATb/zWSg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
   "expectedPackageFiles": [
@@ -35,6 +35,7 @@
     "C:\\Users\\Burak\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Burak\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\newtonsoft.json\\10.0.1\\newtonsoft.json.10.0.1.nupkg.sha512",
+    "C:\\Users\\Burak\\.nuget\\packages\\ninject\\3.3.4\\ninject.3.3.4.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",

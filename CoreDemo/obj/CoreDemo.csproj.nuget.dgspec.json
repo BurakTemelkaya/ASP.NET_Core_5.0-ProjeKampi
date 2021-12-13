@@ -58,6 +58,10 @@
             "FluentValidation.AspNetCore": {
               "target": "Package",
               "version": "[10.3.3, )"
+            },
+            "Ninject": {
+              "target": "Package",
+              "version": "[3.3.4, )"
             }
           },
           "imports": [

@@ -12,7 +12,7 @@ namespace BusinessLayer.Concrete
 {
     public class Message2Manager : IMessage2Service
     {
-        IMessage2Dal _message2Dal;
+        private readonly IMessage2Dal _message2Dal;
 
         public Message2Manager(IMessage2Dal message2Dal)
         {
@@ -52,6 +52,11 @@ namespace BusinessLayer.Concrete
         public void TUpdate(Message2 t)
         {
             _message2Dal.Update(t);
+        }
+
+        public int GetCount(Expression<Func<Message2, bool>> filter = null)
+        {
+            return _message2Dal.GetCount(filter);
         }
     }
 }

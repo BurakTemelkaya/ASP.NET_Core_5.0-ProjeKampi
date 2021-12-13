@@ -4,6 +4,7 @@ using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace BusinessLayer.Concrete
 {
     public class CommentManager : ICommentService
     {
-        ICommentDal _commentDal;
+        private readonly ICommentDal _commentDal;
         public CommentManager(ICommentDal commentDal)
         {
             _commentDal = commentDal;
@@ -22,9 +23,44 @@ namespace BusinessLayer.Concrete
             _commentDal.Insert(comment);
         }
 
+        public int GetCount(Expression<Func<Comment, bool>> filter = null)
+        {
+            return _commentDal.GetCount(filter);
+        }
+
         public List<Comment> GetList(int id)
         {
             return _commentDal.GetListAll(x => x.BlogID == id);
+        }
+
+        public List<Comment> GetList(Expression<Func<Comment, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TAdd(Comment t)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TDelete(Comment t)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Comment TGetByFilter(Expression<Func<Comment, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Comment TGetByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TUpdate(Comment t)
+        {
+            throw new NotImplementedException();
         }
     }
 }

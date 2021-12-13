@@ -12,11 +12,16 @@ namespace BusinessLayer.Concrete
 {
     public class NotificationManager : INotificationService
     {
-        INotificationDal _notificationDal;
+        private readonly INotificationDal _notificationDal;
 
         public NotificationManager(INotificationDal notificationDal)
         {
             _notificationDal = notificationDal;
+        }
+
+        public int GetCount(Expression<Func<Notification, bool>> filter = null)
+        {
+            return _notificationDal.GetCount(filter);
         }
 
         public List<Notification> GetList(Expression<Func<Notification, bool>> filter = null)

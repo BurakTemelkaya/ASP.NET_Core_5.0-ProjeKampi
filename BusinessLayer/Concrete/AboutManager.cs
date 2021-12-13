@@ -12,7 +12,7 @@ namespace BusinessLayer.Concrete
 {
     public class AboutManager : IAboutService
     {
-        IAboutDal _aboutDal;
+        private readonly IAboutDal _aboutDal;
 
         public AboutManager(IAboutDal aboutDal)
         {
@@ -52,6 +52,9 @@ namespace BusinessLayer.Concrete
             return _aboutDal.GetListAll(filter);
         }
 
-
+        public int GetCount(Expression<Func<About, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

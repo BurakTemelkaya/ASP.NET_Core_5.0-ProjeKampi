@@ -12,7 +12,7 @@ namespace BusinessLayer.Concrete
 {
     public class ContactManager : IContactService
     {
-        IContactDal _contactDal;
+        private readonly IContactDal _contactDal;
 
         public ContactManager(IContactDal contactDal)
         {
@@ -22,6 +22,11 @@ namespace BusinessLayer.Concrete
         public void ContactAdd(Contact contact)
         {
             _contactDal.Insert(contact);
+        }
+
+        public int GetCount(Expression<Func<Contact, bool>> filter = null)
+        {
+            return _contactDal.GetCount(filter);
         }
 
         public List<Contact> GetList(Expression<Func<Contact, bool>> filter = null)

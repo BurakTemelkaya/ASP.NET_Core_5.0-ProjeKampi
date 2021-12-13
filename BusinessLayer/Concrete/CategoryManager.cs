@@ -14,7 +14,7 @@ namespace BusinessLayer.Concrete
 {
     public class CategoryManager : ICategoryService
     {
-        ICategoryDal _categoryDal;
+        private readonly ICategoryDal _categoryDal;
 
         public CategoryManager(ICategoryDal categoryDal)
         {
@@ -53,6 +53,11 @@ namespace BusinessLayer.Concrete
             return filter == null ?
                 _categoryDal.GetByFilter() :
                 _categoryDal.GetByFilter(filter);
+        }
+
+        public int GetCount(Expression<Func<Category, bool>> filter = null)
+        {
+            return _categoryDal.GetCount(filter);
         }
     }
 }
