@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -16,6 +17,13 @@ namespace CoreDemo.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IWriterService _writerService;
+
+        public LoginController(IWriterService writerService)
+        {
+            _writerService = writerService;
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Index()
@@ -26,8 +34,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Writer writer)
         {
-            WriterManager writermanager = new WriterManager(new EfWriterRepository());
-            var dataValue = writermanager.TGetByFilter(x => x.WriterMail == writer.WriterMail && x.WriterPassword == writer.WriterPassword);
+            var dataValue = _writerService.TGetByFilter(x => x.WriterMail == writer.WriterMail && x.WriterPassword == writer.WriterPassword);
             if (dataValue != null)
             {
                 var claims = new List<Claim>

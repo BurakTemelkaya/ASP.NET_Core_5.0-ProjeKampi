@@ -1,5 +1,5 @@
-﻿using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,16 @@ namespace CoreDemo.Controllers
 {
     public class AboutController : Controller
     {
-        AboutManager aboutManager = new AboutManager(new EfAboutRepository());
+        IAboutService _aboutService;
+
+        public AboutController(IAboutService aboutService)
+        {
+            _aboutService = aboutService;
+        }
+
         public IActionResult Index()
         {
-            var Values = aboutManager.GetList();
+            var Values = _aboutService.GetList();
             return View(Values);
         }
         public PartialViewResult SocialMediaAbout()

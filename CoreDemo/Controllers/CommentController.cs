@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,13 @@ namespace CoreDemo.Controllers
 {
     public class CommentController : Controller
     {
-        CommentManager cm = new CommentManager(new EfCommentRepository());
+        private readonly ICommentService _commentService;
+
+        public CommentController(ICommentService commentService)
+        {
+            _commentService = commentService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -27,12 +34,12 @@ namespace CoreDemo.Controllers
             comment.CommentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
             comment.CommentStatus = true;
             comment.BlogID = 2;
-            cm.CommentAdd(comment);
+            _commentService.CommentAdd(comment);
             return PartialView();
         }
         public PartialViewResult CommentListByBlog(int id)
         {
-            var values = cm.GetList(id);
+            var values = _commentService.GetList(id);
             return PartialView(values);
         }
     }

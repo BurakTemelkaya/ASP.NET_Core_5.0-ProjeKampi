@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
@@ -20,23 +21,32 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class BlogController : Controller
     {
-        BlogManager bm = new BlogManager(new EfBlogRepository());
-        WriterManager wm = new WriterManager(new EfWriterRepository());
-        UserInfo userInfo = new UserInfo();
+        private readonly IBlogService _blogService;
+        private readonly IWriterService _writerService;
+        private readonly UserInfo _userInfo;
+
+        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo)
+        {
+            _blogService = blogService;
+            _writerService = writerService;
+            _userInfo = userInfo;
+        }
+
         public IActionResult Index()
         {
-            var values = bm.GetBlogListWithCategory();
+            var values = _blogService.GetBlogListWithCategory();
             return View(values);
         }
         public IActionResult BlogReadAll(int id)
         {
             ViewBag.i = id;
-            var values = bm.GetBlogByID(id);
+            var values = _blogService.GetBlogByID(id);
             return View(values);
         }
         public IActionResult BlogListByWriter()
         {
-            var values = bm.GetListWithCategoryByWriterBm(userInfo.GetID(User));
+            int id = _userInfo.GetID(User);
+            var values = _blogService.GetListWithCategoryByWriterBm(id);
             return View(values);
         }
         [HttpGet]
@@ -48,22 +58,13 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult BlogAdd(Blog blog)
         {
-            BlogValidator bv = new BlogValidator();
-            ValidationResult results = bv.Validate(blog);
-            if (results.IsValid)
+            if (ModelState.IsValid)
             {
                 blog.BlogStatus = true;
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = userInfo.GetID(User);
-                bm.TAdd(blog);
+                blog.WriterID = _userInfo.GetID(User);
+                _blogService.TAdd(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
-            }
-            else
-            {
-                foreach (var item in results.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
             }
             GetCategoryList();
             return View();
@@ -81,14 +82,14 @@ namespace CoreDemo.Controllers
         }
         public IActionResult DeleteBlog(int id)
         {
-            var blogValue = bm.TGetByID(id);
-            bm.TDelete(blogValue);
+            var blogValue = _blogService.TGetByID(id);
+            _blogService.TDelete(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         public IActionResult ChangeStatusBlog(int id)
         {
-            var blogValue = bm.TGetByID(id);
+            var blogValue = _blogService.TGetByID(id);
             if (blogValue.BlogStatus)
             {
                 blogValue.BlogStatus = false;
@@ -97,14 +98,14 @@ namespace CoreDemo.Controllers
             {
                 blogValue.BlogStatus = true;
             }
-            bm.TUpdate(blogValue);
+            _blogService.TUpdate(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         [HttpGet]
         public IActionResult EditBlog(int id)
         {
-            var blogValue = bm.TGetByID(id);
+            var blogValue = _blogService.TGetByID(id);
             GetCategoryList();
             return View(blogValue);
         }
@@ -115,11 +116,11 @@ namespace CoreDemo.Controllers
             ValidationResult results = bv.Validate(blog);
             if (results.IsValid)
             {
-                var value = bm.TGetByID(blog.BlogID);//eski değeri getirme
-                blog.WriterID = userInfo.GetID(User);
+                var value = _blogService.TGetByID(blog.BlogID);//eski değeri getirme
+                blog.WriterID = _userInfo.GetID(User);
                 blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
                 blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
-                bm.TUpdate(blog);//update işlemi
+                _blogService.TUpdate(blog);//update işlemi
                 return RedirectToAction("BlogListByWriter");
             }
             else

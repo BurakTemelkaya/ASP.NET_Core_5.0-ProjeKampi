@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,23 +11,30 @@ namespace CoreDemo.Controllers
 {
     public class MessageController : Controller
     {
-        Message2Manager message2Manager = new Message2Manager(new EfMessage2Repository());
-        WriterManager writerManager = new WriterManager(new EfWriterRepository());
+        private readonly IMessage2Service _message2Service;
+        private readonly IWriterService _writerService;
+
+        public MessageController(IMessage2Service message2Service, IWriterService writerService)
+        {
+            _message2Service = message2Service;
+            _writerService = writerService;
+        }
+
         public IActionResult Inbox()
         {
-            var values = message2Manager.GetInboxListByWriter(GetByUserID());
+            var values = _message2Service.GetInboxListByWriter(GetByUserID());
             return View(values);
         }
         [HttpGet]
         public IActionResult MessageDetails(int id)
         {
-            var values = message2Manager.GetInboxListByWriter(GetByUserID())
+            var values = _message2Service.GetInboxListByWriter(GetByUserID())
                 .Where(x => x.MessageID == id).FirstOrDefault();
             return View(values);
         }
         public int GetByUserID()
         {
-            return writerManager.TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name)).WriterID;
+            return _writerService.TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name)).WriterID;
         }
     }
 }

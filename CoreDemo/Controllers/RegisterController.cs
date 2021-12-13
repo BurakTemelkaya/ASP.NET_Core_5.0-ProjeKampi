@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
@@ -16,8 +17,14 @@ namespace CoreDemo.Controllers
 {
     public class RegisterController : Controller
     {
-        WriterManager wm = new WriterManager(new EfWriterRepository());
+        private readonly IWriterService _writerService;
+
         WriterCity writerCity = new WriterCity();
+
+        public RegisterController(IWriterService writerService)
+        {
+            _writerService = writerService;
+        }
 
         [HttpGet]
         public IActionResult Index()
@@ -28,26 +35,17 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult Index(Writer writer, string passwordAgain, IFormFile imageFile)
         {
-            WriterValidator wv = new WriterValidator();
             AddProfileImage addProfileImage = new AddProfileImage();
-            ValidationResult results = wv.Validate(writer);
-            var validateWriter = wm.TGetByFilter(x => x.WriterMail == writer.WriterMail);
-            if (results.IsValid && writer.WriterPassword == passwordAgain && validateWriter == null)
+            var validateWriter = _writerService.TGetByFilter(x => x.WriterMail == writer.WriterMail);
+            if (ModelState.IsValid && writer.WriterPassword == passwordAgain && validateWriter == null)
             {
                 writer.WriterStatus = true;
                 writer.WriterAbout = "Deneme test";
                 writer.WriterRegisterDate = DateTime.Now;
                 addProfileImage.ImageAdd(imageFile, out string imageName);
                 writer.WriterImage = imageName;
-                wm.TAdd(writer);
+                _writerService.TAdd(writer);
                 return RedirectToAction("Index", "Blog");
-            }
-            else if (!results.IsValid)
-            {
-                foreach (var item in results.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
             }
             else if (writer.WriterPassword != passwordAgain)
             {
@@ -57,8 +55,8 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError("ErrorMessage", "Girdiğiniz E-Mail Adresini Kullanan Bir Hesap Mevcut");
             }
-            ViewBag.Cities = writerCity.GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim            
-            return View();
+            ViewBag.Cities = writerCity.GetCityList();//dropdown hata vermemesi için Şehir Listesini tekrar gönderdim
+            return View(writer);
         }
 
     }

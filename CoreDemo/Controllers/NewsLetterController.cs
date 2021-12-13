@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,13 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class NewsLetterController : Controller
     {
-        NewsLetterManager nm = new NewsLetterManager(new EfNewsLetterRepository());
+        private readonly INewsLetterService _newsLetterService;
+
+        public NewsLetterController(INewsLetterService newsLetterService)
+        {
+            _newsLetterService = newsLetterService;
+        }
+
         [HttpGet]
         public PartialViewResult SubscribeMail()
         {
@@ -23,7 +30,7 @@ namespace CoreDemo.Controllers
         public PartialViewResult SubscribeMail(NewsLetter newsLetter)
         {
             newsLetter.MailStatus = true;
-            nm.AddNewsLetter(newsLetter);
+            _newsLetterService.AddNewsLetter(newsLetter);
             return PartialView();
         }
     }

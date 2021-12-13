@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
@@ -17,10 +18,16 @@ namespace CoreDemo.Controllers
 {
     public class WriterController : Controller
     {
-        WriterManager writerManager = new WriterManager(new EfWriterRepository());
+        private readonly IWriterService _writerService;
+        private readonly UserInfo _userInfo;
+
+        public WriterController(IWriterService writerService, UserInfo userInfo)
+        {
+            _writerService = writerService;
+            _userInfo = userInfo;
+        }
         WriterCity writerCity = new WriterCity();
-        UserInfo userinfo = new UserInfo();
-        
+
         [Authorize]
         public IActionResult Index()
         {
@@ -28,7 +35,7 @@ namespace CoreDemo.Controllers
             string id = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value;
             ViewBag.id = id;
             ViewBag.mail = mail;
-            ViewBag.Name = writerManager.TGetByFilter(x => x.WriterMail == mail).WriterName;
+            ViewBag.Name = _writerService.TGetByFilter(x => x.WriterMail == mail).WriterName;
             return View();
         }
         public IActionResult WriterProfile()
@@ -57,22 +64,20 @@ namespace CoreDemo.Controllers
         public IActionResult WriterEditProfile()
         {
             ViewBag.Cities = writerCity.GetCityList();
-            var writerValues = writerManager.TGetByFilter(x => x.WriterID == userinfo.GetID(User));
+            var writerValues = _writerService.TGetByFilter(x => x.WriterID == _userInfo.GetID(User));
             return View(writerValues);
         }
         [HttpPost]
         public IActionResult WriterEditProfile(Writer writer, string passwordAgain, IFormFile imageFile)
         {
-            WriterValidator validations = new WriterValidator();
             AddProfileImage addProfileImage = new AddProfileImage();
-            var oldValues = writerManager.TGetByID(userinfo.GetID(User));
+            var oldValues = _writerService.TGetByID(_userInfo.GetID(User));
             if (writer.WriterPassword == null)
             {
                 writer.WriterPassword = oldValues.WriterPassword;
                 passwordAgain = writer.WriterPassword;
             }
-            ValidationResult result = validations.Validate(writer);
-            if (result.IsValid && writer.WriterPassword == passwordAgain)
+            if (ModelState.IsValid && writer.WriterPassword == passwordAgain)
             {
                 if (imageFile == null)
                 {
@@ -86,15 +91,8 @@ namespace CoreDemo.Controllers
                 //eski bilgilerin silinmemesi için tekrar eski verileri kaydetme
                 writer.WriterStatus = oldValues.WriterStatus;
                 writer.WriterRegisterDate = oldValues.WriterRegisterDate;
-                writerManager.TUpdate(writer);
+                _writerService.TUpdate(writer);
                 return RedirectToAction("Index", "Dashboard");
-            }
-            else if (!result.IsValid)
-            {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
             }
             else if (writer.WriterPassword != passwordAgain && writer.WriterPassword != oldValues.WriterPassword)
             {

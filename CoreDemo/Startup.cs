@@ -1,7 +1,10 @@
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
+using CoreDemo.Models;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -51,25 +54,25 @@ namespace CoreDemo
                 }
             );
 
-            services.AddSingleton<IAboutDal>(new EfAboutRepository());
+            //services.AddSingleton<IAboutDal>(new EfAboutRepository());
 
-            services.AddSingleton<IBlogDal>(new EfBlogRepository());
+            //services.AddSingleton<IBlogDal>(new EfBlogRepository());
 
-            services.AddSingleton<ICategoryDal>(new EfCategoryRepository());
+            //services.AddSingleton<ICategoryDal>(new EfCategoryRepository());
 
-            services.AddSingleton<ICommentDal>(new EfCommentRepository());
+            //services.AddSingleton<ICommentDal>(new EfCommentRepository());
 
-            services.AddSingleton<IContactDal>(new EfContactRepository());
+            //services.AddSingleton<IContactDal>(new EfContactRepository());
 
-            services.AddSingleton<IMessage2Dal>(new EfMessage2Repository());
+            //services.AddSingleton<IMessage2Dal>(new EfMessage2Repository());
 
-            services.AddSingleton<INewsLetterDal>(new EfNewsLetterRepository());
+            //services.AddSingleton<INewsLetterDal>(new EfNewsLetterRepository());
 
-            services.AddSingleton<INotificationDal>(new EfNotificationRepository());
+            //services.AddSingleton<INotificationDal>(new EfNotificationRepository());
 
-            services.AddSingleton<IWriterDal>(new EfWriterRepository());
+            //services.AddSingleton<IWriterDal>(new EfWriterRepository());
 
-            services.AddSingleton<IAdminDal>(new EfAdminRepository());
+            //services.AddSingleton<IAdminDal>(new EfAdminRepository());
 
 
             services.AddSingleton<IAboutService>(new AboutManager(new EfAboutRepository()));
@@ -91,6 +94,11 @@ namespace CoreDemo
             services.AddSingleton<IWriterService>(new WriterManager(new EfWriterRepository()));
 
             services.AddSingleton<IAdminService>(new AdminManager(new EfAdminRepository()));
+
+            services.AddSingleton (new UserInfo());
+
+            services.AddControllersWithViews().AddFluentValidation(x =>
+            x.RegisterValidatorsFromAssemblyContaining<BlogValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

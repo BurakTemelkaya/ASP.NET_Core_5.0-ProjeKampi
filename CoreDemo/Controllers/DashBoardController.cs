@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
@@ -13,17 +14,23 @@ namespace CoreDemo.Controllers
 {
     public class DashBoardController : Controller
     {
+        private readonly IBlogService _blogService;
+        private readonly ICategoryService _categoryService;
+
+        public DashBoardController(IBlogService blogService, ICategoryService categoryService)
+        {
+            _blogService = blogService;
+            _categoryService = categoryService;
+        }
+
         [AllowAnonymous]
         public IActionResult Index()
         {
-            BlogManager blogManager = new BlogManager(new EfBlogRepository());
-            CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
-            WriterManager writerManager = new WriterManager(new EfWriterRepository());
             string mail = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email).Value.ToString();
             int id = int.Parse(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value);
-            ViewBag.ToplamBlogSayisi = blogManager.GetList(x => x.BlogStatus == true).Count();
-            ViewBag.YazarinBlogSayisi = blogManager.GetBlogByWriter(id).Count();
-            ViewBag.KategoriSayisi = categoryManager.GetList().Count();
+            ViewBag.ToplamBlogSayisi = _blogService.GetCount(x => x.BlogStatus == true);
+            ViewBag.YazarinBlogSayisi = _blogService.GetBlogByWriter(id).Count();
+            ViewBag.KategoriSayisi = _categoryService.GetList().Count();
             return View();
         }
     }

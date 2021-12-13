@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -15,10 +16,16 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoryController : Controller
     {
-        CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
+        private readonly ICategoryService _categoryService;
+
+        public CategoryController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
+
         public IActionResult Index(int page = 1)
         {
-            var values = categoryManager.GetList().ToPagedList(page,3);
+            var values = _categoryService.GetList().ToPagedList(page,3);
             return View(values);
         }
         [HttpGet]
@@ -34,7 +41,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (results.IsValid)
             {
                 category.CategoryStatus = true;
-                categoryManager.TAdd(category);
+                _categoryService.TAdd(category);
                 return RedirectToAction("Index");
             }
             else
@@ -48,8 +55,8 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public IActionResult CategoryDelete(int id)
         {
-            var value = categoryManager.TGetByID(id);
-            categoryManager.TDelete(value);
+            var value = _categoryService.TGetByID(id);
+            _categoryService.TDelete(value);
             return RedirectToAction("Index");
         }
     }
