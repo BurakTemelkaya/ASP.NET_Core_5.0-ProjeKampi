@@ -43,8 +43,7 @@ namespace CoreDemo.Controllers
                 writer.WriterStatus = true;
                 writer.WriterAbout = "Deneme test";
                 writer.WriterRegisterDate = DateTime.Now;
-                addProfileImage.ImageAdd(imageFile, out string imageName);
-                writer.WriterImage = imageName;
+                writer.WriterImage = AddProfileImage.ImageAdd(imageFile);
                 _writerService.TAdd(writer);
                 return RedirectToAction("Index", "Blog");
             }

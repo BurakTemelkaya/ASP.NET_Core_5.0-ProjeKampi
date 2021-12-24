@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="chartDiv" style="width:800px; height:600px">
+            <h2>Burası Chart Alanıdır</h2>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['CoreChart'] });
+    google.charts.setOnLoadCallback(DrawonLoad);
+
+    function DrawonLoad() {
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Admin/Chart/CategoryChart',
+                success: function (chartsdata) {
+
+                    var Data = chartsdata.jsonlist;
+                    var dataVirt = new google.visualization.DataTable();
+
+                    dataVirt.addColumn('string', 'categoryname');
+                    dataVirt.addColumn('number', 'categorycount');
+
+                    for (var i = 0; i < Data.length; i++){
+                        dataVirt.addRow([Data[i].categoryname, Data[i].categorycount]);
+                    }
+                    var chart = new google.visualization.PieChart(document.getElementById('chartDiv'));
+
+                    chart.draw(dataVirt,
+                        {
+                            title: "Google Chart Core Projesi",
+                            position: "top",
+                            fontsize:"16px"
+                        });
+                }
+            });
+        });
+    }
+</script>
+

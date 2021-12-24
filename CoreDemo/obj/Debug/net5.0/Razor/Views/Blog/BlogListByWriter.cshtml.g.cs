@@ -27,6 +27,13 @@ using CoreDemo.Models;
 #line hidden
 #nullable disable
 #nullable restore
+#line 3 "C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\_ViewImports.cshtml"
+using CoreDemo.Areas.Admin.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 1 "C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\Blog\BlogListByWriter.cshtml"
 using EntityLayer.Concrete;
 
@@ -34,7 +41,7 @@ using EntityLayer.Concrete;
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"8481259dbf50727d6ae94e8aee26c44c5f45df59", @"/Views/Blog/BlogListByWriter.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c0e2cbebe4b7cca4b09168dd159f601192fafdf0", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b3e273681fe023035aba1d643f355c88c8bae0c4", @"/Views/_ViewImports.cshtml")]
     public class Views_Blog_BlogListByWriter : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<List<Blog>>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("class", new global::Microsoft.AspNetCore.Html.HtmlString("btn btn-danger Sil"), global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -158,7 +165,7 @@ using EntityLayer.Concrete;
 #line hidden
 #nullable disable
             WriteLiteral("                </td>\r\n                <td>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df598163", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df598374", async() => {
                 WriteLiteral("<i class=\"far fa-trash-alt\">&nbsp;Sil</i>");
             }
             );
@@ -183,7 +190,7 @@ AddHtmlAttributeValue("", 1328, item.BlogID, 1328, 12, false);
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("</td>\r\n                <td>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df599868", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df5910079", async() => {
                 WriteLiteral("Düzenle");
             }
             );
@@ -217,7 +224,7 @@ AddHtmlAttributeValue("", 1466, item.BlogID, 1466, 12, false);
 #line hidden
 #nullable disable
             WriteLiteral("                        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df5911849", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df5912061", async() => {
                 WriteLiteral("Pasif Yap");
             }
             );
@@ -252,7 +259,7 @@ AddHtmlAttributeValue("", 1669, item.BlogID, 1669, 12, false);
 #line hidden
 #nullable disable
             WriteLiteral("                        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df5913814", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8481259dbf50727d6ae94e8aee26c44c5f45df5914026", async() => {
                 WriteLiteral("Aktif Yap");
             }
             );

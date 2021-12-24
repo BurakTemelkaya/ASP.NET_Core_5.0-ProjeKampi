@@ -26,8 +26,22 @@ using CoreDemo.Models;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 3 "C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\_ViewImports.cshtml"
+using CoreDemo.Areas.Admin.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 4 "C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\_ViewImports.cshtml"
+using EntityLayer.Concrete;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"d08289f9ad82f32bcb3899cfa5c7f9866b49e5a5", @"/Views/NewsLetter/SubscribeMail.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c0e2cbebe4b7cca4b09168dd159f601192fafdf0", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b3e273681fe023035aba1d643f355c88c8bae0c4", @"/Views/_ViewImports.cshtml")]
     public class Views_NewsLetter_SubscribeMail : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("action", new global::Microsoft.AspNetCore.Html.HtmlString("/NewsLetter/SubscribeMail"), global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -61,7 +75,7 @@ using CoreDemo.Models;
             BeginWriteAttribute("alt", " alt=\"", 89, "\"", 95, 0);
             EndWriteAttribute();
             WriteLiteral(">\r\n</div>\r\n<div class=\"tech-btm\">\r\n    <p>Teknoloji, Yazılım ve Diğer Bloglarımızdan İlk Sizin Haberiniz Olsun</p>\r\n    ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d08289f9ad82f32bcb3899cfa5c7f9866b49e5a54340", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d08289f9ad82f32bcb3899cfa5c7f9866b49e5a54755", async() => {
                 WriteLiteral("\r\n        <input type=\"email\" placeholder=\"Email\" name=\"Mail\"");
                 BeginWriteAttribute("required", " required=\"", 332, "\"", 343, 0);
                 EndWriteAttribute();

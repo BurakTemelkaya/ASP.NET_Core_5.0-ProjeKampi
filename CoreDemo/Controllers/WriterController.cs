@@ -71,7 +71,6 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult WriterEditProfile(Writer writer, string passwordAgain, IFormFile imageFile)
         {
-            AddProfileImage addProfileImage = new AddProfileImage();
             var oldValues = _writerService.TGetByID(_userInfo.GetID(User));
             if (writer.WriterPassword == null)
             {
@@ -86,8 +85,7 @@ namespace CoreDemo.Controllers
                 }
                 else
                 {
-                    addProfileImage.ImageAdd(imageFile, out string fileName);
-                    writer.WriterImage = fileName;
+                    writer.WriterImage= AddProfileImage.ImageAdd(imageFile);
                 }
                 //eski bilgilerin silinmemesi için tekrar eski verileri kaydetme
                 writer.WriterStatus = oldValues.WriterStatus;

@@ -9,7 +9,7 @@ namespace CoreDemo.Models
 {
     public class AddProfileImage
     {
-        public void ImageAdd(IFormFile image, out string fileName)
+        public static string ImageAdd(IFormFile image)
         {
             var extension = Path.GetExtension(image.FileName);
             var newImageName = Guid.NewGuid() + extension;
@@ -17,7 +17,7 @@ namespace CoreDemo.Models
                 newImageName);
             var stream = new FileStream(location, FileMode.Create);
             image.CopyTo(stream);
-            fileName = newImageName;
+            return newImageName;
         }
     }
 }

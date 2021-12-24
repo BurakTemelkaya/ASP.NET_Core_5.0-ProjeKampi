@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@model WidgetModel
+<div class="row">
     <div class="col-lg-3">
         <div class="widget style1">
             <div class="row">
@@ -7,7 +8,7 @@
                 </div>
                 <div class="col-8 text-right">
                     <span> Today income </span>
-                    <h2 class="font-bold">@ViewBag.v1</h2>
+                    <h2 class="font-bold">@Model.BlogCount</h2>
                 </div>
             </div>
         </div>
@@ -20,7 +21,7 @@
                 </div>
                 <div class="col-8 text-right">
                     <span> Today degrees </span>
-                    <h2 class="font-bold">26'C</h2>
+                    <h2 class="font-bold">@Model.Temparature</h2>
                 </div>
             </div>
         </div>
@@ -33,7 +34,7 @@
                 </div>
                 <div class="col-8 text-right">
                     <span> Yeni Mesaj Sayısı </span>
-                    <h2 class="font-bold">@ViewBag.v2</h2>
+                    <h2 class="font-bold">@Model.MessageCount</h2>
                 </div>
             </div>
         </div>
@@ -46,7 +47,7 @@
                 </div>
                 <div class="col-8 text-right">
                     <span> Toplam Yorum Sayısı </span>
-                    <h2 class="font-bold">@ViewBag.v3</h2>
+                    <h2 class="font-bold">@Model.CommentCount</h2>
                 </div>
             </div>
         </div>
