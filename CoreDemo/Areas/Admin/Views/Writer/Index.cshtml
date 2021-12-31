@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Yazar Ajax İşlemleri</h1>
+<br />
+<button type="button" id="btnGetList" class="btn btn-outline-primary">Yazar Listesi</button>
+<button type="button" id="btnGetById" class="btn btn-outline-success">Yazar Getir</button>
+<br />
+<br />
+<div id="writerList">
+    Buraya Yazarlar Gelecek
+</div>
+<br />
+<div id="writerGet">
+    Buraya 1 yazar gelecek
+</div>
+<br />
+<div>
+    <input type="text" class="form-control" id="writerId" placeholder="Yazar Id değerini giriniz" />
+</div>
+
+@section scripts{
+    <script>
+        $("#btnGetList").click(function () {
+            $.ajax({
+                contentType: "application/json",
+                dataType: "json",
+                type: "Get",
+                url: "/Admin/Writer/WriterList",
+                success: function (func) {
+                    let w = jQuery.parseJSON(func);
+                    console.log(w);
+                    let tablehtml = "<table class='table table-bordered' <tr><th>Yazar ID</th><th>Yazar Adı</th></tr> ";
+                    $.each(w, (index, value) => {
+                        tablehtml += `<tr><td>${value.Id}</td> <td>${value.Name}</td></tr>`
+                    });
+                    tablehtml += "</table>"
+                    $("#writerList").html(tablehtml);
+                }
+            })
+        })
+    </script>
+    <script>
+        $("#btnGetById").click(function () {
+            let writerId = $("#writerId").val();
+            console.log(writerId);
+            $.ajax({
+                contentType: "application/json",
+                dataType: "json",
+                type: "Get",
+                url: "/Admin/Writer/GetWriterByID/",
+                data: { writerId: writerId },
+                success: function (func) {
+                    let w = jQuery.parseJSON(func);
+                    console.log(w);
+                    let html = "<p>";
+                    $.each(w, (index, value) => {
+                        html += `${value.Name}</p>`
+                    });
+                    console.log(html);
+                    $("#writerGet").html(func);
+                }
+            });
+        });
+    </script>
+}
