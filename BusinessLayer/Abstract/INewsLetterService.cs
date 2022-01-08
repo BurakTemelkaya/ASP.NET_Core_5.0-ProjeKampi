@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
     public interface INewsLetterService
     {
         void AddNewsLetter(NewsLetter newsLetter);
+        NewsLetter GetByMail(string mail);
     }
 }

@@ -81,7 +81,7 @@
         $("#btnAddWriter").click(function () {
             let writer = {
                 Id: $("#txtWriterId").val(),
-                Name: $("txtWriterName").val()
+                Name: $("#txtWriterName").val()
             };
             $.ajax({
                 type: "post",
@@ -89,7 +89,7 @@
                 data: writer,
                 success: function (func) {
                     let result = jQuery.parseJSON(func);
-                    alert("Yazar Ekleme işlemi başarılı bir şekilde gerçekleşti")
+                    alert("Mail bültenimize abone oldunuz");
                 }
             });
         });

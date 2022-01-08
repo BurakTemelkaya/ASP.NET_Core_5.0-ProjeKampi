@@ -12,6 +12,8 @@
     <meta name="keywords" content="Weblog Blog Web Site" />
 
     <script>
+        const { error } = require("jquery");
+
         addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
         }, false);
@@ -19,6 +21,52 @@
         function hideURLbar() {
             window.scrollTo(0, 1);
         }
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 900);
+            });
+        });
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        $(document).ready(function () {
+            /*
+                                    var defaults = {
+                                            containerID: 'toTop', // fading element id
+                                        containerHoverID: 'toTopHover', // fading element hover id
+                                        scrollSpeed: 1200,
+                                        easingType: 'linear'
+                                        };
+                                    */
+
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+
+        });
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
+
+        /* END EXTERNAL SOURCE */
+        /* BEGIN EXTERNAL SOURCE */
     </script>
     <link href="~/CoreBlogTema/css/bootstrap.css" rel='stylesheet' type='text/css' />
     <link rel="stylesheet" href="~/CoreBlogTema/css/single.css">
@@ -85,40 +133,33 @@
     <!--/ start-smoth-scrolling -->
     <script src="~/CoreBlogTema/js/move-top.js"></script>
     <script src="~/CoreBlogTema/js/easing.js"></script>
-    <script>
-        jQuery(document).ready(function ($) {
-            $(".scroll").click(function (event) {
-                event.preventDefault();
-                $('html,body').animate({
-                    scrollTop: $(this.hash).offset().top
-                }, 900);
-            });
-        });
-    </script>
+    <script></script>
     <!--// end-smoth-scrolling -->
 
-    <script>
-        $(document).ready(function () {
-            /*
-                                    var defaults = {
-                                            containerID: 'toTop', // fading element id
-                                        containerHoverID: 'toTopHover', // fading element hover id
-                                        scrollSpeed: 1200,
-                                        easingType: 'linear'
-                                        };
-                                    */
-
-            $().UItoTop({
-                easingType: 'easeOutQuart'
-            });
-
-        });
-    </script>
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
     </a>
 
     <!-- //Custom-JavaScript-File-Links -->
     <script src="~/CoreBlogTema/js/bootstrap.js"></script>
+    <script>
+        $("#btnSubscribe").click(function () {
+            let mail = {
+                Mail: $("#txtEmail").val(),
+                MailStatus: true
+            };
+            $.ajax({
+                type: "post",
+                url: "/NewsLetter/SubscribeMail",
+                data: mail,
+                success: function (func) {
+                    alert("Mail bültenimize abone oldunuz, teşekkürler.");
+                },
+                error: function (func) {
+                    alert("Girdiğiniz mail adresi zaten bültenimize abone.");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

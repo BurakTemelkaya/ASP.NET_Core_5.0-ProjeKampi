@@ -22,5 +22,10 @@ namespace BusinessLayer.Concrete
         {
             _newsLetterDal.Insert(newsLetter);
         }
+
+        public NewsLetter GetByMail(string mail)
+        {
+            return _newsLetterDal.GetByFilter(x => x.Mail == mail);
+        }
     }
 }

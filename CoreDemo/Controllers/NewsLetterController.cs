@@ -4,6 +4,7 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,14 @@ namespace CoreDemo.Controllers
             return PartialView();
         }
         [HttpPost]
-        public PartialViewResult SubscribeMail(NewsLetter newsLetter)
+        public IActionResult SubscribeMail(NewsLetter newsLetter)
         {
-            newsLetter.MailStatus = true;
-            _newsLetterService.AddNewsLetter(newsLetter);
-            return PartialView();
+            if (_newsLetterService.GetByMail(newsLetter.Mail)==null)
+            {
+                _newsLetterService.AddNewsLetter(newsLetter);
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }
