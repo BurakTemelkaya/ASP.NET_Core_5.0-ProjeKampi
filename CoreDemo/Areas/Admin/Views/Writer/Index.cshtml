@@ -10,6 +10,7 @@
 <button type="button" id="btnGetById" class="btn btn-outline-success">Yazar Getir</button>
 <button type="button" id="btnAddWriter" class="btn btn-outline-info">Yazar Ekle</button>
 <button type="button" id="btndeletewriter" class="btn btn-outline-danger">Yazar Sil</button>
+<button type="button" id="btnupdatewriter" class="btn btn-outline-warning">Yazar Güncelle</button>
 <br />
 <br />
 <div id="writerList">
@@ -29,11 +30,16 @@
     <br />
     <input type="text" id="txtWriterName" class="form-control" placeholder="Yazar Adı" />
 </div>
-
+<br />
 <div>
     <h1 class="text-center">Yazar Sil</h1>
     <input type="text" id="txtid" class="form-control" placeholder="Silinecek Yazar ID" />
 </div>
+<br />
+<h1 class="text-center">Yazar Güncelle</h1>
+<input type="text" class="form-control" id="txtUpdateWriterId" placeholder="Güncellenecek ID" />
+<br />
+<input type="text" class="form-control" id="txtUpdateWriterName" placeholder="Güncellenecek İsim" />
 
 @section scripts{
     <script>
@@ -103,6 +109,22 @@
                 dataType: "json",
                 success: function (func) {
                     alert("Yazar Silme işlemi başarılı bir şekilde gerçekleşti");
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#btnupdatewriter").click(function () {
+            let writer = {
+                Id: $("#txtUpdateWriterId").val(),
+                Name: $("#txtUpdateWriterName").val()
+            };
+            $.ajax({
+                type: "post",
+                url: "/Admin/Writer/UpdateWriter",
+                data: writer,
+                success: function (func) {
+                    alert("Güncelleme yapıldı");
                 }
             });
         });
