@@ -11,7 +11,7 @@ namespace BlogApiDemo.DataAccessLayer
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=DESKTOP-899RAQ8\\SQLEXPRESS;database=CoreBlogApiDb; integrated security=true;");
+            optionsBuilder.UseSqlServer("server=BLACKMONSTER\\SQLEXPRESS;database=CoreBlogApiDb; integrated security=true;");
         }
         public DbSet<Employee> Employees { get; set; }
     }

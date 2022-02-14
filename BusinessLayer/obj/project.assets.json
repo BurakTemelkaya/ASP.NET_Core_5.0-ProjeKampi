@@ -5806,28 +5806,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Burak\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\burak\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
+      "projectUniqueName": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
       "projectName": "BusinessLayer",
-      "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
-      "packagesPath": "C:\\Users\\Burak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\obj\\",
+      "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\BusinessLayer.csproj",
+      "packagesPath": "C:\\Users\\burak\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\BusinessLayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages",
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 20.2.config",
+        "C:\\Users\\burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5835,7 +5830,6 @@
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\System\\Components\\Packages": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -5843,11 +5837,11 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
-              "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj"
+            "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
+              "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj"
             },
-            "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
-              "projectPath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
+            "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+              "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
             }
           }
         }
@@ -5886,7 +5880,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

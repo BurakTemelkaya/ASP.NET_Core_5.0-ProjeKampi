@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7Kp09jbJWMJQzjkUjSGYgMbxNtzgj7N0mc/maTWDCDwqPPJp5a93+SB/gU3o5qvIQDuLWQsot2+ErsTM6Pzx8Q==",
+  "dgSpecHash": "OiiADIt9DGquG1iWdUhE+29eCbPhSdTzX4gkedXV8/Eyh/ftjIptvuvpG7NFPj3bkfnM6M1Apv0BeIOHWeVlzg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Burak\\Documents\\GitHub\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj",
+  "projectFilePath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
