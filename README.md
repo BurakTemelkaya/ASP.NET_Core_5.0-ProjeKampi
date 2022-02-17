@@ -20,7 +20,7 @@ Video 34: <del>Kayıt olma sayfasında değerlerini view modelde tutucağımız 
 
 Video 35: <del>Fluent Validationda Kullanıcının parolası en az bir büyük harf, en az bir küçük harf ve en az 1 sayı olacak.</del> 
 
-Video 39: <del>Partial viewlerin formu post ederken başka bir sayfaya gitmesine gerek kalmadan post işlemini yaptırma. (Ajax ile yapılacak)</del>
+Video 39: <del>Partial viewlerin formu post ederken başka bir sayfaya gitmesine gerek kalmadan post işlemini yaptırma. (Ajax ile yapıldı)</del>
 
 Video 40: <del> GitHub repoları güncellenecek.</del>
 
