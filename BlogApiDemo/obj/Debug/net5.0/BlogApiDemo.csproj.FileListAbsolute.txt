@@ -67,7 +67,6 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDe
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\BlogApiDemo.runtimeconfig.json
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\BlogApiDemo.runtimeconfig.dev.json
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\BlogApiDemo.dll
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\ref\BlogApiDemo.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\BlogApiDemo.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\Humanizer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
@@ -120,3 +119,4 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDe
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\ref\BlogApiDemo.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.genruntimeconfig.cache
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\refint\BlogApiDemo.dll

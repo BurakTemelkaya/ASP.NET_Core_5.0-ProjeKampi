@@ -1,0 +1,14 @@
+﻿@model CoreDemo.Controllers.Class1
+@{
+    ViewData["Title"] = "EditEmployee";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Api ile Personel Güncelleme Sayfası</h1>
+<form method="post">
+    <label>ID</label>
+    <input asp-for=ID class="form-control"/>
+    <input asp-for=Name class="form-control" />
+    <button class="btn btn-outline-success">Güncelle</button>
+</form>
+

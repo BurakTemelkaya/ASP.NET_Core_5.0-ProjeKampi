@@ -17,7 +17,6 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\De
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.csproj.CopyComplete
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.deps.json
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.dll
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\ref\BusinessLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\BusinessLayer.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\DataAccessLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\bin\Debug\net5.0\EntityLayer.dll
@@ -32,3 +31,4 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessL
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\ref\BusinessLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\BusinessLayer.pdb
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BusinessLayer\obj\Debug\net5.0\refint\BusinessLayer.dll
