@@ -12,7 +12,6 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.csproj.AssemblyReference.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\bin\Debug\net5.0\CoreLayer.deps.json
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\bin\Debug\net5.0\CoreLayer.dll
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\bin\Debug\net5.0\ref\CoreLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\bin\Debug\net5.0\CoreLayer.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.csproj.AssemblyReference.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.GeneratedMSBuildEditorConfig.editorconfig
@@ -22,3 +21,4 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\ref\CoreLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\CoreLayer.pdb
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreLayer\obj\Debug\net5.0\refint\CoreLayer.dll
