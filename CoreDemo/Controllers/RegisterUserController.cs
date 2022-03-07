@@ -24,6 +24,12 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserSignUpViewModel signUpViewModel)
         {
+            if (!signUpViewModel.IsAcceptTheContract)
+            {
+                ModelState.AddModelError("IsAcceptTheContract",
+                    "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
+                return View(signUpViewModel);
+            }
             if (ModelState.IsValid)
             {
                 AppUser user = new AppUser()
