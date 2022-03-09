@@ -1,5 +1,7 @@
 ﻿using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,19 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterAboutOnDashboard : ViewComponent
     {
-        WriterManager writerManager = new WriterManager(new EfWriterRepository());
-        public IViewComponentResult Invoke()
+        private readonly UserManager<AppUser> _userManager;
+
+        public WriterAboutOnDashboard(UserManager<AppUser> userManager)
         {
-            var values = writerManager.
-                TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name));
-            return View(values);
+            _userManager = userManager;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            string name = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(name);
+            var userMail = User.Identity.Name;
+            return View();
         }
     }
 }

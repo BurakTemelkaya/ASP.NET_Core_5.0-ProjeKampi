@@ -63,26 +63,6 @@ namespace CoreDemo
                 }
             );
 
-            services.AddSingleton<IAboutService>(new AboutManager(new EfAboutRepository()));
-
-            services.AddSingleton<IBlogService>(new BlogManager(new EfBlogRepository()));
-
-            services.AddSingleton<ICategoryService>(new CategoryManager(new EfCategoryRepository()));
-
-            services.AddSingleton<ICommentService>(new CommentManager(new EfCommentRepository()));
-
-            services.AddSingleton<IContactService>(new ContactManager(new EfContactRepository()));
-
-            services.AddSingleton<IMessage2Service>(new Message2Manager(new EfMessage2Repository()));
-
-            services.AddSingleton<INewsLetterService>(new NewsLetterManager(new EfNewsLetterRepository()));
-
-            services.AddSingleton<INotificationService>(new NotificationManager(new EfNotificationRepository()));
-
-            services.AddSingleton<IWriterService>(new WriterManager(new EfWriterRepository()));
-
-            services.AddSingleton<IAdminService>(new AdminManager(new EfAdminRepository()));
-
             services.AddSingleton(new UserInfo());
 
             services.AddSingleton(new WriterCity());
