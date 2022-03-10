@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,17 +12,24 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
     {
-        Message2Manager notificationManager = new Message2Manager(new EfMessage2Repository());
+        private readonly INotificationService _notificationService;
+
+        public WriterMessageNotification(INotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
+
         public IViewComponentResult Invoke()
         {
-            int id = int.Parse(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value);
-            var values = notificationManager.GetInboxListByWriter(id);
-            if (values.Count() > 3)
-            {
-                values = values.TakeLast(3).ToList();
-            }
-            ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
-            return View(values);
+            //int id = int.Parse(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value);
+            //var values = _notificationService.GetInboxListByWriter(id);
+            //if (values.Count() > 3)
+            //{
+            //    values = values.TakeLast(3).ToList();
+            //}
+            //ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
+            //return View(values);
+            return View();
         }
     }
 }

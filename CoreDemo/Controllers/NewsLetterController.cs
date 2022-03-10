@@ -30,7 +30,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult SubscribeMail(NewsLetter newsLetter)
         {
-            if (_newsLetterService.GetByMail(newsLetter.Mail) == null)
+            if (_newsLetterService.GetByMail(newsLetter.Mail) == null && newsLetter.Mail != null)
             {
                 _newsLetterService.AddNewsLetter(newsLetter);
                 return Ok();

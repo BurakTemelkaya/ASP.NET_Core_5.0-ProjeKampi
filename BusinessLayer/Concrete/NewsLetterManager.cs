@@ -20,6 +20,7 @@ namespace BusinessLayer.Concrete
 
         public void AddNewsLetter(NewsLetter newsLetter)
         {
+            newsLetter.MailStatus = true;
             _newsLetterDal.Insert(newsLetter);
         }
 

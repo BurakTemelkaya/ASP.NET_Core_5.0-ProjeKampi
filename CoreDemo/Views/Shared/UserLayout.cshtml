@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -142,13 +141,12 @@
 
     <!-- //Custom-JavaScript-File-Links -->
     <script src="~/CoreBlogTema/js/bootstrap.js"></script>
-    <script>
+    <script type="text/javascript">
         $("#btnSubscribe").click(function () {
             let mail = {
-                Mail: $("#txtEmail").val(),
-                MailStatus: true
+                Mail: $("#txtEmail").val()
             };
-            $.ajax({
+                $.ajax({
                 type: "post",
                 url: "/NewsLetter/SubscribeMail",
                 data: mail,
@@ -156,9 +154,17 @@
                     alert("Mail bültenimize abone oldunuz, teşekkürler.");
                 },
                 error: function (func) {
-                    alert("Girdiğiniz mail adresi zaten bültenimize abone.");
+                    if(mail.Mail=="")
+                    {
+                        alert("Lütfen mail alanını boş bırakmayınız.");
+                    }
+                    else
+                    {
+                        alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
+                    }
+                    
                 }
-            });
+                    });
         });
     </script>
 </body>

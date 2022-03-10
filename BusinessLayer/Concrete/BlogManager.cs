@@ -40,9 +40,9 @@ namespace BusinessLayer.Concrete
             return _blogDal.GetListAll(filter);
         }
 
-        public List<Blog> GetLastBlog(int number)
+        public List<Blog> GetLastBlog(int count)
         {
-            return _blogDal.GetListAll().TakeLast(number).ToList();
+            return _blogDal.GetListAll().TakeLast(count).ToList();
         }
 
         public List<Blog> GetBlogByWriter(int id)

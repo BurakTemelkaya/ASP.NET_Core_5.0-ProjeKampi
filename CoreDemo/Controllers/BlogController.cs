@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 namespace CoreDemo.Controllers
 {
     
-    [AllowAnonymous]
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;
@@ -31,12 +30,13 @@ namespace CoreDemo.Controllers
             _writerService = writerService;
             _userInfo = userInfo;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var values = _blogService.GetBlogListWithCategory();
             return View(values);
         }
+        [AllowAnonymous]
         public IActionResult BlogReadAll(int id)
         {
             ViewBag.i = id;

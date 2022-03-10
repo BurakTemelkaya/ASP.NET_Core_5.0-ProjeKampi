@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +11,16 @@ namespace CoreDemo.ViewComponents.Blog
 {
     public class WriterLastBlog:ViewComponent
     {
-        BlogManager bm = new BlogManager(new EfBlogRepository());
+        private readonly IBlogService _blogService;
+
+        public WriterLastBlog(IBlogService blogService)
+        {
+            _blogService = blogService;
+        }
+
         public IViewComponentResult Invoke()
         {
-            var values = bm.GetBlogByWriter(1);
+            var values = _blogService.GetBlogByWriter(1);
             return View(values);
         }
     }

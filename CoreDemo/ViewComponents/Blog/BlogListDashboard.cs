@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +11,10 @@ namespace CoreDemo.ViewComponents.Blog
 {
     public class BlogListDashboard : ViewComponent
     {
-        BlogManager bm = new BlogManager(new EfBlogRepository());
+        private readonly IBlogService _blogService;
         public IViewComponentResult Invoke()
         {
-            var values = bm.GetBlogListWithCategory().TakeLast(10).ToList();
+            var values = _blogService.GetBlogListWithCategory().TakeLast(10).ToList();
             return View(values);
         }
     }
