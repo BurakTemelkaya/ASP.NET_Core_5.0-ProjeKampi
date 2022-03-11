@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
@@ -12,19 +13,18 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterAboutOnDashboard : ViewComponent
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IUserService _userService;
 
-        public WriterAboutOnDashboard(UserManager<AppUser> userManager)
+        public WriterAboutOnDashboard(IUserService userService)
         {
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
             string name = User.Identity.Name;
-            var user = await _userManager.FindByNameAsync(name);
-            var userMail = User.Identity.Name;
-            return View();
+            var user = await _userService.GetByUserNameAsync(name);
+            return View(user);
         }
     }
 }

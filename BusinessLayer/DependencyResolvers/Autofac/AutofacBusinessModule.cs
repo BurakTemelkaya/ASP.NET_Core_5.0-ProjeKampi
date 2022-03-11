@@ -3,6 +3,8 @@ using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +57,9 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
 
             builder.RegisterType<WriterManager>().As<IWriterService>().SingleInstance();
+
+            builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
+
         }
     }
 }

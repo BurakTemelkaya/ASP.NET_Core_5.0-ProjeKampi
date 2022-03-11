@@ -12,24 +12,25 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
     {
-        private readonly INotificationService _notificationService;
+        private readonly IMessage2Service _messageService;
+        private readonly IUserService _userService;
 
-        public WriterMessageNotification(INotificationService notificationService)
+        public WriterMessageNotification(IMessage2Service messageService, IUserService userService)
         {
-            _notificationService = notificationService;
+            _messageService = messageService;
+            _userService = userService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            //int id = int.Parse(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value);
-            //var values = _notificationService.GetInboxListByWriter(id);
-            //if (values.Count() > 3)
-            //{
-            //    values = values.TakeLast(3).ToList();
-            //}
-            //ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
-            //return View(values);
-            return View();
+            var user = await _userService.GetByUserNameAsync(User.Identity.Name);
+            var values = _messageService.GetList(x => x.ReceiverID == user.Id);
+            if (values.Count() > 3)
+            {
+                values = values.TakeLast(3).ToList();
+            }
+            ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
+            return View(values);
         }
     }
 }

@@ -18,23 +18,23 @@ namespace CoreDemo.Controllers
     {
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IUserService _userService;
 
-        public DashBoardController(IBlogService blogService, ICategoryService categoryService, UserManager<AppUser> userManager)
+        public DashBoardController(IBlogService blogService, ICategoryService categoryService, IUserService userService)
         {
             _blogService = blogService;
             _categoryService = categoryService;
-            _userManager = userManager;
+            _userService = userService;
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //string mail = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email).Value.ToString();
-            //int id = int.Parse(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value);
-            //ViewBag.ToplamBlogSayisi = _blogService.GetCount(x => x.BlogStatus == true);
-            //ViewBag.YazarinBlogSayisi = _blogService.GetBlogByWriter(id).Count();
-            //ViewBag.KategoriSayisi = _categoryService.GetList().Count();
+            var userName = User.Identity.Name;
+            var user = await _userService.GetByUserNameAsync(userName);
+            ViewBag.ToplamBlogSayisi = _blogService.GetCount(x => x.BlogStatus == true);
+            ViewBag.YazarinBlogSayisi = _blogService.GetCount(x => x.WriterID == user.Id);
+            ViewBag.KategoriSayisi = _categoryService.GetCount(x => x.CategoryStatus == true);
             return View();
         }
     }

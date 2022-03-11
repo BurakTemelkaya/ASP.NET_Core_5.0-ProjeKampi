@@ -21,12 +21,16 @@ namespace CoreDemo.Controllers
         private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
         private readonly WriterCity _writerCity;
+        private readonly IUserService _userService;
 
-        public WriterController(IWriterService writerService, UserInfo userInfo, WriterCity writerCity)
+        public WriterController(IWriterService writerService, UserInfo userInfo, WriterCity writerCity
+        , IUserService userService)
         {
             _writerService = writerService;
             _userInfo = userInfo;
             _writerCity = writerCity;
+            _userService = userService;
+
         }
 
         [Authorize]
@@ -62,11 +66,11 @@ namespace CoreDemo.Controllers
             return PartialView();
         }
         [HttpGet]
-        public IActionResult WriterEditProfile()
-        {
+        public async Task<IActionResult> WriterEditProfile()
+        {            
             ViewBag.Cities = _writerCity.GetCityList();
-            var writerValues = _writerService.TGetByFilter(x => x.WriterID == _userInfo.GetID(User));
-            return View(writerValues);
+            var writer = await _userService.GetByUserNameAsync(User.Identity.Name);
+            return View(writer);
         }
         [HttpPost]
         public IActionResult WriterEditProfile(Writer writer, string passwordAgain, IFormFile imageFile)
@@ -85,7 +89,7 @@ namespace CoreDemo.Controllers
                 }
                 else
                 {
-                    writer.WriterImage= AddProfileImage.ImageAdd(imageFile);
+                    writer.WriterImage = AddProfileImage.ImageAdd(imageFile);
                 }
                 //eski bilgilerin silinmemesi için tekrar eski verileri kaydetme
                 writer.WriterStatus = oldValues.WriterStatus;
@@ -100,6 +104,6 @@ namespace CoreDemo.Controllers
             }
             ViewBag.Cities = _writerCity.GetCityList();
             return View();
-        }      
+        }
     }
 }
