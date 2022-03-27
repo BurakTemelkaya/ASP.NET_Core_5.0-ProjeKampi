@@ -1,6 +1,9 @@
 ﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
+using AutoMapper;
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using Castle.DynamicProxy;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -58,7 +61,15 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<WriterManager>().As<IWriterService>().SingleInstance();
 
-            builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
+            builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
+
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+                .EnableInterfaceInterceptors(new ProxyGenerationOptions()
+                {
+                    Selector = new AspectInterceptorSelector()
+                }).SingleInstance();
 
         }
     }

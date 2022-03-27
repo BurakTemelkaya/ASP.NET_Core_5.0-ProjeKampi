@@ -1,12 +1,15 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
+using EntityLayer;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,16 +24,15 @@ namespace CoreDemo.Controllers
         private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
         private readonly WriterCity _writerCity;
-        private readonly IUserService _userService;
+        private readonly IBusinessUserService _userManager;
 
         public WriterController(IWriterService writerService, UserInfo userInfo, WriterCity writerCity
-        , IUserService userService)
+        , IBusinessUserService userManager)
         {
             _writerService = writerService;
             _userInfo = userInfo;
             _writerCity = writerCity;
-            _userService = userService;
-
+            _userManager = userManager;
         }
 
         [Authorize]
@@ -69,38 +71,26 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> WriterEditProfile()
         {            
             ViewBag.Cities = _writerCity.GetCityList();
-            var writer = await _userService.GetByUserNameAsync(User.Identity.Name);
-            return View(writer);
+            var writer = await _userManager.FindUserNameAsync(User.Identity.Name);
+            UserDto appUser = writer;
+            return View(appUser);
         }
         [HttpPost]
-        public IActionResult WriterEditProfile(Writer writer, string passwordAgain, IFormFile imageFile)
+        public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
         {
-            var oldValues = _writerService.TGetByID(_userInfo.GetID(User));
-            if (writer.WriterPassword == null)
+            var oldValues = await _userManager.FindUserNameAsync(User.Identity.Name);
+            if (ModelState.IsValid && userDto.Password == userDto.PasswordAgain)
             {
-                writer.WriterPassword = oldValues.WriterPassword;
-                passwordAgain = writer.WriterPassword;
-            }
-            if (ModelState.IsValid && writer.WriterPassword == passwordAgain)
-            {
-                if (imageFile == null)
+                if (imageFile != null)
                 {
-                    writer.WriterImage = oldValues.WriterImage;
+                    userDto.ImageUrl = AddProfileImage.ImageAdd(imageFile);
                 }
-                else
-                {
-                    writer.WriterImage = AddProfileImage.ImageAdd(imageFile);
-                }
-                //eski bilgilerin silinmemesi için tekrar eski verileri kaydetme
-                writer.WriterStatus = oldValues.WriterStatus;
-                writer.WriterRegisterDate = oldValues.WriterRegisterDate;
-                _writerService.TUpdate(writer);
+                await _userManager.UpdateUserAsync(userDto);
                 return RedirectToAction("Index", "Dashboard");
             }
-            else if (writer.WriterPassword != passwordAgain && writer.WriterPassword != oldValues.WriterPassword)
+            else if (userDto.Password != userDto.PasswordAgain)
             {
-                ModelState.AddModelError("PasswordAgainMessage",
-                    "Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
+                ModelState.AddModelError("PasswordAgainMessage","Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
             }
             ViewBag.Cities = _writerCity.GetCityList();
             return View();

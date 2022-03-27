@@ -1,4 +1,5 @@
-﻿@model EntityLayer.Concrete.AppUser
+﻿@using EntityLayer
+@model UserDto
 @{
     ViewData["Title"] = "WriterEditProfile";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
@@ -29,16 +30,16 @@
                     @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @placeholder = "Mail" })
                     @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                 </div>
-                @*<div class="form-group">
+                <div class="form-group">
                     <label for="exampleInputPassword4">Yeni Şifre</label>
-                    @Html.PasswordFor(x => x.WriterPassword, new { @class = "form-control", @placeholder = "Yeni Şifreniz" })
-                    @Html.ValidationMessageFor(x => x.WriterPassword, "", new { @class = "text-danger" })
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Yeni Şifreniz" })
+                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword5">Şifrenizi Tekrar Giriniz</label>
                     @Html.Password("passwordAgain", "", new { @class = "form-control", @placeholder = "Yeni Şifrenizi Tekrar Giriniz" })
                     @Html.ValidationMessage("PasswordAgainMessage", "", new { @class = "text-danger" })
-                </div>*@
+                </div>
                 <div class="form-group">
                     <label for="exampleSelectGender">Gender</label>
                     <select class="form-control" id="exampleSelectGender">

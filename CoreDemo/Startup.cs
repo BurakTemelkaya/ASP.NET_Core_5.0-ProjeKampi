@@ -1,5 +1,8 @@
 using BusinessLayer.Abstract;
+using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.Concrete;
+using BusinessLayer.DependencyResolvers;
+using BusinessLayer.DependencyResolvers.Autofac;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.Abstract;
@@ -67,8 +70,15 @@ namespace CoreDemo
 
             services.AddSingleton(new WriterCity());
 
+            services.AddDependencyResolvers(new ICoreModule[] {
+               new CoreModule()
+            }); 
+
             services.AddControllersWithViews().AddFluentValidation(x =>
             x.RegisterValidatorsFromAssemblyContaining<BlogValidator>());
+
+            services.AddAutoMapper(typeof(BusinessImages));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,11 +109,6 @@ namespace CoreDemo
 
             app.UseEndpoints(endpoints =>
             {
-
-
-                //endpoints.MapControllerRoute(
-                //    name: "Admin",
-                //    pattern: "{area:exist}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapAreaControllerRoute(
                     name: "Admin",

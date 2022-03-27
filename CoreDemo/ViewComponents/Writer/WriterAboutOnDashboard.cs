@@ -13,9 +13,9 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterAboutOnDashboard : ViewComponent
     {
-        private readonly IUserService _userService;
+        private readonly IBusinessUserService _userService;
 
-        public WriterAboutOnDashboard(IUserService userService)
+        public WriterAboutOnDashboard(IBusinessUserService userService)
         {
             _userService = userService;
         }
@@ -23,7 +23,7 @@ namespace CoreDemo.ViewComponents.Writer
         public async Task<IViewComponentResult> InvokeAsync()
         {
             string name = User.Identity.Name;
-            var user = await _userService.GetByUserNameAsync(name);
+            var user = await _userService.FindUserNameAsync(name);
             return View(user);
         }
     }

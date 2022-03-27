@@ -18,9 +18,9 @@ namespace CoreDemo.Controllers
     {
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
-        private readonly IUserService _userService;
+        private readonly IBusinessUserService _userService;
 
-        public DashBoardController(IBlogService blogService, ICategoryService categoryService, IUserService userService)
+        public DashBoardController(IBlogService blogService, ICategoryService categoryService, IBusinessUserService userService)
         {
             _blogService = blogService;
             _categoryService = categoryService;
@@ -31,7 +31,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index()
         {
             var userName = User.Identity.Name;
-            var user = await _userService.GetByUserNameAsync(userName);
+            var user = await _userService.FindUserNameAsync(userName);
             ViewBag.ToplamBlogSayisi = _blogService.GetCount(x => x.BlogStatus == true);
             ViewBag.YazarinBlogSayisi = _blogService.GetCount(x => x.WriterID == user.Id);
             ViewBag.KategoriSayisi = _categoryService.GetCount(x => x.CategoryStatus == true);

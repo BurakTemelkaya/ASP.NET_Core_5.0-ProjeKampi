@@ -13,9 +13,9 @@ namespace CoreDemo.ViewComponents.Writer
     public class WriterMessageNotification : ViewComponent
     {
         private readonly IMessage2Service _messageService;
-        private readonly IUserService _userService;
+        private readonly IBusinessUserService _userService;
 
-        public WriterMessageNotification(IMessage2Service messageService, IUserService userService)
+        public WriterMessageNotification(IMessage2Service messageService, IBusinessUserService userService)
         {
             _messageService = messageService;
             _userService = userService;
@@ -23,7 +23,7 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _userService.GetByUserNameAsync(User.Identity.Name);
+            var user = await _userService.FindUserNameAsync(User.Identity.Name);
             var values = _messageService.GetList(x => x.ReceiverID == user.Id);
             if (values.Count() > 3)
             {
