@@ -69,17 +69,15 @@ namespace CoreDemo.Controllers
         }
         [HttpGet]
         public async Task<IActionResult> WriterEditProfile()
-        {            
+        {
             ViewBag.Cities = _writerCity.GetCityList();
             var writer = await _userManager.FindUserNameAsync(User.Identity.Name);
-            UserDto appUser = writer;
-            return View(appUser);
+            return View(writer);
         }
         [HttpPost]
         public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
         {
-            var oldValues = await _userManager.FindUserNameAsync(User.Identity.Name);
-            if (ModelState.IsValid && userDto.Password == userDto.PasswordAgain)
+            if (ModelState.IsValid)
             {
                 if (imageFile != null)
                 {
@@ -87,10 +85,6 @@ namespace CoreDemo.Controllers
                 }
                 await _userManager.UpdateUserAsync(userDto);
                 return RedirectToAction("Index", "Dashboard");
-            }
-            else if (userDto.Password != userDto.PasswordAgain)
-            {
-                ModelState.AddModelError("PasswordAgainMessage","Girdiğiniz Şifreler Eşleşmedi Lütfen Tekrar Deneyin");
             }
             ViewBag.Cities = _writerCity.GetCityList();
             return View();

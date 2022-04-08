@@ -50,10 +50,9 @@ namespace CoreDemo.Controllers
             }
             return View(appUser);
         }
-        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index");
         }
     }

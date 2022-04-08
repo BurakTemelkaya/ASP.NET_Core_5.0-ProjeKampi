@@ -66,13 +66,23 @@ namespace CoreDemo
                 }
             );
 
+            services.ConfigureApplicationCookie(options =>
+
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(100);
+
+                options.LoginPath = "/Login/Index";
+                options.SlidingExpiration = true;
+            });
+
             services.AddSingleton(new UserInfo());
 
             services.AddSingleton(new WriterCity());
 
             services.AddDependencyResolvers(new ICoreModule[] {
                new CoreModule()
-            }); 
+            });
 
             services.AddControllersWithViews().AddFluentValidation(x =>
             x.RegisterValidatorsFromAssemblyContaining<BlogValidator>());

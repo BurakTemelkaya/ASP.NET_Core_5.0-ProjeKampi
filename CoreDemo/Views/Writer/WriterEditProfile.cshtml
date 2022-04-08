@@ -31,21 +31,19 @@
                     @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword4">Yeni Şifre</label>
-                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Yeni Şifreniz" })
+                    <label for="exampleInputPassword4">Mevcut Şifre</label>
+                    @Html.PasswordFor(x => x.OldPassword, new { @class = "form-control", @placeholder = "Mevcut Şifrenizi Giriniz" })
+                    @Html.ValidationMessageFor(x => x.OldPassword, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword5">Yeni Şifrenizi Giriniz</label>
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Yeni Şifrenizi Giriniz" })
                     @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword5">Şifrenizi Tekrar Giriniz</label>
-                    @Html.Password("passwordAgain", "", new { @class = "form-control", @placeholder = "Yeni Şifrenizi Tekrar Giriniz" })
-                    @Html.ValidationMessage("PasswordAgainMessage", "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    <label for="exampleSelectGender">Gender</label>
-                    <select class="form-control" id="exampleSelectGender">
-                        <option>Erkek</option>
-                        <option>Kadın</option>
-                    </select>
+                    <label for="exampleInputPassword5">Yeni Şifrenizi Tekrar Giriniz</label>
+                    @Html.PasswordFor(x => x.PasswordAgain, new { @class = "form-control", @placeholder = "Yeni Şifrenizi Giriniz" })
+                    @Html.ValidationMessageFor(x => x.PasswordAgain, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label>Yazar Görsel</label>

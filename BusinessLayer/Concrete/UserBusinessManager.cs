@@ -38,8 +38,16 @@ namespace BusinessLayer.Concrete
 
         public async Task UpdateUserAsync(UserDto user)
         {
-            AppUser appUser = Mapper.Map<AppUser>(user);
-            await _userManager.UpdateAsync(appUser);
+            var value = await _userManager.FindByNameAsync(user.UserName);
+            value.NameSurname = user.NameSurname;
+            value.Email = user.Email;
+            value.UserName = user.UserName;
+            bool oldPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
+            if (user.Password != null && oldPassword)
+            {
+                value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
+            }
+            await _userManager.UpdateAsync(value);
         }
 
         public async Task<UserDto> FindUserNameAsync(string userName)

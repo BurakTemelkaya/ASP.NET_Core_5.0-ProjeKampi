@@ -17,19 +17,22 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
 {
-    
+
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;
         private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
+        private readonly IBusinessUserService _businessUserService;
 
-        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo)
+        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo, IBusinessUserService businessUserService)
         {
             _blogService = blogService;
             _writerService = writerService;
             _userInfo = userInfo;
+            _businessUserService = businessUserService;
         }
+
         [AllowAnonymous]
         public IActionResult Index()
         {
@@ -43,10 +46,11 @@ namespace CoreDemo.Controllers
             var values = _blogService.GetBlogByID(id);
             return View(values);
         }
-        public IActionResult BlogListByWriter()
+        public async Task<IActionResult> BlogListByWriter()
         {
-            int id = _userInfo.GetID(User);
-            var values = _blogService.GetListWithCategoryByWriterBm(id);
+            var userName = User.Identity.Name;
+            var user = await _businessUserService.FindUserNameAsync(userName);
+            var values = _blogService.GetListWithCategoryByWriterBm(user.Id);
             return View(values);
         }
         [HttpGet]
@@ -56,13 +60,14 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult BlogAdd(Blog blog)
+        public async Task<IActionResult> BlogAdd(Blog blog)
         {
+            var user = await _businessUserService.FindUserNameAsync(User.Identity.Name);
             if (ModelState.IsValid)
             {
                 blog.BlogStatus = true;
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = _userInfo.GetID(User);
+                blog.WriterID = user.Id;
                 _blogService.TAdd(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
             }

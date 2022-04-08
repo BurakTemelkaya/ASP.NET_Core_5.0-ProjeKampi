@@ -13,28 +13,31 @@ namespace CoreDemo.Controllers
     {
         private readonly IMessage2Service _message2Service;
         private readonly IWriterService _writerService;
+        private readonly IBusinessUserService _userService;
 
-        public MessageController(IMessage2Service message2Service, IWriterService writerService)
+        public MessageController(IMessage2Service message2Service, IWriterService writerService, IBusinessUserService userService)
         {
             _message2Service = message2Service;
             _writerService = writerService;
+            _userService = userService;
         }
 
-        public IActionResult Inbox()
+        public async Task<IActionResult> Inbox()
         {
-            var values = _message2Service.GetInboxListByWriter(GetByUserID());
+            var values = _message2Service.GetInboxListByWriter(await GetByUserID());
             return View(values);
         }
         [HttpGet]
-        public IActionResult MessageDetails(int id)
+        public async Task<IActionResult> MessageDetails(int id)
         {
-            var values = _message2Service.GetInboxListByWriter(GetByUserID())
+            var values = _message2Service.GetInboxListByWriter(await GetByUserID())
                 .Where(x => x.MessageID == id).FirstOrDefault();
             return View(values);
         }
-        public int GetByUserID()
+        public async Task<int> GetByUserID()
         {
-            return _writerService.TGetByFilter(x => x.WriterID == int.Parse(User.Identity.Name)).WriterID;
+            var user = await _userService.FindUserNameAsync(User.Identity.Name);
+            return user.Id;
         }
     }
 }
