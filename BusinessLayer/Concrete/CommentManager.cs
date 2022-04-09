@@ -28,7 +28,7 @@ namespace BusinessLayer.Concrete
             return _commentDal.GetCount(filter);
         }
 
-        public List<Comment> GetList(int id)
+        public List<Comment> GetListById(int id)
         {
             return _commentDal.GetListAll(x => x.BlogID == id);
         }

@@ -16,7 +16,7 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class ContactController : Controller
     {
-        IContactService _contactService;
+        private readonly IContactService _contactService;
 
         public ContactController(IContactService contactService)
         {

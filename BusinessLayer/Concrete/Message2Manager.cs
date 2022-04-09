@@ -19,9 +19,9 @@ namespace BusinessLayer.Concrete
             _message2Dal = message2Dal;
         }
 
-        public List<Message2> GetInboxListByWriter(int id)
+        public List<Message2> GetInboxWithMessageByWriter(int id)
         {
-            return _message2Dal.GetListWithMessageByWriter(id);
+            return _message2Dal.GetInboxWithMessageByWriter(id);
         }
 
         public List<Message2> GetList(Expression<Func<Message2, bool>> filter = null)
@@ -57,6 +57,11 @@ namespace BusinessLayer.Concrete
         public int GetCount(Expression<Func<Message2, bool>> filter = null)
         {
             return _message2Dal.GetCount(filter);
+        }
+
+        public List<Message2> GetSendBoxWithMessageByWriter(int id)
+        {
+            return _message2Dal.GetSendBoxWithMessageByWriter(id);
         }
     }
 }

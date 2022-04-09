@@ -41,7 +41,7 @@ namespace CoreDemo.Controllers
         }
         public PartialViewResult CommentListByBlog(int id)
         {
-            var values = _commentService.GetList(id);
+            var values = _commentService.GetListById(id);
             return PartialView(values);
         }
     }

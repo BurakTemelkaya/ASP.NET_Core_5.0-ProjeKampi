@@ -71,7 +71,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> WriterEditProfile()
         {
             ViewBag.Cities = _writerCity.GetCityList();
-            var writer = await _userManager.FindUserNameAsync(User.Identity.Name);
+            var writer = await _userManager.FindByUserNameAsync(User.Identity.Name);
             return View(writer);
         }
         [HttpPost]

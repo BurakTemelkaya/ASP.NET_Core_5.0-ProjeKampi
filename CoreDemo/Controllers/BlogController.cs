@@ -49,7 +49,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> BlogListByWriter()
         {
             var userName = User.Identity.Name;
-            var user = await _businessUserService.FindUserNameAsync(userName);
+            var user = await _businessUserService.FindByUserNameAsync(userName);
             var values = _blogService.GetListWithCategoryByWriterBm(user.Id);
             return View(values);
         }
@@ -62,7 +62,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog)
         {
-            var user = await _businessUserService.FindUserNameAsync(User.Identity.Name);
+            var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
             if (ModelState.IsValid)
             {
                 blog.BlogStatus = true;

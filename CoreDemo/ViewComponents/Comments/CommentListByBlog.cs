@@ -20,7 +20,7 @@ namespace CoreDemo.ViewComponents.Comments
 
         public IViewComponentResult Invoke(int id)
         {
-            var values = _commentService.GetList(id);
+            var values = _commentService.GetListById(id);
             return View(values);
         }
     }

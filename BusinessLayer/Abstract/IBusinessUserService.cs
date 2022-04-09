@@ -14,6 +14,7 @@ namespace BusinessLayer.Abstract
         Task DeleteUserAsync(AppUser t);
         Task<AppUser> GetByIDAsync(string id);
         Task UpdateUserAsync(UserDto user);
-        Task<UserDto> FindUserNameAsync(string userName);
+        Task<UserDto> FindByUserNameAsync(string userName);
+        Task<UserDto> FindByMailAsync(string mail);
     }
 }

@@ -13,7 +13,7 @@ namespace BusinessLayer.Abstract
         void CommentAdd(Comment comment);
         //void CommentDelete(Comment comment);
         //void CommentUpdate(Comment comment);
-        List<Comment> GetList(int id);
+        List<Comment> GetListById(int id);
         //Comment GetByID(int id);
     }
 }

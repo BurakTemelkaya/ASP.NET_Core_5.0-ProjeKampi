@@ -50,9 +50,16 @@ namespace BusinessLayer.Concrete
             await _userManager.UpdateAsync(value);
         }
 
-        public async Task<UserDto> FindUserNameAsync(string userName)
+        public async Task<UserDto> FindByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
+            var userDto = Mapper.Map<UserDto>(user);
+            return userDto;
+        }
+
+        public async Task<UserDto> FindByMailAsync(string mail)
+        {
+            var user = await _userManager.FindByEmailAsync(mail);
             var userDto = Mapper.Map<UserDto>(user);
             return userDto;
         }

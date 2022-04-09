@@ -23,7 +23,7 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _userService.FindUserNameAsync(User.Identity.Name);
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             var values = _messageService.GetList(x => x.ReceiverID == user.Id);
             if (values.Count() > 3)
             {
