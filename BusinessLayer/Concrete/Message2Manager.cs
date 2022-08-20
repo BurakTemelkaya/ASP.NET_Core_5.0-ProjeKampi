@@ -31,6 +31,7 @@ namespace BusinessLayer.Concrete
 
         public void TAdd(Message2 t)
         {
+            t.MessageStatus = true;
             _message2Dal.Insert(t);
         }
 

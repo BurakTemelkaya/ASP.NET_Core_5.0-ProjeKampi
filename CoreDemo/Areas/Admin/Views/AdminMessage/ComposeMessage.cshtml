@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Message2
+@{
     ViewData["Title"] = "ComposeMessage";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
@@ -65,42 +66,32 @@
 
                     <div class="mail-body">
 
-                        <form method="get">
+                        <form method="post">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">To:</label>
+                                <label class="col-sm-2 col-form-label">Gönderilecek Kişi:</label>
 
-                                <div class="col-sm-10"><input type="text" class="form-control" value="alex.smith@corporat.com"></div>
+                                <div class="col-sm-10"><input type="text" class="form-control"></div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Subject:</label>
+                                <label class="col-sm-2 col-form-label">Başlık:</label>
 
-                                <div class="col-sm-10"><input type="text" class="form-control" value=""></div>
+                                <div class="col-sm-10"><input type="text" asp-for="Subject" class="form-control" value=""></div>
                             </div>
+
+                            <label class="col-sm-2 col-form-label">Mesajınız:</label>
+
+                            <div class="col-sm-12"><textarea class="form-control" asp-for="Details" cols="10" rows="10"></textarea></div>
+                            <div class="clearfix"></div>
+                            <div class="mail-body text-right tooltip-demo">
+                                <button class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Mail Gönder"><i class="fa fa-reply"></i>Gönder</button>
+                                <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mail Yollamaktan Vazgeç"><i class="fa fa-times"></i> Vazgeç</a>
+                                <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Taslak Olarak Kaydet"><i class="fa fa-pencil"></i> Taslak</a>
+                            </div>
+                            <div class="clearfix"></div>
+
                         </form>
 
                     </div>
-
-                    <div class="mail-text h-200">
-
-                        <div class="summernote">
-                            <h3>Hello Jonathan! </h3>
-                            dummy text of the printing and typesetting industry. <strong>Lorem Ipsum has been the industry's</strong> standard dummy text ever since the 1500s,
-                            when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                            typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with
-                            <br />
-                            <br />
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="mail-body text-right tooltip-demo">
-                        <a href="mailbox.html" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Mail Gönder"><i class="fa fa-reply"></i> Gönder</a>
-                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mail Yollamaktan Vazgeç"><i class="fa fa-times"></i> Vazgeç</a>
-                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Taslak Olarak Kaydet"><i class="fa fa-pencil"></i> Taslak</a>
-                    </div>
-                    <div class="clearfix"></div>
-
-
 
                 </div>
             </div>

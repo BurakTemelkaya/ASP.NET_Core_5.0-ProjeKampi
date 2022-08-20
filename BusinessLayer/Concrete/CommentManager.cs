@@ -35,7 +35,7 @@ namespace BusinessLayer.Concrete
 
         public List<Comment> GetList(Expression<Func<Comment, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return _commentDal.GetListAll(filter);
         }
 
         public void TAdd(Comment t)
@@ -61,6 +61,11 @@ namespace BusinessLayer.Concrete
         public void TUpdate(Comment t)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Comment> GetBlogListWithComment()
+        {
+            return _commentDal.GetListWithCommentByBlog();
         }
     }
 }

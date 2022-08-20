@@ -1,0 +1,80 @@
+﻿@model List<Comment>
+@{
+    string puanRengi = "";
+}
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Yorumlar</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 1</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Kullanıcı</th>
+                            <th>Başlık</th>
+                            <th>Blog</th>
+                            <th>Puan</th>
+                            <th>Tarih</th>
+                            <th>Sil</th>
+                            <th>Düzenle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            {  if (item.BlogScore <= 3)
+                                { puanRengi = "text-danger"; }
+                                else if(item.BlogScore>=4 && item.BlogScore<=6)
+                                {
+                                    puanRengi = "text-warning";
+                                }
+                                else
+                                {
+                                    puanRengi = "text-success";
+                                }
+                            }
+                            <tr>
+                                <td>@item.CommentID</td>
+                                <td>@item.CommentUserName</td>
+                                <td>@item.CommentTitle</td>
+                                <td>@item.Blog.BlogTitle</td>                               
+                                <td class="text-navy"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
+                                <td>@item.CommentDate.ToShortDateString()</td>
+                                <td><a href="#" class="btn btn-outline-danger">Sil</a></td>
+                                <td><a href="#" class="btn btn-outline-success">Düzenle</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,5 +1,7 @@
 ﻿using BusinessLayer.Abstract;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Areas.Admin.Controllers
@@ -31,9 +33,20 @@ namespace CoreDemo.Areas.Admin.Controllers
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             return user.Id;
         }
+        [HttpGet]
         public IActionResult ComposeMessage()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ComposeMessage(Message2 message)
+        {
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
+            message.SenderID = user.Id;
+            message.ReceiverID = 2;
+            message.MessageDate = DateTime.Now;
+            _message2Service.TAdd(message);
+            return RedirectToAction("SendBox");
         }
     }
 }
