@@ -45,7 +45,7 @@
                 <a href="metrics.html"><i class="fa fa-list"></i> <span class="nav-label">Bloglar</span>  </a>
             </li>
             <li>
-                <a href="widgets.html"><i class="fa fa-comment"></i> <span class="nav-label">Yorumlar</span></a>
+                <a href="/Admin/AdminComment/Index"><i class="fa fa-comment"></i> <span class="nav-label">Yorumlar</span></a>
             </li>
             <li>
                 <a href="/admin/writer/index"><i class="fa fa-user"></i> <span class="nav-label">Yazarlar</span></a>
@@ -53,9 +53,12 @@
             <li>
                 <a href="widgets.html"><i class="fa fa-info"></i> <span class="nav-label">Ayarlar</span></a>
             </li>
-            <li>
-                <a href="/Admin/AdminRole/Index"><i class="fa fa-person"></i> <span class="nav-label">Roller</span></a>
-            </li>
+            @if (User.IsInRole(role: "Admin") || User.IsInRole(role: "Moderator"))
+            {
+                <li>
+                    <a href="/Admin/AdminRole/Index"><i class="fa fa-tasks"></i> <span class="nav-label">Roller</span></a>
+                </li>
+            }          
             <li>
                 <a href="/Admin/AdminComment/Index"><i class="fa fa-diamond"></i> <span class="nav-label">Yorumlar</span></a>
             </li>
@@ -72,7 +75,7 @@
                 <a href="/Admin/Blog/Index"><i class="fa fa-pencil"></i> <span class="nav-label">Dinamik Rapor</span></a>
             </li>
             <li>
-                <a href="/Admin/Blog/Index"><i class="fa fa-close"></i> <span class="nav-label">Çıkış Yap</span></a>
+                <a href="/Login/Logout"><i class="fa fa-close"></i> <span class="nav-label">Çıkış Yap</span></a>
             </li>
         </ul>
     </div>
