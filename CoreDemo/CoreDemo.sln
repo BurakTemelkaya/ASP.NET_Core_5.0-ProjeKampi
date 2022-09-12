@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDemo", "CoreDemo.csproj", "{A2771BAD-E403-473F-9442-FF8AE2D7A2B2}"
 EndProject
@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "..\Busines
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLayer", "..\CoreLayer\CoreLayer.csproj", "{2C0185A0-F214-424E-B1DF-A19D57FA5612}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApiDemo", "..\BlogApiDemo\BlogApiDemo.csproj", "{BAADAE32-7D81-42F4-B716-253DFDECE00A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApiDemo", "..\BlogApiDemo\BlogApiDemo.csproj", "{BAADAE32-7D81-42F4-B716-253DFDECE00A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jwt_Core_Proje_Kampi", "..\Jwt_Core_Proje_Kampi\Jwt_Core_Proje_Kampi.csproj", "{4863BCB3-920B-4D13-8654-F410979C3D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{BAADAE32-7D81-42F4-B716-253DFDECE00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAADAE32-7D81-42F4-B716-253DFDECE00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAADAE32-7D81-42F4-B716-253DFDECE00A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4863BCB3-920B-4D13-8654-F410979C3D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4863BCB3-920B-4D13-8654-F410979C3D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4863BCB3-920B-4D13-8654-F410979C3D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4863BCB3-920B-4D13-8654-F410979C3D63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
