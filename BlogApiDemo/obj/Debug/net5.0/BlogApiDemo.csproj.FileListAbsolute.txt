@@ -116,7 +116,7 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDe
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.RazorTargetAssemblyInfo.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.csproj.CopyComplete
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.dll
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\ref\BlogApiDemo.dll
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\refint\BlogApiDemo.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.genruntimeconfig.cache
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\refint\BlogApiDemo.dll
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\ref\BlogApiDemo.dll

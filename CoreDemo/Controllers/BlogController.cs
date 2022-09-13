@@ -24,13 +24,16 @@ namespace CoreDemo.Controllers
         private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
         private readonly IBusinessUserService _businessUserService;
+        private readonly ICommentService _commentService;
 
-        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo, IBusinessUserService businessUserService)
+        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo,
+            IBusinessUserService businessUserService, ICommentService commentService)
         {
             _blogService = blogService;
             _writerService = writerService;
             _userInfo = userInfo;
             _businessUserService = businessUserService;
+            _commentService = commentService;
         }
 
         [AllowAnonymous]
@@ -44,6 +47,7 @@ namespace CoreDemo.Controllers
         {
             ViewBag.i = id;
             var values = _blogService.GetBlogByID(id);
+            ViewBag.CommentCount = _commentService.GetCount(x => x.BlogID == id);
             return View(values);
         }
         public async Task<IActionResult> BlogListByWriter()

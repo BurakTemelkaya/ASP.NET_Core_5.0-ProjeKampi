@@ -31,13 +31,13 @@ namespace CoreDemo.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public PartialViewResult PartialAddComment(Comment comment)
+        public IActionResult PartialAddComment(Comment comment, int blogId)
         {
             comment.CommentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
             comment.CommentStatus = true;
-            comment.BlogID = 2;
+            comment.BlogID = blogId;
             _commentService.CommentAdd(comment);
-            return PartialView();
+            return Ok();
         }
         public PartialViewResult CommentListByBlog(int id)
         {
