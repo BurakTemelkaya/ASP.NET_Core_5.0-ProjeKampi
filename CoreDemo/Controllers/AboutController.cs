@@ -12,7 +12,7 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class AboutController : Controller
     {
-        IAboutService _aboutService;
+        readonly IAboutService _aboutService;
 
         public AboutController(IAboutService aboutService)
         {
@@ -21,8 +21,8 @@ namespace CoreDemo.Controllers
 
         public IActionResult Index()
         {
-            var Values = _aboutService.GetList();
-            return View(Values);
+            var values = _aboutService.GetList();
+            return View(values);
         }
         public PartialViewResult SocialMediaAbout()
         {           

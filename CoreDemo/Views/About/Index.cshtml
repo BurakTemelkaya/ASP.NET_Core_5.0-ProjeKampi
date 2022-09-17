@@ -1,5 +1,4 @@
-﻿@using EntityLayer.Concrete
-@model List<About>
+﻿@*@model List<About>*@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -17,14 +16,12 @@
                             <img src="~/CoreBlogTema/images/b5.jpg" class="img-fluid" alt="">
                         </div>
                         <h3>
-                            Biz Kimiz &Aacute; Misyonumuz &Aacute; Vizyonumuz
+                            Biz Kimiz & Misyonumuz & Vizyonumuz
                         </h3>
                         @foreach (var item in Model)
                         {
                             <p>@item.AboutDetails1</p>
                         }
-
-                        <a href="single.html" class="btn btn-primary read-m">Read More</a>
                     </div>
                     
                 </div>
