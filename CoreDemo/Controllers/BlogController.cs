@@ -37,9 +37,17 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
-        {
+        public IActionResult Index(string id)
+        {            
             var values = _blogService.GetBlogListWithCategory();
+            if (id != null)
+            {
+                if (_blogService.GetCount(x => x.CategoryID == Convert.ToInt32(id)) != 0)
+                {
+                    values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
+                    ViewBag.id = id;
+                }               
+            }
             return View(values);
         }
         [AllowAnonymous]
@@ -48,6 +56,8 @@ namespace CoreDemo.Controllers
             ViewBag.i = id;
             var values = _blogService.GetBlogByID(id);
             ViewBag.CommentCount = _commentService.GetCount(x => x.BlogID == id);
+            ViewBag.Star = _commentService.TGetByFilter(x => x.BlogID == id).BlogScore;
+            ViewBag.WriterId = values[0].WriterID;
             return View(values);
         }
         public async Task<IActionResult> BlogListByWriter()

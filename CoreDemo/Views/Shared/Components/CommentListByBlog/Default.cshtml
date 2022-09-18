@@ -1,5 +1,13 @@
 ﻿@model IEnumerable<Comment>
-<div class="comment-top">
+@{
+    string fiveStar = "";
+    string fourStar = "";
+    string threeStar = "";
+    string twoStar = "";
+    string oneStar = "";
+}
+
+<div class="comment-top" id="comment">
     @if (Model.Count() > 0)
     {
         <h4>Yorumlar</h4>
@@ -12,8 +20,75 @@
                     <p>
                         @item.CommentContent
                     </p>
+                    @{
+
+                        fiveStar = "";
+                        fourStar = "";
+                        threeStar = "";
+                        twoStar = "";
+                        oneStar = "";
+
+                        if (item.BlogScore == 5)
+                        {
+                            fiveStar = "checked";
+                        }
+                        else if (item.BlogScore == 4)
+                        {
+                            fourStar = "checked";
+                        }
+                        else if (item.BlogScore == 3)
+                        {
+                            threeStar = "checked";
+                        }
+                        else if (item.BlogScore == 2)
+                        {
+                            twoStar = "checked";
+                        }
+                        else if (item.BlogScore == 1)
+                        {
+                            oneStar = "checked";
+                        }
+                    }
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="row justify-content-center col-md-3">
+                            <!-- star rating -->
+                            <div class="rating-wrapper">
+
+                                <!-- star 5 -->
+                                <input type="radio" @fiveStar>
+                                <label class="star-rating">
+                                    <i class="fas fa-star d-inline-block"></i>
+                                </label>
+
+                                <!-- star 4 -->
+                                <input type="radio" @fourStar>
+                                <label class="star-rating">
+                                    <i class="fas fa-star d-inline-block"></i>
+                                </label>
+
+                                <!-- star 3 -->
+                                <input type="radio" @threeStar>
+                                <label class="star-rating">
+                                    <i class="fas fa-star d-inline-block"></i>
+                                </label>
+
+                                <!-- star 2 -->
+                                <input type="radio" @twoStar>
+                                <label class="star-rating">
+                                    <i class="fas fa-star d-inline-block"></i>
+                                </label>
+
+                                <!-- star 1 -->
+                                <input type="radio" @oneStar>
+                                <label class="star-rating">
+                                    <i class="fas fa-star d-inline-block"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <br />
         }
         <h4>Bir Yorum Bırak</h4>
     }

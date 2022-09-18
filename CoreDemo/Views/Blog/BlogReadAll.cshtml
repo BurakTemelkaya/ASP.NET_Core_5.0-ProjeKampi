@@ -17,9 +17,7 @@
                         <div class="blog-grid-top">
                             <div class="b-grid-top">
                                 <div class="blog_info_left_grid">
-                                    <a href="single.html">
-                                        <img src="@item.BlogImage" class="img-fluid" alt="@item.BlogTitle">
-                                    </a>
+                                    <img src="@item.BlogImage" class="img-fluid" alt="@item.BlogTitle">
                                 </div>
                                 <div class="blog-info-middle">
                                     <ul>
@@ -30,11 +28,11 @@
                                         </li>
                                         <li class="mx-2">
                                             <a href="#">
-                                                <i class="far fa-thumbs-up"></i> 201 Beğeni
+                                                <i class="far fa-star"></i> @ViewBag.Star
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="#comment">
                                                 <i class="far fa-comment"></i> @ViewBag.CommentCount
                                             </a>
                                         </li>
@@ -68,7 +66,7 @@
 
                         @await Component.InvokeAsync("CategoryList")
 
-                        @await Component.InvokeAsync("WriterLastBlog")
+                        @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId,blogId=ViewBag.i })
 
 
                         <div class="single-gd my-5 tech-btm">

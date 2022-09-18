@@ -18,9 +18,11 @@ namespace CoreDemo.ViewComponents.Blog
             _blogService = blogService;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(int writerId,int blogId)
         {
-            var values = _blogService.GetBlogByWriter(1);
+            var values = _blogService.GetBlogByWriter(writerId);
+            var currentBlog = values.FirstOrDefault(x=> x.BlogID==blogId);
+            values.Remove(currentBlog);
             return View(values);
         }
     }

@@ -22,8 +22,8 @@
   filter: drop-shadow(5px 1px 3px #c6ceed);
 }
 .rating-wrapper input {
-  height: 50%;
-  width: 50%;
+  height: 100%;
+  width: 100%;
 }
 .rating-wrapper input {
   display: none;

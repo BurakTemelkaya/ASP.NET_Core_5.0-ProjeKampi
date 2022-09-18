@@ -50,7 +50,7 @@ namespace BusinessLayer.Concrete
 
         public Comment TGetByFilter(Expression<Func<Comment, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return _commentDal.GetByFilter(filter);
         }
 
         public Comment TGetByID(int id)

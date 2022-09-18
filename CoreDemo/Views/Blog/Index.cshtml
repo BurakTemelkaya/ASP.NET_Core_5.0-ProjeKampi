@@ -6,7 +6,15 @@
 }
 <section class="main-content-w3layouts-agileits">
     <div class="container">
-        <h3 class="tittle">Bloglar</h3>
+        @if (ViewBag.id == null)
+        {
+            <h3 class="tittle">Bloglar</h3>
+        }
+        else
+        {
+            <h3 class="tittle">@Model[0].Category.CategoryName Blogları</h3>
+        }
+
         <div class="inner-sec">
             <!--left-->
             <div class="left-blog-info-w3layouts-agileits text-left">
@@ -15,7 +23,7 @@
                     {
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@item.BlogID">
-                                <img src="@item.BlogImage" class="card-img-top img-fluid" alt="">
+                                <img src="@item.BlogImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
                             </a>
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
