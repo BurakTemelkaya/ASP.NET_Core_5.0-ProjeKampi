@@ -1,5 +1,5 @@
 ﻿@using EntityLayer.Concrete;
-@model List<Blog>
+@model List<BlogandCommentCount>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -12,7 +12,7 @@
         }
         else
         {
-            <h3 class="tittle">@Model[0].Category.CategoryName Blogları</h3>
+            <h3 class="tittle">@Model[0].Blog.Category.CategoryName Blogları</h3>
         }
 
         <div class="inner-sec">
@@ -22,43 +22,43 @@
                     @foreach (var item in Model)
                     {
                         <div class="col-lg-4 card">
-                            <a href="/Blog/BlogReadAll/@item.BlogID">
-                                <img src="@item.BlogImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
+                            <a href="/Blog/BlogReadAll/@item.Blog.BlogID">
+                                <img src="@item.Blog.BlogImage" class="card-img-top img-fluid" alt="@item.Blog.BlogTitle">
                             </a>
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
                                     <li>
                                         <a href="#">
-                                            <i class="far fa-calendar-alt"></i> @(((DateTime)item.BlogCreateDate).ToString("dd.MM.yyyy"))
+                                            <i class="far fa-calendar-alt"></i> @(((DateTime)item.Blog.BlogCreateDate).ToString("dd.MM.yyyy"))
                                         </a>
                                     </li>
                                     <li class="mx-2">
                                         <a href="#">
-                                            <i class="far fa-comment"></i> 0
+                                            <i class="far fa-comment"></i> @item.ContentCount
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/@item.BlogID">
-                                            <i class="fas fa-eye"></i> @item.Category.CategoryName
+                                        <a href="#/@item.Blog.BlogID">
+                                            <i class="fas fa-eye"></i> @item.Blog.Category.CategoryName
                                         </a>
                                     </li>
 
                                 </ul>
                                 <h5 class="card-title">
-                                    <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogTitle</a>
+                                    <a href="/Blog/BlogReadAll/@item.Blog.BlogID">@item.Blog.BlogTitle</a>
                                 </h5>
                                 <p class="card-text mb-3">
-                                    @if (item.BlogContent != null && item.BlogContent.Length > 130)
+                                    @if (item.Blog.BlogContent != null && item.Blog.BlogContent.Length > 130)
                                     {
-                                        @item.BlogContent.Substring(0, item.BlogContent.Substring(0, 130).LastIndexOf(" "))
+                                        @item.Blog.BlogContent.Substring(0, item.Blog.BlogContent.Substring(0, 130).LastIndexOf(" "))
                                     }
                                     else
                                     {
-                                        @item.BlogContent
+                                        @item.Blog.BlogContent
                                     }
                                     ...
                                 </p>
-                                <a href="/Blog/BlogReadAll/@item.BlogID" class="btn btn-primary read-m">Devamını Oku</a>
+                                <a href="/Blog/BlogReadAll/@item.Blog.BlogID" class="btn btn-primary read-m">Devamını Oku</a>
                             </div>
                         </div>
                     }

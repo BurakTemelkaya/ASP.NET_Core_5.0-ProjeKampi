@@ -38,8 +38,10 @@ namespace CoreDemo.Controllers
 
         [AllowAnonymous]
         public IActionResult Index(string id)
-        {            
+        {
+            List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
             var values = _blogService.GetBlogListWithCategory();
+            var comments = _commentService.GetList();
             if (id != null)
             {
                 if (_blogService.GetCount(x => x.CategoryID == Convert.ToInt32(id)) != 0)
@@ -48,7 +50,23 @@ namespace CoreDemo.Controllers
                     ViewBag.id = id;
                 }               
             }
-            return View(values);
+            int commentCount = 0;
+            foreach (var item in values)
+            {
+                BlogandCommentCount value = new BlogandCommentCount();
+                value.Blog = item;
+                foreach (var comment in comments)
+                {
+                    if (comment.BlogID==item.BlogID)
+                    {
+                        commentCount++;
+                    }                   
+                }
+                value.ContentCount = commentCount;
+                blogandCommentCount.Add(value);
+                commentCount = 0;
+            }
+            return View(blogandCommentCount);
         }
         [AllowAnonymous]
         public IActionResult BlogReadAll(int id)
