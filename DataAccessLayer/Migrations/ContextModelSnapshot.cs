@@ -115,8 +115,14 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("About")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -379,10 +385,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("MessageStatus")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ReceiverID")
+                    b.Property<int?>("ReceiverUserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SenderID")
+                    b.Property<int?>("SenderUserId")
                         .HasColumnType("int");
 
                     b.Property<string>("Subject")
@@ -390,9 +396,9 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("MessageID");
 
-                    b.HasIndex("ReceiverID");
+                    b.HasIndex("ReceiverUserId");
 
-                    b.HasIndex("SenderID");
+                    b.HasIndex("SenderUserId");
 
                     b.ToTable("Messages2");
                 });
@@ -443,42 +449,6 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("NotificationID");
 
                     b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("EntityLayer.Concrete.Writer", b =>
-                {
-                    b.Property<int>("WriterID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("WriterAbout")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WriterCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WriterImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WriterMail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WriterName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WriterPassword")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("WriterRegisterDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("WriterStatus")
-                        .HasColumnType("bit");
-
-                    b.HasKey("WriterID");
-
-                    b.ToTable("Writers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -590,8 +560,8 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EntityLayer.Concrete.Writer", "Writer")
-                        .WithMany("Blogs")
+                    b.HasOne("EntityLayer.Concrete.AppUser", "Writer")
+                        .WithMany()
                         .HasForeignKey("WriterID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -614,13 +584,13 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("EntityLayer.Concrete.Message2", b =>
                 {
-                    b.HasOne("EntityLayer.Concrete.Writer", "ReceiverUser")
-                        .WithMany("WriterReceiver")
-                        .HasForeignKey("ReceiverID");
+                    b.HasOne("EntityLayer.Concrete.AppUser", "ReceiverUser")
+                        .WithMany()
+                        .HasForeignKey("ReceiverUserId");
 
-                    b.HasOne("EntityLayer.Concrete.Writer", "SenderUser")
-                        .WithMany("WriterSender")
-                        .HasForeignKey("SenderID");
+                    b.HasOne("EntityLayer.Concrete.AppUser", "SenderUser")
+                        .WithMany()
+                        .HasForeignKey("SenderUserId");
 
                     b.Navigation("ReceiverUser");
 
@@ -686,15 +656,6 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("EntityLayer.Concrete.Category", b =>
                 {
                     b.Navigation("Blogs");
-                });
-
-            modelBuilder.Entity("EntityLayer.Concrete.Writer", b =>
-                {
-                    b.Navigation("Blogs");
-
-                    b.Navigation("WriterReceiver");
-
-                    b.Navigation("WriterSender");
                 });
 #pragma warning restore 612, 618
         }

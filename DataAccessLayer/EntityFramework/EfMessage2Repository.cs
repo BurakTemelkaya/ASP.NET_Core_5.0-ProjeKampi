@@ -19,7 +19,7 @@ namespace DataAccessLayer.EntityFramework
             using (var c = new Context())
             {
                 return c.Messages2.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverID == id).ToList();
+                .Where(x => x.ReceiverUser.Id == id).ToList();
             }
         }
 
@@ -28,7 +28,7 @@ namespace DataAccessLayer.EntityFramework
             using (var c = new Context())
             {
                 return c.Messages2.Include(x => x.ReceiverUser)
-                .Where(x => x.SenderID == id).ToList();
+                .Where(x => x.ReceiverUser.Id == id).ToList();
             }
         }
     }

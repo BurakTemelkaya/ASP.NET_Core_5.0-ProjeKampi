@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EntityLayer;
+using EntityLayer.DTO;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;

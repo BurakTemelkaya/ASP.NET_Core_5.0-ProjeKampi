@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using BusinessLayer.ValidationRules;
-using EntityLayer;
+using EntityLayer.DTO;
 using EntityLayer.Concrete;
 using FluentValidation;
 using System;
@@ -20,8 +20,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<CategoryValidator>().As<IValidator<Category>>().SingleInstance();
 
             builder.RegisterType<ContactValidator>().As<IValidator<Contact>>().SingleInstance();
-
-            builder.RegisterType<WriterValidator>().As<IValidator<Writer>>().SingleInstance();
 
             builder.RegisterType<UserValidator>().As<IValidator<UserDto>>().SingleInstance();
         }

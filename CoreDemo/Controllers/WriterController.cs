@@ -4,9 +4,7 @@ using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
-using EntityLayer;
-using EntityLayer.Concrete;
-using FluentValidation.Results;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,28 +19,26 @@ namespace CoreDemo.Controllers
 {
     public class WriterController : Controller
     {
-        private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
         private readonly WriterCity _writerCity;
         private readonly IBusinessUserService _userManager;
 
-        public WriterController(IWriterService writerService, UserInfo userInfo, WriterCity writerCity
+        public WriterController(UserInfo userInfo, WriterCity writerCity
         , IBusinessUserService userManager)
         {
-            _writerService = writerService;
             _userInfo = userInfo;
             _writerCity = writerCity;
             _userManager = userManager;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             string mail = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email).Value.ToString();
             string id = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value;
             ViewBag.id = id;
             ViewBag.mail = mail;
-            ViewBag.Name = _writerService.TGetByFilter(x => x.WriterMail == mail).WriterName;
+            ViewBag.Name = await _userManager.FindByMailAsync(mail);
             return View();
         }
         public IActionResult WriterProfile()

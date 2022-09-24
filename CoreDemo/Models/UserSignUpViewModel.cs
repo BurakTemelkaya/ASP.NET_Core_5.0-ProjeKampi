@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreDemo.Models
 {
@@ -20,5 +23,8 @@ namespace CoreDemo.Models
         [Required(ErrorMessage = "Lütfen kullanıcı adınızı giriniz.")]
         public string UserName { get; set; }
         public bool IsAcceptTheContract { get; set; }
+        public string About { get; set; }
+        public string City { get; set; }
+        public List<SelectListItem> Cities { get; set; }
     }
 }

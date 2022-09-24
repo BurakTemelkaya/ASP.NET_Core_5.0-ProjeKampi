@@ -9,7 +9,6 @@
     @foreach (var item in Model)
     {
         TimeSpan zaman = now.Subtract(item.MessageDate);
-
         if (zaman.Days == 0)
         {
             if (zaman.Minutes == 0 && zaman.Hours == 0)
@@ -25,7 +24,7 @@
                 sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
             }
         }
-        else
+        else if (zaman.Days < 10)
         {
             if (zaman.Hours == 0)
             {
@@ -35,6 +34,10 @@
             {
                 sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
             }
+        }
+        else
+        {
+            sure = item.MessageDate.ToShortDateString() + " tarihinde gönderildi";
         }
         <div class="dropdown-divider"></div>
         <a class="dropdown-item preview-item">

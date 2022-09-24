@@ -10,14 +10,14 @@ C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debu
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\ref\EntityLayer.dll
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.pdb
 C:\Users\Burak\Documents\GitHub\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.csproj.AssemblyReference.cache
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.deps.json
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.dll
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.csproj.AssemblyReference.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.AssemblyInfoInputs.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.AssemblyInfo.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.csproj.CoreCompileInputs.cache
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.deps.json
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.dll
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\bin\Debug\net5.0\EntityLayer.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\refint\EntityLayer.dll
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\EntityLayer\obj\Debug\net5.0\EntityLayer.pdb

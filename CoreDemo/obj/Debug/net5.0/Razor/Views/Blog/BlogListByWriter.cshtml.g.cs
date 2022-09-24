@@ -34,6 +34,13 @@ using CoreDemo.Areas.Admin.Models;
 #line hidden
 #nullable disable
 #nullable restore
+#line 5 "C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\_ViewImports.cshtml"
+using EntityLayer.DTO;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 1 "C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Views\Blog\BlogListByWriter.cshtml"
 using EntityLayer.Concrete;
 
@@ -41,7 +48,7 @@ using EntityLayer.Concrete;
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"83c407227e8f0299dd44dc39285a3c189275219e", @"/Views/Blog/BlogListByWriter.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b3e273681fe023035aba1d643f355c88c8bae0c4", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"82429cdebbbf1c616feac6277cada6c5bb8457d7", @"/Views/_ViewImports.cshtml")]
     #nullable restore
     public class Views_Blog_BlogListByWriter : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<List<Blog>>
     #nullable disable
@@ -167,7 +174,7 @@ using EntityLayer.Concrete;
 #line hidden
 #nullable disable
             WriteLiteral("                </td>\r\n                <td>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e8574", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e8784", async() => {
                 WriteLiteral("<i class=\"far fa-trash-alt\">&nbsp;Sil</i>");
             }
             );
@@ -192,7 +199,7 @@ AddHtmlAttributeValue("", 1328, item.BlogID, 1328, 12, false);
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("</td>\r\n                <td>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e10290", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e10500", async() => {
                 WriteLiteral("Düzenle");
             }
             );
@@ -226,7 +233,7 @@ AddHtmlAttributeValue("", 1466, item.BlogID, 1466, 12, false);
 #line hidden
 #nullable disable
             WriteLiteral("                        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e12294", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e12504", async() => {
                 WriteLiteral("Pasif Yap");
             }
             );
@@ -261,7 +268,7 @@ AddHtmlAttributeValue("", 1669, item.BlogID, 1669, 12, false);
 #line hidden
 #nullable disable
             WriteLiteral("                        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e14281", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "83c407227e8f0299dd44dc39285a3c189275219e14491", async() => {
                 WriteLiteral("Aktif Yap");
             }
             );

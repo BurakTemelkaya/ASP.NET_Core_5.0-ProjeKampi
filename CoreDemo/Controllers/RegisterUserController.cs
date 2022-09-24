@@ -1,5 +1,7 @@
-﻿using CoreDemo.Models;
+﻿using BusinessLayer.Abstract;
+using CoreDemo.Models;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +12,20 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class RegisterUserController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IBusinessUserService _userService;
+        private readonly WriterCity _writerCity;
 
-        public RegisterUserController(UserManager<AppUser> userManager)
+        public RegisterUserController(IBusinessUserService userService, WriterCity writerCity)
         {
-            _userManager = userManager;
+            userService = _userService;
+            _writerCity = writerCity;
         }
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            UserSignUpViewModel signUpViewModel = new UserSignUpViewModel();
+            signUpViewModel.Cities = _writerCity.GetCityList();
+            return View(signUpViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserSignUpViewModel signUpViewModel)
@@ -32,24 +38,18 @@ namespace CoreDemo.Controllers
             }
             if (ModelState.IsValid)
             {
-                AppUser user = new AppUser()
+                UserDto user = new UserDto()
                 {
                     Email = signUpViewModel.Mail,
                     UserName = signUpViewModel.UserName,
-                    NameSurname = signUpViewModel.NameSurname
+                    NameSurname = signUpViewModel.NameSurname,
+                    About= signUpViewModel.About,
+                    City = signUpViewModel.City
                 };
-
-                var result = await _userManager.CreateAsync(user, signUpViewModel.Password);
-                if (result.Succeeded)
+                await _userService.RegisterUserAsync(user, signUpViewModel.Password);
+                if (!ModelState.IsValid)
                 {
                     return RedirectToAction("Index", "Login");
-                }
-                else
-                {
-                    foreach (var item in result.Errors)
-                    {
-                        ModelState.AddModelError("",item.Description);
-                    }
                 }
             }
             return View(signUpViewModel);

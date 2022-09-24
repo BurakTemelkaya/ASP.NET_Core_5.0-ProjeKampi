@@ -42,8 +42,8 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> ComposeMessage(Message2 message)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            message.SenderID = user.Id;
-            message.ReceiverID = 2;
+            message.SenderUser = user;
+            message.ReceiverUser.Id = 2;
             message.MessageDate = DateTime.Now;
             _message2Service.TAdd(message);
             return RedirectToAction("SendBox");

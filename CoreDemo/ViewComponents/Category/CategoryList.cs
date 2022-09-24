@@ -25,11 +25,11 @@ namespace CoreDemo.ViewComponents.Category
         {
             var values = _categoryService.GetList();
             var blogs = _blogService.GetList();
-            var blogCategoryCount = new List<CategoryandBlogCount>();
+            var blogCategoryCount = new List<CategoryBlogandBlogCount>();
             int categoryCount = 0;
             foreach (var value in values)
             {
-                var categoryandBlogCount = new CategoryandBlogCount();
+                var categoryandBlogCount = new CategoryBlogandBlogCount();
                 categoryandBlogCount.Categorys = value;
                 foreach (var blog in blogs)
                 {

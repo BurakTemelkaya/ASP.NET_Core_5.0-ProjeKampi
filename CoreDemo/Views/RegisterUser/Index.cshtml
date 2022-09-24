@@ -5,7 +5,6 @@
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
     <meta charset="utf-8">
@@ -25,37 +24,40 @@
 
     <div class="middle-box text-center loginscreen   animated fadeInDown">
         <div>
-            <div>
-
-                <h3 class="logo-name">IN+</h3>
-
-            </div>
-            <h3>Register to IN+</h3>
-            <p>Yeni bir hesap oluşturun.</p>
+            <h3>Yeni bir hesap oluşturun</h3>
             <form class="m-t" role="form" asp-action="Index">
                 <div class="form-group">
                     <span asp-validation-for="@Model.NameSurname" class="text-danger"></span>
-                    <input type="text" class="form-control" asp-for="@Model.NameSurname" placeholder="Adınız Soyadınız" required="">
+                    <input type="text" class="form-control" asp-for="@Model.NameSurname" placeholder="Adınız Soyadınız" required>
                 </div>
                 <div class="form-group">
                     <span asp-validation-for="@Model.UserName" class="text-danger"></span>
-                    <input type="text" class="form-control" asp-for="@Model.UserName" placeholder="Kullanıcı Adı" required="">
+                    <input type="text" class="form-control" asp-for="@Model.UserName" placeholder="Kullanıcı Adı" required>
                 </div>
                 <div class="form-group">
                     <span asp-validation-for="@Model.Mail" class="text-danger"></span>
-                    <input type="email" class="form-control" asp-for="@Model.Mail" placeholder="Email" required="">
+                    <input type="email" class="form-control" asp-for="@Model.Mail" placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                    <input type="password" class="form-control" asp-for="@Model.Password" placeholder="Parola" required="">
+                    <input type="password" class="form-control" asp-for="@Model.Password" placeholder="Parola" required>
                 </div>
                 <div class="form-group">
                     <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                    <input type="password" class="form-control" asp-for="@Model.ConfirmPassword" placeholder="Parola Tekrar" required="">
+                    <input type="password" class="form-control" asp-for="@Model.ConfirmPassword" placeholder="Parola Tekrar" required>
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="@Model.About" class="text-danger"></span>
+                    <textarea type="text" class="form-control" asp-for="@Model.About" placeholder="Hakkınızda" required></textarea>
+                </div>
+                <div class="form-group">
+                    <p>Yaşadığınız Şehir</p>
+                    <span asp-validation-for="@Model.City" class="text-danger"></span>
+                    <select asp-items="@(new List<SelectListItem>(Model.Cities))" asp-for="@Model.City" required></select>>
                 </div>
                 <div class="form-group">
                     <div class="checkbox i-checks"><label> <input type="checkbox" asp-for="IsAcceptTheContract"><i></i>
-                        Kullanım şartlarını okudum kabul ediyorum. Kabul ediyorum </label></div>
+                        Kullanım şartlarını okudum kabul ediyorum. </label></div>
                 </div>
                 <span asp-validation-for="@Model.IsAcceptTheContract" class="text-danger"></span>
                 <button type="submit" class="btn btn-primary block full-width m-b">Kayıt Ol</button>

@@ -25,9 +25,13 @@
             {
                 sure = "Bugün";
             }
-            else
+            else if (zaman.Days <= 10)
             {
                 sure = new DateTime(zaman.Ticks).ToString("d 'Gün önce' ");
+            }
+            else
+            {
+                sure = item.NotificationDate.ToString();
             }
             <tr>
                 <td>@item.NotificationID</td>

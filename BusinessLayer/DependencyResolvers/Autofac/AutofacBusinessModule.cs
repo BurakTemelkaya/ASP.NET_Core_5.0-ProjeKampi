@@ -38,8 +38,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<EfNotificationRepository>().As<INotificationDal>().SingleInstance();
 
-            builder.RegisterType<EfWriterRepository>().As<IWriterDal>().SingleInstance();
-
 
             builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
 
@@ -58,8 +56,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<NewsLetterManager>().As<INewsLetterService>().SingleInstance();
 
             builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
-
-            builder.RegisterType<WriterManager>().As<IWriterService>().SingleInstance();
 
             builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
 

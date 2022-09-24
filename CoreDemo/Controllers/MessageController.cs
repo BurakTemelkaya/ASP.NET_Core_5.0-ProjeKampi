@@ -2,6 +2,7 @@
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -53,11 +54,11 @@ namespace CoreDemo.Controllers
         {
             if (ModelState.IsValid)
             {
-                message.SenderID = await GetByUserID();
+                message.SenderUser.Id = await GetByUserID();
                 var receiver = await _userService.FindByMailAsync(ReceiverMail);
                 if (receiver.Id != 0)
                 {
-                    message.ReceiverID = receiver.Id;
+                    message.ReceiverUser.Id = receiver.Id;
                 }
                 else
                 {

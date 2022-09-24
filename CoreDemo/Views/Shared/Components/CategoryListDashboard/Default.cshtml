@@ -1,5 +1,4 @@
-﻿@using EntityLayer.Concrete
-@model List<Category>
+﻿@model List<CategoryandBlogPercent>
 <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
@@ -12,17 +11,17 @@
                                 <th> # </th>
                                 <th> Kategori Adı </th>
                                 <th> Durum </th>
-                                <th> İşlemler </th>
+                                <th> Tüm Bloglara Oranı </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td> @item.CategoryID </td>
-                                    <td> @item.CategoryName </td>
+                                    <td> @item.Category.CategoryID </td>
+                                    <td> @item.Category.CategoryName </td>
                                     <td>
-                                        @if (item.CategoryStatus)
+                                        @if (item.Category.CategoryStatus)
                                         {
                                             <p class="badge badge-primary">Aktif</p>
                                         }
@@ -33,7 +32,7 @@
                                     </td>
                                     <td>
                                         <div class="progress">
-                                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: @item.BlogPercent%" aria-valuenow="@item.BlogPercent" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
                                 </tr>

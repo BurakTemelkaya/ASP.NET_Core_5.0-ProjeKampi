@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CoreDemo.Models
 {
-    public class CategoryandBlogCount
+    public class CategoryBlogandBlogCount
     {
         public Blog Blogs { get; set; }
         public Category Categorys { get; set; }

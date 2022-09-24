@@ -4,6 +4,7 @@ using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +22,14 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;
-        private readonly IWriterService _writerService;
         private readonly UserInfo _userInfo;
         private readonly IBusinessUserService _businessUserService;
         private readonly ICommentService _commentService;
 
-        public BlogController(IBlogService blogService, IWriterService writerService, UserInfo userInfo,
+        public BlogController(IBlogService blogService, UserInfo userInfo,
             IBusinessUserService businessUserService, ICommentService commentService)
         {
             _blogService = blogService;
-            _writerService = writerService;
             _userInfo = userInfo;
             _businessUserService = businessUserService;
             _commentService = commentService;
@@ -74,8 +73,12 @@ namespace CoreDemo.Controllers
             ViewBag.i = id;
             var values = _blogService.GetBlogByID(id);
             ViewBag.CommentCount = _commentService.GetCount(x => x.BlogID == id);
-            ViewBag.Star = _commentService.TGetByFilter(x => x.BlogID == id).BlogScore;
-            ViewBag.WriterId = values[0].WriterID;
+            var comments = _commentService.TGetByFilter(x => x.BlogID == id);
+            if (comments!=null)
+            {
+                ViewBag.Star = comments.BlogScore;
+            }           
+            ViewBag.WriterId = values.FirstOrDefault().WriterID;
             return View(values);
         }
         public async Task<IActionResult> BlogListByWriter()
