@@ -37,6 +37,8 @@ namespace CoreDemo.Controllers
         {
             var values = _message2Service.GetInboxWithMessageByWriter(await GetByUserID())
                 .Where(x => x.MessageID == id).FirstOrDefault();
+            values.MessageStatus = false;
+            _message2Service.TUpdate(values);
             return View(values);
         }
         public async Task<int> GetByUserID()
@@ -70,6 +72,26 @@ namespace CoreDemo.Controllers
                 return RedirectToAction("Inbox");
             }
             return View();
+        }
+        /// <summary>
+        /// Id değeri kontrolü
+        /// Mesaj kullanıcının mesajı mı kontrolü
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> MarkAsUnread(int id)
+        {
+            bool isChanged = await _message2Service.MarkChangedAsync(id, User.Identity.Name);
+            if (isChanged)
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+        public async Task<IActionResult> MarkUsUnreadInbox(int id)
+        {
+            bool isChanged = await _message2Service.MarkChangedAsync(id, User.Identity.Name);
+            return RedirectToAction("Inbox");
         }
     }
 }

@@ -14,15 +14,21 @@ namespace CoreDemo.Controllers
     {
         private readonly IBusinessUserService _userService;
         private readonly WriterCity _writerCity;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public RegisterUserController(IBusinessUserService userService, WriterCity writerCity)
+        public RegisterUserController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager)
         {
-            userService = _userService;
+            _userService = userService;
             _writerCity = writerCity;
+            _signInManager = signInManager;
         }
         [HttpGet]
         public IActionResult Index()
         {
+            if (User.Identity.Name!=null)
+            {
+                return RedirectToAction("Index");
+            }
             UserSignUpViewModel signUpViewModel = new UserSignUpViewModel();
             signUpViewModel.Cities = _writerCity.GetCityList();
             return View(signUpViewModel);
@@ -34,24 +40,24 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
+                signUpViewModel.Cities = _writerCity.GetCityList();
                 return View(signUpViewModel);
             }
             if (ModelState.IsValid)
             {
-                UserDto user = new UserDto()
+                AppUser user = new AppUser()
                 {
                     Email = signUpViewModel.Mail,
                     UserName = signUpViewModel.UserName,
                     NameSurname = signUpViewModel.NameSurname,
-                    About= signUpViewModel.About,
+                    About = signUpViewModel.About,
                     City = signUpViewModel.City
                 };
                 await _userService.RegisterUserAsync(user, signUpViewModel.Password);
-                if (!ModelState.IsValid)
-                {
-                    return RedirectToAction("Index", "Login");
-                }
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction("Index", "Dashboard");
             }
+            signUpViewModel.Cities = _writerCity.GetCityList();
             return View(signUpViewModel);
         }
     }

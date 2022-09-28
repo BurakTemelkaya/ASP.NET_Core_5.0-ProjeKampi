@@ -12,5 +12,6 @@ namespace BusinessLayer.Abstract
     {
         List<Message2> GetInboxWithMessageByWriter(int id);
         List<Message2> GetSendBoxWithMessageByWriter(int id);
+        Task<bool> MarkChangedAsync(int messageId, string userName);
     }
 }

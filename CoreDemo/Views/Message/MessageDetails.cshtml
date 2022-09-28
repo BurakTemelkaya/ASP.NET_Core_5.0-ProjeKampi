@@ -5,6 +5,7 @@
 }
 
 <h1>Message Detay Sayfası</h1>
+@Html.HiddenFor(x=> x.MessageID)
 @Html.Label("Mesaj Başlığı")
 @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", disabled = "disabled" })
 <br />
@@ -14,4 +15,6 @@
 @Html.Label("Gönderen")
 @Html.TextBoxFor(x => x.SenderUser.UserName, new { @class = "form-control", disabled = "disabled" })
 <br />
-<button class="btn btn-success">Mesajlara Dön</button>
+<button class="btn btn-gradient-primary" id="MarkUsUnread">Okunmadı olarak işaretle</button>
+<br />
+<button href="/Message/Inbox" class="btn btn-success">Mesajlara Dön</button>

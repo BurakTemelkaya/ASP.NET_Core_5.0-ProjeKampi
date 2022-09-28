@@ -5,28 +5,42 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
-<h1>Inbox</h1>
+<h1>Gelen Kutusu</h1>
 
 <table class="table table-bordered table-responsive">
     <thead>
         <tr>
-            <th scope="row">#</th>,
+            <th scope="row">#</th>
             <th>Konu</th>
             <th>Gönderen</th>
             <th>Tarih</th>
             <th>Mesajı Aç</th>
+            <th>Okundu/Okunmadı Olarak İşaretle</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td scope="row">@item.MessageID</td>
-            <td>@item.Subject</td>
-            <td>@item.SenderUser.NameSurname</td>
-            <td>@item.MessageDate</td>
-            <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
-        </tr>
+            <tr>
+                <td scope="row">@item.MessageID</td>
+                <td>@item.Subject</td>
+                <td>@item.SenderUser.NameSurname</td>
+                <td>@item.MessageDate</td>
+                <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
+                <td>
+
+                    <a href="/Message/MarkUsUnreadInbox/@item.MessageID" class="btn btn-gradient-dark">
+                        @if (item.MessageStatus)
+                        {
+                            <p>Okundu olarak işaretle</p>
+                        }
+                        else
+                        {
+                            <p>Okunmadı olarak işaretle</p>
+                        }
+                    </a>
+                </td>
+            </tr>
         }
 
     </tbody>

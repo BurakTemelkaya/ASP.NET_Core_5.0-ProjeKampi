@@ -1,0 +1,16 @@
+﻿@model AppUser
+<li class="nav-item nav-profile">
+    <a href="/Writer/WriterEditProfile" class="nav-link">
+        <div class="nav-profile-image">
+            <img src="@Model.ImageUrl" alt="profile">
+            <span class="login-status online"></span>
+            <!--change to offline or busy as needed-->
+        </div>
+        <div class="nav-profile-text d-flex flex-column">
+            <span class="font-weight-bold mb-2">@Model.NameSurname</span>
+            <span class="text-secondary text-small"><b>@ViewBag.Role</b>
+            </span>
+        </div>
+        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+    </a>
+</li>

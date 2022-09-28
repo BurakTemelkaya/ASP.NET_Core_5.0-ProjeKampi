@@ -41,18 +41,10 @@
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item nav-profile dropdown">
-                        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <div class="nav-profile-img">
-                                <img src="/writer/assets/images/faces/face1.jpg" alt="image">
-                                <span class="availability-status online"></span>
-                            </div>
-                            <div class="nav-profile-text">
-                                <p class="mb-1 text-black">David Greymaax</p>
-                            </div>
-                        </a>
+                        @await Component.InvokeAsync("WriterDropdownToggle")
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="mdi mdi-cached mr-2 text-success"></i> Activity Log
+                            <a class="dropdown-item" href="/Writer/WriterEditProfile">
+                                <i class="mdi mdi-cached mr-2 text-success"></i> Profil
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/Login/Logout">
@@ -107,5 +99,23 @@
     <script src="~/writer/assets/js/off-canvas.js"></script>
     <script src="~/writer/assets/js/hoverable-collapse.js"></script>
     <script src="~/writer/assets/js/misc.js"></script>
+    <script>
+        $("#MarkUsUnread").click(function () {
+            let mail = {
+                id: $("#MessageID").val()
+            };
+            $.ajax({
+                type: "post",
+                url: "/Message/MarkAsUnread",
+                data: mail,
+                success: function (func) {
+                    alert("Mesaj okunmadı olarak işaretlendi.");
+                },
+                error: function (func) {
+                    alert("Bir hata oluştu lütfen tekrar deneyin.");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

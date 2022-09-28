@@ -24,6 +24,7 @@ namespace BusinessLayer.Concrete
         }
         public async Task RegisterUserAsync(AppUser T, string password)
         {
+            await _userManager.AddToRoleAsync(T, "Yazar");
             await _userManager.CreateAsync(T, password);
         }
 

@@ -13,10 +13,12 @@ namespace BusinessLayer.Concrete
     public class Message2Manager : IMessage2Service
     {
         private readonly IMessage2Dal _message2Dal;
+        private readonly IBusinessUserService _userService;
 
-        public Message2Manager(IMessage2Dal message2Dal)
+        public Message2Manager(IMessage2Dal message2Dal, IBusinessUserService userService)
         {
             _message2Dal = message2Dal;
+            _userService = userService;
         }
 
         public List<Message2> GetInboxWithMessageByWriter(int id)
@@ -63,6 +65,26 @@ namespace BusinessLayer.Concrete
         public List<Message2> GetSendBoxWithMessageByWriter(int id)
         {
             return _message2Dal.GetSendBoxWithMessageByWriter(id);
+        }
+
+        public async Task<bool> MarkChangedAsync(int messageId, string userName)
+        {
+            if (messageId != 0)
+            {
+                var message = TGetByFilter(x => x.MessageID == messageId);
+                var activeUser = await _userService.FindByUserNameAsync(userName);
+                if (activeUser.UserName != userName)
+                {
+                    return false;
+                }
+                if (message.MessageStatus)
+                    message.MessageStatus = false;
+                else
+                    message.MessageStatus = true;               
+                TUpdate(message);
+                return true;
+            }
+            return false;
         }
     }
 }
