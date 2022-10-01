@@ -13,32 +13,32 @@ namespace CoreDemo.Controllers
 {
     public class MessageController : Controller
     {
-        private readonly IMessage2Service _message2Service;
+        private readonly IMessageService _messageService;
         private readonly IBusinessUserService _userService;
 
-        public MessageController(IMessage2Service message2Service, IBusinessUserService userService)
+        public MessageController(IMessageService messageService, IBusinessUserService userService)
         {
-            _message2Service = message2Service;
+            _messageService = messageService;
             _userService = userService;
         }
 
         public async Task<IActionResult> Inbox()
         {
-            var values = _message2Service.GetInboxWithMessageByWriter(await GetByUserID());
+            var values = _messageService.GetInboxWithMessageByWriter(await GetByUserID());
             return View(values);
         }
         public async Task<IActionResult> SendBox()
         {
-            var values = _message2Service.GetSendBoxWithMessageByWriter(await GetByUserID());
+            var values = _messageService.GetSendBoxWithMessageByWriter(await GetByUserID());
             return View(values);
         }
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var values = _message2Service.GetInboxWithMessageByWriter(await GetByUserID())
+            var values = _messageService.GetInboxWithMessageByWriter(await GetByUserID())
                 .Where(x => x.MessageID == id).FirstOrDefault();
             values.MessageStatus = false;
-            _message2Service.TUpdate(values);
+            _messageService.TUpdate(values);
             return View(values);
         }
         public async Task<int> GetByUserID()
@@ -52,23 +52,31 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SendMessage(Message2 message, string ReceiverMail)
+        public async Task<IActionResult> SendMessage(Message message, string Receiver)
         {
             if (ModelState.IsValid)
             {
-                message.SenderUser.Id = await GetByUserID();
-                var receiver = await _userService.FindByMailAsync(ReceiverMail);
-                if (receiver.Id != 0)
+                var sender = await _userService.FindByUserNameAsync(User.Identity.Name);
+                message.SenderUser.Id = sender.Id;
+                var mailUser = await _userService.FindByMailAsync(Receiver);
+                var userNameUser = await _userService.FindByUserNameAsync(Receiver);
+
+                if (mailUser != null)
                 {
-                    message.ReceiverUser.Id = receiver.Id;
+                    message.ReceiverUser.Id = mailUser.Id;
+                }
+                else if (userNameUser != null)
+                {
+                    message.ReceiverUser.Id = userNameUser.Id;
                 }
                 else
                 {
+                    ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
                     return View();
                 }
                 message.MessageStatus = true;
                 message.MessageDate = DateTime.Now;
-                _message2Service.TAdd(message);
+                _messageService.TAdd(message);
                 return RedirectToAction("Inbox");
             }
             return View();
@@ -81,7 +89,7 @@ namespace CoreDemo.Controllers
         /// <returns></returns>
         public async Task<IActionResult> MarkAsUnread(int id)
         {
-            bool isChanged = await _message2Service.MarkChangedAsync(id, User.Identity.Name);
+            bool isChanged = await _messageService.MarkChangedAsync(id, User.Identity.Name);
             if (isChanged)
             {
                 return Ok();
@@ -90,7 +98,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> MarkUsUnreadInbox(int id)
         {
-            bool isChanged = await _message2Service.MarkChangedAsync(id, User.Identity.Name);
+            bool isChanged = await _messageService.MarkChangedAsync(id, User.Identity.Name);
             return RedirectToAction("Inbox");
         }
     }

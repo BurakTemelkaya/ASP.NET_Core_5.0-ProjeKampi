@@ -12,10 +12,10 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
     public class Statistic1 : ViewComponent
     {
         private readonly IBlogService _blogService;
-        private readonly IMessage2Service _message2Service;
+        private readonly IMessageService _message2Service;
         private readonly ICommentService _commentService;
 
-        public Statistic1(IBlogService blogService, IMessage2Service message2Service, ICommentService commentService)
+        public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService)
         {
             _blogService = blogService;
             _message2Service = message2Service;

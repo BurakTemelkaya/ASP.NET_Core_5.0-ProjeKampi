@@ -32,7 +32,7 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<EfContactRepository>().As<IContactDal>().SingleInstance();
 
-            builder.RegisterType<EfMessage2Repository>().As<IMessage2Dal>().SingleInstance();
+            builder.RegisterType<EfMessageRepository>().As<IMessageDal>().SingleInstance();
 
             builder.RegisterType<EfNewsLetterRepository>().As<INewsLetterDal>().SingleInstance();
 
@@ -51,7 +51,7 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<ContactManager>().As<IContactService>().SingleInstance();
 
-            builder.RegisterType<Message2Manager>().As<IMessage2Service>().SingleInstance();
+            builder.RegisterType<MessageManager>().As<IMessageService>().SingleInstance();
 
             builder.RegisterType<NewsLetterManager>().As<INewsLetterService>().SingleInstance();
 

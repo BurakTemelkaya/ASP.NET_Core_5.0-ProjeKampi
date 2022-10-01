@@ -13,15 +13,17 @@ namespace BusinessLayer.Concrete
     public class MessageManager : IMessageService
     {
         private readonly IMessageDal _messageDal;
+        private readonly IBusinessUserService _userService;
 
-        public MessageManager(IMessageDal messageDal)
+        public MessageManager(IMessageDal message2Dal, IBusinessUserService userService)
         {
-            _messageDal = messageDal;
+            _messageDal = message2Dal;
+            _userService = userService;
         }
 
-        public int GetCount(Expression<Func<Message, bool>> filter = null)
+        public List<Message> GetInboxWithMessageByWriter(int id)
         {
-            throw new NotImplementedException();
+            return _messageDal.GetInboxWithMessageByWriter(id);
         }
 
         public List<Message> GetList(Expression<Func<Message, bool>> filter = null)
@@ -31,6 +33,7 @@ namespace BusinessLayer.Concrete
 
         public void TAdd(Message t)
         {
+            t.MessageStatus = true;
             _messageDal.Insert(t);
         }
 
@@ -52,6 +55,36 @@ namespace BusinessLayer.Concrete
         public void TUpdate(Message t)
         {
             _messageDal.Update(t);
+        }
+
+        public int GetCount(Expression<Func<Message, bool>> filter = null)
+        {
+            return _messageDal.GetCount(filter);
+        }
+
+        public List<Message> GetSendBoxWithMessageByWriter(int id)
+        {
+            return _messageDal.GetSendBoxWithMessageByWriter(id);
+        }
+
+        public async Task<bool> MarkChangedAsync(int messageId, string userName)
+        {
+            if (messageId != 0)
+            {
+                var message = TGetByFilter(x => x.MessageID == messageId);
+                var activeUser = await _userService.FindByUserNameAsync(userName);
+                if (activeUser.UserName != userName)
+                {
+                    return false;
+                }
+                if (message.MessageStatus)
+                    message.MessageStatus = false;
+                else
+                    message.MessageStatus = true;               
+                TUpdate(message);
+                return true;
+            }
+            return false;
         }
     }
 }

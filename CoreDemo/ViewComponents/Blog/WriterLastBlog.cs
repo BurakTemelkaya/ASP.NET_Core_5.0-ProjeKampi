@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.ViewComponents.Blog
 {
-    public class WriterLastBlog:ViewComponent
+    public class WriterLastBlog : ViewComponent
     {
         private readonly IBlogService _blogService;
 
@@ -18,10 +18,10 @@ namespace CoreDemo.ViewComponents.Blog
             _blogService = blogService;
         }
 
-        public IViewComponentResult Invoke(int writerId,int blogId)
+        public IViewComponentResult Invoke(int writerId, int blogId)
         {
-            var values = _blogService.GetBlogByWriter(writerId);
-            var currentBlog = values.FirstOrDefault(x=> x.BlogID==blogId);
+            var values = _blogService.GetBlogByWriter(writerId).Where(x => x.BlogStatus).ToList();
+            var currentBlog = values.FirstOrDefault(x => x.BlogID == blogId);
             values.Remove(currentBlog);
             return View(values);
         }

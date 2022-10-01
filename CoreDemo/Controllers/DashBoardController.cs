@@ -27,7 +27,6 @@ namespace CoreDemo.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var userName = User.Identity.Name;

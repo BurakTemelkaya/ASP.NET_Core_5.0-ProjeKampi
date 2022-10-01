@@ -36,7 +36,7 @@ namespace CoreDemo.ViewComponents.Category
                         blogCount++;
                     }
                 }
-                categoryandBlogCount.BlogPercent = Math.Round((decimal.Divide(blogCount, blogs.Count)) * 100);
+                categoryandBlogCount.BlogPercent = Math.Round(decimal.Divide(blogCount, blogs.Count) * 100).ToString();
                 blogCount = 0;
                 categoryandBlogCounts.Add(categoryandBlogCount);
             }

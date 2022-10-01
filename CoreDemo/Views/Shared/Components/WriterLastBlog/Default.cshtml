@@ -1,27 +1,29 @@
 ﻿@using EntityLayer.Concrete
 @model List<Blog>
+@if (Model.Count > 0)
+{
+    <div class="tech-btm">
+        <h4>Yazarın Diğer Yazıları</h4>
+        @foreach (var item in Model)
+        {
+            <div class="blog-grids row mb-3">
+                <div class="col-md-5 blog-grid-left">
+                    <a href="/Blog/BlogReadAll/@item.BlogID">
+                        <img src="@item.BlogImage" class="img-fluid" alt="">
+                    </a>
+                </div>
+                <div class="col-md-7 blog-grid-right">
 
-<div class="tech-btm">
-    <h4>Yazarın Diğer Yazıları</h4>
-    @foreach (var item in Model)
-    {
-        <div class="blog-grids row mb-3">
-            <div class="col-md-5 blog-grid-left">
-                <a href="/Blog/BlogReadAll/@item.BlogID">
-                    <img src="@item.BlogImage" class="img-fluid" alt="">
-                </a>
-            </div>
-            <div class="col-md-7 blog-grid-right">
-
-                <h5>
-                    <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogTitle </a>
-                </h5>
-                <div class="sub-meta">
-                    <span>
-                        <i class="far fa-clock"></i> @item.BlogCreateDate
-                    </span>
+                    <h5>
+                        <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogTitle </a>
+                    </h5>
+                    <div class="sub-meta">
+                        <span>
+                            <i class="far fa-clock"></i> @item.BlogCreateDate
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}

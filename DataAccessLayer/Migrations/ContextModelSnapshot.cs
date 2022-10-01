@@ -355,40 +355,12 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("MessageStatus")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReceiverMail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderMail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MessageID");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("EntityLayer.Concrete.Message2", b =>
-                {
-                    b.Property<int>("MessageID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("MessageDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("MessageStatus")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("ReceiverUserId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("SenderUserId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Subject")
@@ -400,7 +372,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("SenderUserId");
 
-                    b.ToTable("Messages2");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.NewsLetter", b =>
@@ -582,15 +554,17 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Blog");
                 });
 
-            modelBuilder.Entity("EntityLayer.Concrete.Message2", b =>
+            modelBuilder.Entity("EntityLayer.Concrete.Message", b =>
                 {
                     b.HasOne("EntityLayer.Concrete.AppUser", "ReceiverUser")
-                        .WithMany()
-                        .HasForeignKey("ReceiverUserId");
+                        .WithMany("ReceiverUserInfo")
+                        .HasForeignKey("ReceiverUserId")
+                        .IsRequired();
 
                     b.HasOne("EntityLayer.Concrete.AppUser", "SenderUser")
-                        .WithMany()
-                        .HasForeignKey("SenderUserId");
+                        .WithMany("SenderUserInfo")
+                        .HasForeignKey("SenderUserId")
+                        .IsRequired();
 
                     b.Navigation("ReceiverUser");
 
@@ -646,6 +620,13 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.AppUser", b =>
+                {
+                    b.Navigation("ReceiverUserInfo");
+
+                    b.Navigation("SenderUserInfo");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Blog", b =>

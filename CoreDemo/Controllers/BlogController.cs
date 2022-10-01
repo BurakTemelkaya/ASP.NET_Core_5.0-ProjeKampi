@@ -25,21 +25,23 @@ namespace CoreDemo.Controllers
         private readonly UserInfo _userInfo;
         private readonly IBusinessUserService _businessUserService;
         private readonly ICommentService _commentService;
+        private readonly ICategoryService _categoryService;
 
         public BlogController(IBlogService blogService, UserInfo userInfo,
-            IBusinessUserService businessUserService, ICommentService commentService)
+            IBusinessUserService businessUserService, ICommentService commentService, ICategoryService categoryService)
         {
             _blogService = blogService;
             _userInfo = userInfo;
             _businessUserService = businessUserService;
             _commentService = commentService;
+            _categoryService = categoryService;
         }
 
         [AllowAnonymous]
         public IActionResult Index(string id)
         {
             List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
-            var values = _blogService.GetBlogListWithCategory();
+            var values = _blogService.GetBlogListWithCategory().Where(x=> x.BlogStatus).OrderByDescending(x=> x.BlogCreateDate).ToList();
             var comments = _commentService.GetList();
             if (id != null)
             {
@@ -47,7 +49,7 @@ namespace CoreDemo.Controllers
                 {
                     values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
                     ViewBag.id = id;
-                }               
+                }
             }
             int commentCount = 0;
             foreach (var item in values)
@@ -56,10 +58,10 @@ namespace CoreDemo.Controllers
                 value.Blog = item;
                 foreach (var comment in comments)
                 {
-                    if (comment.BlogID==item.BlogID)
+                    if (comment.BlogID == item.BlogID)
                     {
                         commentCount++;
-                    }                   
+                    }
                 }
                 value.ContentCount = commentCount;
                 blogandCommentCount.Add(value);
@@ -68,18 +70,26 @@ namespace CoreDemo.Controllers
             return View(blogandCommentCount);
         }
         [AllowAnonymous]
-        public IActionResult BlogReadAll(int id)
+        public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
             var values = _blogService.GetBlogByID(id);
+            if (values == null)
+            {
+                return RedirectToAction("Error404", "ErrorPage");
+            }
             ViewBag.CommentCount = _commentService.GetCount(x => x.BlogID == id);
             var comments = _commentService.TGetByFilter(x => x.BlogID == id);
-            if (comments!=null)
+            if (comments != null)
             {
                 ViewBag.Star = comments.BlogScore;
-            }           
-            ViewBag.WriterId = values.FirstOrDefault().WriterID;
+            }
+            var writer = await _businessUserService.GetByIDAsync(values.WriterID.ToString());
+            ViewBag.WriterId = writer.Id;
             return View(values);
+
+
+
         }
         public async Task<IActionResult> BlogListByWriter()
         {
@@ -111,8 +121,7 @@ namespace CoreDemo.Controllers
         }
         public void GetCategoryList()
         {
-            CategoryManager cm = new CategoryManager(new EfCategoryRepository());
-            List<SelectListItem> CategoryValues = (from x in cm.GetList()
+            List<SelectListItem> CategoryValues = (from x in _categoryService.GetList()
                                                    select new SelectListItem
                                                    {
                                                        Text = x.CategoryName,
@@ -157,7 +166,6 @@ namespace CoreDemo.Controllers
             if (results.IsValid)
             {
                 var value = _blogService.TGetByID(blog.BlogID);//eski değeri getirme
-                blog.WriterID = _userInfo.GetID(User);
                 blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
                 blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
                 _blogService.TUpdate(blog);//update işlemi

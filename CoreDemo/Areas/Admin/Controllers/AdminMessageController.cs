@@ -9,10 +9,10 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Area("Admin")]
     public class AdminMessageController : Controller
     {
-        private readonly IMessage2Service _message2Service;
+        private readonly IMessageService _message2Service;
         private readonly IBusinessUserService _userService;
 
-        public AdminMessageController(IMessage2Service message2Service, IBusinessUserService userService)
+        public AdminMessageController(IMessageService message2Service, IBusinessUserService userService)
         {
             _message2Service = message2Service;
             _userService = userService;
@@ -39,7 +39,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ComposeMessage(Message2 message)
+        public async Task<IActionResult> ComposeMessage(Message message)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             message.SenderUser = user;

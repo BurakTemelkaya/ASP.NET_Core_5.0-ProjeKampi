@@ -12,10 +12,10 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
     {
-        private readonly IMessage2Service _messageService;
+        private readonly IMessageService _messageService;
         private readonly IBusinessUserService _userService;
 
-        public WriterMessageNotification(IMessage2Service messageService, IBusinessUserService userService)
+        public WriterMessageNotification(IMessageService messageService, IBusinessUserService userService)
         {
             _messageService = messageService;
             _userService = userService;

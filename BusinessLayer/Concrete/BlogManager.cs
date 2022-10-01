@@ -31,9 +31,9 @@ namespace BusinessLayer.Concrete
         {
             return _blogDal.GetByID(id);
         }
-        public List<Blog> GetBlogByID(int id)
+        public Blog GetBlogByID(int id)
         {
-            return _blogDal.GetListAll(x => x.BlogID == id);
+            return _blogDal.GetByID(id);
         }
         public List<Blog> GetList(Expression<Func<Blog, bool>> filter)
         {

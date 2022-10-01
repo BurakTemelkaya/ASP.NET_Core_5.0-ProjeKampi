@@ -20,7 +20,7 @@ namespace CoreDemo.ViewComponents.Blog
 
         public IViewComponentResult Invoke()
         {
-            var values = _blogService.GetLastBlog(3);
+            var values = _blogService.GetLastBlog(3).Where(x=> x.BlogStatus).ToList();
             return View(values);
         }
     }
