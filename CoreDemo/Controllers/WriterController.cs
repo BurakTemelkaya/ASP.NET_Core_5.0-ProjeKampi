@@ -73,17 +73,19 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
         {
-            if (ModelState.IsValid)
+            if (userDto.UserName == null || userDto.NameSurname == null || userDto.Email == null ||
+                userDto.City == null || userDto.About == null)
             {
-                if (imageFile != null)
-                {
-                    userDto.ImageUrl = AddProfileImage.ImageAdd(imageFile);
-                }
-                await _userManager.UpdateUserAsync(userDto);
-                return RedirectToAction("Index", "Dashboard");
+                ModelState.AddModelError("UserName", "Lütfen profil bilgilerinizi boş bırakmayın.");
+                ViewBag.Cities = _writerCity.GetCityList();
+                return View(userDto);
             }
-            ViewBag.Cities = _writerCity.GetCityList();
-            return View();
+            if (imageFile != null)
+            {
+                userDto.ImageUrl = AddImage.ImageAdd(imageFile, AddImage.StaticProfileImageLocation());
+            }
+            await _userManager.UpdateUserAsync(userDto);
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

@@ -8,13 +8,13 @@ using EntityLayer.DTO;
 
 namespace BusinessLayer.ValidationRules
 {
-    public class UserValidator:AbstractValidator<UserDto>
+    public class UserValidator : AbstractValidator<UserDto>
     {
         public UserValidator()
         {
-            RuleFor(x=> x.NameSurname).NotEmpty();
-            RuleFor(x=> x.UserName).NotEmpty();
-            RuleFor(x=> x.Password).NotEmpty();
+            RuleFor(x => x.NameSurname).NotEmpty();
+            RuleFor(x => x.UserName).NotEmpty();
+            RuleFor(x => x.Password).NotEmpty();
             RuleFor(x => x.Email).EmailAddress();
             RuleFor(x => x.PasswordAgain).Matches(x => x.Password);
 

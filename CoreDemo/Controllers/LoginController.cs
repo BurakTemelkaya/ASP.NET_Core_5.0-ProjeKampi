@@ -30,6 +30,10 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (User.Identity.Name != null)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
             return View();
         }
         [HttpPost]
@@ -53,7 +57,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Blog");
         }
         public IActionResult AccessDenied()
         {

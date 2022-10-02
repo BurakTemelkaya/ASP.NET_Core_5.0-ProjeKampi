@@ -13,6 +13,7 @@ namespace EntityLayer.Concrete
         public string ImageUrl { get; set; }
         public string About { get; set; }
         public string City { get; set; }
+        public DateTime RegistrationTime { get; set; }
         public virtual ICollection<Message> SenderUserInfo { get; set; }
         public virtual ICollection<Message> ReceiverUserInfo { get; set; }
     }

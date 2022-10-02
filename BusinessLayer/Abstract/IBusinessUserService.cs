@@ -17,5 +17,6 @@ namespace BusinessLayer.Abstract
         Task UpdateUserAsync(UserDto user);
         Task<UserDto> FindByUserNameAsync(string userName);
         Task<UserDto> FindByMailAsync(string mail);
+        Task CastUserRole(AppUser user, string role);
     }
 }

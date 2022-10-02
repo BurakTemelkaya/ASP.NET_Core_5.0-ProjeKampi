@@ -1,18 +1,12 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
-using DataAccessLayer.EntityFramework;
-using EntityLayer.DTO;
+using DocumentFormat.OpenXml.Vml;
 using EntityLayer.Concrete;
-using FluentValidation.Results;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -21,59 +15,60 @@ namespace CoreDemo.Controllers
     public class RegisterController : Controller
     {
         private readonly IBusinessUserService _userService;
-
         private readonly WriterCity _writerCity;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public RegisterController(IBusinessUserService userService, WriterCity writerCity)
+        public RegisterController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager)
         {
             _userService = userService;
             _writerCity = writerCity;
+            _signInManager = signInManager;
         }
-
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Cities = _writerCity.GetCityList();
-            return View();
+            if (User.Identity.Name != null)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+            UserSignUpViewModel signUpViewModel = new UserSignUpViewModel();
+            signUpViewModel.Cities = _writerCity.GetCityList();
+            return View(signUpViewModel);
         }
-        /// <summary>
-        /// kullanıcının bilgilerinin önceden kullanılmadığını ve doğru olduğunu kontrol edip kullanıcıyı kayıt etme işlemi.
-        /// </summary>
-        /// <param name="user"></param>
-        /// kullanıcının bilgilerinin yer aldığı nesne
-        /// <param name="passwordAgain"></param>
-        /// parola kontrolü için kullanılan nesne
-        /// <param name="imageFile"></param>
-        /// kullanıcının resmini kaydetmek için kullanılan nesne
-        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Index(UserDto user, string passwordAgain, IFormFile imageFile)
+        public async Task<IActionResult> Index(UserSignUpViewModel signUpViewModel)
         {
-            var validateUserName = await _userService.FindByUserNameAsync(user.UserName);
-            var validateEmail = await _userService.FindByMailAsync(user.Email);
-            if (ModelState.IsValid && user.Password == passwordAgain && validateUserName == null && validateEmail == null)
+            if (!signUpViewModel.IsAcceptTheContract)
             {
-                user.ImageUrl = AddProfileImage.ImageAdd(imageFile);
-                await _userService.RegisterUserAsync(user, user.Password);
-                return RedirectToAction("Index", "Blog");
+                ModelState.AddModelError("IsAcceptTheContract",
+                    "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
+                signUpViewModel.Cities = _writerCity.GetCityList();
+                return View(signUpViewModel);
             }
-            else if (user.Password != passwordAgain)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("WriterPassword", "Girdiğiniz şifreler eşleşmedi lütfen tekrar deneyin");
+                AppUser user = new AppUser()
+                {
+                    Email = signUpViewModel.Mail,
+                    UserName = signUpViewModel.UserName,
+                    NameSurname = signUpViewModel.NameSurname,
+                    About = signUpViewModel.About,
+                    City = signUpViewModel.City
+                };
+                if (signUpViewModel.ImageFile != null)
+                {
+                    user.ImageUrl = AddImage.ImageAdd(signUpViewModel.ImageFile, AddImage.StaticProfileImageLocation());
+                }
+                else if (signUpViewModel.ImageUrl != null)
+                {
+                    user.ImageUrl = signUpViewModel.ImageUrl;
+                }
+                await _userService.RegisterUserAsync(user, signUpViewModel.Password);
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction("Index", "Dashboard");
             }
-            else if (validateEmail != null)
-            {
-                ModelState.AddModelError("ErrorMessage", "Girdiğiniz e-maili kullanan bir hesap mevcut." +
-                    "Lütfen başka bir Email ile kayıt yapmayı deneyin.");
-            }
-            else if (validateUserName != null)
-            {
-                ModelState.AddModelError("ErrorMessage", "Girdiğiniz kullanıcı adını kullanan bir hesap mevcut." +
-                    " Lütfen başka bir kullanıcı adı ile kayıt olmayı yapmayı deneyin.");
-            }
-            ViewBag.Cities = _writerCity.GetCityList();
-            return View(user);
+            signUpViewModel.Cities = _writerCity.GetCityList();
+            return View(signUpViewModel);
         }
-
     }
 }

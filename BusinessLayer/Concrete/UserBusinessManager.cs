@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
+using BusinessLayer.StaticTexts;
 using DataAccessLayer.Abstract;
 using EntityLayer;
 using EntityLayer.Concrete;
@@ -24,8 +25,13 @@ namespace BusinessLayer.Concrete
         }
         public async Task RegisterUserAsync(AppUser T, string password)
         {
-            await _userManager.AddToRoleAsync(T, "Yazar");
+            T.RegistrationTime = DateTime.Now;
             await _userManager.CreateAsync(T, password);
+            await CastUserRole(T, RolesTexts.WriterRole());
+        }
+        public async Task CastUserRole(AppUser user, string role)
+        {
+            await _userManager.AddToRoleAsync(user, role);
         }
 
         public async Task DeleteUserAsync(AppUser t)
@@ -44,6 +50,9 @@ namespace BusinessLayer.Concrete
             value.NameSurname = user.NameSurname;
             value.Email = user.Email;
             value.UserName = user.UserName;
+            value.ImageUrl = user.ImageUrl;
+            value.About = user.About;
+            value.City = user.City;
             bool oldPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
             if (user.Password != null && oldPassword)
             {
