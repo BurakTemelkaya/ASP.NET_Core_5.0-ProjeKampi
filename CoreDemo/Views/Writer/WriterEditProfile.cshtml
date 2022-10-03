@@ -44,6 +44,10 @@
                 <div class="form-group">
                     <label>Yazar Görsel</label>
                     <input type="file" name="imageFile" class="form-control-file">
+                    <br />
+                    <label>Yada Link Yapıştır</label>
+                    @Html.TextBoxFor(x => x.ImageUrl, new { @class = "form-control", @placeholder = "ImageUrl" })
+                    @Html.ValidationMessageFor(x => x.ImageUrl, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label for="exampleInputCity1">Şehir</label>
@@ -54,6 +58,7 @@
                     @Html.TextAreaFor(x => x.About, 10, 3, new { @class = "form-control", @placeholder = "Hakkımda" })
                     @Html.ValidationMessageFor(x => x.About, "", new { @class = "text-danger" })
                 </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <button type="submit" class="btn btn-gradient-primary mr-2">Güncelle</button>
                 <button class="btn btn-light">İptal</button>
             </form>

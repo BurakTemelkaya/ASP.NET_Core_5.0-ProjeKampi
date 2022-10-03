@@ -68,6 +68,8 @@ namespace CoreDemo.Controllers
         {
             ViewBag.Cities = _writerCity.GetCityList();
             var writer = await _userManager.FindByUserNameAsync(User.Identity.Name);
+            if (writer.ImageUrl.Substring(0, 5) != "https" || writer.ImageUrl.Substring(0, 4) != "http")
+                writer.ImageUrl = null;
             return View(writer);
         }
         [HttpPost]

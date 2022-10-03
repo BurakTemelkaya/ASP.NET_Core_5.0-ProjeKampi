@@ -55,9 +55,7 @@ namespace BusinessLayer.Concrete
             value.City = user.City;
             bool oldPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
             if (user.Password != null && oldPassword)
-            {
                 value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
-            }
             await _userManager.UpdateAsync(value);
         }
 

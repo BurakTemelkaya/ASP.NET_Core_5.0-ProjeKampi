@@ -7,6 +7,7 @@ using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -22,16 +23,14 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;
-        private readonly UserInfo _userInfo;
         private readonly IBusinessUserService _businessUserService;
         private readonly ICommentService _commentService;
         private readonly ICategoryService _categoryService;
 
-        public BlogController(IBlogService blogService, UserInfo userInfo,
+        public BlogController(IBlogService blogService,
             IBusinessUserService businessUserService, ICommentService commentService, ICategoryService categoryService)
         {
             _blogService = blogService;
-            _userInfo = userInfo;
             _businessUserService = businessUserService;
             _commentService = commentService;
             _categoryService = categoryService;
@@ -41,7 +40,7 @@ namespace CoreDemo.Controllers
         public IActionResult Index(string id)
         {
             List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
-            var values = _blogService.GetBlogListWithCategory().Where(x=> x.BlogStatus).OrderByDescending(x=> x.BlogCreateDate).ToList();
+            var values = _blogService.GetBlogListWithCategory().Where(x => x.BlogStatus).OrderByDescending(x => x.BlogCreateDate).ToList();
             var comments = _commentService.GetList();
             if (id != null)
             {
@@ -105,12 +104,19 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> BlogAdd(Blog blog)
+        public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
             if (ModelState.IsValid)
             {
-                blog.BlogStatus = true;
+                if (blogImage != null)
+                    blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
+                else
+                    ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                if (blogThumbnailImage != null)
+                    blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
+                else
+                    ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 blog.WriterID = user.Id;
                 _blogService.TAdd(blog);
@@ -154,17 +160,33 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult EditBlog(int id)
         {
-            var blogValue = _blogService.TGetByID(id);
-            GetCategoryList();
-            return View(blogValue);
+            if (id != 0)
+            {
+                var blogValue = _blogService.TGetByID(id);
+                GetCategoryList();
+                if (blogValue.BlogImage.Substring(0, 5) != "https" || blogValue.BlogImage.Substring(0, 4) != "http")
+                    blogValue.BlogImage = null;
+                if (blogValue.BlogThumbnailImage.Substring(0, 5) != "https" || blogValue.BlogThumbnailImage.Substring(0, 4) != "http")
+                    blogValue.BlogThumbnailImage = null;
+                return View(blogValue);
+            }
+            return RedirectToAction("Error404", "ErrorPage");
         }
         [HttpPost]
-        public IActionResult EditBlog(Blog blog)
+        public IActionResult EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             BlogValidator bv = new BlogValidator();
             ValidationResult results = bv.Validate(blog);
             if (results.IsValid)
             {
+                if (blogImage != null)
+                    blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
+                else
+                    ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                if (blogThumbnailImage != null)
+                    blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
+                else
+                    ModelState.AddModelError("blogImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 var value = _blogService.TGetByID(blog.BlogID);//eski değeri getirme
                 blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
                 blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
