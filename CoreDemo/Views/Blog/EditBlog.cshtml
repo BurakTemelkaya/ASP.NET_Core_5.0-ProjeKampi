@@ -7,6 +7,7 @@
 
 <h1>Blog Düzenleme Sayfası</h1>
 <form class="form-group" method="post" enctype="multipart/form-data">
+    @Html.HiddenFor(x=> x.BlogID)
     @Html.Label("Blog Başlığı")
     @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" })
     @Html.ValidationMessageFor(x => x.BlogTitle, "", new { @class = "text-danger" })
@@ -35,7 +36,7 @@
     @Html.DropDownListFor(x => x.CategoryID, (List<SelectListItem>)ViewBag.CategoryList, new { @class = "form-control" })
     <br />
     <br />
-    @Html.Label("Blog Hemen Yayınlansın Mı ? (İşaretli Evet, İşaretsiz Hayır)")
+    @Html.Label("Blog Yayınlansın Mı ? (İşaretli Evet, İşaretsiz Hayır)")
     @Html.CheckBoxFor(x => x.BlogStatus, new { @class = "form-check" })
     <br />
     <br />

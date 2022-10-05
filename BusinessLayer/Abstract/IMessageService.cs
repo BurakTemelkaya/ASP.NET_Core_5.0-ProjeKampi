@@ -10,8 +10,8 @@ namespace BusinessLayer.Abstract
 {
     public interface IMessageService : IGenericService<Message>
     {
-        List<Message> GetInboxWithMessageByWriter(int id);
-        List<Message> GetSendBoxWithMessageByWriter(int id);
+        List<Message> GetInboxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null);
+        List<Message> GetSendBoxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null);
         Task<bool> MarkChangedAsync(int messageId, string userName);
     }
 }

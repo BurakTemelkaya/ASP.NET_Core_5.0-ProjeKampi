@@ -57,22 +57,13 @@
                             <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i class="mdi mdi-email-outline"></i>
-                            <span class="count-symbol bg-warning"></span>
-                        </a>
+
                         @await Component.InvokeAsync("WriterMessageNotification")
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                            <i class="mdi mdi-bell-outline"></i>
-                            <span class="count-symbol bg-danger"></span>
-                        </a>
+
                         @await Component.InvokeAsync("WriterNotification")
-                    </li>
+
                     <li class="nav-item nav-logout d-none d-lg-block">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/login/logout">
                             <i class="mdi mdi-power"></i>
                         </a>
                     </li>
@@ -99,6 +90,8 @@
     <script src="~/writer/assets/js/off-canvas.js"></script>
     <script src="~/writer/assets/js/hoverable-collapse.js"></script>
     <script src="~/writer/assets/js/misc.js"></script>
+    <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script>
         $("#MarkUsUnread").click(function () {
             let mail = {

@@ -1,12 +1,14 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Areas.Admin.Controllers
-{
+{    
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     public class AdminMessageController : Controller
     {
         private readonly IMessageService _message2Service;

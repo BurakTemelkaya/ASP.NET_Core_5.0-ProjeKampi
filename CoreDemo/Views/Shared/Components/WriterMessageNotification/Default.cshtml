@@ -2,76 +2,92 @@
 @model List<Message>
 @{
     string sure = "";
+    string okunduMu = "";
     DateTime now = DateTime.Now;
-}
-<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-    <h6 class="p-3 mb-0">Mesajlar</h6>
-    @foreach (var item in Model)
+    foreach (var item in Model)
     {
-        TimeSpan zaman = now.Subtract(item.MessageDate);
-        if (zaman.Days == 0)
+        if (item.MessageStatus == true)
         {
-            if (zaman.Minutes == 0 && zaman.Hours == 0)
-            {
-                sure = "Şimdi";
-            }
-            else if (zaman.Minutes > 0 && zaman.Hours == 0)
-            {
-                sure = zaman.Minutes + " dakika önce";
-            }
-            else
-            {
-                sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
-            }
+            okunduMu = "count-symbol";
+            break;
         }
-        else if (zaman.Days < 10)
+    }
+
+}
+<li class="nav-item dropdown">
+    <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+        <i class="mdi mdi-email-outline"></i>
+        <span class="@okunduMu bg-warning"></span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+        <h6 class="p-3 mb-0">Mesajlar</h6>
+        @foreach (var item in Model)
         {
-            if (zaman.Hours == 0)
+            TimeSpan zaman = now.Subtract(item.MessageDate);
+            if (zaman.Days == 0)
             {
-                sure = zaman.Days + " gün önce";
+                if (zaman.Minutes == 0 && zaman.Hours == 0)
+                {
+                    sure = "Şimdi";
+                }
+                else if (zaman.Minutes > 0 && zaman.Hours == 0)
+                {
+                    sure = zaman.Minutes + " dakika önce";
+                }
+                else
+                {
+                    sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
+                }
+            }
+            else if (zaman.Days < 10)
+            {
+                if (zaman.Hours == 0)
+                {
+                    sure = zaman.Days + " gün önce";
+                }
+                else
+                {
+                    sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
+                }
             }
             else
             {
-                sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
+                sure = item.MessageDate.ToShortDateString() + " tarihinde";
             }
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item" href="/Message/MessageDetails/@item.MessageID">
+                <div class="preview-thumbnail">
+                    <img src="~/@item.SenderUser.ImageUrl" alt="image" class="profile-pic">
+                </div>
+                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                    <h6>
+                        @item.SenderUser.NameSurname - @item.Subject
+                    </h6>
+                    <p class="text-gray mb-0">
+                        @sure gönderildi
+                        @if (!item.MessageStatus)
+                        {
+                            <b>Okundu</b>
+                        }
+                        else
+                        {
+                            <b>Okunmadı</b>
+                        }
+                    </p>
+                </div>
+            </a>
+        }
+        <div class="dropdown-divider"></div>
+        @if (ViewBag.NewMessage != 0)
+        {
+            <h6 class="p-3 mb-0 text-center">@ViewBag.NewMessage tane yeni mesajın var :)</h6>
         }
         else
         {
-            sure = item.MessageDate.ToShortDateString() + " tarihinde";
+            <h6 class="p-3 mb-0 text-center">Şu anda yeni bir mesajın yok :(</h6>
         }
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item preview-item" href="/Message/MessageDetails/@item.MessageID">
-            <div class="preview-thumbnail">
-                <img src="~/@item.SenderUser.ImageUrl" alt="image" class="profile-pic">
-            </div>
-            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6>
-                    @item.SenderUser.NameSurname - @item.Subject
-                </h6>
-                <p class="text-gray mb-0">
-                    @sure gönderildi
-                    @if(!item.MessageStatus)
-                    {
-                        <b>Okundu</b>
-                    }
-                    else
-                    {
-                        <b>Okunmadı</b>
-                    }
-                </p>
-            </div>
-        </a>
-    }
-    <div class="dropdown-divider"></div>
-    @if (ViewBag.NewMessage != 0)
-    {
-        <h6 class="p-3 mb-0 text-center">@ViewBag.NewMessage tane yeni mesajın var :)</h6>
-    }
-    else
-    {
-        <h6 class="p-3 mb-0 text-center">Şu anda yeni bir mesajın yok :(</h6>
-    }
-    <div class="dropdown-divider"></div>
-    
-    <a href="/Message/Inbox"><h6 class="p-3 mb-0 text-center">Tüm Mesajlarını Gör</h6></a>
-</div>
+
+        <a href="/Message/Inbox"><h6 class="p-3 mb-0 text-center">Tüm Mesajlarını Gör</h6></a>
+    </div>
+</li>

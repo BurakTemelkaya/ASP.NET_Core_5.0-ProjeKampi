@@ -35,11 +35,19 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var values = _messageService.GetInboxWithMessageByWriter(await GetByUserID())
-                .Where(x => x.MessageID == id).FirstOrDefault();
-            values.MessageStatus = false;
-            _messageService.TUpdate(values);
-            return View(values);
+            if (id != 0)
+            {
+                var value = _messageService.GetInboxWithMessageByWriter(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
+                if (value == null)
+                    value = _messageService.GetSendBoxWithMessageByWriter(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
+                if (value == null)
+                    return RedirectToAction("Inbox");
+                value.MessageStatus = false;
+                _messageService.TUpdate(value);
+
+                return View(value);
+            }
+            return RedirectToAction("Inbox");
         }
         public async Task<int> GetByUserID()
         {
@@ -57,29 +65,25 @@ namespace CoreDemo.Controllers
             if (ModelState.IsValid)
             {
                 var sender = await _userService.FindByUserNameAsync(User.Identity.Name);
-                message.SenderUser.Id = sender.Id;
+                message.SenderUserId = sender.Id;
                 var mailUser = await _userService.FindByMailAsync(Receiver);
                 var userNameUser = await _userService.FindByUserNameAsync(Receiver);
 
                 if (mailUser != null)
-                {
-                    message.ReceiverUser.Id = mailUser.Id;
-                }
+                    message.ReceiverUserId = mailUser.Id;
                 else if (userNameUser != null)
-                {
-                    message.ReceiverUser.Id = userNameUser.Id;
-                }
+                    message.ReceiverUserId = userNameUser.Id;
                 else
                 {
                     ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
-                    return View();
+                    return View(message);
                 }
                 message.MessageStatus = true;
                 message.MessageDate = DateTime.Now;
                 _messageService.TAdd(message);
                 return RedirectToAction("Inbox");
             }
-            return View();
+            return View(message);
         }
         /// <summary>
         /// Id değeri kontrolü

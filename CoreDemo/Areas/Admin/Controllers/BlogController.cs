@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using CoreDemo.Areas.Admin.Models;
 using DataAccessLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace CoreDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     public class BlogController : Controller
     {
         public IActionResult ExportStaticExcelBlogList()

@@ -3,6 +3,7 @@ using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation.Results;
@@ -85,6 +86,7 @@ namespace CoreDemo.Controllers
             }
             var writer = await _businessUserService.GetByIDAsync(values.WriterID.ToString());
             ViewBag.WriterId = writer.Id;
+            ViewBag.WriterName = writer.NameSurname;
             return View(values);
 
 
@@ -111,11 +113,11 @@ namespace CoreDemo.Controllers
             {
                 if (blogImage != null)
                     blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
-                else
+                else if (blog.BlogImage == null)
                     ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
                 if (blogThumbnailImage != null)
                     blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
-                else
+                else if (blog.BlogThumbnailImage == null)
                     ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 blog.WriterID = user.Id;
@@ -173,32 +175,31 @@ namespace CoreDemo.Controllers
             return RedirectToAction("Error404", "ErrorPage");
         }
         [HttpPost]
-        public IActionResult EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
+        public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             BlogValidator bv = new BlogValidator();
             ValidationResult results = bv.Validate(blog);
+            var oldValue = _blogService.TGetByID(blog.BlogID);
             if (results.IsValid)
             {
                 if (blogImage != null)
                     blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
-                else
-                    ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                else if (blog.BlogImage == null)
+                    blog.BlogImage = oldValue.BlogImage;
                 if (blogThumbnailImage != null)
                     blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
-                else
-                    ModelState.AddModelError("blogImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
-                var value = _blogService.TGetByID(blog.BlogID);//eski değeri getirme
-                blog.BlogID = value.BlogID; //frontend kısmından değiştirlmesin diye burda birdaha atama yaptım
-                blog.BlogCreateDate = value.BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
+                else if (blog.BlogThumbnailImage == null)
+                    blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
+                var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
+                var value = _blogService.GetListWithCategoryByWriterBm(user.Id);//eski değeri getirme
+                if (!value.Any(x => x.WriterID == user.Id && x.BlogID == blog.BlogID))
+                {
+                    return RedirectToAction("BlogListByWriter");
+                }
+                blog.BlogCreateDate = value.FirstOrDefault(x => x.BlogID == blog.BlogID).BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
+                blog.Writer = user;
                 _blogService.TUpdate(blog);//update işlemi
                 return RedirectToAction("BlogListByWriter");
-            }
-            else
-            {
-                foreach (var item in results.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
             }
             GetCategoryList();
             return View();

@@ -14,21 +14,27 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfMessageRepository : GenericRepository<Message>, IMessageDal
     {
-        public List<Message> GetInboxWithMessageByWriter(int id)
+        public List<Message> GetInboxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
         {
             using (var c = new Context())
             {
-                return c.Messages.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverUser.Id == id).ToList();
+                return filter == null ?
+                    c.Messages.Include(x => x.SenderUser)
+                .Where(x => x.ReceiverUser.Id == id).ToList() :
+                c.Messages.Include(x => x.SenderUser)
+                .Where(x => x.ReceiverUser.Id == id).Where(filter).ToList();
             }
         }
 
-        public List<Message> GetSendBoxWithMessageByWriter(int id)
+        public List<Message> GetSendBoxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
         {
             using (var c = new Context())
             {
-                return c.Messages.Include(x => x.ReceiverUser)
-                .Where(x => x.ReceiverUser.Id == id).ToList();
+                return filter == null ?
+                    c.Messages.Include(x => x.ReceiverUser)
+                .Where(x => x.SenderUser.Id == id).ToList() :
+                c.Messages.Include(x => x.ReceiverUser)
+                .Where(x => x.SenderUser.Id == id).Where(filter).ToList();
             }
         }
     }

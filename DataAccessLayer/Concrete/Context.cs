@@ -22,14 +22,12 @@ namespace DataAccessLayer.Concrete
                 .HasOne(x => x.SenderUser)
                 .WithMany(y => y.SenderUserInfo)
                 .HasForeignKey(x => x.SenderUserId)
-                .IsRequired(true)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Message>()
                 .HasOne(x => x.ReceiverUser)
                 .WithMany(y => y.ReceiverUserInfo)
                 .HasForeignKey(x => x.ReceiverUserId)
-                .IsRequired(true)
                 .OnDelete(DeleteBehavior.ClientSetNull);
             base.OnModelCreating(modelBuilder);
         }

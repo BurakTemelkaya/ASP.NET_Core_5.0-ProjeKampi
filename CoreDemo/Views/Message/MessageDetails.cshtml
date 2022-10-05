@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
-<h1>Message Detay Sayfası</h1>
+<h1>Mesaj Detay</h1>
 @Html.HiddenFor(x=> x.MessageID)
 @Html.Label("Mesaj Başlığı")
 @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", disabled = "disabled" })
@@ -12,8 +12,17 @@
 @Html.Label("Mesaj İçeriği")
 @Html.TextAreaFor(x => x.Details, 20, 3, new { @class = "form-control", disabled = "disabled" })
 <br />
-@Html.Label("Gönderen")
-@Html.TextBoxFor(x => x.SenderUser.UserName, new { @class = "form-control", disabled = "disabled" })
+@if(Model.SenderUser!=null)
+{
+    @Html.Label("Gönderen Kullanıcı Adı")
+    @Html.TextBoxFor(x => x.SenderUser.UserName, new { @class = "form-control", disabled = "disabled" })
+}
+else
+{
+    @Html.Label("Alıcı Kullanıcı Adı")
+    @Html.TextBoxFor(x => x.ReceiverUser.UserName, new { @class = "form-control", disabled = "disabled" })
+}
+
 <br />
 <button class="btn btn-gradient-primary" id="MarkUsUnread">Okunmadı olarak işaretle</button>
 <br />
