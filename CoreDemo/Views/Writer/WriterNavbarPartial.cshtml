@@ -44,6 +44,15 @@
                 <i class="mdi mdi-call-merge menu-icon"></i>
             </a>
         </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="/Admin/Widget" target="_blank">
+                    <span class="menu-title">Admin Paneline Git</span>
+                    <i class="mdi mdi-car menu-icon"></i>
+                </a>
+            </li>
+        }
         <li class="nav-item">
             <a class="nav-link" href="/Blog" target="_blank">
                 <span class="menu-title">Siteye Git</span>

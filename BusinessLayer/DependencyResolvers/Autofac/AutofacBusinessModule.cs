@@ -24,8 +24,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<EfAboutRepository>().As<IAboutDal>().SingleInstance();
 
-            builder.RegisterType<EfAdminRepository>().As<IAdminDal>().SingleInstance();
-
             builder.RegisterType<EfBlogRepository>().As<IBlogDal>().SingleInstance();
 
             builder.RegisterType<EfCommentRepository>().As<ICommentDal>().SingleInstance();
@@ -40,8 +38,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
 
             builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
-
-            builder.RegisterType<AdminManager>().As<IAdminService>().SingleInstance();
 
             builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();
 

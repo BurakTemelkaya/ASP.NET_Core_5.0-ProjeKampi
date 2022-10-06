@@ -11,19 +11,18 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 {
     public class Statistic4 : ViewComponent
     {
-        private readonly IAdminService _adminService;
-
-        public Statistic4(IAdminService adminService)
+        readonly IBusinessUserService _userService;
+        public Statistic4(IBusinessUserService userService)
         {
-            _adminService = adminService;
+            _userService = userService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var value = _adminService.TGetByFilter(x => x.AdminID == 1);
-            ViewBag.v1 = value.Name;
-            ViewBag.v2 = value.ImageURL;
-            ViewBag.v3 = value.ShortDescription;
+            var value = await _userService.FindByUserNameAsync(User.Identity.Name);
+            ViewBag.v1 = value.NameSurname;
+            ViewBag.v2 = value.ImageUrl;
+            ViewBag.v3 = value.About;
             return View();
         }
     }

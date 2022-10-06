@@ -27,7 +27,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public IActionResult Index(int page = 1)
         {
-            var values = _categoryService.GetList().ToPagedList(page,3);
+            var values = _categoryService.GetList().ToPagedList(page,10);
             return View(values);
         }
         [HttpGet]

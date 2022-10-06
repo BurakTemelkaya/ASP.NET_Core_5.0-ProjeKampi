@@ -11,6 +11,6 @@ namespace CoreDemo.Areas.Admin.Models
         public int BlogCount { get; set; }
         public int MessageCount { get; set; }
         public int CommentCount { get; set; }
-        public XAttribute Temparature { get; set; }
+        public string Temparature { get; set; }
     }
 }

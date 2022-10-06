@@ -24,12 +24,14 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public IViewComponentResult Invoke()
         {
+            decimal tempFah = Convert.ToDecimal(WeatherApi().Value.Replace(".",","));
+            tempFah = tempFah - Convert.ToDecimal(273.15);
             WidgetModel widgetModel = new WidgetModel
             {
                 BlogCount = _blogService.GetCount(),
                 MessageCount = _message2Service.GetCount(),
                 CommentCount = _commentService.GetCount(),
-                Temparature = WeatherApi()
+                Temparature = tempFah.ToString()
             };
             ViewBag.v2 = _message2Service.GetCount();
             ViewBag.v3 = _commentService.GetCount();
