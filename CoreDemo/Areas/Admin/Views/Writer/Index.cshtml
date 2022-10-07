@@ -41,7 +41,7 @@
 <br />
 <input type="text" class="form-control" id="txtUpdateWriterName" placeholder="Güncellenecek İsim" />
 
-@section scripts{
+
     <script>
         $("#btnGetList").click(function () {
             $.ajax({
@@ -61,8 +61,7 @@
                 }
             })
         })
-    </script>
-    <script>
+
         $("#btnGetById").click(function () {
             let writerId = $("#writerId").val();
             console.log(writerId);
@@ -82,8 +81,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $("#btnAddWriter").click(function () {
             let writer = {
                 Id: $("#txtWriterId").val(),
@@ -99,8 +97,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $("#btndeletewriter").click(x => {
             let id = $("#txtid").val();
             $.ajax({
@@ -112,8 +109,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $("#btnupdatewriter").click(function () {
             let writer = {
                 Id: $("#txtUpdateWriterId").val(),
@@ -129,4 +125,3 @@
             });
         });
     </script>
-}

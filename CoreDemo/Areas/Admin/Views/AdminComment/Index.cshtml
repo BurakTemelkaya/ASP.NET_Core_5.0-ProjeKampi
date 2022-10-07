@@ -1,4 +1,4 @@
-﻿@model List<Comment>
+﻿@model IPagedList<Comment>
 @{
     string puanRengi = "";
 }
@@ -77,4 +77,16 @@
         </div>
     </div>
 </div>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+new X.PagedList.Web.Common.PagedListRenderOptions
+{
+    LinkToFirstPageFormat="<<İlk",
+    LinkToLastPageFormat="Son>>",
+    LinkToNextPageFormat="sonraki>",
+    LinkToPreviousPageFormat="<önceki",
+    ContainerDivClasses=new[] {"navigation"},
+    LiElementClasses= new[] {"page-item"},
+    PageClasses=new[] {"page-link"},
+    ActiveLiElementClass="active"
+})
 

@@ -27,7 +27,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public IActionResult Index(int page = 1)
         {
-            var values = _categoryService.GetList().ToPagedList(page,10);
+            var values = _categoryService.GetList().ToPagedList(page,5);          
             return View(values);
         }
         [HttpGet]
@@ -43,7 +43,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (results.IsValid)
             {
                 category.CategoryStatus = true;
-                _categoryService.TAdd(category);
+                _categoryService.TAdd(category);               
                 return RedirectToAction("Index");
             }
             else

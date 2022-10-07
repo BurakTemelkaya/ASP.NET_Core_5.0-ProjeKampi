@@ -14,16 +14,17 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/Blog/BlogListByWriter">
-                <span class="menu-title">Bloglarım</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/Blog/BlogAdd">
-                <span class="menu-title">Yeni Blog</span>
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <span class="menu-title">Blog</span>
+                <i class="menu-arrow"></i>
                 <i class="mdi mdi-blogger menu-icon"></i>
             </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link mdi mdi-blogger menu-icon" href="/Blog/BlogListByWriter">Bloglarım</a></li>
+                    <li class="nav-item"> <a class="nav-link mdi mdi-blogger menu-icon" href="/Blog/BlogAdd">Yeni Blog</a></li>
+                </ul>
+            </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
@@ -41,7 +42,7 @@
         <li class="nav-item">
             <a class="nav-link" href="/Notification/AllNotification">
                 <span class="menu-title">Bildirimler</span>
-                <i class="mdi mdi-call-merge menu-icon"></i>
+                <i class="mdi mdi-notification-clear-all menu-icon"></i>
             </a>
         </li>
         @if (User.IsInRole("Admin"))
@@ -49,14 +50,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="/Admin/Widget" target="_blank">
                     <span class="menu-title">Admin Paneline Git</span>
-                    <i class="mdi mdi-car menu-icon"></i>
+                    <i class="mdi mdi-account-star menu-icon"></i>
                 </a>
             </li>
         }
         <li class="nav-item">
             <a class="nav-link" href="/Blog" target="_blank">
                 <span class="menu-title">Siteye Git</span>
-                <i class="mdi mdi-car menu-icon"></i>
+                <i class="mdi mdi-sitemap menu-icon"></i>
             </a>
         </li>
         <li class="nav-item">

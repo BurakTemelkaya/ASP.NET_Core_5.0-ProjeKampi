@@ -37,13 +37,15 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(UserSignInViewModel appUser)
+        public async Task<IActionResult> Index(UserSignInViewModel appUser,string returnUrl)
         {
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
                 if (result.Succeeded)
                 {
+                    if (!string.IsNullOrEmpty(returnUrl))
+                        return Redirect(returnUrl);
                     return RedirectToAction("Index", "Dashboard");
                 }
                 else

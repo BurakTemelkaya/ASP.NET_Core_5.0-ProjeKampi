@@ -36,9 +36,6 @@
                 </ul>
             </li>
             <li>
-                <a href="/Admin/Widget"><i class="fa fa-pie-chart"></i> <span class="nav-label">Metrikler</span>  </a>
-            </li>
-            <li>
                 <a href="/Admin/Category"><i class="fa fa-group"></i> <span class="nav-label">Kategoriler</span>  </a>
             </li>
             <li>
@@ -53,7 +50,7 @@
             <li>
                 <a href="widgets.html"><i class="fa fa-info"></i> <span class="nav-label">Ayarlar</span></a>
             </li>
-            @if (User.IsInRole(role: "Admin") || User.IsInRole(role: "Moderator"))
+            @if (User.IsInRole(role: "Admin"))
             {
                 <li>
                     <a href="/Admin/AdminRole/Index"><i class="fa fa-tasks"></i> <span class="nav-label">Roller</span></a>
