@@ -17,6 +17,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Controllers
 {
@@ -38,19 +39,44 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Index(string id)
+        public IActionResult Index(string id, int page = 1, string search = null)
         {
+            List<Blog> values = new List<Blog>();
             List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
-            var values = _blogService.GetBlogListWithCategory().Where(x => x.BlogStatus).OrderByDescending(x => x.BlogCreateDate).ToList();
-            var comments = _commentService.GetList();
+            if (id == null)
+            {
+                values = _blogService.GetBlogListWithCategory().Where(x => x.BlogStatus)
+                    .OrderByDescending(x => x.BlogCreateDate).ToList();
+            }
             if (id != null)
             {
                 if (_blogService.GetCount(x => x.CategoryID == Convert.ToInt32(id)) != 0)
                 {
+                    values = _blogService.GetBlogListWithCategory()
+                        .Where(x => x.BlogStatus && x.CategoryID == Convert.ToInt32(id))
+                        .OrderByDescending(x => x.BlogCreateDate).ToList();
                     values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
                     ViewBag.id = id;
                 }
+                else
+                {
+                    values = _blogService.GetBlogListWithCategory().OrderByDescending(x => x.BlogCreateDate).ToList();
+                }
             }
+            if (search != null)
+            {
+                values = values.Where(x => x.BlogTitle.ToLower().Contains(search.ToLower())).ToList();
+                ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
+                ViewBag.Sonuc = true;
+                if (values.Count() < 1)
+                {
+                    values = null;
+                    values = _blogService.GetBlogListWithCategory().ToList();
+                    ViewBag.Message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
+                    ViewBag.Sonuc = false;
+                }
+            }
+            var comments = _commentService.GetList();
             int commentCount = 0;
             foreach (var item in values)
             {
@@ -59,15 +85,13 @@ namespace CoreDemo.Controllers
                 foreach (var comment in comments)
                 {
                     if (comment.BlogID == item.BlogID)
-                    {
                         commentCount++;
-                    }
                 }
                 value.ContentCount = commentCount;
                 blogandCommentCount.Add(value);
                 commentCount = 0;
             }
-            return View(blogandCommentCount);
+            return View(blogandCommentCount.ToPagedList(page, 6));
         }
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)

@@ -78,7 +78,7 @@
     </div>
 </div>
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
-new X.PagedList.Web.Common.PagedListRenderOptions
+new PagedListRenderOptions
 {
     LinkToFirstPageFormat="<<İlk",
     LinkToLastPageFormat="Son>>",

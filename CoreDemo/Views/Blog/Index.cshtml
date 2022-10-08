@@ -1,5 +1,5 @@
 ﻿@using EntityLayer.Concrete;
-@model List<BlogandCommentCount>
+@model IPagedList<BlogandCommentCount>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -13,6 +13,19 @@
         else
         {
             <h3 class="tittle">@Model[0].Blog.Category.CategoryName Blogları</h3>
+        }
+        @if (ViewBag.Message != null)
+        {
+            @if (ViewBag.Sonuc)
+            {
+                <br />
+                <h3 class="tittle text-success">@ViewBag.Message</h3>
+            }
+            else
+            {
+                <br />
+                <h3 class="tittle text-danger">@ViewBag.Message</h3>
+            }
         }
 
         <div class="inner-sec">
@@ -66,6 +79,22 @@
                 <!--//left-->
             </div>
         </div>
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+        new PagedListRenderOptions
+        {
+        LinkToFirstPageFormat="<<İlk",
+        LinkToLastPageFormat="Son>>",
+        LinkToNextPageFormat="sonraki>",
+        LinkToPreviousPageFormat="<önceki",
+        ContainerDivClasses=new[] {"navigation"},
+        LiElementClasses= new[] {"page-item"},
+        PageClasses=new[] {"page-link"},
+        ActiveLiElementClass="active"
+        })
+        <br />
+        @await Component.InvokeAsync("CategoryList")
     </div>
+
 </section>
+
 

@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
@@ -30,12 +31,17 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult SubscribeMail(NewsLetter newsLetter)
         {
+            NewsLetterValidator rules = new NewsLetterValidator();
+            if (!rules.Validate(newsLetter).IsValid)
+            {
+                return BadRequest("Email geçersiz.");
+            }
             if (_newsLetterService.GetByMail(newsLetter.Mail) == null && newsLetter.Mail != null)
             {
                 _newsLetterService.AddNewsLetter(newsLetter);
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("Böyle bir mail adresi bulunuyor.");
         }
     }
 }

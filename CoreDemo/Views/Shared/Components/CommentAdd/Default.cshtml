@@ -1,13 +1,15 @@
 ﻿<div class="comment-top">
     <div class="comment-bottom">
-        <input type="hidden" id="blogId" value="@ViewBag.blogId" />
+        <div class="form-row">
+            <input type="hidden" id="blogId" value="@ViewBag.blogId" />
 
-        <input class="form-control" type="text" id="CommentUserName" placeholder="Adınız Soyadınız" required="">
+            <input class="form-control" type="text" id="CommentUserName" placeholder="Adınız Soyadınız" required>
 
-        <input class="form-control" type="text" id="CommentTitle" placeholder="Konu" required>
+            <input class="form-control" type="text" id="CommentTitle" placeholder="Konu" required>
 
-        <textarea class="form-control" id="CommentContent" placeholder="Mesajın..." required></textarea>
+            <textarea class="form-control" id="CommentContent" placeholder="Mesajın..." required></textarea>
 
+        </div>
         <div class="container-wrapper">
             <div class="container d-flex align-items-center justify-content-center">
                 <div class="row justify-content-center">

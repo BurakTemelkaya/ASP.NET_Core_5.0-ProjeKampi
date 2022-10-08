@@ -34,14 +34,14 @@
         /* BEGIN EXTERNAL SOURCE */
 
         $(document).ready(function () {
-            
-                                    var defaults = {
-                                            containerID: 'toTop', // fading element id
-                                        containerHoverID: 'toTopHover', // fading element hover id
-                                        scrollSpeed: 1200,
-                                        easingType: 'linear'
-                                        };
-                                    
+
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear'
+            };
+
 
             $().UItoTop({
                 easingType: 'easeOutQuart'
@@ -112,9 +112,11 @@
     </header>
     <!--/main-->
     @RenderBody()
-    <!--//main-->
+    <!--//main-->    
+    
     <!--footer-->
     @await Html.PartialAsync("Partial3")
+    
     <!---->
     <!-- js -->
     <script src="~/CoreBlogTema/js/jquery-2.2.3.min.js"></script>
@@ -137,6 +139,27 @@
         $("#btnSubscribe").click(function () {
             let mail = {
                 Mail: $("#txtEmail").val()
+            };
+            $.ajax({
+                type: "post",
+                url: "/NewsLetter/SubscribeMail",
+                data: mail,
+                success: function (func) {
+                    alert("Mail bültenimize abone oldunuz, teşekkürler.");
+                },
+                error: function (func) {
+                    if (mail.Mail == "") {
+                        alert("Lütfen mail alanını boş bırakmayınız.");
+                    }
+                    else {
+                        alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
+                    }
+                }
+            });
+        });
+        $("#btnFooterSubscribe").click(function () {
+            let mail = {
+                Mail: $("#txtFooterEmail").val()
             };
             $.ajax({
                 type: "post",
