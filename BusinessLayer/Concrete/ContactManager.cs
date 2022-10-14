@@ -21,6 +21,7 @@ namespace BusinessLayer.Concrete
 
         public void ContactAdd(Contact contact)
         {
+            contact.ContactStatus = false;
             _contactDal.Insert(contact);
         }
 

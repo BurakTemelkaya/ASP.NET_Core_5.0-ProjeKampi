@@ -41,6 +41,7 @@ namespace CoreDemo.Controllers
         [AllowAnonymous]
         public IActionResult Index(string id, int page = 1, string search = null)
         {
+            ViewData["Title"] = "Ana Sayfa";
             List<Blog> values = new List<Blog>();
             List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
             if (id == null)
@@ -57,6 +58,7 @@ namespace CoreDemo.Controllers
                         .OrderByDescending(x => x.BlogCreateDate).ToList();
                     values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
                     ViewBag.id = id;
+                    ViewData["Title"] = values.FirstOrDefault().Category.CategoryName + " Blogları";
                 }
                 else
                 {
@@ -67,6 +69,7 @@ namespace CoreDemo.Controllers
             {
                 values = values.Where(x => x.BlogTitle.ToLower().Contains(search.ToLower())).ToList();
                 ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
+                ViewData["Title"] = search;
                 ViewBag.Sonuc = true;
                 if (values.Count() < 1)
                 {
@@ -97,8 +100,8 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
-            var values = _blogService.GetBlogByID(id);
-            if (values == null)
+            var value = _blogService.GetBlogByID(id);
+            if (value == null)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
@@ -108,13 +111,11 @@ namespace CoreDemo.Controllers
             {
                 ViewBag.Star = comments.BlogScore;
             }
-            var writer = await _businessUserService.GetByIDAsync(values.WriterID.ToString());
+            var writer = await _businessUserService.GetByIDAsync(value.WriterID.ToString());
             ViewBag.WriterId = writer.Id;
             ViewBag.WriterName = writer.NameSurname;
-            return View(values);
-
-
-
+            ViewData["Title"] = value.BlogTitle;
+            return View(value);
         }
         public async Task<IActionResult> BlogListByWriter()
         {

@@ -236,7 +236,6 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\CoreDemo.RazorCoreGenerate.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminBlog\Index.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminComment\Index.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminMessage\ComposeMessage.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminMessage\Inbox.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminMessage\SendBox.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminRole\AddRole.cshtml.g.cs
@@ -275,9 +274,6 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\EmployeeTest\EditEmployee.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\EmployeeTest\Index.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\ErrorPage\Error404.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Home\Privacy.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Home\Test.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Login\AccessDenied.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Login\Index.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Message\Inbox.cshtml.g.cs
@@ -305,7 +301,6 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\Partial3.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\UserLayout.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\WriterLayout.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\Index.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\Test.cshtml.g.cs
@@ -484,3 +479,7 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\Components\WriterDropdownToggle\Default.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\Components\LastBlogs\Default.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\NewsLetter\SubscribeMailFooter.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminContact\Index.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminContact\Read.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminMessage\Read.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\Shared\Components\MessageFolders\Default.cshtml.g.cs

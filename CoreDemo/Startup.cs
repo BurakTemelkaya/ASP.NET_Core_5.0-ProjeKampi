@@ -1,13 +1,8 @@
-using BusinessLayer.Abstract;
 using BusinessLayer.AutoMapper.Profiles;
-using BusinessLayer.Concrete;
 using BusinessLayer.DependencyResolvers;
-using BusinessLayer.DependencyResolvers.Autofac;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
-using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,15 +10,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CoreDemo
 {
@@ -56,8 +47,8 @@ namespace CoreDemo
                 .RequireAuthenticatedUser()
                 .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-            });
 
+            });
             services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -72,8 +63,9 @@ namespace CoreDemo
             {
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(100);
-                options.AccessDeniedPath = new PathString("/Login/AccessDenied");
                 options.LoginPath = "/Login/Index";
+                options.LogoutPath = "/Login/Logout";
+                options.AccessDeniedPath = new PathString("/Login/AccessDenied");
                 options.SlidingExpiration = true;
             });
 
@@ -120,7 +112,6 @@ namespace CoreDemo
 
             app.UseEndpoints(endpoints =>
             {
-
                 endpoints.MapAreaControllerRoute(
                     name: "Admin",
                     areaName: "Admin",
@@ -129,7 +120,7 @@ namespace CoreDemo
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Blog}/{action=Index}/{id?}");              
             });
 
 

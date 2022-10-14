@@ -26,6 +26,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewData["Title"] = "İletişim";
             return View();
         }
         [HttpPost]

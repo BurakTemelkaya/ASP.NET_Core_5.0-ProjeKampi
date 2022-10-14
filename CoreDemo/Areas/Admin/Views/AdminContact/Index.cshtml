@@ -1,14 +1,15 @@
-﻿@model List<Message>
+﻿@model List<Contact>
 @{
-    ViewData["Title"] = "Inbox";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
     string read = "";
 }
+
 <div class="wrapper wrapper-content">
     <div class="row">
-        @await Component.InvokeAsync("MessageFolders")
-        <div class="col-lg-9 animated fadeInRight">
+        <div class="col-lg-12 animated fadeInRight">
             <div class="mail-box-header">
+
                 <form method="get" action="index.html" class="float-right mail-search">
                     <div class="input-group">
                         <input type="text" class="form-control form-control-sm" name="search" placeholder="Mail ara">
@@ -20,7 +21,7 @@
                     </div>
                 </form>
                 <h2>
-                    Gelen Kutusu
+                    İletişim
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group float-right">
@@ -32,7 +33,6 @@
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
-
                 </div>
             </div>
             <div class="mail-box">
@@ -41,22 +41,25 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            @if (item.MessageStatus)
+                            @if (item.ContactStatus)
                                 read = "read";
                             else
+                            {
                                 read = "unread";
+                            }
                             <tr class="@read">
                                 <td class="check-mail">
                                     <input type="checkbox" class="i-checks">
                                 </td>
-                                <td class="mail-ontact"><a href="mail_detail.html">@item.SenderUser.NameSurname</a></td>
-                                <td class="mail-subject"><a href="mail_detail.html">@item.Details</a></td>
-                                <td class=""><i class="fa fa-paperclip"></i></td>
-                                <td class="text-right mail-date">@item.MessageDate.ToShortDateString()</td>
+                                <td class="mail-ontact"><a href="/Admin/AdminContact/Read/@item.ContactID">@item.ContactUserName</a></td>
+                                <td class="mail-subject"><a href="/Admin/AdminContact/Read/@item.ContactID">@item.ContactMessage</a></td>
+                                <td class="text-right mail-date">@item.ContactDate</td>
                             </tr>
                         }
                     </tbody>
                 </table>
+
+
             </div>
         </div>
     </div>
