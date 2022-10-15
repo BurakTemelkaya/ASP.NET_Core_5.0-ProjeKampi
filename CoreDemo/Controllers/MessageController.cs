@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -24,23 +25,26 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Inbox()
         {
-            var values = _messageService.GetInboxWithMessageByWriter(await GetByUserID());
+            var values = _messageService.GetInboxWithMessageList(await GetByUserID());
             return View(values);
         }
         public async Task<IActionResult> SendBox()
         {
-            var values = _messageService.GetSendBoxWithMessageByWriter(await GetByUserID());
+            var values = _messageService.GetSendBoxWithMessageList(await GetByUserID());
             return View(values);
         }
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
+            var user = _userService.FindByUserNameAsync(User.Identity.Name);
             if (id != 0)
             {
-                var value = _messageService.GetInboxWithMessageByWriter(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
+                var value = _messageService.GetInboxWithMessageList(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
                 if (value == null)
-                    value = _messageService.GetSendBoxWithMessageByWriter(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
+                    value = _messageService.GetSendBoxWithMessageList(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
                 if (value == null)
+                    return RedirectToAction("Inbox");
+                if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                     return RedirectToAction("Inbox");
                 value.MessageStatus = false;
                 _messageService.TUpdate(value);

@@ -14,7 +14,7 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfMessageRepository : GenericRepository<Message>, IMessageDal
     {
-        public List<Message> GetInboxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
+        public List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
         {
             using (var c = new Context())
             {
@@ -25,8 +25,30 @@ namespace DataAccessLayer.EntityFramework
                 .Where(x => x.ReceiverUser.Id == id).Where(filter).ToList();
             }
         }
+        public Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        {
+            using (var c = new Context())
+            {
+                return filter == null ?
+                    c.Messages.Include(x => x.SenderUser)
+                .Where(x => x.ReceiverUser.Id == id).FirstOrDefault() :
+                c.Messages.Include(x => x.SenderUser)
+                .Where(x => x.ReceiverUser.Id == id).FirstOrDefault(filter);
+            }
+        }
+        public Message GetSendedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        {
+            using (var c = new Context())
+            {
+                return filter == null ?
+                    c.Messages.Include(x => x.ReceiverUser)
+                .Where(x => x.SenderUser.Id == id).FirstOrDefault() :
+                c.Messages.Include(x => x.ReceiverUser)
+                .Where(x => x.SenderUser.Id == id).FirstOrDefault(filter);
+            }
+        }
 
-        public List<Message> GetSendBoxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
+        public List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
         {
             using (var c = new Context())
             {

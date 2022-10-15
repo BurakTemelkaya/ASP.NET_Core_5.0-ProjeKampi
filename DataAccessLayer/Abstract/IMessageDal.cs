@@ -10,7 +10,9 @@ namespace DataAccessLayer.Abstract
 {
     public interface IMessageDal : IGenericDal<Message>
     {
-        List<Message> GetInboxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null);
-        List<Message> GetSendBoxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null);
+        List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null);
+        List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null);
+        Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null);
+        Message GetSendedMessage(int id, Expression<Func<Message, bool>> filter = null);
     }
 }

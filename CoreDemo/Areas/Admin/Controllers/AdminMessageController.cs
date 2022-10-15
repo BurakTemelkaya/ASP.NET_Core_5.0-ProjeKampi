@@ -23,12 +23,12 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Inbox()
         {
-            var values = _messageService.GetInboxWithMessageByWriter(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            var values = _messageService.GetInboxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
             return View(values);
         }
         public async Task<IActionResult> SendBox()
         {
-            var values = _messageService.GetSendBoxWithMessageByWriter(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            var values = _messageService.GetSendBoxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
             return View(values);
         }
         public async Task<int> GetByUserID()
@@ -37,13 +37,30 @@ namespace CoreDemo.Areas.Admin.Controllers
             return user.Id;
         }
         [HttpGet]
-        public IActionResult Read(int id)
+        public IActionResult SendMessage()
         {
-            var value = _messageService.TGetByID(id);
-            if (value.ReceiverUser.UserName != User.Identity.Name)
-            {
-                return RedirectToAction("Index");
-            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(Message message)
+        {
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
+            message.SenderUserId = user.Id;
+            _messageService.TAdd(message);
+            return RedirectToAction("SendMessage");
+        }
+        public async Task<IActionResult> Read(int id)
+        {
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
+            var value = _messageService.GetReceivedMessage(user.Id, x => x.MessageID == id);
+            if (value == null)
+                value = _messageService.GetSendMessage(user.Id, x => x.MessageID == id);
+            if (value == null)
+                return RedirectToAction("Inbox");
+            if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
+                return RedirectToAction("Inbox");
+            value.MessageStatus = false;
+            _messageService.TUpdate(value);
             return View(value);
         }
     }

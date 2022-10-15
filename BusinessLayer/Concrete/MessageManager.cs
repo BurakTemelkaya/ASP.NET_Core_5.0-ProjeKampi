@@ -21,9 +21,9 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public List<Message> GetInboxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
+        public List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetInboxWithMessageByWriter(id, filter);
+            return _messageDal.GetInboxWithMessageList(id, filter);
         }
 
         public List<Message> GetList(Expression<Func<Message, bool>> filter = null)
@@ -62,9 +62,9 @@ namespace BusinessLayer.Concrete
             return _messageDal.GetCount(filter);
         }
 
-        public List<Message> GetSendBoxWithMessageByWriter(int id, Expression<Func<Message, bool>> filter = null)
+        public List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetSendBoxWithMessageByWriter(id, filter);
+            return _messageDal.GetSendBoxWithMessageList(id, filter);
         }
 
         public async Task<bool> MarkChangedAsync(int messageId, string userName)
@@ -85,6 +85,16 @@ namespace BusinessLayer.Concrete
                 return true;
             }
             return false;
+        }
+
+        public Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        {
+            return _messageDal.GetReceivedMessage(id, filter);
+        }
+
+        public Message GetSendMessage(int id, Expression<Func<Message, bool>> filter = null)
+        {
+            return _messageDal.GetSendedMessage(id, filter);
         }
     }
 }
