@@ -59,9 +59,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var value = _roleManager.Roles.FirstOrDefault(x => x.Id == id);
             if (value == null)
-            {
                 return RedirectToAction("Index");
-            }
             RoleUpdateViewModel model = new RoleUpdateViewModel
             {
                 Id = value.Id,

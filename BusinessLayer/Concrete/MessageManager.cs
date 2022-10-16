@@ -33,6 +33,7 @@ namespace BusinessLayer.Concrete
 
         public void TAdd(Message t)
         {
+            t.MessageDate = DateTime.Now;
             t.MessageStatus = true;
             _messageDal.Insert(t);
         }

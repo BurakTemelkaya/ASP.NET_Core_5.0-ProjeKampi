@@ -30,11 +30,11 @@
             <span class="float-right font-normal">@Model.MessageDate</span>
             @if (Model.ReceiverUser != null)
             {
-                <span class="font-normal">From: @Model.ReceiverUser.Email </span>
+                <span class="font-normal">Alıcı: @Model.ReceiverUser.Email </span>
             }
             else
             {
-                <span class="font-normal">From: @Model.SenderUser.Email </span>               
+                <span class="font-normal">Gönderen: @Model.SenderUser.Email </span>               
             }
 
         </h5>
@@ -50,7 +50,10 @@
         <a class="btn btn-sm btn-white" href="#"><i class="fa fa-reply"></i> Yanıtla</a>
         <a class="btn btn-sm btn-white" href="#"><i class="fa fa-arrow-right"></i> Sonraki</a>
         <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
-        <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Kaldır</button>
+        @if (Model.ReceiverUser == null)
+        {
+            <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Sil</button>
+        }
     </div>
     <div class="clearfix"></div>
 </div>

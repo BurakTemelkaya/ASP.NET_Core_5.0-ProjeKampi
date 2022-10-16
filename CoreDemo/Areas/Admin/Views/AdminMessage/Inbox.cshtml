@@ -41,7 +41,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            @if (item.MessageStatus)
+                            @if (!item.MessageStatus)
                                 read = "read";
                             else
                                 read = "unread";

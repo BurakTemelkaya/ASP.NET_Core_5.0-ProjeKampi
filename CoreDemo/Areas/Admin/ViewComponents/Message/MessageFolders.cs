@@ -13,7 +13,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         public IViewComponentResult Invoke()
         {
             ViewBag.ReceivedUnreadMessage = _messageService.
-                GetCount(x => x.MessageStatus == false && x.ReceiverUser.UserName == User.Identity.Name);
+                GetCount(x => x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
             return View();
         }
     }

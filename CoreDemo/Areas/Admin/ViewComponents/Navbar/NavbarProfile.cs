@@ -1,0 +1,30 @@
+﻿using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
+{
+    [Authorize(Roles = "Admin,Moderator")]
+    public class NavbarProfile : ViewComponent
+    {
+        readonly IBusinessUserService _businessUserService;
+        public NavbarProfile(IBusinessUserService businessUserService)
+        {
+            _businessUserService = businessUserService;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
+            var roles = await _businessUserService.FindUserRoleAsync(user);
+            string role = "";
+            foreach (var item in roles)
+                role += item + " , ";
+            role = role.Substring(0, role.Length - 3);
+            ViewBag.Role = role;
+            return View(user);
+        }
+    }
+}

@@ -1,0 +1,20 @@
+﻿@model UserDto
+<li class="nav-header">
+    <div class="dropdown profile-element">
+        <img alt="image" class="rounded-circle" src="@Model.ImageUrl" />
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <span class="block m-t-xs font-bold">@Model.NameSurname</span>
+            <span class="text-muted text-xs block">@ViewBag.Role <b class="caret"></b></span>
+        </a>
+        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+            <li><a class="dropdown-item" href="#">Profil</a></li>
+            <li><a class="dropdown-item" href="/Admin/AdminContact">İletişim</a></li>
+            <li><a class="dropdown-item" href="/Admin/AdminMessage/Inbox">Mail</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/Login/Logout">Çıkış Yap</a></li>
+        </ul>
+    </div>
+    <div class="logo-element">
+        IN+
+    </div>
+</li>

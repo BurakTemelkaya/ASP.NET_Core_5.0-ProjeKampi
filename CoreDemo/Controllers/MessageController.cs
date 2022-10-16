@@ -82,8 +82,6 @@ namespace CoreDemo.Controllers
                     ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
                     return View(message);
                 }
-                message.MessageStatus = true;
-                message.MessageDate = DateTime.Now;
                 _messageService.TAdd(message);
                 return RedirectToAction("Inbox");
             }

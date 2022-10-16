@@ -72,5 +72,11 @@ namespace BusinessLayer.Concrete
             var userDto = Mapper.Map<UserDto>(user);
             return userDto;
         }
+
+        public async Task<List<string>> FindUserRoleAsync(AppUser user)
+        {
+            var value = await _userManager.GetRolesAsync(user);
+            return value.ToList();
+        }
     }
 }

@@ -1,33 +1,27 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace CoreDemo.ViewComponents.Writer
+namespace CoreDemo.Areas.Admin.ViewComponents.Message
 {
-    public class WriterMessageNotification : ViewComponent
+    public class AdminDropdownMessage : ViewComponent
     {
-        private readonly IMessageService _messageService;
-        private readonly IBusinessUserService _userService;
-
-        public WriterMessageNotification(IMessageService messageService, IBusinessUserService userService)
+        readonly IMessageService _messageService;
+        readonly IBusinessUserService _userService;
+        public AdminDropdownMessage(IMessageService messageService, IBusinessUserService userService)
         {
             _messageService = messageService;
             _userService = userService;
         }
-
         public async Task<IViewComponentResult> InvokeAsync()
-        {
+        {           
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             var values = _messageService.GetInboxWithMessageList(user.Id);
             if (values.Count > 3)
                 values = values.TakeLast(3).ToList();
-            ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
+            ViewBag.UnreadMessageCount = _messageService.GetCount(x => x.ReceiverUser.UserName == User.Identity.Name && x.MessageStatus);
             return View(values);
         }
     }

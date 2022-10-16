@@ -6,7 +6,7 @@
     DateTime now = DateTime.Now;
     foreach (var item in Model)
     {
-        if (item.MessageStatus == true)
+        if (item.MessageStatus)
         {
             okunduMu = "count-symbol";
             break;
@@ -27,33 +27,21 @@
             if (zaman.Days == 0)
             {
                 if (zaman.Minutes == 0 && zaman.Hours == 0)
-                {
                     sure = "Şimdi";
-                }
                 else if (zaman.Minutes > 0 && zaman.Hours == 0)
-                {
                     sure = zaman.Minutes + " dakika önce";
-                }
                 else
-                {
                     sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
-                }
             }
             else if (zaman.Days < 10)
             {
                 if (zaman.Hours == 0)
-                {
                     sure = zaman.Days + " gün önce";
-                }
                 else
-                {
                     sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
-                }
             }
             else
-            {
                 sure = item.MessageDate.ToShortDateString() + " tarihinde";
-            }
             <div class="dropdown-divider"></div>
             <a class="dropdown-item preview-item" href="/Message/MessageDetails/@item.MessageID">
                 <div class="preview-thumbnail">

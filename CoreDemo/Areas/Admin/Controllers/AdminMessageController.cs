@@ -42,12 +42,23 @@ namespace CoreDemo.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SendMessage(Message message)
+        public async Task<IActionResult> SendMessage(Message message, string receiver)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             message.SenderUserId = user.Id;
+            var userNameUser = await _userService.FindByUserNameAsync(receiver);
+            var mailUser = await _userService.FindByMailAsync(receiver);
+            if (userNameUser != null)
+                message.ReceiverUserId = userNameUser.Id;
+            else if (mailUser != null)
+                message.ReceiverUserId = mailUser.Id;
+            else
+            {
+                ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
+                return View(message);
+            }
             _messageService.TAdd(message);
-            return RedirectToAction("SendMessage");
+            return RedirectToAction("SendBox");
         }
         public async Task<IActionResult> Read(int id)
         {

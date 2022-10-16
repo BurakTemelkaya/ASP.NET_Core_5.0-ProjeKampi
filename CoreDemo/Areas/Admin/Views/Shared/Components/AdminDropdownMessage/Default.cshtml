@@ -1,0 +1,59 @@
+﻿@model List<Message>
+@{
+    string sure = "";
+    DateTime now = DateTime.Now;
+}
+<li class="dropdown">
+    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+        <i class="fa fa-envelope"></i> @if (ViewBag.UnreadMessageCount > 0)
+        {
+            <span class="label label-warning">@ViewBag.UnreadMessageCount</span>
+        }
+
+
+    </a>
+    <ul class="dropdown-menu dropdown-messages">
+        @foreach (var item in Model)
+        {
+            TimeSpan zaman = now.Subtract(item.MessageDate);
+            if (zaman.Days == 0)
+            {
+                if (zaman.Minutes == 0 && zaman.Hours == 0)
+                    sure = "Şimdi";
+                else if (zaman.Minutes > 0 && zaman.Hours == 0)
+                    sure = zaman.Minutes + " dakika önce";
+                else
+                    sure = zaman.Hours + " saat " + zaman.Minutes + " dakika önce";
+            }
+            else if (zaman.Days < 10)
+            {
+                if (zaman.Hours == 0)
+                    sure = zaman.Days + " gün önce";
+                else
+                    sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
+            }
+            else
+                sure = item.MessageDate.ToShortDateString() + " tarihinde";
+            <li>
+                <div class="dropdown-messages-box">
+                    <a class="dropdown-item float-left" href="/Admin/AdminMessage/Read/@item.MessageID">
+                        <img alt="image" class="rounded-circle" src="@item.SenderUser.ImageUrl">
+                    </a>
+                    <div class="media-body">
+                        <small class="float-right">@sure</small>
+                        <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
+                        <small class="text-muted">@item.MessageDate</small>
+                    </div>
+                </div>
+            </li>
+        }
+        <li class="dropdown-divider"></li>
+        <li>
+            <div class="text-center link-block">
+                <a href="/Admin/AdminMessage/Inbox" class="dropdown-item">
+                    <i class="fa fa-envelope"></i> <strong>Gelen Kutusuna Git</strong>
+                </a>
+            </div>
+        </li>
+    </ul>
+</li>
