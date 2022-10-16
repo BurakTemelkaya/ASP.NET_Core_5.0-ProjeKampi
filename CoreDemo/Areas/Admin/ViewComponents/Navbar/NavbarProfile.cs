@@ -21,8 +21,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
             var roles = await _businessUserService.FindUserRoleAsync(user);
             string role = "";
             foreach (var item in roles)
-                role += item + " , ";
-            role = role.Substring(0, role.Length - 3);
+                role += item + ",";
+            role = role.Substring(0, role.Length - 1);
             ViewBag.Role = role;
             return View(user);
         }
