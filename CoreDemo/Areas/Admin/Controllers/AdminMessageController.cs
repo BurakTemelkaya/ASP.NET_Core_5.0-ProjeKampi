@@ -3,6 +3,7 @@ using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,14 +22,26 @@ namespace CoreDemo.Areas.Admin.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Inbox()
+        public async Task<IActionResult> Inbox(string search = null)
         {
-            var values = _messageService.GetInboxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            List<Message> values = new();
+            if (search != null)
+                values = _messageService.GetInboxWithMessageList(await GetByUserID(),
+                    x => x.Subject.ToLower().Contains(search.ToLower()))
+                    .OrderByDescending(x => x.MessageID).ToList();
+            if (values.Count == 0)
+                values = _messageService.GetInboxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
             return View(values);
         }
-        public async Task<IActionResult> SendBox()
+        public async Task<IActionResult> SendBox(string search = null)
         {
-            var values = _messageService.GetSendBoxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            List<Message> values = new();
+            if (search != null)
+                values = _messageService.GetSendBoxWithMessageList(await GetByUserID(),
+                    x => x.Subject.ToLower().Contains(search.ToLower()))
+                    .OrderByDescending(x => x.MessageID).ToList();
+            if (values.Count == 0)
+                values = _messageService.GetSendBoxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
             return View(values);
         }
         public async Task<int> GetByUserID()
@@ -73,6 +86,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             value.MessageStatus = false;
             _messageService.TUpdate(value);
             return View(value);
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
+            var message = _messageService.GetReceivedMessage(user.Id, x => x.MessageID == id);
+            if (id != 0 && message.ReceiverUserId == user.Id)
+                _messageService.TDelete(message);
+            return RedirectToAction("Inbox");
         }
     }
 }

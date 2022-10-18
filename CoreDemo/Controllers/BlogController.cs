@@ -42,8 +42,8 @@ namespace CoreDemo.Controllers
         public IActionResult Index(string id, int page = 1, string search = null)
         {
             ViewData["Title"] = "Ana Sayfa";
-            List<Blog> values = new List<Blog>();
-            List<BlogandCommentCount> blogandCommentCount = new List<BlogandCommentCount>();
+            List<Blog> values = new();
+            List<BlogandCommentCount> blogandCommentCount = new();
             if (id == null)
             {
                 values = _blogService.GetBlogListWithCategory().Where(x => x.BlogStatus)
@@ -71,7 +71,7 @@ namespace CoreDemo.Controllers
                 ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
                 ViewData["Title"] = search;
                 ViewBag.Sonuc = true;
-                if (values.Count() < 1)
+                if (values.Count < 1)
                 {
                     values = null;
                     values = _blogService.GetBlogListWithCategory().ToList();

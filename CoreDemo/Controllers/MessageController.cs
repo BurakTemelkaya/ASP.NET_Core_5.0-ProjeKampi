@@ -36,7 +36,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var user = _userService.FindByUserNameAsync(User.Identity.Name);
+            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             if (id != 0)
             {
                 var value = _messageService.GetInboxWithMessageList(await GetByUserID(), x => x.MessageID == id).FirstOrDefault();
