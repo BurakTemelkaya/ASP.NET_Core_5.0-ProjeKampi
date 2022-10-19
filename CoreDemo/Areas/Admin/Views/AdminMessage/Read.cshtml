@@ -47,7 +47,10 @@
         </p>
     </div>
     <div class="mail-body text-right tooltip-demo">
-        <a class="btn btn-sm btn-white" href="#"><i class="fa fa-reply"></i> Yanıtla</a>
+        @if (Model.ReceiverUser == null)
+        {
+            <a class="btn btn-sm btn-white" href="#"><i class="fa fa-reply"></i> Yanıtla</a>
+        }
         <a class="btn btn-sm btn-white" href="#"><i class="fa fa-arrow-right"></i> Sonraki</a>
         <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
         @if (Model.ReceiverUser == null)

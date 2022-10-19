@@ -4,6 +4,7 @@ using EntityLayer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,5 +20,6 @@ namespace BusinessLayer.Abstract
         Task<UserDto> FindByMailAsync(string mail);
         Task CastUserRole(AppUser user, string role);
         Task<List<string>> FindUserRoleAsync(AppUser user);
+        Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
     }
 }

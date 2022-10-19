@@ -35,6 +35,7 @@ namespace CoreDemo
             {
                 x.Password.RequireUppercase = false;
                 x.Password.RequireNonAlphanumeric = false;
+                x.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<Context>();
 
             services.AddControllersWithViews();
@@ -59,7 +60,6 @@ namespace CoreDemo
             );
 
             services.ConfigureApplicationCookie(options =>
-
             {
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(100);

@@ -21,8 +21,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic2
         }
         public IViewComponentResult Invoke()
         {
-            ViewBag.v1 = _blogService.GetList().OrderByDescending(x => x.BlogID).Select(y => y.BlogTitle).Take(1).FirstOrDefault();
-            ViewBag.v2 = _commentService.GetCount();
+            ViewBag.v1 = _blogService.GetList().Select(y => y.BlogTitle).TakeLast(1).FirstOrDefault();
+            ViewBag.v2 = _blogService.GetCount(x=> x.BlogStatus);
             return View();
         }
     }

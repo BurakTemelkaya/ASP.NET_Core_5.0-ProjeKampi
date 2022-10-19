@@ -6,6 +6,7 @@ using EntityLayer;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,14 @@ namespace BusinessLayer.Concrete
         {
             var value = await _userManager.GetRolesAsync(user);
             return value.ToList();
+        }
+
+        public async Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null)
+        {
+            if (filter == null)
+                return await _userManager.Users.CountAsync();
+            else
+                return await _userManager.Users.CountAsync(filter);
         }
     }
 }
