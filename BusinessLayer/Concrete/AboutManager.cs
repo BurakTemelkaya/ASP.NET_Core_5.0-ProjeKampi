@@ -36,12 +36,12 @@ namespace BusinessLayer.Concrete
 
         public void TUpdate(About t)
         {
-            throw new NotImplementedException();
+            _aboutDal.Update(t);
         }
 
         public About TGetByFilter(Expression<Func<About, bool>> filter)
         {
-            throw new NotImplementedException();
+            return _aboutDal.GetByFilter();
         }
         public List<About> GetList(Expression<Func<About, bool>> filter)
         {

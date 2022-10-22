@@ -21,7 +21,7 @@ namespace CoreDemo.Controllers
 
         public IActionResult Index()
         {
-            var values = _aboutService.GetList();
+            var values = _aboutService.TGetByFilter();
             return View(values);
         }
         public PartialViewResult SocialMediaAbout()

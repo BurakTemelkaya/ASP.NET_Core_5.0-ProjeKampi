@@ -1,4 +1,4 @@
-﻿@*@model List<About>*@
+﻿@model About
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -13,15 +13,12 @@
                     <div class="blog-grid-top">
 
                         <div class="blog_info_left_grid">
-                            <img src="~/CoreBlogTema/images/b5.jpg" class="img-fluid" alt="">
+                            <img src="@Model.AboutImage1" class="img-fluid" alt="Hakkında Resmi">
                         </div>
                         <h3>
                             Biz Kimiz & Misyonumuz & Vizyonumuz
                         </h3>
-                        @foreach (var item in Model)
-                        {
-                            <p>@item.AboutDetails1</p>
-                        }
+                            <p>@Model.AboutDetails1</p>
                     </div>
                     
                 </div>
@@ -35,7 +32,6 @@
                         @await Html.PartialAsync("~/Views/About/SocialMediaAbout.cshtml")
 
                         @await Component.InvokeAsync("WriterLastBlog")
-
                     </div>
                 </aside>
             </div>

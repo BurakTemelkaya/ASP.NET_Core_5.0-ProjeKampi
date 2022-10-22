@@ -16,14 +16,16 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         readonly INotificationService _notificationService;
         readonly IBlogService _blogService;
         readonly IMessageService _messageService;
+        readonly ICommentService _commentService;
         public Statistic4(IBusinessUserService userService, IContactService contactService, INotificationService notificationService
-            , IBlogService blogService, IMessageService messageService)
+            , IBlogService blogService, IMessageService messageService, ICommentService commentService)
         {
             _userService = userService;
             _contactService = contactService;
             _notificationService = notificationService;
             _blogService = blogService;
             _messageService = messageService;
+            _commentService = commentService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -38,7 +40,13 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             ViewBag.v5 = value.City;
             ViewBag.v6 = value.RegistrationTime;
             ViewBag.BlogCount = _blogService.GetCount(x=> x.WriterID==value.Id);
-            @ViewBag.SendedMessageCount = _messageService.GetCount(x => x.SenderUserId == value.Id);
+            ViewBag.SendedMessageCount = _messageService.GetCount(x => x.SenderUserId == value.Id);
+            var ratings = _commentService.GetBlogListWithComment().Select(x => x.BlogScore);
+            int rating = 0;
+            foreach (var item in ratings)
+                rating += item;
+            rating = rating / ratings.Count();
+            ViewBag.Rating = rating;
             return View();
         }
     }

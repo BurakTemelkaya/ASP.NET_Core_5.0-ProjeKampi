@@ -1,0 +1,35 @@
+﻿@model About
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<form method="post">
+    <label class="col-sm-2 col-form-label">1. Hakkında:</label>
+    <div class="col-sm-12"><textarea class="form-control" asp-for="AboutDetails1" cols="10" rows="10"></textarea></div>
+    <label class="col-sm-2 col-form-label">2. Hakkında:</label>
+    <div class="col-sm-12"><textarea class="form-control" asp-for="AboutDetails2" cols="10" rows="10"></textarea></div>
+    <label class="col-sm-2 col-form-label">1. Resmin Linkini Yapıştır:</label>
+    <div class="col-sm-12"><input type="text" class="form-control" asp-for="AboutImage1" cols="10" rows="10"></div>
+    <label class="col-sm-2 col-form-label">Veya Yükle:</label>
+    <br />
+    <div class="btn-group col-sm-12">
+        <label title="1.Resim Dosyasını Yükle" for="inputImage" class="btn btn-primary">
+            <input type="file" accept="image/*" name="aboutImage1" id="inputImage" class="hide">
+            1. Resmi Yükle
+        </label>
+    </div>
+    <label class="col-sm-2 col-form-label">2. Resmin Linkini Yapıştır:</label>
+    <div class="col-sm-12"><input type="text" class="form-control" asp-for="AboutImage2" cols="10" rows="10"></div>
+    <label class="col-sm-2 col-form-label">Veya Yükle:</label>
+    <div class="btn-group col-sm-12">
+        <label title="2.Res,m Dosyasını Yükle" for="inputImage" class="btn btn-primary">
+            <input type="file" accept="image/*" name="aboutImage2" id="inputImage" class="hide">
+            2. Resmi Yükle
+        </label>
+    </div>
+    <div asp-validation-summary="All"></div>
+        <button class="btn btn-primary col-md-12">Güncelle</button>
+    
+</form>
+

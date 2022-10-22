@@ -14,7 +14,7 @@
                 <ul class="nav nav-second-level collapse">
                     <li><a href="/Admin/AdminMessage/Inbox">Gelen Kutusu</a></li>
                     <li><a href="/Admin/AdminMessage/SendBox">Giden Kutusu</a></li>
-                    <li><a href="/Admin/AdminMessage/ComposeMessage">Yeni Mesaj Oluştur</a></li>
+                    <li><a href="/Admin/AdminMessage/SendMessage">Mesaj Gönder</a></li>
                 </ul>
             </li>
             <li>
@@ -26,9 +26,12 @@
             <li>
                 <a href="/Admin/AdminComment"><i class="fa fa-comment"></i> <span class="nav-label">Yorumlar</span></a>
             </li>
-            <li>
-                <a href="/admin/writer"><i class="fa fa-user"></i> <span class="nav-label">Yazarlar</span></a>
-            </li>
+            @if (User.IsInRole(role: "Admin"))
+            {
+                <li>
+                    <a href="/admin/writer"><i class="fa fa-user"></i> <span class="nav-label">Yazarlar</span></a>
+                </li>
+            }
             <li>
                 <a href="#"><i class="fa fa-info"></i> <span class="nav-label">Ayarlar</span></a>
             </li>

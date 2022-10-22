@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CoreDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Moderator")]
+    [Authorize(Roles = "Admin")]
     public class WriterController : Controller
     {
         public IActionResult Index()

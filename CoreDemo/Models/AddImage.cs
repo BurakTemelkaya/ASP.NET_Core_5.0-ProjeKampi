@@ -23,6 +23,10 @@ namespace CoreDemo.Models
         {
             return "/WriterImageFiles/";
         }
+        public static string StaticAboutImageLocation()
+        {
+            return "/AboutImageFiles/";
+        }
 
     }
 }
