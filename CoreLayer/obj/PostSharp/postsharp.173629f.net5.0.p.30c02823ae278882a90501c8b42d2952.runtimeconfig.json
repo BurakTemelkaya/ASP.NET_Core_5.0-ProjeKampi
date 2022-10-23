@@ -1,0 +1,16 @@
+{
+  "runtimeOptions": {
+    "tfm": "net5.0",
+    "framework": {
+      "name": "Microsoft.NETCore.App",
+      "version": "5.0.12"
+    },
+    "additionalProbingPaths": [
+      "C:\\Users\\Burak\\.nuget\\packages\\",
+      "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages",
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder",
+      "C:\\ProgramData\\PostSharp\\NuGetFallback"
+    ]
+  }
+}

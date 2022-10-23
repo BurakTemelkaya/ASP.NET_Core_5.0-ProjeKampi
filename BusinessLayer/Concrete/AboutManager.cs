@@ -32,8 +32,7 @@ namespace BusinessLayer.Concrete
         public void TDelete(About t)
         {
             throw new NotImplementedException();
-        }
-
+        }      
         public void TUpdate(About t)
         {
             _aboutDal.Update(t);

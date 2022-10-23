@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -49,7 +51,7 @@ namespace BusinessLayer.Concrete
         {
             return _blogDal.GetListAll(x => x.WriterID == id);
         }
-
+        [ValidationAspect(typeof(BlogValidator))]
         public void TAdd(Blog t)
         {
             _blogDal.Insert(t);
@@ -59,7 +61,7 @@ namespace BusinessLayer.Concrete
         {
             _blogDal.Delete(t);
         }
-
+        [ValidationAspect(typeof(BlogValidator))]
         public void TUpdate(Blog t)
         {
             _blogDal.Update(t);

@@ -77,8 +77,8 @@ namespace CoreDemo
                new CoreModule()
             });
 
-            services.AddControllersWithViews().AddFluentValidation(x =>
-            x.RegisterValidatorsFromAssemblyContaining<BlogValidator>());
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
 
             services.AddAutoMapper(typeof(BusinessImages));
 

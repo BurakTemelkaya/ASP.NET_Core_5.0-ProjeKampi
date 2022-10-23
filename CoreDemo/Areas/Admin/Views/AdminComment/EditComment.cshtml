@@ -1,0 +1,18 @@
+﻿@model Comment
+@{
+    ViewData["Title"] = "EditComment";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<form method="post">
+    <input type="hidden" asp-for="CommentID" />
+    <label class="col-sm-2 col-form-label">Adı</label>
+    <div class="col-sm-12"><input type="text" class="form-control" asp-for="CommentUserName"></div>
+    <label class="col-sm-2 col-form-label">Başlık</label>
+    <div class="col-sm-12"><input type="text" class="form-control" asp-for="CommentTitle"></div>
+    <label class="col-sm-2 col-form-label">İçerik</label>
+    <div class="col-sm-12"><textarea class="form-control" asp-for="CommentContent" cols="10" rows="10"></textarea></div>
+    <div asp-validation-summary="All"></div>
+    <button class="btn btn-primary col-md-12">Düzenle</button>
+
+</form>
+

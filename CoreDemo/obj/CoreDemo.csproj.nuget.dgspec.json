@@ -46,7 +46,7 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.14, )"
+              "version": "[5.0.17, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -120,6 +120,9 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
+              "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\CoreLayer.csproj": {
+                "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\CoreLayer.csproj"
+              },
               "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj": {
                 "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj"
               },
@@ -151,17 +154,9 @@
               "target": "Package",
               "version": "[5.2.0, )"
             },
-            "Autofac.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[5.0.1, )"
-            },
             "Autofac.Extras.DynamicProxy": {
               "target": "Package",
               "version": "[5.0.0, )"
-            },
-            "FluentValidation.AspNetCore": {
-              "target": "Package",
-              "version": "[10.3.3, )"
             }
           },
           "imports": [
@@ -249,10 +244,6 @@
               "target": "Package",
               "version": "[5.2.0, )"
             },
-            "Autofac.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[5.0.1, )"
-            },
             "Autofac.Extras.DynamicProxy": {
               "target": "Package",
               "version": "[5.0.0, )"
@@ -261,19 +252,11 @@
               "target": "Package",
               "version": "[0.95.4, )"
             },
-            "FluentValidation.AspNetCore": {
-              "target": "Package",
-              "version": "[10.3.3, )"
-            },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
               "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[5.0.14, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.14, )"
             },
@@ -321,6 +304,111 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\CoreLayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\CoreLayer.csproj",
+        "projectName": "CoreLayer",
+        "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\CoreLayer.csproj",
+        "packagesPath": "C:\\Users\\burak\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\CoreLayer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\burak\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj": {
+                "projectPath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\EntityLayer\\EntityLayer.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Autofac.Extras.DynamicProxy": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.2.2, )"
+            },
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            },
+            "Microsoft.Extensions.Configuration.UserSecrets": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[5.6.0, )"
+            },
+            "System.Runtime.Caching": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "log4net": {
+              "target": "Package",
+              "version": "[2.0.14, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
@@ -383,7 +471,7 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.14, )"
+              "version": "[5.0.17, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

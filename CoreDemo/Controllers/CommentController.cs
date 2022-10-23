@@ -36,7 +36,7 @@ namespace CoreDemo.Controllers
             comment.CommentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
             comment.CommentStatus = true;
             comment.BlogID = blogId;
-            _commentService.CommentAdd(comment);
+            _commentService.TAdd(comment);
             return Ok();
         }
         public PartialViewResult CommentListByBlog(int id)

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UbvZDaMCyqJAmjz2ahJccfSBPDFWYs56REYFYPM6viELzt1Be1Wa/n6HtwMba9vBVkLL3ZFHgdHdBm1uDCjFxA==",
+  "dgSpecHash": "0I03uR01OTonkxRh9mR2fnJKO3yk6aohqGC9iFUaGgQGaTGZ0ynA3js7t/saQOrY+6kh4e9CDOLesfWTkuzhUQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\burak\\source\\repos\\BurakTemelkaya\\ASP.NET_Core_5.0-ProjeKampi\\DataAccessLayer\\DataAccessLayer.csproj",
   "expectedPackageFiles": [
@@ -25,9 +25,9 @@
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",
-    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.14\\microsoft.entityframeworkcore.5.0.14.nupkg.sha512",
-    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\5.0.14\\microsoft.entityframeworkcore.abstractions.5.0.14.nupkg.sha512",
-    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\5.0.14\\microsoft.entityframeworkcore.analyzers.5.0.14.nupkg.sha512",
+    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.17\\microsoft.entityframeworkcore.5.0.17.nupkg.sha512",
+    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\5.0.17\\microsoft.entityframeworkcore.abstractions.5.0.17.nupkg.sha512",
+    "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\5.0.17\\microsoft.entityframeworkcore.analyzers.5.0.17.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.design\\5.0.14\\microsoft.entityframeworkcore.design.5.0.14.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\5.0.14\\microsoft.entityframeworkcore.relational.5.0.14.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\5.0.14\\microsoft.entityframeworkcore.sqlserver.5.0.14.nupkg.sha512",

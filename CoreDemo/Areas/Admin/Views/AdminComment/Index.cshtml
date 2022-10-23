@@ -49,9 +49,10 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            {  if (item.BlogScore <= 3)
+                            {
+                                if (item.BlogScore <= 3)
                                 { puanRengi = "text-danger"; }
-                                else if(item.BlogScore>=4 && item.BlogScore<=6)
+                                else if (item.BlogScore >= 4 && item.BlogScore <= 6)
                                 {
                                     puanRengi = "text-warning";
                                 }
@@ -64,11 +65,11 @@
                                 <td>@item.CommentID</td>
                                 <td>@item.CommentUserName</td>
                                 <td>@item.CommentTitle</td>
-                                <td>@item.Blog.BlogTitle</td>                               
+                                <td>@item.Blog.BlogTitle</td>
                                 <td class="text-navy"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
                                 <td>@item.CommentDate.ToShortDateString()</td>
-                                <td><a href="#" class="btn btn-outline-danger">Sil</a></td>
-                                <td><a href="#" class="btn btn-outline-success">Düzenle</a></td>
+                                <td><a href="/Admin/AdminComment/DeleteComment/@item.CommentID" class="btn btn-outline-danger">Sil</a></td>
+                                <td><a href="/Admin/AdminComment/EditComment/@item.CommentID" class="btn btn-outline-success">Düzenle</a></td>
                             </tr>
                         }
                     </tbody>

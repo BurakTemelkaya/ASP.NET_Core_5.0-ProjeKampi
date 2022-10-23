@@ -13,7 +13,4 @@
     <SourceRoot Include="C:\Users\burak\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">C:\Users\burak\.nuget\packages\newtonsoft.json\10.0.1</PkgNewtonsoft_Json>
-  </PropertyGroup>
 </Project>

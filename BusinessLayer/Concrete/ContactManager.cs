@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -18,7 +20,7 @@ namespace BusinessLayer.Concrete
         {
             _contactDal = contactDal;
         }
-
+        [ValidationAspect(typeof(ContactValidator))]
         public void ContactAdd(Contact contact)
         {
             contact.ContactStatus = false;
@@ -54,7 +56,7 @@ namespace BusinessLayer.Concrete
         {
             return _contactDal.GetByID(id);
         }
-
+        [ValidationAspect(typeof(ContactValidator))]
         public void TUpdate(Contact t)
         {
             _contactDal.Update(t);

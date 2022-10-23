@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using DataAccessLayer.Repositories;
@@ -25,7 +27,7 @@ namespace BusinessLayer.Concrete
         {
             return _categoryDal.GetByID(id);
         }
-
+        [ValidationAspect(typeof(CategoryValidator))]
         public void TAdd(Category t)
         {
             _categoryDal.Insert(t);
@@ -35,7 +37,7 @@ namespace BusinessLayer.Concrete
         {
             _categoryDal.Delete(t);
         }
-
+        [ValidationAspect(typeof(CategoryValidator))]
         public void TUpdate(Category t)
         {
             _categoryDal.Update(t);

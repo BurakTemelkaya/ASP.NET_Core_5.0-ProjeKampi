@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
 using BusinessLayer.StaticTexts;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer;
 using EntityLayer.Concrete;
@@ -24,6 +26,7 @@ namespace BusinessLayer.Concrete
         {
             _userManager = userManager;
         }
+        [ValidationAspect(typeof(UserValidator))]
         public async Task RegisterUserAsync(AppUser T, string password)
         {
             T.RegistrationTime = DateTime.Now;
@@ -44,16 +47,17 @@ namespace BusinessLayer.Concrete
         {
             return await _userManager.FindByIdAsync(id);
         }
-
+        [ValidationAspect(typeof(UserValidator))]
         public async Task UpdateUserAsync(UserDto user)
         {
             var value = await _userManager.FindByNameAsync(user.UserName);
-            value.NameSurname = user.NameSurname;
-            value.Email = user.Email;
-            value.UserName = user.UserName;
-            value.ImageUrl = user.ImageUrl;
-            value.About = user.About;
-            value.City = user.City;
+            //value.NameSurname = user.NameSurname;
+            //value.Email = user.Email;
+            //value.UserName = user.UserName;
+            //value.ImageUrl = user.ImageUrl;
+            //value.About = user.About;
+            //value.City = user.City;
+            value = Mapper.Map<AppUser>(user);
             bool oldPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
             if (user.Password != null && oldPassword)
                 value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);

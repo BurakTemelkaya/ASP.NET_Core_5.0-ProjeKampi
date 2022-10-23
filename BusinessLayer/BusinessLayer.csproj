@@ -5,17 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoreLayer\CoreLayer.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\EntityLayer\EntityLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="5.0.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
   </ItemGroup>
 
 </Project>

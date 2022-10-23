@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -17,8 +19,8 @@ namespace BusinessLayer.Concrete
         {
             _commentDal = commentDal;
         }
-
-        public void CommentAdd(Comment comment)
+        [ValidationAspect(typeof(CommentValidator))]
+        public void TAdd(Comment comment)
         {
             _commentDal.Insert(comment);
         }
@@ -38,14 +40,9 @@ namespace BusinessLayer.Concrete
             return _commentDal.GetListAll(filter);
         }
 
-        public void TAdd(Comment t)
-        {
-            throw new NotImplementedException();
-        }
-
         public void TDelete(Comment t)
         {
-            throw new NotImplementedException();
+            _commentDal.Delete(t);
         }
 
         public Comment TGetByFilter(Expression<Func<Comment, bool>> filter = null)
@@ -55,12 +52,19 @@ namespace BusinessLayer.Concrete
 
         public Comment TGetByID(int id)
         {
-            throw new NotImplementedException();
+            return _commentDal.GetByID(id);
         }
-
+        [ValidationAspect(typeof(CommentValidator))]
         public void TUpdate(Comment t)
         {
-            throw new NotImplementedException();
+            var oldValue = TGetByID(t.CommentID);
+            if (oldValue != null)
+            {
+                t.BlogScore = oldValue.BlogScore;
+                t.CommentDate = oldValue.CommentDate;
+                t.BlogID = oldValue.BlogID;
+            }
+            _commentDal.Update(t);
         }
 
         public List<Comment> GetBlogListWithComment()
