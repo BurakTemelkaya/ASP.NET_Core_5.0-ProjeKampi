@@ -38,7 +38,7 @@
                     <h3>
                         <a href="#">@Model.BlogTitle.ToString() </a>
                     </h3>
-                    @Model.BlogContent
+                    @Html.Raw(Model.BlogContent)
                     <p>
                         Yazar Adı : <b>@ViewBag.WriterName</b>
                     </p>
