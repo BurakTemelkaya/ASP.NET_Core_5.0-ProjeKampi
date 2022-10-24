@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <meta name="keywords" content="Weblog Blog Web Site" />
-
     <script>
         const { error } = require("jquery");
 
@@ -30,9 +29,6 @@
             });
         });
 
-        /* END EXTERNAL SOURCE */
-        /* BEGIN EXTERNAL SOURCE */
-
         $(document).ready(function () {
 
             var defaults = {
@@ -48,21 +44,15 @@
             });
 
         });
-
-        /* END EXTERNAL SOURCE */
-        /* BEGIN EXTERNAL SOURCE */
-
-        /* END EXTERNAL SOURCE */
-        /* BEGIN EXTERNAL SOURCE */
     </script>
     <link href="~/comment-star/dist/style.css" rel="stylesheet" />
     <link href="~/CoreBlogTema/css/bootstrap.css" rel='stylesheet' type='text/css' />
-    <link rel="stylesheet" href="~/CoreBlogTema/css/single.css">
+    <link href="~/CoreBlogTema/css/single.css" rel="stylesheet">
     <link href="~/CoreBlogTema/css/style.css" rel='stylesheet' type='text/css' />
     <link href="~/CoreBlogTema/css/fontawesome-all.css" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
           rel="stylesheet">
-
+    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
 </head>
 
 <body>
@@ -112,14 +102,13 @@
     </header>
     <!--/main-->
     @RenderBody()
-    <!--//main-->    
-    
+    <!--//main-->
     <!--footer-->
     @await Html.PartialAsync("Partial3")
-    
+
     <!---->
     <!-- js -->
-    <script src="~/CoreBlogTema/js/jquery-2.2.3.min.js"></script>
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
     <!-- //js -->
     <!--/ start-smoth-scrolling -->
     <script src="~/CoreBlogTema/js/move-top.js"></script>
@@ -132,7 +121,8 @@
     </a>
 
     <!-- //Custom-JavaScript-File-Links -->
-    <script src="~/CoreBlogTema/js/bootstrap.js"></script>
+    <script src="~/admin/js/bootstrap.js"></script>
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script type="text/javascript">

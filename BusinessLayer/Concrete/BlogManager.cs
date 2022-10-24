@@ -3,22 +3,26 @@ using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.Utilities.FileUtilities;
 
 namespace BusinessLayer.Concrete
 {
     public class BlogManager : IBlogService
     {
         private readonly IBlogDal _blogDal;
+        private readonly IBusinessUserService _userService;
 
-        public BlogManager(IBlogDal blogDal)
+        public BlogManager(IBlogDal blogDal, IBusinessUserService userService)
         {
             _blogDal = blogDal;
+            _userService = userService;
         }
 
         public List<Blog> GetBlogListWithCategory()
@@ -54,6 +58,7 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(BlogValidator))]
         public void TAdd(Blog t)
         {
+            t.BlogCreateDate = DateTime.Now;
             _blogDal.Insert(t);
         }
 
@@ -75,6 +80,24 @@ namespace BusinessLayer.Concrete
         public int GetCount(Expression<Func<Blog, bool>> filter = null)
         {
             return _blogDal.GetCount(filter);
+        }
+
+        public async Task<Blog> BlogAdd(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            if (user == null)
+                return blog;
+            if (blogImage != null && blogThumbnailImage != null)
+            {
+                blog.BlogImage = FileManager.FileAdd(blogImage, FileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = FileManager.FileAdd(blogThumbnailImage, FileManager.StaticProfileImageLocation());
+            }
+            else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
+                return blog;
+            blog.WriterID = user.Id;
+            blog.BlogCreateDate = DateTime.Now;
+            _blogDal.Insert(blog);
+            return blog;
         }
     }
 }

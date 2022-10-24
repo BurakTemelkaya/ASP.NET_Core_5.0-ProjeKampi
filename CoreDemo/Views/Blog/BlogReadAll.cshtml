@@ -2,83 +2,73 @@
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
-<body>
-
-    <!--//banner-->
-    <section class="banner-bottom">
-        <!--/blog-->
-        <div class="container">
-            <div class="row">
-                <!--left-->
-                <div class="col-lg-8 left-blog-info-w3layouts-agileits text-left">
-                        <div class="blog-grid-top">
-                            <div class="b-grid-top">
-                                <div class="blog_info_left_grid">
-                                <img src="@Model.BlogImage" class="img-fluid" alt="@Model.BlogTitle">
-                                </div>
-                                <div class="blog-info-middle">
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <i class="far fa-calendar-alt"></i> @(((DateTime)Model.BlogCreateDate).ToString("dd-MMM-yyyy"))
-                                            </a>
-                                        </li>
-                                        <li class="mx-2">
-                                            <a href="#">
-                                                <i class="far fa-star"></i> @ViewBag.Star
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#comment">
-                                                <i class="far fa-comment"></i> @ViewBag.CommentCount
-                                            </a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <h3>
-                            <a href="#">@Model.BlogTitle </a>
-                            </h3>
-                            <p>
-                                @Model.BlogContent
-                            </p>
-                            <p>
-                            Yazar Adı : <b>@ViewBag.WriterName</b>
-                            </p>
-                            <a href="/Blog/Index" class="btn btn-primary read-m">Blog Listesi</a>
+<!--//banner-->
+<section class="banner-bottom">
+    <!--/blog-->
+    <div class="container">
+        <div class="row">
+            <!--left-->
+            <div class="col-lg-8 left-blog-info-w3layouts-agileits text-left">
+                <div class="blog-grid-top">
+                    <div class="b-grid-top">
+                        <div class="blog_info_left_grid">
+                            <img src="@Model.BlogImage" class="img-fluid" alt="@Model.BlogTitle">
                         </div>
-                    
-                    @await Component.InvokeAsync("CommentListByBlog", new { id = ViewBag.i })
+                        <div class="blog-info-middle">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <i class="far fa-calendar-alt"></i> @(((DateTime)Model.BlogCreateDate).ToString("dd-MMM-yyyy"))
+                                    </a>
+                                </li>
+                                <li class="mx-2">
+                                    <a href="#">
+                                        <i class="far fa-star"></i> @ViewBag.Star
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#comment">
+                                        <i class="far fa-comment"></i> @ViewBag.CommentCount
+                                    </a>
+                                </li>
 
-                    @await Component.InvokeAsync("CommentAdd", new { blogId = ViewBag.i })
-
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>
+                        <a href="#">@Model.BlogTitle.ToString() </a>
+                    </h3>
+                    @Model.BlogContent
+                    <p>
+                        Yazar Adı : <b>@ViewBag.WriterName</b>
+                    </p>
+                    <a href="/Blog/Index" class="btn btn-primary read-m">Blog Listesi</a>
                 </div>
 
-                <!--//left-->
-                <!--right-->
-                <aside class="col-lg-4 agileits-w3ls-right-blog-con text-right">
-                    <div class="right-blog-info text-left">
+                @await Component.InvokeAsync("CommentListByBlog", new { id = ViewBag.i })
 
-                        <h4>Mail Bültenine Abone Olun</h4>
-                        @await Html.PartialAsync("~/Views/NewsLetter/SubscribeMail.cshtml")
+                @await Component.InvokeAsync("CommentAdd", new { blogId = ViewBag.i })
 
-                        @await Component.InvokeAsync("CategoryList")
-
-                        @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId,blogId=ViewBag.i })
-
-                        @await Component.InvokeAsync("LastBlogs")
-                    </div>
-
-                </aside>
-                <!--//right-->
             </div>
+
+            <!--//left-->
+            <!--right-->
+            <aside class="col-lg-4 agileits-w3ls-right-blog-con text-right">
+                <div class="right-blog-info text-left">
+
+                    <h4>Mail Bültenine Abone Olun</h4>
+                    @await Html.PartialAsync("~/Views/NewsLetter/SubscribeMail.cshtml")
+
+                    @await Component.InvokeAsync("CategoryList")
+
+                    @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId,blogId=ViewBag.i })
+
+                    @await Component.InvokeAsync("LastBlogs")
+                </div>
+
+            </aside>
+            <!--//right-->
         </div>
-    </section>
-
-
-
-
-</body>
+    </div>
+</section>
 

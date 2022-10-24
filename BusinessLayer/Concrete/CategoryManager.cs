@@ -5,6 +5,7 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,16 @@ namespace BusinessLayer.Concrete
         public int GetCount(Expression<Func<Category, bool>> filter = null)
         {
             return _categoryDal.GetCount(filter);
+        }
+
+        public List<SelectListItem> GetCategoryList()
+        {
+            return (from x in GetList()
+                    select new SelectListItem
+                    {
+                        Text = x.CategoryName,
+                        Value = x.CategoryID.ToString()
+                    }).ToList();
         }
     }
 }

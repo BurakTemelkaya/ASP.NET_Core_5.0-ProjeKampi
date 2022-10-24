@@ -127,40 +127,25 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult BlogAdd()
         {
-            GetCategoryList();
+            ViewBag.CategoryList = _categoryService.GetCategoryList();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            if (ModelState.IsValid)
+            var value = await _blogService.BlogAdd(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            if (value.BlogImage == null)
             {
-                if (blogImage != null)
-                    blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
-                else if (blog.BlogImage == null)
-                    ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
-                if (blogThumbnailImage != null)
-                    blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
-                else if (blog.BlogThumbnailImage == null)
-                    ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
-                blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = user.Id;
-                _blogService.TAdd(blog);
-                return RedirectToAction("BlogListByWriter", "Blog");
+                ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                return View(blog);
             }
-            GetCategoryList();
-            return View();
-        }
-        public void GetCategoryList()
-        {
-            List<SelectListItem> CategoryValues = (from x in _categoryService.GetList()
-                                                   select new SelectListItem
-                                                   {
-                                                       Text = x.CategoryName,
-                                                       Value = x.CategoryID.ToString()
-                                                   }).ToList();
-            ViewBag.CategoryList = CategoryValues;
+            if (value.BlogThumbnailImage == null)
+            {
+                ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
+                return View(blog);
+            }
+            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            return RedirectToAction("BlogListByWriter", "Blog");
         }
         public IActionResult DeleteBlog(int id)
         {
@@ -190,7 +175,7 @@ namespace CoreDemo.Controllers
             if (id != 0)
             {
                 var blogValue = _blogService.TGetByID(id);
-                GetCategoryList();
+                ViewBag.CategoryList = _categoryService.GetCategoryList();
                 if (blogValue.BlogImage.Substring(0, 5) != "https" || blogValue.BlogImage.Substring(0, 4) != "http")
                     blogValue.BlogImage = null;
                 if (blogValue.BlogThumbnailImage.Substring(0, 5) != "https" || blogValue.BlogThumbnailImage.Substring(0, 4) != "http")
@@ -226,7 +211,7 @@ namespace CoreDemo.Controllers
                 _blogService.TUpdate(blog);//update işlemi
                 return RedirectToAction("BlogListByWriter");
             }
-            GetCategoryList();
+            ViewBag.CategoryList = _categoryService.GetCategoryList();
             return View();
         }
     }

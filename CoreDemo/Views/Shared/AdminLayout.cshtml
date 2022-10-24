@@ -11,8 +11,11 @@
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/admin/css/animate.css" rel="stylesheet">
+    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">    
     <link href="~/admin/css/style.css" rel="stylesheet">
+    <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 </head>
 <body>
 
@@ -55,7 +58,7 @@
             <div class="footer">
                 <div>
                     <cache>
-                       BirBlog <strong>Copyright</strong> Tüm Hakları Saklıdır 2021-@DateTime.Now.Year
+                        BirBlog <strong>Copyright</strong> Tüm Hakları Saklıdır 2021-@DateTime.Now.Year
                     </cache>
                 </div>
             </div>
@@ -74,18 +77,27 @@
     <script src="~/admin/js/inspinia.js"></script>
     <script src="~/admin/js/plugins/pace/pace.min.js"></script>
     <!-- iCheck -->
-    <script src="~/admin/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="js/plugins/iCheck/icheck.min.js"></script>
     <!-- Peity -->
     <script src="~/admin/js/demo/peity-demo.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
         $(document).ready(function () {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-        });</script>
+        });
+        $(document).ready(function () {
+
+            $('#BlogContent').summernote({
+                height: 300
+            });
+
+        });
+    </script>
     @*@await RenderSectionAsync("scripts")*@
 </body>
 </html>

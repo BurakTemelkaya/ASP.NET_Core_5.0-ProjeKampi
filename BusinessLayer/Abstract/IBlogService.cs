@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace BusinessLayer.Abstract
         List<Blog> GetBlogListWithCategory();
         List<Blog> GetBlogByWriter(int id);
         List<Blog> GetLastBlog(int count);
+        Task<Blog> BlogAdd(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
     }
 }

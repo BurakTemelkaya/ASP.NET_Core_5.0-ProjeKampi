@@ -10,31 +10,23 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class FileManager
     {
-        public static string FileAdd(IFormFile file, string fileLocation)
+        public static string FileAdd(IFormFile image, string Folder)
         {
-            try
-            {
-                if (file != null)
-                {
-                    var extension = Path.GetExtension(file.FileName);
-                    var newImageName = Guid.NewGuid() + extension;
-                    var mainPath = "wwwroot";
-                    var path = "/Image/" + fileLocation + "/";
-                    var location = Path.Combine(Directory.GetCurrentDirectory(), mainPath + path, newImageName);
-                    var stream = new FileStream(location, FileMode.Create);
-                    file.CopyTo(stream);
-                    string filePath = path + newImageName;
-                    return filePath;
-                }
-            }
-            catch
-            {
-            }
-            return FileNotUploadReturnValue();
+            var extension = Path.GetExtension(image.FileName);
+            var newImageName = Guid.NewGuid() + extension;
+            var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + Folder,
+                newImageName);
+            var stream = new FileStream(location, FileMode.Create);
+            image.CopyTo(stream);
+            return Folder + newImageName;
         }
-        public static string FileNotUploadReturnValue()
+        public static string StaticProfileImageLocation()
         {
-            return "File Not Uploaded";
+            return "/WriterImageFiles/";
+        }
+        public static string StaticAboutImageLocation()
+        {
+            return "/AboutImageFiles/";
         }
         public static void DeleteFile(string fileLocation)
         {

@@ -33,8 +33,6 @@ namespace CoreDemo
             services.AddDbContext<Context>();
             services.AddIdentity<AppUser, AppRole>(x =>
             {
-                x.Password.RequireUppercase = false;
-                x.Password.RequireNonAlphanumeric = false;
                 x.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<Context>();
 
