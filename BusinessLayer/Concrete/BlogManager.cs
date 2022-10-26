@@ -25,64 +25,65 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public List<Blog> GetBlogListWithCategory()
+        public async Task<List<Blog>> GetBlogListWithCategoryAsync()
         {
-            return _blogDal.GetListWithCategory();
+            return await _blogDal.GetListWithCategoryAsync();
         }
-        public List<Blog> GetListWithCategoryByWriterBm(int id)
+        public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id)
         {
-            return _blogDal.GetListWithCategoryByWriter(id);
+            return await _blogDal.GetListWithCategoryByWriterAsync(id);
         }
-        public Blog TGetByID(int id)
+        public async Task<Blog> TGetByIDAsync(int id)
         {
-            return _blogDal.GetByID(id);
+            return await _blogDal.GetByIDAsync(id);
         }
-        public Blog GetBlogByID(int id)
+        public async Task<Blog> GetBlogByIDAsync(int id)
         {
-            return _blogDal.GetByID(id);
+            return await _blogDal.GetByIDAsync(id);
         }
-        public List<Blog> GetList(Expression<Func<Blog, bool>> filter)
+        public async Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter)
         {
-            return _blogDal.GetListAll(filter);
-        }
-
-        public List<Blog> GetLastBlog(int count)
-        {
-            return _blogDal.GetListAll().TakeLast(count).ToList();
+            return await _blogDal.GetListAllAsync(filter);
         }
 
-        public List<Blog> GetBlogByWriter(int id)
+        public async Task<List<Blog>> GetLastBlogAsync(int count)
         {
-            return _blogDal.GetListAll(x => x.WriterID == id);
+            var value = await _blogDal.GetListAllAsync();
+            return value.TakeLast(count).ToList();
+        }
+
+        public async Task<List<Blog>> GetBlogByWriterAsync(int id)
+        {
+            return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
         [ValidationAspect(typeof(BlogValidator))]
-        public void TAdd(Blog t)
+        public async Task TAddAsync(Blog t)
         {
             t.BlogCreateDate = DateTime.Now;
-            _blogDal.Insert(t);
+            await _blogDal.InsertAsync(t);
         }
 
-        public void TDelete(Blog t)
+        public async Task TDeleteAsync(Blog t)
         {
-            _blogDal.Delete(t);
+            await _blogDal.DeleteAsync(t);
         }
         [ValidationAspect(typeof(BlogValidator))]
-        public void TUpdate(Blog t)
+        public async Task TUpdateAsync(Blog t)
         {
-            _blogDal.Update(t);
+            await _blogDal.UpdateAsync(t);
         }
 
-        public Blog TGetByFilter(Expression<Func<Blog, bool>> filter)
+        public async Task<Blog> TGetByFilterAsync(Expression<Func<Blog, bool>> filter)
         {
-            return _blogDal.GetByFilter(filter);
+            return await _blogDal.GetByFilterAsync(filter);
         }
 
-        public int GetCount(Expression<Func<Blog, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            return _blogDal.GetCount(filter);
+            return await _blogDal.GetCountAsync(filter);
         }
 
-        public async Task<Blog> BlogAdd(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
+        public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var user = await _userService.FindByUserNameAsync(userName);
             if (user == null)
@@ -96,7 +97,7 @@ namespace BusinessLayer.Concrete
                 return blog;
             blog.WriterID = user.Id;
             blog.BlogCreateDate = DateTime.Now;
-            _blogDal.Insert(blog);
+            await _blogDal.InsertAsync(blog);
             return blog;
         }
     }

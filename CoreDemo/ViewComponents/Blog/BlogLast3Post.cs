@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Blog
 {
@@ -18,9 +19,10 @@ namespace CoreDemo.ViewComponents.Blog
             _blogService = blogService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = _blogService.GetLastBlog(3).Where(x=> x.BlogStatus).ToList();
+            var blogs = await _blogService.GetLastBlogAsync(3);
+            var values = await blogs.Where(x => x.BlogStatus).ToListAsync();
             return View(values);
         }
     }

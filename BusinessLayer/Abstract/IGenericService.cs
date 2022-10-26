@@ -9,12 +9,12 @@ namespace BusinessLayer.Abstract
 {
     public interface IGenericService<T>
     {
-        void TAdd(T t);
-        void TDelete(T t);
-        void TUpdate(T t);
-        List<T> GetList(Expression<Func<T, bool>> filter = null);
-        T TGetByID(int id);
-        T TGetByFilter(Expression<Func<T, bool>> filter = null);
-        int GetCount(Expression<Func<T, bool>> filter = null);
+        Task TAddAsync(T t);
+        Task TDeleteAsync(T t);
+        Task TUpdateAsync(T t);
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>> filter = null);
+        Task<T> TGetByIDAsync(int id);
+        Task<T> TGetByFilterAsync(Expression<Func<T, bool>> filter = null);
+        Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null);
     }
 }

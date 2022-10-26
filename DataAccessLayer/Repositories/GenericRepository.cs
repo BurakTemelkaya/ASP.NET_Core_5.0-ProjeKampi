@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,56 +12,56 @@ namespace DataAccessLayer.Repositories
 {
     public class GenericRepository<T> : IGenericDal<T> where T : class
     {
-        public void Delete(T t)
+        public async Task DeleteAsync(T t)
         {
             using var c = new Context();
             c.Remove(t);
-            c.SaveChanges();
+            await c.SaveChangesAsync();
         }
 
-        public T GetByID(int id)
+        public async Task<T> GetByIDAsync(int id)
         {
             using var c = new Context();
-            return c.Set<T>().Find(id);
+            return await c.Set<T>().FindAsync(id);
         }
-        public List<T> GetListAll(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetListAllAsync(Expression<Func<T, bool>> filter = null)
         {
             using var c = new Context();
             return filter == null ?
-                c.Set<T>().ToList() ://null ise
-                c.Set<T>().Where(filter).ToList();//null değilse
+                await c.Set<T>().ToListAsync() ://null ise
+                await c.Set<T>().Where(filter).ToListAsync();//null değilse
         }
 
-        public void Insert(T t)
+        public async Task InsertAsync(T t)
         {
             using var c = new Context();
-            c.Add(t);
-            c.SaveChanges();
+            await c.AddAsync(t);
+            await c.SaveChangesAsync();
         }
 
-        public T GetByFilter(Expression<Func<T, bool>> filter = null)
+        public async Task<T> GetByFilterAsync(Expression<Func<T, bool>> filter = null)
         {
             using var c = new Context();
             if (filter == null)
-                return c.Set<T>().FirstOrDefault();
+                return await c.Set<T>().FirstOrDefaultAsync();
             else
-                return c.Set<T>().FirstOrDefault(filter);
+                return await c.Set<T>().FirstOrDefaultAsync(filter);
         }
 
-        public void Update(T t)
+        public async Task UpdateAsync(T t)
         {
             using var c = new Context();
             c.Update(t);
-            c.SaveChanges();
+            await c.SaveChangesAsync();
         }
 
-        public int GetCount(Expression<Func<T, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null)
         {
             using var c = new Context();
             if (filter == null)
-                return c.Set<T>().Count();
+                return await c.Set<T>().CountAsync();
             else
-                return c.Set<T>().Where(filter).Count();
+                return await c.Set<T>().Where(filter).CountAsync();
         }
     }
 }

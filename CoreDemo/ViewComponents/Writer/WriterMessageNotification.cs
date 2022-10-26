@@ -24,7 +24,7 @@ namespace CoreDemo.ViewComponents.Writer
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var values = _messageService.GetInboxWithMessageList(user.Id);
+            var values =await _messageService.GetInboxWithMessageListAsync(user.Id);
             if (values.Count > 3)
                 values = values.TakeLast(3).ToList();
             ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();

@@ -12,9 +12,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         {
             _notificationService = notificationService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = _notificationService.GetList();
+            var values = await _notificationService.GetListAsync();
             return View(values);
         }
     }

@@ -21,50 +21,50 @@ namespace BusinessLayer.Concrete
             _newsLetterDal = newsLetterDal;
         }
         [ValidationAspect(typeof(NewsLetterValidator))]
-        public void AddNewsLetter(NewsLetter newsLetter)
+        public async Task AddNewsLetterAsync(NewsLetter newsLetter)
         {
             newsLetter.MailStatus = true;
-            _newsLetterDal.Insert(newsLetter);
+            await _newsLetterDal.InsertAsync(newsLetter);
         }
 
-        public NewsLetter GetByMail(string mail)
+        public async Task<NewsLetter> GetByMailAsync(string mail)
         {
-            return _newsLetterDal.GetByFilter(x => x.Mail == mail);
+            return await _newsLetterDal.GetByFilterAsync(x => x.Mail == mail);
         }
 
-        public int GetCount(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            return _newsLetterDal.GetCount(filter);
+            return await _newsLetterDal.GetCountAsync(filter);
         }
 
-        public List<NewsLetter> GetList(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<List<NewsLetter>> GetListAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return await _newsLetterDal.GetListAllAsync(filter);
         }
 
-        public void TAdd(NewsLetter t)
+        public async Task TAddAsync(NewsLetter t)
         {
-            throw new NotImplementedException();
+            await _newsLetterDal.InsertAsync(t);
         }
 
-        public void TDelete(NewsLetter t)
+        public async Task TDeleteAsync(NewsLetter t)
         {
-            throw new NotImplementedException();
+            await _newsLetterDal.DeleteAsync(t);
         }
 
-        public NewsLetter TGetByFilter(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<NewsLetter> TGetByFilterAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return await _newsLetterDal.GetByFilterAsync(filter);
         }
 
-        public NewsLetter TGetByID(int id)
+        public async Task<NewsLetter> TGetByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _newsLetterDal.GetByIDAsync(id);
         }
 
-        public void TUpdate(NewsLetter t)
+        public async Task TUpdateAsync(NewsLetter t)
         {
-            throw new NotImplementedException();
+            await _newsLetterDal.UpdateAsync(t);
         }
     }
 }

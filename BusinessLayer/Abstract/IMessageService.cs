@@ -10,10 +10,10 @@ namespace BusinessLayer.Abstract
 {
     public interface IMessageService : IGenericService<Message>
     {
-        List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null);
-        List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null);
-        Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null);
-        Message GetSendMessage(int id, Expression<Func<Message, bool>> filter = null);
+        Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null);
+        Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null);
+        Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null);
+        Task<Message> GetSendMessageAsync(int id, Expression<Func<Message, bool>> filter = null);
         Task<bool> MarkChangedAsync(int messageId, string userName);
     }
 }

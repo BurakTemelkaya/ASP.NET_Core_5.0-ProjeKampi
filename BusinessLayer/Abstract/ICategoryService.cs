@@ -10,6 +10,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ICategoryService : IGenericService<Category>
     {
-        List<SelectListItem> GetCategoryList();
+        Task<List<SelectListItem>> GetCategoryListAsync();
     }
 }

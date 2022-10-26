@@ -21,45 +21,45 @@ namespace BusinessLayer.Concrete
             _contactDal = contactDal;
         }
         [ValidationAspect(typeof(ContactValidator))]
-        public void ContactAdd(Contact contact)
+        public async Task ContactAddAsync(Contact contact)
         {
             contact.ContactStatus = false;
-            _contactDal.Insert(contact);
+            await _contactDal.InsertAsync(contact);
         }
 
-        public int GetCount(Expression<Func<Contact, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return _contactDal.GetCount(filter);
+            return await _contactDal.GetCountAsync(filter);
         }
 
-        public List<Contact> GetList(Expression<Func<Contact, bool>> filter = null)
+        public async Task<List<Contact>> GetListAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return _contactDal.GetListAll(filter);
+            return await _contactDal.GetListAllAsync(filter);
         }
 
-        public void TAdd(Contact t)
+        public async Task TAddAsync(Contact t)
         {
-            _contactDal.Insert(t);
+            await _contactDal.InsertAsync(t);
         }
 
-        public void TDelete(Contact t)
+        public async Task TDeleteAsync(Contact t)
         {
-            _contactDal.Delete(t);
+            await _contactDal.DeleteAsync(t);
         }
 
-        public Contact TGetByFilter(Expression<Func<Contact, bool>> filter = null)
+        public async Task<Contact> TGetByFilterAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return _contactDal.GetByFilter(filter);
+            return await _contactDal.GetByFilterAsync(filter);
         }
 
-        public Contact TGetByID(int id)
+        public async Task<Contact> TGetByIDAsync(int id)
         {
-            return _contactDal.GetByID(id);
+            return await _contactDal.GetByIDAsync(id);
         }
         [ValidationAspect(typeof(ContactValidator))]
-        public void TUpdate(Contact t)
+        public async Task TUpdateAsync(Contact t)
         {
-            _contactDal.Update(t);
+            await _contactDal.UpdateAsync(t);
         }
     }
 }

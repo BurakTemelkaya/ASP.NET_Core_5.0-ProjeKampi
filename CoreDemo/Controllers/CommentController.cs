@@ -31,17 +31,17 @@ namespace CoreDemo.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult PartialAddComment(Comment comment, int blogId)
+        public async Task<IActionResult> PartialAddComment(Comment comment, int blogId)
         {
             comment.CommentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
             comment.CommentStatus = true;
             comment.BlogID = blogId;
-            _commentService.TAdd(comment);
+            await _commentService.TAddAsync(comment);
             return Ok();
         }
-        public PartialViewResult CommentListByBlog(int id)
+        public async Task<PartialViewResult> CommentListByBlog(int id)
         {
-            var values = _commentService.GetListById(id);
+            var values = await _commentService.GetListByIdAsync(id);
             return PartialView(values);
         }
     }

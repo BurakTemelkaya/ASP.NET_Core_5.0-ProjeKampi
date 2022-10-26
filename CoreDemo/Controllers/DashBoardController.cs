@@ -31,9 +31,9 @@ namespace CoreDemo.Controllers
         {
             var userName = User.Identity.Name;
             var user = await _userService.FindByUserNameAsync(userName);
-            ViewBag.ToplamBlogSayisi = _blogService.GetCount(x => x.BlogStatus == true);
-            ViewBag.YazarinBlogSayisi = _blogService.GetCount(x => x.WriterID == user.Id);
-            ViewBag.KategoriSayisi = _categoryService.GetCount(x => x.CategoryStatus == true);
+            ViewBag.ToplamBlogSayisi = await _blogService.GetCountAsync(x => x.BlogStatus == true);
+            ViewBag.YazarinBlogSayisi = await _blogService.GetCountAsync(x => x.WriterID == user.Id);
+            ViewBag.KategoriSayisi = await _categoryService.GetCountAsync(x => x.CategoryStatus == true);
             return View();
         }
     }

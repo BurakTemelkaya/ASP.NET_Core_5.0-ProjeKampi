@@ -19,9 +19,9 @@ namespace CoreDemo.Controllers
             _aboutService = aboutService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _aboutService.TGetByFilter();
+            var values = await _aboutService.TGetByFilterAsync();
             return View(values);
         }
         public PartialViewResult SocialMediaAbout()

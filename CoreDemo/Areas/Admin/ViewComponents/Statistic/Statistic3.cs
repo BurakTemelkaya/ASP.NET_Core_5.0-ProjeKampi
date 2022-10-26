@@ -29,9 +29,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         public async Task<IViewComponentResult> InvokeAsync()
         {
             ViewBag.UserCount = await _userService.GetByUserCountAsync();
-            ViewBag.LikeCommentCount = _commentService.GetCount(x => x.BlogScore > 2);
-            ViewBag.NewsLetterCount = _newsLetterService.GetCount();
-            ViewBag.CategoryCount = _categoryService.GetCount();
+            ViewBag.LikeCommentCount = await _commentService.GetCountAsync(x => x.BlogScore > 2);
+            ViewBag.NewsLetterCount = await _newsLetterService.GetCountAsync();
+            ViewBag.CategoryCount = await _categoryService.GetCountAsync();
             string exchangeRate = "http://www.tcmb.gov.tr/kurlar/today.xml";
             var xmlDoc = new XmlDocument();
             try

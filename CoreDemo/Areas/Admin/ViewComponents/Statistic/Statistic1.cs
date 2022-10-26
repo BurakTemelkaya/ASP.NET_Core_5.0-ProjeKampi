@@ -22,19 +22,19 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             _commentService = commentService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             decimal tempFah = Convert.ToDecimal(WeatherApi().Value.Replace(".",","));
             tempFah = tempFah - Convert.ToDecimal(273.15);
             WidgetModel widgetModel = new WidgetModel
             {
-                BlogCount = _blogService.GetCount(),
-                MessageCount = _message2Service.GetCount(),
-                CommentCount = _commentService.GetCount(),
+                BlogCount = await _blogService.GetCountAsync(),
+                MessageCount = await _message2Service.GetCountAsync(),
+                CommentCount = await _commentService.GetCountAsync(),
                 Temparature = tempFah.ToString()
             };
-            ViewBag.v2 = _message2Service.GetCount();
-            ViewBag.v3 = _commentService.GetCount();
+            ViewBag.v2 = await _message2Service.GetCountAsync();
+            ViewBag.v3 = await _commentService.GetCountAsync();
             return View(widgetModel);
         }
         private XAttribute WeatherApi(string city = "istanbul")

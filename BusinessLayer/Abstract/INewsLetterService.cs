@@ -9,7 +9,7 @@ namespace BusinessLayer.Abstract
 {
     public interface INewsLetterService : IGenericService<NewsLetter>
     {
-        void AddNewsLetter(NewsLetter newsLetter);
-        NewsLetter GetByMail(string mail);
+        Task AddNewsLetterAsync(NewsLetter newsLetter);
+        Task<NewsLetter> GetByMailAsync(string mail);
     }
 }

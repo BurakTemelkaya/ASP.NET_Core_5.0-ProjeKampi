@@ -25,14 +25,14 @@ namespace CoreDemo.Controllers
             _signInManager = signInManager;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (User.Identity.Name != null)
             {
                 return RedirectToAction("Index", "Dashboard");
             }
             UserSignUpViewModel signUpViewModel = new UserSignUpViewModel();
-            signUpViewModel.Cities = _writerCity.GetCityList();
+            signUpViewModel.Cities = await _writerCity.GetCityListAsync();
             return View(signUpViewModel);
         }
         [HttpPost]
@@ -42,7 +42,7 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
-                signUpViewModel.Cities = _writerCity.GetCityList();
+                signUpViewModel.Cities = await _writerCity.GetCityListAsync();
                 return View(signUpViewModel);
             }
             if (ModelState.IsValid)
@@ -67,7 +67,7 @@ namespace CoreDemo.Controllers
                 await _signInManager.SignInAsync(user, true);
                 return RedirectToAction("Index", "Dashboard");
             }
-            signUpViewModel.Cities = _writerCity.GetCityList();
+            signUpViewModel.Cities = await _writerCity.GetCityListAsync();
             return View(signUpViewModel);
         }
     }

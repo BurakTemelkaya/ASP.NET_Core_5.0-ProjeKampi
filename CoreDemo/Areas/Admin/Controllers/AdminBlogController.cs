@@ -21,9 +21,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             _categoryService = categoryService;
         }
 
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var values = _blogService.GetBlogListWithCategory().ToPagedList(page, 4);
+            var blogs = await _blogService.GetBlogListWithCategoryAsync();
+            var values = await blogs.ToPagedListAsync(page, 4);
             foreach (var item in values)
             {
                 if (item.BlogContent.Length > 150)
@@ -34,15 +35,15 @@ namespace CoreDemo.Areas.Admin.Controllers
             return View(values);
         }
         [HttpGet]
-        public IActionResult BlogAdd()
+        public async Task<IActionResult> BlogAdd()
         {
-            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var value = await _blogService.BlogAdd(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             if (value.BlogImage == null)
             {
                 ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
@@ -53,7 +54,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
-            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            ViewBag.CategoryList = _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
     }

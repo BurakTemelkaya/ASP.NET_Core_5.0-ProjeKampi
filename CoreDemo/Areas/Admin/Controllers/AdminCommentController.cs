@@ -2,6 +2,7 @@
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
@@ -16,17 +17,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             _commentService = commentService;
         }
 
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var values = _commentService.GetBlogListWithComment().ToPagedList(page, 5);
+            var comments = await _commentService.GetBlogListWithCommentAsync();
+            var values = await comments.ToPagedListAsync(page, 5);
             return View(values);
         }
-        public IActionResult DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(int id)
         {
-            var value = _commentService.TGetByID(id);
+            var value = await _commentService.TGetByIDAsync(id);
             if (value != null)
             {
-                _commentService.TDelete(value);
+                await _commentService.TDeleteAsync(value);
                 ViewBag.ReturnMessage = "Yorum Başarıyla Silindi";
             }
             else
@@ -34,9 +36,9 @@ namespace CoreDemo.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult EditComment(int id)
+        public async Task<IActionResult> EditComment(int id)
         {
-            var value = _commentService.TGetByID(id);
+            var value = await _commentService.TGetByIDAsync(id);
             if (value != null)
             {
                 return View(value);
@@ -44,10 +46,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        public IActionResult EditComment(Comment comment)
+        public async Task<IActionResult> EditComment(Comment comment)
         {
             if (comment != null)
-                _commentService.TUpdate(comment);
+                await _commentService.TUpdateAsync(comment);
             return RedirectToAction("Index");
         }
     }

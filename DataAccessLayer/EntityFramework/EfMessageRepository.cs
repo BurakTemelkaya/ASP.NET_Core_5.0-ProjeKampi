@@ -14,50 +14,42 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfMessageRepository : GenericRepository<Message>, IMessageDal
     {
-        public List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            using (var c = new Context())
-            {
-                return filter == null ?
-                    c.Messages.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverUser.Id == id).ToList() :
-                c.Messages.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverUser.Id == id).Where(filter).ToList();
-            }
+            using var c = new Context();
+            return filter == null ?
+                await c.Messages.Include(x => x.SenderUser)
+            .Where(x => x.ReceiverUser.Id == id).ToListAsync() :
+           await c.Messages.Include(x => x.SenderUser)
+            .Where(x => x.ReceiverUser.Id == id).Where(filter).ToListAsync();
         }
-        public Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            using (var c = new Context())
-            {
-                return filter == null ?
-                    c.Messages.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverUser.Id == id).FirstOrDefault() :
-                c.Messages.Include(x => x.SenderUser)
-                .Where(x => x.ReceiverUser.Id == id).FirstOrDefault(filter);
-            }
+            using var c = new Context();
+            return filter == null ?
+                await c.Messages.Include(x => x.SenderUser)
+            .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync() :
+            await c.Messages.Include(x => x.SenderUser)
+            .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync(filter);
         }
-        public Message GetSendedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetSendedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            using (var c = new Context())
-            {
-                return filter == null ?
-                    c.Messages.Include(x => x.ReceiverUser)
-                .Where(x => x.SenderUser.Id == id).FirstOrDefault() :
-                c.Messages.Include(x => x.ReceiverUser)
-                .Where(x => x.SenderUser.Id == id).FirstOrDefault(filter);
-            }
+            using var c = new Context();
+            return filter == null ?
+               await c.Messages.Include(x => x.ReceiverUser)
+            .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync() :
+            await c.Messages.Include(x => x.ReceiverUser)
+            .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync(filter);
         }
 
-        public List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            using (var c = new Context())
-            {
-                return filter == null ?
-                    c.Messages.Include(x => x.ReceiverUser)
-                .Where(x => x.SenderUser.Id == id).ToList() :
-                c.Messages.Include(x => x.ReceiverUser)
-                .Where(x => x.SenderUser.Id == id).Where(filter).ToList();
-            }
+            using var c = new Context();
+            return filter == null ?
+               await c.Messages.Include(x => x.ReceiverUser)
+            .Where(x => x.SenderUser.Id == id).ToListAsync() :
+            await c.Messages.Include(x => x.ReceiverUser)
+            .Where(x => x.SenderUser.Id == id).Where(filter).ToListAsync();
         }
     }
 }

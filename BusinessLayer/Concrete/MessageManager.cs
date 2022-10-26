@@ -21,58 +21,58 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public List<Message> GetInboxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetInboxWithMessageList(id, filter);
+            return await _messageDal.GetInboxWithMessageListAsync(id, filter);
         }
 
-        public List<Message> GetList(Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetListAsync(Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetListAll(filter);
+            return await _messageDal.GetListAllAsync(filter);
         }
 
-        public void TAdd(Message t)
+        public async Task TAddAsync(Message t)
         {
             t.MessageDate = DateTime.Now;
             t.MessageStatus = true;
-            _messageDal.Insert(t);
+            await _messageDal.InsertAsync(t);
         }
 
-        public void TDelete(Message t)
+        public async Task TDeleteAsync(Message t)
         {
-            _messageDal.Delete(t);
+            await _messageDal.DeleteAsync(t);
         }
 
-        public Message TGetByFilter(Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> TGetByFilterAsync(Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetByFilter(filter);
+            return await _messageDal.GetByFilterAsync(filter);
         }
 
-        public Message TGetByID(int id)
+        public async Task<Message> TGetByIDAsync(int id)
         {
-            return _messageDal.GetByID(id);
+            return await _messageDal.GetByIDAsync(id);
         }
 
-        public void TUpdate(Message t)
+        public async Task TUpdateAsync(Message t)
         {
-            _messageDal.Update(t);
+            await _messageDal.UpdateAsync(t);
         }
 
-        public int GetCount(Expression<Func<Message, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetCount(filter);
+            return await _messageDal.GetCountAsync(filter);
         }
 
-        public List<Message> GetSendBoxWithMessageList(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetSendBoxWithMessageList(id, filter);
+            return await _messageDal.GetSendBoxWithMessageListAsync(id, filter);
         }
 
         public async Task<bool> MarkChangedAsync(int messageId, string userName)
         {
             if (messageId != 0)
             {
-                var message = TGetByFilter(x => x.MessageID == messageId);
+                var message = await TGetByFilterAsync(x => x.MessageID == messageId);
                 var activeUser = await _userService.FindByUserNameAsync(userName);
                 if (activeUser.UserName != userName)
                 {
@@ -82,20 +82,20 @@ namespace BusinessLayer.Concrete
                     message.MessageStatus = false;
                 else
                     message.MessageStatus = true;
-                TUpdate(message);
+                await TUpdateAsync(message);
                 return true;
             }
             return false;
         }
 
-        public Message GetReceivedMessage(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetReceivedMessage(id, filter);
+            return await _messageDal.GetReceivedMessageAsync(id, filter);
         }
 
-        public Message GetSendMessage(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetSendMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
-            return _messageDal.GetSendedMessage(id, filter);
+            return await _messageDal.GetSendedMessageAsync(id, filter);
         }
     }
 }

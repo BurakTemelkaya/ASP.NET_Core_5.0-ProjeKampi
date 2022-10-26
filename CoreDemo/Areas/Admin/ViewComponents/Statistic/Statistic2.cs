@@ -19,10 +19,11 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic2
             _message2Service = message2Service;
             _commentService = commentService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            ViewBag.v1 = _blogService.GetList().Select(y => y.BlogTitle).TakeLast(1).FirstOrDefault();
-            ViewBag.v2 = _blogService.GetCount(x=> x.BlogStatus);
+            var value = await _blogService.GetListAsync();
+            ViewBag.v1 = value.Select(y => y.BlogTitle).TakeLast(1).FirstOrDefault();
+            ViewBag.v2 = await _blogService.GetCountAsync(x=> x.BlogStatus);
             return View();
         }
     }

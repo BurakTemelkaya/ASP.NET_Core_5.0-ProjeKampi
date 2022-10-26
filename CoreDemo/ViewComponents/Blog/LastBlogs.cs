@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Blog
 {
@@ -12,9 +14,10 @@ namespace CoreDemo.ViewComponents.Blog
         {
             _blogService = blogService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var last3Blog = _blogService.GetList().Where(x => x.BlogStatus).TakeLast(3);
+            var blogs = await _blogService.GetListAsync();
+            var last3Blog = await blogs.Where(x => x.BlogStatus).TakeLast(3).ToListAsync();
             return View(last3Blog);
         }
     }

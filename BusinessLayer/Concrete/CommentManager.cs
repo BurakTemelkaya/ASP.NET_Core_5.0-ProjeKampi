@@ -20,56 +20,56 @@ namespace BusinessLayer.Concrete
             _commentDal = commentDal;
         }
         [ValidationAspect(typeof(CommentValidator))]
-        public void TAdd(Comment comment)
+        public async Task TAddAsync(Comment comment)
         {
-            _commentDal.Insert(comment);
+            await _commentDal.InsertAsync(comment);
         }
 
-        public int GetCount(Expression<Func<Comment, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Comment, bool>> filter = null)
         {
-            return _commentDal.GetCount(filter);
+            return await _commentDal.GetCountAsync(filter);
         }
 
-        public List<Comment> GetListById(int id)
+        public async Task<List<Comment>> GetListByIdAsync(int id)
         {
-            return _commentDal.GetListAll(x => x.BlogID == id);
+            return await _commentDal.GetListAllAsync(x => x.BlogID == id);
         }
 
-        public List<Comment> GetList(Expression<Func<Comment, bool>> filter = null)
+        public async Task<List<Comment>> GetListAsync(Expression<Func<Comment, bool>> filter = null)
         {
-            return _commentDal.GetListAll(filter);
+            return await _commentDal.GetListAllAsync(filter);
         }
 
-        public void TDelete(Comment t)
+        public async Task TDeleteAsync(Comment t)
         {
-            _commentDal.Delete(t);
+            await _commentDal.DeleteAsync(t);
         }
 
-        public Comment TGetByFilter(Expression<Func<Comment, bool>> filter = null)
+        public async Task<Comment> TGetByFilterAsync(Expression<Func<Comment, bool>> filter = null)
         {
-            return _commentDal.GetByFilter(filter);
+            return await _commentDal.GetByFilterAsync(filter);
         }
 
-        public Comment TGetByID(int id)
+        public async Task<Comment> TGetByIDAsync(int id)
         {
-            return _commentDal.GetByID(id);
+            return await _commentDal.GetByIDAsync(id);
         }
         [ValidationAspect(typeof(CommentValidator))]
-        public void TUpdate(Comment t)
+        public async Task TUpdateAsync(Comment t)
         {
-            var oldValue = TGetByID(t.CommentID);
+            var oldValue = await TGetByIDAsync(t.CommentID);
             if (oldValue != null)
             {
                 t.BlogScore = oldValue.BlogScore;
                 t.CommentDate = oldValue.CommentDate;
                 t.BlogID = oldValue.BlogID;
             }
-            _commentDal.Update(t);
+            await _commentDal.UpdateAsync(t);
         }
 
-        public List<Comment> GetBlogListWithComment()
+        public Task<List<Comment>> GetBlogListWithCommentAsync()
         {
-            return _commentDal.GetListWithCommentByBlog();
+            return _commentDal.GetListWithCommentByBlogAsync();
         }
     }
 }

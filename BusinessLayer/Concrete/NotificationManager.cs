@@ -19,39 +19,39 @@ namespace BusinessLayer.Concrete
             _notificationDal = notificationDal;
         }
 
-        public int GetCount(Expression<Func<Notification, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return _notificationDal.GetCount(filter);
+            return await _notificationDal.GetCountAsync(filter);
         }
 
-        public List<Notification> GetList(Expression<Func<Notification, bool>> filter = null)
+        public Task<List<Notification>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return _notificationDal.GetListAll(filter);
+            return _notificationDal.GetListAllAsync(filter);
         }
 
-        public void TAdd(Notification t)
+        public async Task TAddAsync(Notification t)
         {
-            _notificationDal.Insert(t);
+            await _notificationDal.InsertAsync(t);
         }
 
-        public void TDelete(Notification t)
+        public async Task TDeleteAsync(Notification t)
         {
-            _notificationDal.Delete(t);
+            await _notificationDal.DeleteAsync(t);
         }
 
-        public Notification TGetByFilter(Expression<Func<Notification, bool>> filter = null)
+        public async Task<Notification> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return _notificationDal.GetByFilter(filter);
+            return await _notificationDal.GetByFilterAsync(filter);
         }
 
-        public Notification TGetByID(int id)
+        public async Task<Notification> TGetByIDAsync(int id)
         {
-            return _notificationDal.GetByID(id);
+            return await _notificationDal.GetByIDAsync(id);
         }
 
-        public void TUpdate(Notification t)
+        public async Task TUpdateAsync(Notification t)
         {
-            _notificationDal.Update(t);
+            await _notificationDal.UpdateAsync(t);
         }
     }
 }

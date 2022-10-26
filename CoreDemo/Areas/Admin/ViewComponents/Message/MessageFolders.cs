@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Message
 {
@@ -10,10 +11,10 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         {
             _messageService = messageService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            ViewBag.ReceivedUnreadMessage = _messageService.
-                GetCount(x => x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
+            ViewBag.ReceivedUnreadMessage = await _messageService.
+                GetCountAsync(x => x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
             return View();
         }
     }

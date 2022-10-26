@@ -14,16 +14,15 @@
 
                 <h5>
                     <a href="/Blog/BlogReadAll/@item.BlogID">
-                        @if (item.BlogContent != null && item.BlogContent.Length > 50)
+                        @if (item.BlogTitle != null && item.BlogTitle.Length > 50)
                         {
-                            @item.BlogContent.Substring(0, item.BlogContent.Substring(0, 50).LastIndexOf(" "))
+                            @item.BlogTitle.Substring(0, item.BlogTitle.Substring(0, 50).LastIndexOf(" "))
                         }
                         else
                         {
-                            @item.BlogContent
+                            @item.BlogTitle
                         }
-                        ...
-                                    </a>
+                    </a>
                 </h5>
                 <div class="sub-meta">
                     <span>

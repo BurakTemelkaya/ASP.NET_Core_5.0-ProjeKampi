@@ -34,14 +34,15 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             ViewBag.v1 = value.NameSurname;
             ViewBag.v2 = value.ImageUrl;
             ViewBag.v3 = value.About;
-            ViewBag.ContactCount = _contactService.GetCount();
-            ViewBag.NotificationCount = _notificationService.GetCount();
+            ViewBag.ContactCount = await _contactService.GetCountAsync();
+            ViewBag.NotificationCount = await _notificationService.GetCountAsync();
             ViewBag.v4 = value.Email;
             ViewBag.v5 = value.City;
             ViewBag.v6 = value.RegistrationTime;
-            ViewBag.BlogCount = _blogService.GetCount(x=> x.WriterID==value.Id);
-            ViewBag.SendedMessageCount = _messageService.GetCount(x => x.SenderUserId == value.Id);
-            var ratings = _commentService.GetBlogListWithComment().Select(x => x.BlogScore);
+            ViewBag.BlogCount = await _blogService.GetCountAsync(x=> x.WriterID==value.Id);
+            ViewBag.SendedMessageCount = await _messageService.GetCountAsync(x => x.SenderUserId == value.Id);
+            var ratingValue = await _commentService.GetBlogListWithCommentAsync();
+            var ratings = ratingValue.Select(x => x.BlogScore);
             int rating = 0;
             foreach (var item in ratings)
                 rating += item;

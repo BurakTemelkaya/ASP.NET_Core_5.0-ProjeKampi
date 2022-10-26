@@ -19,10 +19,10 @@ namespace CoreDemo.ViewComponents.Category
             _categoryService = categoryService;
             _blogService = blogService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categorys = _categoryService.GetList();
-            var blogs = _blogService.GetList();
+            var categorys = await _categoryService.GetListAsync();
+            var blogs = await _blogService.GetListAsync();
             var categoryandBlogCounts = new List<CategoryandBlogPercent>();
             int blogCount = 0;
             foreach (var category in categorys)

@@ -10,7 +10,7 @@ namespace BusinessLayer.Abstract
 {
     public interface ICommentService : IGenericService<Comment>
     {
-        List<Comment> GetListById(int id);
-        List<Comment> GetBlogListWithComment();
+        Task<List<Comment>> GetListByIdAsync(int id);
+        Task<List<Comment>> GetBlogListWithCommentAsync();
     }
 }

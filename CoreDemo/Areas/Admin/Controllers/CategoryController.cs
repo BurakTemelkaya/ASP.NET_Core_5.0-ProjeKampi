@@ -25,9 +25,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             _categoryService = categoryService;
         }
 
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var values = _categoryService.GetList().ToPagedList(page,5);          
+            var categories = await _categoryService.GetListAsync();
+            var values = await categories.ToPagedListAsync(page, 5);
             return View(values);
         }
         [HttpGet]
@@ -36,14 +37,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddCategory(Category category)
+        public async Task<IActionResult> AddCategory(Category category)
         {
             CategoryValidator cv = new CategoryValidator();
-            ValidationResult results = cv.Validate(category);
+            ValidationResult results = await cv.ValidateAsync(category);
             if (results.IsValid)
             {
                 category.CategoryStatus = true;
-                _categoryService.TAdd(category);               
+                await _categoryService.TAddAsync(category);
                 return RedirectToAction("Index");
             }
             else
@@ -55,12 +56,12 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             return View();
         }
-        public IActionResult CategoryDelete(int id)
+        public async Task<IActionResult> CategoryDelete(int id)
         {
-            var value = _categoryService.TGetByID(id);
-            _categoryService.TDelete(value);
+            var value = await _categoryService.TGetByIDAsync(id);
+            await _categoryService.TDeleteAsync(value);
             return RedirectToAction("Index");
         }
     }
-    
+
 }

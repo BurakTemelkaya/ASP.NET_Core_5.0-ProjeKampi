@@ -9,6 +9,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface ICommentDal : IGenericDal<Comment>
     {
-        List<Comment> GetListWithCommentByBlog();
+        Task<List<Comment>> GetListWithCommentByBlogAsync();
     }
 }

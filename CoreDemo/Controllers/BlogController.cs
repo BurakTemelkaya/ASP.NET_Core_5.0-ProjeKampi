@@ -39,51 +39,53 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Index(string id, int page = 1, string search = null)
+        public async Task<IActionResult> Index(string id, int page = 1, string search = null)
         {
             ViewData["Title"] = "Ana Sayfa";
             List<Blog> values = new();
             List<BlogandCommentCount> blogandCommentCount = new();
             if (id == null)
             {
-                values = _blogService.GetBlogListWithCategory().Where(x => x.BlogStatus)
-                    .OrderByDescending(x => x.BlogCreateDate).ToList();
+                values = await _blogService.GetBlogListWithCategoryAsync();
+                values = await values.Where(x => x.BlogStatus).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
             }
             if (id != null)
             {
-                if (_blogService.GetCount(x => x.CategoryID == Convert.ToInt32(id)) != 0)
+                if (await _blogService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0)
                 {
-                    values = _blogService.GetBlogListWithCategory()
-                        .Where(x => x.BlogStatus && x.CategoryID == Convert.ToInt32(id))
-                        .OrderByDescending(x => x.BlogCreateDate).ToList();
+                    values = await _blogService.GetBlogListWithCategoryAsync();
+                    values = await values.Where(x => x.BlogStatus && x.CategoryID == Convert.ToInt32(id))
+                        .OrderByDescending(x => x.BlogCreateDate).ToListAsync();
                     values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
                     ViewBag.id = id;
                     ViewData["Title"] = values.FirstOrDefault().Category.CategoryName + " Blogları";
                 }
                 else
                 {
-                    values = _blogService.GetBlogListWithCategory().OrderByDescending(x => x.BlogCreateDate).ToList();
+                    values = await _blogService.GetBlogListWithCategoryAsync();
+                    values = await values.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
                 }
             }
             if (search != null)
             {
-                values = values.Where(x => x.BlogTitle.ToLower().Contains(search.ToLower())).ToList();
+                values = await values.Where(x => x.BlogTitle.ToLower().Contains(search.ToLower())).ToListAsync();
                 ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
                 ViewData["Title"] = search;
                 ViewBag.Sonuc = true;
                 if (values.Count < 1)
                 {
                     values = null;
-                    values = _blogService.GetBlogListWithCategory().ToList();
+                    values = await _blogService.GetBlogListWithCategoryAsync();
+                    values = await values.ToListAsync();
                     ViewBag.Message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                     ViewBag.Sonuc = false;
                 }
             }
-            var comments = _commentService.GetList();
+            var comments = await _commentService.GetListAsync();
             int commentCount = 0;
             foreach (var item in values)
             {
-                BlogandCommentCount value = new BlogandCommentCount();
+                BlogandCommentCount value = new();
                 value.Blog = item;
                 foreach (var comment in comments)
                 {
@@ -94,19 +96,19 @@ namespace CoreDemo.Controllers
                 blogandCommentCount.Add(value);
                 commentCount = 0;
             }
-            return View(blogandCommentCount.ToPagedList(page, 6));
+            return View(await blogandCommentCount.ToPagedListAsync(page, 6));
         }
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
-            var value = _blogService.GetBlogByID(id);
+            var value = await _blogService.GetBlogByIDAsync(id);
             if (value == null)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
-            ViewBag.CommentCount = _commentService.GetCount(x => x.BlogID == id);
-            var comments = _commentService.TGetByFilter(x => x.BlogID == id);
+            ViewBag.CommentCount = await _commentService.GetCountAsync(x => x.BlogID == id);
+            var comments = await _commentService.TGetByFilterAsync(x => x.BlogID == id);
             if (comments != null)
             {
                 ViewBag.Star = comments.BlogScore;
@@ -121,19 +123,19 @@ namespace CoreDemo.Controllers
         {
             var userName = User.Identity.Name;
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var values = _blogService.GetListWithCategoryByWriterBm(user.Id);
+            var values = await _blogService.GetListWithCategoryByWriterBmAsync(user.Id);
             return View(values);
         }
         [HttpGet]
-        public IActionResult BlogAdd()
+        public async Task<IActionResult> BlogAdd()
         {
-            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var value = await _blogService.BlogAdd(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             if (value.BlogImage == null)
             {
                 ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
@@ -144,19 +146,19 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
-            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("BlogListByWriter", "Blog");
         }
-        public IActionResult DeleteBlog(int id)
+        public async Task<IActionResult> DeleteBlog(int id)
         {
-            var blogValue = _blogService.TGetByID(id);
-            _blogService.TDelete(blogValue);
+            var blogValue = await _blogService.TGetByIDAsync(id);
+            await _blogService.TDeleteAsync(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
-        public IActionResult ChangeStatusBlog(int id)
+        public async Task<IActionResult> ChangeStatusBlog(int id)
         {
-            var blogValue = _blogService.TGetByID(id);
+            var blogValue = await _blogService.TGetByIDAsync(id);
             if (blogValue.BlogStatus)
             {
                 blogValue.BlogStatus = false;
@@ -165,20 +167,20 @@ namespace CoreDemo.Controllers
             {
                 blogValue.BlogStatus = true;
             }
-            _blogService.TUpdate(blogValue);
+            await _blogService.TUpdateAsync(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         [HttpGet]
-        public IActionResult EditBlog(int id)
+        public async Task<IActionResult> EditBlog(int id)
         {
             if (id != 0)
             {
-                var blogValue = _blogService.TGetByID(id);
-                ViewBag.CategoryList = _categoryService.GetCategoryList();
-                if (blogValue.BlogImage.Substring(0, 5) != "https" || blogValue.BlogImage.Substring(0, 4) != "http")
+                var blogValue = await _blogService.TGetByIDAsync(id);
+                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+                if (blogValue.BlogImage[..5] != "https" || blogValue.BlogImage[..4] != "http")
                     blogValue.BlogImage = null;
-                if (blogValue.BlogThumbnailImage.Substring(0, 5) != "https" || blogValue.BlogThumbnailImage.Substring(0, 4) != "http")
+                if (blogValue.BlogThumbnailImage[..5] != "https" || blogValue.BlogThumbnailImage[..4] != "http")
                     blogValue.BlogThumbnailImage = null;
                 return View(blogValue);
             }
@@ -189,7 +191,7 @@ namespace CoreDemo.Controllers
         {
             BlogValidator bv = new BlogValidator();
             ValidationResult results = bv.Validate(blog);
-            var oldValue = _blogService.TGetByID(blog.BlogID);
+            var oldValue = await _blogService.TGetByIDAsync(blog.BlogID);
             if (results.IsValid)
             {
                 if (blogImage != null)
@@ -201,17 +203,17 @@ namespace CoreDemo.Controllers
                 else if (blog.BlogThumbnailImage == null)
                     blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
                 var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-                var value = _blogService.GetListWithCategoryByWriterBm(user.Id);//eski değeri getirme
+                var value = await _blogService.GetListWithCategoryByWriterBmAsync(user.Id);//eski değeri getirme
                 if (!value.Any(x => x.WriterID == user.Id && x.BlogID == blog.BlogID))
                 {
                     return RedirectToAction("BlogListByWriter");
                 }
                 blog.BlogCreateDate = value.FirstOrDefault(x => x.BlogID == blog.BlogID).BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
                 blog.Writer = user;
-                _blogService.TUpdate(blog);//update işlemi
+                await _blogService.TUpdateAsync(blog);//update işlemi
                 return RedirectToAction("BlogListByWriter");
             }
-            ViewBag.CategoryList = _categoryService.GetCategoryList();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return View();
         }
     }

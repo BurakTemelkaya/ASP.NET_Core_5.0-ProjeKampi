@@ -1,23 +1,30 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterNotification : ViewComponent
     {
-        NotificationManager notificationManager = new NotificationManager(new EfNotificationRepository());
-        public IViewComponentResult Invoke()
+        readonly INotificationService _notificationService;
+        public WriterNotification(INotificationService notificationService)
         {
-            var values = notificationManager.GetList(x => x.NotificationStatus == true
+            _notificationService = notificationService;
+        }
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var values = await _notificationService.GetListAsync(x => x.NotificationStatus == true
             && x.NotificationStatus == true);
             if (values.Count() > 3)
             {
-                values = values.Take(3).ToList();
+                values = await values.Take(3).ToListAsync();
             }
             return View(values);
         }

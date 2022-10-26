@@ -66,9 +66,9 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> WriterEditProfile()
         {
-            ViewBag.Cities = _writerCity.GetCityList();
+            ViewBag.Cities = _writerCity.GetCityListAsync();
             var writer = await _userManager.FindByUserNameAsync(User.Identity.Name);
-            if (writer.ImageUrl.Substring(0, 5) != "https" || writer.ImageUrl.Substring(0, 4) != "http")
+            if (writer.ImageUrl[..5] != "https" || writer.ImageUrl[..4] != "http")
                 writer.ImageUrl = null;
             return View(writer);
         }
@@ -79,7 +79,7 @@ namespace CoreDemo.Controllers
                 userDto.City == null || userDto.About == null)
             {
                 ModelState.AddModelError("UserName", "Lütfen profil bilgilerinizi boş bırakmayın.");
-                ViewBag.Cities = _writerCity.GetCityList();
+                ViewBag.Cities = _writerCity.GetCityListAsync();
                 return View(userDto);
             }
             if (imageFile != null)

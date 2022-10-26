@@ -19,37 +19,39 @@ namespace BusinessLayer.Concrete
             _aboutDal = aboutDal;
         }
 
-        public About TGetByID(int id)
+        public async Task<int> GetCountAsync(Expression<Func<About, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return await _aboutDal.GetCountAsync(filter);
         }
 
-        public void TAdd(About t)
+        public Task<List<About>> GetListAsync(Expression<Func<About, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return _aboutDal.GetListAllAsync(filter);
         }
 
-        public void TDelete(About t)
+        public async Task TAddAsync(About t)
         {
-            throw new NotImplementedException();
-        }      
-        public void TUpdate(About t)
-        {
-            _aboutDal.Update(t);
+            await _aboutDal.InsertAsync(t);
         }
 
-        public About TGetByFilter(Expression<Func<About, bool>> filter)
+        public async Task TDeleteAsync(About t)
         {
-            return _aboutDal.GetByFilter();
-        }
-        public List<About> GetList(Expression<Func<About, bool>> filter)
-        {
-            return _aboutDal.GetListAll(filter);
+            await _aboutDal.DeleteAsync(t);
         }
 
-        public int GetCount(Expression<Func<About, bool>> filter = null)
+        public async Task<About> TGetByFilterAsync(Expression<Func<About, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return await _aboutDal.GetByFilterAsync(filter);
+        }
+
+        public async Task<About> TGetByIDAsync(int id)
+        {
+            return await _aboutDal.GetByIDAsync(id);
+        }
+
+        public async Task TUpdateAsync(About t)
+        {
+            await _aboutDal.UpdateAsync(t);
         }
     }
 }

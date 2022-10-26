@@ -30,13 +30,13 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(Contact contact)
+        public async Task<IActionResult> Index(Contact contact)
         {
             if (ModelState.IsValid)
             {
                 contact.ContactDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 contact.ContactStatus = true;
-                _contactService.ContactAdd(contact);
+                await _contactService.ContactAddAsync(contact);
                 return RedirectToAction("Index");
             }
             return View();

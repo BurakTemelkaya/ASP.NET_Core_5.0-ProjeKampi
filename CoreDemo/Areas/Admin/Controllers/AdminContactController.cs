@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -15,41 +17,42 @@ namespace CoreDemo.Areas.Admin.Controllers
             _contactService = contactService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _contactService.GetList().OrderByDescending(x => x.ContactID).ToList();
+            var values = await _contactService.GetListAsync();
+            values = await values.OrderByDescending(x => x.ContactID).ToListAsync();
             return View(values);
         }
-        public IActionResult Read(int id)
+        public async Task<IActionResult> Read(int id)
         {
-            var value = _contactService.TGetByID(id);
+            var value = await _contactService.TGetByIDAsync(id);
             if (value != null)
             {
                 if (!value.ContactStatus)
                 {
                     value.ContactStatus = true;
-                    _contactService.TUpdate(value);
+                    await _contactService.TUpdateAsync(value);
                 }
                 return View(value);
             }
             return RedirectToAction("Index");
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var value = _contactService.TGetByID(id);
+            var value = await _contactService.TGetByIDAsync(id);
             if (value != null)
             {
-                _contactService.TDelete(value);
+                await _contactService.TDeleteAsync(value);
             }
             return RedirectToAction("Index");
         }
-        public IActionResult MarkUsUnread(int id)
+        public async Task<IActionResult> MarkUsUnread(int id)
         {
-            var value = _contactService.TGetByID(id);
+            var value = await _contactService.TGetByIDAsync(id);
             if (value != null)
             {
                 value.ContactStatus = true;
-                _contactService.TUpdate(value);
+                await _contactService.TUpdateAsync(value);
             }
             return RedirectToAction("Index");
         }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -26,22 +27,32 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             List<Message> values = new();
             if (search != null)
-                values = _messageService.GetInboxWithMessageList(await GetByUserID(),
-                    x => x.Subject.ToLower().Contains(search.ToLower()))
-                    .OrderByDescending(x => x.MessageID).ToList();
+            {
+                values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID(),
+                    x => x.Subject.ToLower().Contains(search.ToLower()));
+                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+            }
             if (values.Count == 0)
-                values = _messageService.GetInboxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            {
+                values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID());
+                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+            }
             return View(values);
         }
         public async Task<IActionResult> SendBox(string search = null)
         {
             List<Message> values = new();
             if (search != null)
-                values = _messageService.GetSendBoxWithMessageList(await GetByUserID(),
-                    x => x.Subject.ToLower().Contains(search.ToLower()))
-                    .OrderByDescending(x => x.MessageID).ToList();
+            {
+                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserID(),
+                x => x.Subject.ToLower().Contains(search.ToLower()));
+                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+            }
             if (values.Count == 0)
-                values = _messageService.GetSendBoxWithMessageList(await GetByUserID()).OrderByDescending(x => x.MessageID).ToList();
+            {
+                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserID());
+                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+            }
             return View(values);
         }
         public async Task<int> GetByUserID()
@@ -70,29 +81,29 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
                 return View(message);
             }
-            _messageService.TAdd(message);
+            await _messageService.TAddAsync(message);
             return RedirectToAction("SendBox");
         }
         public async Task<IActionResult> Read(int id)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var value = _messageService.GetReceivedMessage(user.Id, x => x.MessageID == id);
+            var value = await _messageService.GetReceivedMessageAsync(user.Id, x => x.MessageID == id);
             if (value == null)
-                value = _messageService.GetSendMessage(user.Id, x => x.MessageID == id);
+                value = await _messageService.GetSendMessageAsync(user.Id, x => x.MessageID == id);
             if (value == null)
                 return RedirectToAction("Inbox");
             if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                 return RedirectToAction("Inbox");
             value.MessageStatus = false;
-            _messageService.TUpdate(value);
+            await _messageService.TUpdateAsync(value);
             return View(value);
         }
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var message = _messageService.GetReceivedMessage(user.Id, x => x.MessageID == id);
+            var message = await _messageService.GetReceivedMessageAsync(user.Id, x => x.MessageID == id);
             if (id != 0 && message.ReceiverUserId == user.Id)
-                _messageService.TDelete(message);
+               await _messageService.TDeleteAsync(message);
             return RedirectToAction("Inbox");
         }
     }

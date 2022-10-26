@@ -29,16 +29,16 @@ namespace CoreDemo.Controllers
             return PartialView();
         }
         [HttpPost]
-        public IActionResult SubscribeMail(NewsLetter newsLetter)
+        public async Task<IActionResult> SubscribeMail(NewsLetter newsLetter)
         {
             NewsLetterValidator rules = new NewsLetterValidator();
             if (!rules.Validate(newsLetter).IsValid)
             {
                 return BadRequest("Email geçersiz.");
             }
-            if (_newsLetterService.GetByMail(newsLetter.Mail) == null && newsLetter.Mail != null)
+            if (await _newsLetterService.GetByMailAsync(newsLetter.Mail) == null && newsLetter.Mail != null)
             {
-                _newsLetterService.AddNewsLetter(newsLetter);
+                await _newsLetterService.AddNewsLetterAsync(newsLetter);
                 return Ok();
             }
             return BadRequest("Böyle bir mail adresi bulunuyor.");

@@ -24,48 +24,48 @@ namespace BusinessLayer.Concrete
             _categoryDal = categoryDal;
         }
 
-        public Category TGetByID(int id)
+        public async Task<Category> TGetByIDAsync(int id)
         {
-            return _categoryDal.GetByID(id);
+            return await _categoryDal.GetByIDAsync(id);
         }
         [ValidationAspect(typeof(CategoryValidator))]
-        public void TAdd(Category t)
+        public async Task TAddAsync(Category t)
         {
-            _categoryDal.Insert(t);
+            await _categoryDal.InsertAsync(t);
         }
 
-        public void TDelete(Category t)
+        public async Task TDeleteAsync(Category t)
         {
-            _categoryDal.Delete(t);
+            await _categoryDal.DeleteAsync(t);
         }
         [ValidationAspect(typeof(CategoryValidator))]
-        public void TUpdate(Category t)
+        public async Task TUpdateAsync(Category t)
         {
-            _categoryDal.Update(t);
+            await _categoryDal.UpdateAsync(t);
         }
 
-        public List<Category> GetList(Expression<Func<Category, bool>> filter = null)
+        public async Task<List<Category>> GetListAsync(Expression<Func<Category, bool>> filter = null)
         {
             return filter == null ?
-                _categoryDal.GetListAll() :
-                _categoryDal.GetListAll(filter);
+                await _categoryDal.GetListAllAsync() :
+                await _categoryDal.GetListAllAsync(filter);
         }
 
-        public Category TGetByFilter(Expression<Func<Category, bool>> filter = null)
+        public async Task<Category> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null)
         {
             return filter == null ?
-                _categoryDal.GetByFilter() :
-                _categoryDal.GetByFilter(filter);
+                await _categoryDal.GetByFilterAsync() :
+                await _categoryDal.GetByFilterAsync(filter);
         }
 
-        public int GetCount(Expression<Func<Category, bool>> filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<Category, bool>> filter = null)
         {
-            return _categoryDal.GetCount(filter);
+            return await _categoryDal.GetCountAsync(filter);
         }
 
-        public List<SelectListItem> GetCategoryList()
+        public async Task<List<SelectListItem>> GetCategoryListAsync()
         {
-            return (from x in GetList()
+            return (from x in await GetListAsync()
                     select new SelectListItem
                     {
                         Text = x.CategoryName,
