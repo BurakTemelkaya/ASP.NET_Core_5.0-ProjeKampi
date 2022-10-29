@@ -97,14 +97,14 @@ namespace BusinessLayer.Concrete
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
+            var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
-                var oldBlogValue = await GetNormalContentBlogByIDAsync(blog.BlogID);
                 DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
                 blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             }
             else
-                blog.BlogContent = oldValue.BlogContent;
+                blog.BlogContent = oldBlogValue.BlogContent;
             await _blogDal.UpdateAsync(blog);
             return blog;
         }
@@ -127,14 +127,14 @@ namespace BusinessLayer.Concrete
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
+            var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
-                var oldBlogValue = await GetNormalContentBlogByIDAsync(blog.BlogID);
                 DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
                 blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             }
             else
-                blog.BlogContent = oldValue.BlogContent;
+                blog.BlogContent = oldBlogValue.BlogContent;
             await _blogDal.UpdateAsync(blog);
             return blog;
         }
@@ -170,7 +170,7 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public Task<Blog> GetNormalContentBlogByIDAsync(int id)
+        public Task<Blog> GetFileNameContentBlogByIDAsync(int id)
         {
             return _blogDal.GetByIDAsync(id);
         }

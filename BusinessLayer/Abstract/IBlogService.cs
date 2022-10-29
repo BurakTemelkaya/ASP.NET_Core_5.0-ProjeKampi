@@ -23,6 +23,6 @@ namespace BusinessLayer.Abstract
         Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter = null);
         Task ChangedBlogStatus(Blog blog, string userName);
         Task<Blog> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
-        Task<Blog> GetNormalContentBlogByIDAsync(int id);
+        Task<Blog> GetFileNameContentBlogByIDAsync(int id);
     }
 }
