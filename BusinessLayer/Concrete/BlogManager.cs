@@ -33,17 +33,11 @@ namespace BusinessLayer.Concrete
         {
             return await _blogDal.GetListWithCategoryByWriterAsync(id);
         }
-        public async Task<Blog> TGetByIDAsync(int id)
-        {
-            return await _blogDal.GetByIDAsync(id);
-        }
         public async Task<Blog> GetBlogByIDAsync(int id)
         {
-            return await _blogDal.GetByIDAsync(id);
-        }
-        public async Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter)
-        {
-            return await _blogDal.GetListAllAsync(filter);
+            var value = await _blogDal.GetByIDAsync(id);
+            value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
+            return value;
         }
 
         public async Task<List<Blog>> GetLastBlogAsync(int count)
@@ -56,33 +50,12 @@ namespace BusinessLayer.Concrete
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
-        [ValidationAspect(typeof(BlogValidator))]
-        public async Task TAddAsync(Blog t)
-        {
-            t.BlogCreateDate = DateTime.Now;
-            await _blogDal.InsertAsync(t);
-        }
 
         public async Task TDeleteAsync(Blog t)
         {
             await _blogDal.DeleteAsync(t);
         }
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task TUpdateAsync(Blog t)
-        {
-            await _blogDal.UpdateAsync(t);
-        }
-
-        public async Task<Blog> TGetByFilterAsync(Expression<Func<Blog, bool>> filter)
-        {
-            return await _blogDal.GetByFilterAsync(filter);
-        }
-
-        public async Task<int> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
-        {
-            return await _blogDal.GetCountAsync(filter);
-        }
-
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -90,15 +63,63 @@ namespace BusinessLayer.Concrete
                 return blog;
             if (blogImage != null && blogThumbnailImage != null)
             {
-                blog.BlogImage = FileManager.FileAdd(blogImage, FileManager.StaticProfileImageLocation());
-                blog.BlogThumbnailImage = FileManager.FileAdd(blogThumbnailImage, FileManager.StaticProfileImageLocation());
+                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
+            blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             blog.WriterID = user.Id;
             blog.BlogCreateDate = DateTime.Now;
             await _blogDal.InsertAsync(blog);
             return blog;
+        }
+
+        public async Task<Blog> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var oldValue = await GetBlogByIDAsync(blog.BlogID);
+            if (user == null)
+                return blog;
+            if (ImageFileManager.StaticProfileImageLocation() + blogImage.FileName != oldValue.BlogImage &&
+                ImageFileManager.StaticProfileImageLocation() + blogThumbnailImage.FileName != oldValue.BlogThumbnailImage)
+            {
+                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
+                DeleteFileManager.DeleteFile(oldValue.BlogImage);
+                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
+                return blog;
+            DeleteFileManager.DeleteFile(oldValue.BlogContent);
+            blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            await _blogDal.UpdateAsync(blog);
+            return blog;
+        }
+
+        public async Task DeleteBlog(Blog blog)
+        {
+            await _blogDal.DeleteAsync(blog);
+        }
+
+        public async Task<int> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
+        {
+            return await _blogDal.GetCountAsync(filter);
+        }
+
+        public async Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter = null)
+        {
+            return await _blogDal.GetListAllAsync();
+        }
+
+        public async Task ChangedBlogStatus(Blog blog)
+        {
+            var value = await _blogDal.GetByIDAsync(blog.BlogID);
+            if (value.BlogStatus)
+                value.BlogStatus = false;
+            else
+                value.BlogStatus = true;
+            await _blogDal.UpdateAsync(blog);
         }
     }
 }

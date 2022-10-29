@@ -13,8 +13,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            ViewBag.ReceivedUnreadMessage = await _messageService.
-                GetCountAsync(x => x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
+            var messageCount = await _messageService.GetCountAsync(x => x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
+            ViewBag.ReceivedUnreadMessage = messageCount.ToString();
             return View();
         }
     }

@@ -14,8 +14,9 @@
     <br />
     <br />
     @Html.Label("Blog İçeriği")
-    @Html.TextAreaFor(x => x.BlogContent, 4, 10, new { @class = "form-control" })
-    @Html.ValidationMessageFor(x => x.BlogContent, "", new { @class = "text-danger" })
+    <div class="ibox-content no-padding">
+        <textarea asp-for="BlogContent"></textarea>
+    </div>
     <br />
     <br />
     @Html.Label("Blog Görseli Linki")

@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities
 {
-    public class FileManager
+    public class ImageFileManager
     {
-        public static string FileAdd(IFormFile image, string Folder)
+        public static async Task<string> ImageAdd(IFormFile image, string folderLocation)
         {
             var extension = Path.GetExtension(image.FileName);
             var newImageName = Guid.NewGuid() + extension;
-            var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + Folder,
-                newImageName);
+            var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
             var stream = new FileStream(location, FileMode.Create);
-            image.CopyTo(stream);
-            return Folder + newImageName;
+            await image.CopyToAsync(stream);
+            return folderLocation + newImageName;
         }
         public static string StaticProfileImageLocation()
         {
@@ -27,18 +26,6 @@ namespace CoreLayer.Utilities.FileUtilities
         public static string StaticAboutImageLocation()
         {
             return "/AboutImageFiles/";
-        }
-        public static void DeleteFile(string fileLocation)
-        {
-            try
-            {
-                var mainPath = "wwwroot";
-                File.Delete(Path.Combine(Directory.GetCurrentDirectory(), mainPath + fileLocation));
-            }
-            catch
-            {
-
-            }            
-        }
+        }      
     }
 }

@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Blogger</title>
+    <title>Blogger</title>     
     <link rel="stylesheet" href="~/writer/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/writer/assets/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="~/writer/assets/css/style.css">
@@ -16,6 +16,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
     <script src="~/writer/assets/js/SweetAlert2.js"></script>
+    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
 </head>
 <body>
@@ -92,6 +93,7 @@
     <script src="~/writer/assets/js/misc.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
         $("#MarkUsUnread").click(function () {
             let mail = {
@@ -108,6 +110,13 @@
                     alert("Bir hata oluştu lütfen tekrar deneyin.");
                 }
             });
+        });
+        $(document).ready(function () {
+
+            $('#BlogContent').summernote({
+                height: 300
+            });
+
         });
     </script>
 </body>

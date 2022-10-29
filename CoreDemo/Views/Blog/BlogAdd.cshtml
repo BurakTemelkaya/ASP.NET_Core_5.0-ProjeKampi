@@ -11,8 +11,7 @@
     @Html.ValidationMessageFor(x => x.BlogTitle, "", new { @class = "text-danger" })
     <br />
     <br />
-    @Html.Label("Blog İçeriği")
-    @Html.TextAreaFor(x => x.BlogContent, 4, 10, new { @class = "form-control" })
+    <textarea asp-for="BlogContent" itemid="BlogContent" name="BlogContent"></textarea>
     @Html.ValidationMessageFor(x => x.BlogContent, "", new { @class = "text-danger" })
     <br />
     <br />

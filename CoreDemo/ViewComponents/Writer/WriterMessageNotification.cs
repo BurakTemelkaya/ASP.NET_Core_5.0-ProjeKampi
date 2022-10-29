@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Writer
 {
@@ -24,10 +25,10 @@ namespace CoreDemo.ViewComponents.Writer
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var values =await _messageService.GetInboxWithMessageListAsync(user.Id);
+            var values = await _messageService.GetInboxWithMessageListAsync(user.Id);
             if (values.Count > 3)
-                values = values.TakeLast(3).ToList();
-            ViewBag.NewMessage = values.Where(x => x.MessageStatus == true).Count();
+                values = await values.TakeLast(3).ToListAsync();
+            ViewBag.NewMessage = values.Where(x => x.MessageStatus).Count();
             return View(values);
         }
     }

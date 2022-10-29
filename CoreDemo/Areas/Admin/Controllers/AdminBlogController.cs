@@ -57,5 +57,32 @@ namespace CoreDemo.Areas.Admin.Controllers
             ViewBag.CategoryList = _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> BlogUpdate(int id)
+        {
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            var value = await _blogService.GetBlogByIDAsync(id);
+            if (value!=null)
+                return View(value);
+            return RedirectToAction("Index");
+            
+        }
+        [HttpPost]
+        public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
+        {
+            var value = await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            if (value.BlogImage == null)
+            {
+                ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                return View(blog);
+            }
+            if (value.BlogThumbnailImage == null)
+            {
+                ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
+                return View(blog);
+            }
+            ViewBag.CategoryList = _categoryService.GetCategoryListAsync();
+            return RedirectToAction("Index");
+        }
     }
 }

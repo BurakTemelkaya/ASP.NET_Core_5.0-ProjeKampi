@@ -14,26 +14,26 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            <a href="/Blog/BlogReadAll/@item.BlogID" target="_blank">
-            <div class="col-md-3">
-                <div class="ibox">
-                    <div class="ibox-content product-box">
-                        <div class="product-imitation">
-                            <img src="@item.BlogImage" class="col-sm-12">
-                        </div>
-                        <div class="product-desc">
-                            <span class="product-price">
-                                @item.BlogCreateDate.ToShortDateString()
-                            </span>
-                            <small class="text-muted">@item.Category.CategoryName</small>
-                            <a href="#" class="product-name"> @item.BlogTitle</a>
-                            <div class="small m-t-xs">
-                                @item.BlogContent
+            <a href="/Admin/AdminBlog/BlogUpdate/@item.BlogID">
+                <div class="col-md-3">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+                            <div class="product-imitation">
+                                <img src="@item.BlogImage" class="col-sm-12">
+                            </div>
+                            <div class="product-desc">
+                                <span class="product-price">
+                                    @item.BlogCreateDate.ToShortDateString()
+                                </span>
+                                <small class="text-muted">@item.Category.CategoryName</small>
+                                <a href="#" class="product-name"> @item.BlogTitle</a>
+                                <div class="small m-t-xs">
+                                    @item.BlogContent
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </a>
         }
     </div>
@@ -50,5 +50,5 @@ new PagedListRenderOptions
     PageClasses=new[] {"page-link"},
     ActiveLiElementClass="active"
 })
-<script src="/admin/js/plugins/pace/pace.min.js" ></script>
+<script src="/admin/js/plugins/pace/pace.min.js"></script>
 

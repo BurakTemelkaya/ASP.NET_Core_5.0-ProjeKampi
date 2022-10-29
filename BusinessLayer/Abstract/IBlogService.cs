@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IBlogService : IGenericService<Blog>
+    public interface IBlogService
     {
         Task<Blog> GetBlogByIDAsync(int id);
         Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id);
@@ -17,5 +17,10 @@ namespace BusinessLayer.Abstract
         Task<List<Blog>> GetBlogByWriterAsync(int id);
         Task<List<Blog>> GetLastBlogAsync(int count);
         Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
+        Task<Blog> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
+        Task DeleteBlog(Blog blog);
+        Task<int> GetCountAsync(Expression<Func<Blog, bool>> filter = null);
+        Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter = null);
+        Task ChangedBlogStatus(Blog blog);
     }
 }

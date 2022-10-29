@@ -151,23 +151,15 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> DeleteBlog(int id)
         {
-            var blogValue = await _blogService.TGetByIDAsync(id);
-            await _blogService.TDeleteAsync(blogValue);
+            var blogValue = await _blogService.GetBlogByIDAsync(id);
+            await _blogService.DeleteBlog(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         public async Task<IActionResult> ChangeStatusBlog(int id)
         {
-            var blogValue = await _blogService.TGetByIDAsync(id);
-            if (blogValue.BlogStatus)
-            {
-                blogValue.BlogStatus = false;
-            }
-            else
-            {
-                blogValue.BlogStatus = true;
-            }
-            await _blogService.TUpdateAsync(blogValue);
+            var blogValue = await _blogService.GetBlogByIDAsync(id);
+            await _blogService.ChangedBlogStatus(blogValue);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
@@ -176,7 +168,7 @@ namespace CoreDemo.Controllers
         {
             if (id != 0)
             {
-                var blogValue = await _blogService.TGetByIDAsync(id);
+                var blogValue = await _blogService.GetBlogByIDAsync(id);
                 ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
                 if (blogValue.BlogImage[..5] != "https" || blogValue.BlogImage[..4] != "http")
                     blogValue.BlogImage = null;
@@ -189,32 +181,9 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            BlogValidator bv = new BlogValidator();
-            ValidationResult results = bv.Validate(blog);
-            var oldValue = await _blogService.TGetByIDAsync(blog.BlogID);
-            if (results.IsValid)
-            {
-                if (blogImage != null)
-                    blog.BlogImage = AddImage.ImageAdd(blogImage, AddImage.StaticProfileImageLocation());
-                else if (blog.BlogImage == null)
-                    blog.BlogImage = oldValue.BlogImage;
-                if (blogThumbnailImage != null)
-                    blog.BlogThumbnailImage = AddImage.ImageAdd(blogThumbnailImage, AddImage.StaticProfileImageLocation());
-                else if (blog.BlogThumbnailImage == null)
-                    blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
-                var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-                var value = await _blogService.GetListWithCategoryByWriterBmAsync(user.Id);//eski değeri getirme
-                if (!value.Any(x => x.WriterID == user.Id && x.BlogID == blog.BlogID))
-                {
-                    return RedirectToAction("BlogListByWriter");
-                }
-                blog.BlogCreateDate = value.FirstOrDefault(x => x.BlogID == blog.BlogID).BlogCreateDate;//blogCreateDate değişmemesi için tekrar atama yaptım
-                blog.Writer = user;
-                await _blogService.TUpdateAsync(blog);//update işlemi
-                return RedirectToAction("BlogListByWriter");
-            }
+            await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);           
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-            return View();
+            return RedirectToAction("BlogListByWriter");
         }
     }
 }
