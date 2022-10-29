@@ -152,14 +152,14 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIDAsync(id);
-            await _blogService.DeleteBlog(blogValue);
+            await _blogService.DeleteBlog(blogValue, User.Identity.Name);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
         public async Task<IActionResult> ChangeStatusBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIDAsync(id);
-            await _blogService.ChangedBlogStatus(blogValue);
+            await _blogService.ChangedBlogStatus(blogValue, User.Identity.Name);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }
@@ -181,7 +181,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);           
+            await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("BlogListByWriter");
         }

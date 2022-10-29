@@ -15,10 +15,12 @@ namespace CoreDemo.Areas.Admin.Controllers
     {
         readonly IBlogService _blogService;
         readonly ICategoryService _categoryService;
-        public AdminBlogController(IBlogService blogService, ICategoryService categoryService)
+        readonly IBusinessUserService _businessUserService;
+        public AdminBlogController(IBlogService blogService, ICategoryService categoryService, IBusinessUserService businessUserService)
         {
             _blogService = blogService;
             _categoryService = categoryService;
+            _businessUserService = businessUserService;
         }
 
         public async Task<IActionResult> Index(int page = 1)
@@ -62,15 +64,16 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             var value = await _blogService.GetBlogByIDAsync(id);
-            if (value!=null)
+            if (value != null)
                 return View(value);
             return RedirectToAction("Index");
-            
+
         }
         [HttpPost]
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var value = await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            var blogUser = await _businessUserService.GetByIDAsync(blog.WriterID.ToString());
+            var value = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
             if (value.BlogImage == null)
             {
                 ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");

@@ -79,27 +79,71 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.FindByUserNameAsync(userName);
             var oldValue = await GetBlogByIDAsync(blog.BlogID);
-            if (user == null)
+            blog.WriterID = oldValue.WriterID;
+            blog.BlogCreateDate = oldValue.BlogCreateDate;
+            if (user == null || user.Id != oldValue.WriterID)
                 return blog;
-            if (ImageFileManager.StaticProfileImageLocation() + blogImage.FileName != oldValue.BlogImage &&
-                ImageFileManager.StaticProfileImageLocation() + blogThumbnailImage.FileName != oldValue.BlogThumbnailImage)
+            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage &&
+                blogImage != null)
             {
-                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
+                blogThumbnailImage != null)
+            {
+                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
-            DeleteFileManager.DeleteFile(oldValue.BlogContent);
-            blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            if (blog.BlogContent != oldValue.BlogContent)
+            {
+                var oldBlogValue = await GetNormalContentBlogByIDAsync(blog.BlogID);
+                DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
+                blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            }
+            else
+                blog.BlogContent = oldValue.BlogContent;
+            await _blogDal.UpdateAsync(blog);
+            return blog;
+        }
+        public async Task<Blog> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        {
+            var oldValue = await GetBlogByIDAsync(blog.BlogID);
+            blog.WriterID = oldValue.WriterID;
+            blog.BlogCreateDate = oldValue.BlogCreateDate;
+            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage &&
+                blogImage != null)
+            {
+                DeleteFileManager.DeleteFile(oldValue.BlogImage);
+                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
+                blogThumbnailImage != null)
+            {
+                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
+                return blog;
+            if (blog.BlogContent != oldValue.BlogContent)
+            {
+                var oldBlogValue = await GetNormalContentBlogByIDAsync(blog.BlogID);
+                DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
+                blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            }
+            else
+                blog.BlogContent = oldValue.BlogContent;
             await _blogDal.UpdateAsync(blog);
             return blog;
         }
 
-        public async Task DeleteBlog(Blog blog)
+        public async Task DeleteBlog(Blog blog, string userName)
         {
-            await _blogDal.DeleteAsync(blog);
+            var user = await _userService.FindByUserNameAsync(userName);
+            if (user.Id == blog.WriterID)
+                await _blogDal.DeleteAsync(blog);
         }
 
         public async Task<int> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
@@ -112,14 +156,23 @@ namespace BusinessLayer.Concrete
             return await _blogDal.GetListAllAsync();
         }
 
-        public async Task ChangedBlogStatus(Blog blog)
+        public async Task ChangedBlogStatus(Blog blog, string userName)
         {
-            var value = await _blogDal.GetByIDAsync(blog.BlogID);
-            if (value.BlogStatus)
-                value.BlogStatus = false;
-            else
-                value.BlogStatus = true;
-            await _blogDal.UpdateAsync(blog);
+            var user = await _userService.FindByUserNameAsync(userName);
+            if (user.Id == blog.WriterID)
+            {
+                var value = await _blogDal.GetByIDAsync(blog.BlogID);
+                if (value.BlogStatus)
+                    value.BlogStatus = false;
+                else
+                    value.BlogStatus = true;
+                await _blogDal.UpdateAsync(blog);
+            }
+        }
+
+        public Task<Blog> GetNormalContentBlogByIDAsync(int id)
+        {
+            return _blogDal.GetByIDAsync(id);
         }
     }
 }
