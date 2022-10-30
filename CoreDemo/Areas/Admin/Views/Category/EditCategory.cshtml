@@ -1,13 +1,14 @@
 ﻿@model Category
 @{
-    ViewData["Title"] = "AddCategory";
+    ViewData["Title"] = "EditCategory";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<h1>Yeni Kategori Girişi</h1>
+<h1>Kategoriyi Düzenle</h1>
 
-@using (Html.BeginForm("AddCategory", "Category", FormMethod.Post))
+@using (Html.BeginForm("EditCategory", "Category", FormMethod.Post))
 {
+    @Html.HiddenFor(x=> x.CategoryID)
     @Html.Label("Kategori Adı")
     @Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control" })
     @Html.ValidationMessageFor(x => x.CategoryName, "", new { @class = "text-danger" })
@@ -22,6 +23,6 @@
     @Html.CheckBoxFor(x => x.CategoryStatus, new { @class = "form-check" })
     <br />
     <br />
-    <button class="btn btn-info">Verileri Kaydet</button>
+    <button class="btn btn-info">Kategoriyi Düzenle</button>
 }
 

@@ -39,27 +39,32 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(Category category)
         {
-            CategoryValidator cv = new CategoryValidator();
-            ValidationResult results = await cv.ValidateAsync(category);
-            if (results.IsValid)
-            {
-                category.CategoryStatus = true;
-                await _categoryService.TAddAsync(category);
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                foreach (var item in results.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
-            }
-            return View();
+            await _categoryService.TAddAsync(category);
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> ChangedStatus(int id)
+        {
+            await _categoryService.ChangedStatus(id);
+            return RedirectToAction("Index");
         }
         public async Task<IActionResult> CategoryDelete(int id)
         {
             var value = await _categoryService.TGetByIDAsync(id);
             await _categoryService.TDeleteAsync(value);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditCategory(int id)
+        {
+            var value = await _categoryService.TGetByIDAsync(id);
+            if (value == null)
+                return RedirectToAction("Index");
+            return View(value);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditCategory(Category category)
+        {
+            await _categoryService.TUpdateAsync(category);
             return RedirectToAction("Index");
         }
     }

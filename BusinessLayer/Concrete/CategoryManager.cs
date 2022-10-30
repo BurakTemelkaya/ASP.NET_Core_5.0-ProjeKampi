@@ -31,6 +31,7 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(CategoryValidator))]
         public async Task TAddAsync(Category t)
         {
+            t.CategoryStatus = true;
             await _categoryDal.InsertAsync(t);
         }
 
@@ -71,6 +72,16 @@ namespace BusinessLayer.Concrete
                         Text = x.CategoryName,
                         Value = x.CategoryID.ToString()
                     }).ToList();
+        }
+
+        public async Task ChangedStatus(int id)
+        {
+            var value = await TGetByIDAsync(id);
+            if (value.CategoryStatus)
+                value.CategoryStatus = false;
+            else
+                value.CategoryStatus = true;
+            await TUpdateAsync(value);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CoreLayer.Utilities.FileUtilities
             var extension = Path.GetExtension(image.FileName);
             var newImageName = Guid.NewGuid() + extension;
             var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
-            var stream = new FileStream(location, FileMode.Create);
+            using var stream = new FileStream(location, FileMode.Create);
             await image.CopyToAsync(stream);
             return folderLocation + newImageName;
         }

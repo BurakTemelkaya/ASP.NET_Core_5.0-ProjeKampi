@@ -54,7 +54,7 @@
                     @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.Cities, new { @class = "form-control dropdown" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleTextarea1">Textarea</label>
+                    <label for="exampleTextarea1">Hakkında Yazmak İstediklerin</label>
                     @Html.TextAreaFor(x => x.About, 10, 3, new { @class = "form-control", @placeholder = "Hakkımda" })
                     @Html.ValidationMessageFor(x => x.About, "", new { @class = "text-danger" })
                 </div>

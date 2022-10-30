@@ -90,5 +90,13 @@ namespace BusinessLayer.Concrete
             else
                 return await _userManager.Users.CountAsync(filter);
         }
+
+        public async Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
+        {
+            if (filter == null)
+                return await _userManager.Users.ToListAsync();
+            else
+                return await _userManager.Users.Where(filter).ToListAsync();
+        }
     }
 }

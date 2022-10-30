@@ -21,5 +21,6 @@ namespace BusinessLayer.Abstract
         Task CastUserRole(AppUser user, string role);
         Task<List<string>> FindUserRoleAsync(AppUser user);
         Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
+        Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
     }
 }

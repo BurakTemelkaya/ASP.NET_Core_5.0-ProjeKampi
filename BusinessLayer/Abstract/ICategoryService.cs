@@ -11,5 +11,6 @@ namespace BusinessLayer.Abstract
     public interface ICategoryService : IGenericService<Category>
     {
         Task<List<SelectListItem>> GetCategoryListAsync();
+        Task ChangedStatus(int id);
     }
 }

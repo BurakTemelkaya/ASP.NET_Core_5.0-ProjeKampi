@@ -13,8 +13,8 @@ namespace CoreLayer.Utilities.FileUtilities
         {
             var newFileName = Guid.NewGuid() + ".txt";
             var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newFileName);
-            FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
-            StreamWriter streamWriter = new(fileStream);
+            using FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
+            using StreamWriter streamWriter = new(fileStream);
             await streamWriter.WriteLineAsync(text);
             await streamWriter.FlushAsync();
             streamWriter.Close();

@@ -2,35 +2,47 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
+    string status = "";
+    string statusBtn = "";
 }
 
 <h1>Kategori Listesi</h1>
 
 <br />
 
-<table class="table table-bordered table-responsive">
+<table class="table table-bordered">
     <thead>
         <tr>
             <th scope="col">#</th>
             <th>Kategori Adı</th>
             <th>Pasif Yap</th>
-            <th>Aktif Yap</th>
             <th>Düzenle</th>
+            <th>Sil</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            @if (item.CategoryStatus)
+            {
+                status = "Pasif Yap";
+                statusBtn = "btn-secondary";
+            }
+            else
+            {
+                status = "Aktif Yap";
+                statusBtn = "btn-primary";
+            }
             <tr>
                 <th scope="row">@item.CategoryID</th>
-                <td>@item.CategoryName</td>
+                <td>@item.CategoryName</td>               
+                <td><a href="/Admin/Category/ChangedStatus/@item.CategoryID" class="btn @statusBtn">@status</a></td>
+                <td><a href="/Admin/Category/EditCategory/@item.CategoryID" class="btn btn-success">Düzenle</a></td>
                 <td>
                     <a href="/Admin/Category/CategoryDelete/@item.CategoryID" id="DeleteBtn"
-                       onclick="return confirm('Silmek istediğinizden emin misiniz ?');"
-                       class="btn btn-secondary">Pasif Yap</a>
+                   onclick="return confirm('Silmek istediğinizden emin misiniz ?');"
+                   class="btn btn-danger">Sil</a>
                 </td>
-                <td><a href="#" class="btn btn-primary">Aktif Yap</a></td>
-                <td><a href="#" class="btn btn-success">Düzenle</a></td>
             </tr>
         }
     </tbody>
