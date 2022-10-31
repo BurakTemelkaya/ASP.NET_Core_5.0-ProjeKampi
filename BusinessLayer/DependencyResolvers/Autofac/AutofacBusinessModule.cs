@@ -4,6 +4,8 @@ using AutoMapper;
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using Castle.DynamicProxy;
+using CoreLayer.Utilities.Interceptors;
+using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;

@@ -1,6 +1,9 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper.Configuration;
+using BusinessLayer.Abstract;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -15,16 +18,12 @@ namespace BusinessLayer.Concrete
     public class NewsLetterManager : INewsLetterService
     {
         private readonly INewsLetterDal _newsLetterDal;
+        readonly IMailService _mailService;
 
-        public NewsLetterManager(INewsLetterDal newsLetterDal)
+        public NewsLetterManager(INewsLetterDal newsLetterDal, IMailService mailService)
         {
             _newsLetterDal = newsLetterDal;
-        }
-        [ValidationAspect(typeof(NewsLetterValidator))]
-        public async Task AddNewsLetterAsync(NewsLetter newsLetter)
-        {
-            newsLetter.MailStatus = true;
-            await _newsLetterDal.InsertAsync(newsLetter);
+            _mailService = mailService;
         }
 
         public async Task<NewsLetter> GetByMailAsync(string mail)
@@ -42,8 +41,19 @@ namespace BusinessLayer.Concrete
             return await _newsLetterDal.GetListAllAsync(filter);
         }
 
+        public async Task<bool> SendMail(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
+        {
+            var value = await _newsLetterDal.GetListAllAsync(filter);
+            bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);
+            if (isSend)
+                return true;
+            else
+                return false;
+        }
+        [ValidationAspect(typeof(NewsLetterValidator))]
         public async Task TAddAsync(NewsLetter t)
         {
+            t.MailStatus = true;
             await _newsLetterDal.InsertAsync(t);
         }
 
@@ -61,7 +71,7 @@ namespace BusinessLayer.Concrete
         {
             return await _newsLetterDal.GetByIDAsync(id);
         }
-
+        [ValidationAspect(typeof(NewsLetterValidator))]
         public async Task TUpdateAsync(NewsLetter t)
         {
             await _newsLetterDal.UpdateAsync(t);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLayer.Models;
 
 namespace BusinessLayer.DependencyResolvers.Autofac
 {
@@ -22,6 +23,10 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<ContactValidator>().As<IValidator<Contact>>().SingleInstance();
 
             builder.RegisterType<UserValidator>().As<IValidator<UserDto>>().SingleInstance();
+
+            builder.RegisterType<NewsLetterValidator>().As<IValidator<NewsLetter>>().SingleInstance();
+
+            builder.RegisterType<NewsLetterSendMailsModelValidator>().As<IValidator<NewsLetterSendMailsModel>>().SingleInstance();
         }
     }
 }

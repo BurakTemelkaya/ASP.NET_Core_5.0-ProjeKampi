@@ -17,24 +17,31 @@ namespace CoreLayer.Utilities.MailUtilities
             _configuration = configuration;
         }
 
-        public void SendMail(string mail, string subject, string message)
+        public bool SendMails(string[] mail, string subject, string message)
         {
-            SmtpClient smtp = new SmtpClient();
+            SmtpClient smtp = new();
             var senderMail = _configuration["MailInfo:Mail"];
             var senderPassword = _configuration["MailInfo:Password"];
             smtp.Credentials = new System.Net.NetworkCredential(senderMail, senderPassword);
             smtp.Port = 587;
             smtp.Host = "smtp-mail.outlook.com";
             smtp.EnableSsl = true;
-
-            MailMessage eMail = new MailMessage();
+            MailMessage eMail = new();
             eMail.From = new MailAddress(_configuration["MailInfo:Mail"]);
-            eMail.To.Add(mail);
+            for (int i = 0; i < mail.Length; i++)
+                eMail.To.Add(mail[i]);
             eMail.Subject = subject;
             eMail.IsBodyHtml = true;
             eMail.Body = message;
-
-            smtp.SendAsync(eMail, (object)eMail);
+            try
+            {
+                smtp.SendAsync(eMail, (object)eMail);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

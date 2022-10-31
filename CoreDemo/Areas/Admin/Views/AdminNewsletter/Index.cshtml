@@ -1,0 +1,75 @@
+﻿@model IPagedList<NewsLetter>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    string status = "";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Haber Bültenine Kayıtlı Kişiler</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mail</th>
+                            <th>Artık Mail Alıyor Mu ?</th>
+                            <th>Sil</th>
+                            <th>Düzenle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            @if (item.MailStatus)
+                            {
+                                status = "Alıyor";
+                            }
+                            else
+                            {
+                                status = "Almıyor";
+                            }
+                            <tr>
+                                <td>@item.MailID</td>
+                                <td>@item.Mail</td>
+                                <td>@status</td>
+                                <td><a href="/Admin/AdminNewsLetter/Delete/@item.MailID" class="btn btn-outline-danger">Sil</a></td>
+                                <td><a href="/Admin/AdminNewsLetter/EditNewsletter/@item.MailID" class="btn btn-outline-success">Düzenle</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <a href="/Admin/AdminNewsLetter/SendNewsletter" class="btn btn-primary">Yeni Bülten Gönder</a>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+new PagedListRenderOptions
+{
+    LinkToFirstPageFormat="<<İlk",
+    LinkToLastPageFormat="Son>>",
+    LinkToNextPageFormat="sonraki>",
+    LinkToPreviousPageFormat="<önceki",
+    ContainerDivClasses=new[] {"navigation"},
+    LiElementClasses= new[] {"page-item"},
+    PageClasses=new[] {"page-link"},
+    ActiveLiElementClass="active"
+})
+

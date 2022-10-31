@@ -8,6 +8,6 @@ namespace CoreLayer.Utilities.MailUtilities
 {
     public interface IMailService
     {
-        public void SendMail(string mail,string subject, string message);
+        bool SendMails(string[] mail, string subject, string message);
     }
 }

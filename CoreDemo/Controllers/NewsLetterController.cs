@@ -31,14 +31,14 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> SubscribeMail(NewsLetter newsLetter)
         {
-            NewsLetterValidator rules = new NewsLetterValidator();
+            NewsLetterValidator rules = new();
             if (!rules.Validate(newsLetter).IsValid)
             {
                 return BadRequest("Email geçersiz.");
             }
             if (await _newsLetterService.GetByMailAsync(newsLetter.Mail) == null && newsLetter.Mail != null)
             {
-                await _newsLetterService.AddNewsLetterAsync(newsLetter);
+                await _newsLetterService.TAddAsync(newsLetter);
                 return Ok();
             }
             return BadRequest("Böyle bir mail adresi bulunuyor.");

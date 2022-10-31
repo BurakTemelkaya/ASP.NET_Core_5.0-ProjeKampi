@@ -1,7 +1,10 @@
 using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
 using BusinessLayer.ValidationRules;
+using Core.Extensions;
 using CoreDemo.Models;
+using CoreLayer.DependancyResolvers;
+using CoreLayer.Utilities.IoC;
 using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
@@ -34,6 +37,11 @@ namespace CoreDemo
             services.AddIdentity<AppUser, AppRole>(x =>
             {
                 x.User.RequireUniqueEmail = true;
+                x.Password.RequireUppercase = true;
+                x.Password.RequireNonAlphanumeric = true;
+                x.Password.RequireDigit = true;
+                x.Password.RequireLowercase = true;
+                x.Password.RequireNonAlphanumeric = true;
             }).AddEntityFrameworkStores<Context>();
 
             services.AddControllersWithViews();
