@@ -36,17 +36,17 @@
                         <span class="badge badge-secondary">Pasif</span>
                     }
                 </td>
-                <td><a href="~/Blog/DeleteBlog/@item.BlogID" class="btn btn-danger Sil"><i class="far fa-trash-alt">&nbsp;Sil</i></a></td>
-                <td><a href="~/Blog/EditBlog/@item.BlogID" class="btn btn-warning">Düzenle</a></td>
+                <td><a href="/Blog/DeleteBlog/@item.BlogID" class="btn btn-danger Sil"><i class="far fa-trash-alt">&nbsp;Sil</i></a></td>
+                <td><a href="/Blog/EditBlog/@item.BlogID" class="btn btn-warning">Düzenle</a></td>
                 <td>
 
                     @if (item.BlogStatus)
                     {
-                        <a href="~/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-secondary Durum">Pasif Yap</a>
+                        <a href="/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-secondary DurumPasif">Pasif Yap</a>
                     }
                     else
                     {
-                        <a href="~/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-success Durum">Aktif Yap</a>
+                        <a href="/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-success DurumAktif">Aktif Yap</a>
                     }
 
                 </td>
@@ -56,68 +56,79 @@
 </table>
 <a href="/Blog/BlogAdd" class="btn btn-primary">Yeni Blog Oluştur</a>
 <script>
-                    $('.Sil').click(function (e) {
-                        e.preventDefault();
-                        var linkURL = $(this).attr("href");
-                        Swal.fire({
-                            title: 'UYARI!',
-                            text: "Blog yazısını silmek istediğinize emin misiniz?",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            showCancelButton: true,
-                            confirmButtonColor: '#5CBA6C',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Evet',
-                            cancelButtonText: 'Hayır'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = linkURL;
-                                Swal.fire(
-                                    'Başarılı!',
-                                    'Seçilen Blog Silindi .',
-                                    'success'
-                                )
-                            }
-                            else if (result.dismiss === Swal.DismissReason.cancel) {
-                            }
-                        })
-                    });
-
-    $('.Durum').click(function (e) {
-                        e.preventDefault();
+    $('.Sil').click(function (e) {
+        e.preventDefault();
         var linkURL = $(this).attr("href");
-        var deger = document.getElementById("Durum").textContent;
-        var mesaj;
-        var onayMesaji;
-        if (deger == "Pasif Yap") {
-            mesaj = "Blog yazısını pasif yapmak istediğinize emin misiniz ?";
-            onayMesaji="Seçilen blog pasif yapıldı."
-        }
-        else if (deger) {
-            mesaj = "Blog yazısını aktif yapmak istediğinize emin misiniz ?";
-            onayMesaji="Seçilen blog aktif yapıldı."
-        }
-                        Swal.fire({
-                            title: 'UYARI!',
-                            text: mesaj,
-                            icon: 'warning',
-                            showCancelButton: true,
-                            showCancelButton: true,
-                            confirmButtonColor: '#5CBA6C',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Evet',
-                            cancelButtonText: 'Hayır'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = linkURL;
-                                Swal.fire(
-                                    'Başarılı!',
-                                    onayMesaji,
-                                    'success'
-                                )
-                            }
-                            else if (result.dismiss === Swal.DismissReason.cancel) {
-                            }
-                        })
-                    });
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Blog yazısını silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    'Seçilen Blog Silindi .',
+                    'success'
+                )
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+            }
+        })
+    });
+
+    $('.DurumAktif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
+    $('.DurumPasif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
 </script>

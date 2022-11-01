@@ -103,7 +103,7 @@ namespace CoreDemo.Controllers
         {
             ViewBag.i = id;
             var value = await _blogService.GetBlogByIDAsync(id);
-            if (value == null)
+            if (value == null || !value.BlogStatus)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
@@ -158,8 +158,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> ChangeStatusBlog(int id)
         {
-            var blogValue = await _blogService.GetBlogByIDAsync(id);
-            await _blogService.ChangedBlogStatus(blogValue, User.Identity.Name);
+            await _blogService.ChangedBlogStatus(id, User.Identity.Name);
             Thread.Sleep(2000);
             return RedirectToAction("BlogListByWriter");
         }

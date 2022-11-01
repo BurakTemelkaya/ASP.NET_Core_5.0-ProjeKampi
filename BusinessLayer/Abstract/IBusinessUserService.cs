@@ -22,5 +22,7 @@ namespace BusinessLayer.Abstract
         Task<List<string>> FindUserRoleAsync(AppUser user);
         Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
         Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
+        Task<bool> BannedUser(AppUser appUser, DateTime expiration);
+        Task<bool> BanOpenUser(AppUser appUser);
     }
 }

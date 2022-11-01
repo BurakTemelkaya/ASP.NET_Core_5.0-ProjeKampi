@@ -98,5 +98,30 @@ namespace BusinessLayer.Concrete
             else
                 return await _userManager.Users.Where(filter).ToListAsync();
         }
+        public async Task<bool> BannedUser(AppUser appUser, DateTime expiration)
+        {
+            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(appUser, true);
+            if (resultSetLockot.Succeeded)
+            {
+                if (DateTime.Now < expiration)
+                {
+                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(appUser, expiration);
+                    if (resultSetLockotEndDate.Succeeded)
+                        return true;
+                }             
+            }
+            return false;
+        }
+        public async Task<bool> BanOpenUser(AppUser appUser)
+        {
+            appUser.LockoutEnabled = false;
+            var result = await _userManager.SetLockoutEnabledAsync(appUser, false);
+            if (result.Succeeded)
+                return true;
+            else
+                return false;
+        }
+
+
     }
 }

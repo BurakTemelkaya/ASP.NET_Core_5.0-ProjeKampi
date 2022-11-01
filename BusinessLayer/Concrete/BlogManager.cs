@@ -36,6 +36,8 @@ namespace BusinessLayer.Concrete
         public async Task<Blog> GetBlogByIDAsync(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
+            if (value == null)
+                return value;
             value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
             return value;
         }
@@ -156,8 +158,9 @@ namespace BusinessLayer.Concrete
             return await _blogDal.GetListAllAsync();
         }
 
-        public async Task ChangedBlogStatus(Blog blog, string userName)
+        public async Task ChangedBlogStatus(int id, string userName)
         {
+            var blog = await GetFileNameContentBlogByIDAsync(id);
             var user = await _userService.FindByUserNameAsync(userName);
             if (user.Id == blog.WriterID)
             {
@@ -166,7 +169,8 @@ namespace BusinessLayer.Concrete
                     value.BlogStatus = false;
                 else
                     value.BlogStatus = true;
-                await _blogDal.UpdateAsync(blog);
+
+                await _blogDal.UpdateAsync(value);
             }
         }
 

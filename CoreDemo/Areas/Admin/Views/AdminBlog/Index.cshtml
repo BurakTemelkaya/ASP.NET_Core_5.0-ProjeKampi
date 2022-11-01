@@ -11,9 +11,13 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        @foreach (var item in Model)
+    @if (ViewBag.UserName != null)
         {
+        <h2><b>@ViewBag.UserName</b> Kullanıcısına Ait Bloglar</h2>
+        }
+    <div class="row">       
+        @foreach (var item in Model)
+        {           
             <a href="/Admin/AdminBlog/BlogUpdate/@item.BlogID">
                 <div class="col-md-3">
                     <div class="ibox">

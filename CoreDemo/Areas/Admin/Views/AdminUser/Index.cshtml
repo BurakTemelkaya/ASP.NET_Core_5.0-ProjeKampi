@@ -1,0 +1,92 @@
+﻿@model IPagedList<AppUser>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Kullanıcılar</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 1</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-hover table-responsive-sm table-responsive-md table-responsive-lg">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Adı</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Mail Adresi</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>Hakkında</th>
+                            <th>Kullanıcıya Ait Bloglar</th>
+                            <th>Yasakla</th>
+                            <th>Düzenle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.NameSurname</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>@item.RegistrationTime</td>
+                                <td>
+                                    @if (item.About.Length < 36)
+                                    {
+                                        @item.About
+                                    }
+                                    else
+                                    {
+                                        @item.About.Substring(0,35)
+                                    }
+
+                                </td>
+                                <td><a href="/Admin/AdminBlog/Index/@item.Id" class="btn btn-outline-primary">Listele</a></td>
+                                <td><a href="/Admin/AdminUser/BannedUser/@item.Id" class="btn btn-outline-danger">Yasakla</a></td>
+                                <td><a href="/Admin/AdminRole/UpdateUser/@item.Id" class="btn btn-outline-success">Kullanıcının Bilgilerini Düzenle</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <a href="/Admin/AdminRole/AddRole" class="btn btn-outline-primary">Kullanıcı Ekle</a>
+                <a href="/Admin/AdminRole/UserRoleList" class="btn btn-outline-primary">Kullanıcı Rol Listesi</a>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+new PagedListRenderOptions
+{
+    LinkToFirstPageFormat="<<İlk",
+    LinkToLastPageFormat="Son>>",
+    LinkToNextPageFormat="sonraki>",
+    LinkToPreviousPageFormat="<önceki",
+    ContainerDivClasses=new[] {"navigation"},
+    LiElementClasses= new[] {"page-item"},
+    PageClasses=new[] {"page-link"},
+    ActiveLiElementClass="active"
+})
+

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -23,9 +24,21 @@ namespace CoreDemo.Areas.Admin.Controllers
             _businessUserService = businessUserService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, int id = 0)
         {
             var blogs = await _blogService.GetBlogListWithCategoryAsync();
+            if (id != 0)
+            {
+                var user = await _businessUserService.GetByIDAsync(id.ToString());              
+                if (user != null)
+                {
+                    var value = await blogs.Where(x => x.WriterID == id).ToListAsync();
+                    if (value!=null)
+                        blogs = value;
+                    ViewBag.UserName = user.UserName;
+                }
+                    
+            }
             var values = await blogs.ToPagedListAsync(page, 4);
             foreach (var item in values)
             {

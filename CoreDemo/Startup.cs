@@ -1,7 +1,9 @@
 using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
+using BusinessLayer.Extension;
 using BusinessLayer.ValidationRules;
 using Core.Extensions;
+using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Utilities.IoC;
@@ -87,6 +89,7 @@ namespace CoreDemo
             services.AddFluentValidationClientsideAdapters();
 
             services.AddAutoMapper(typeof(BusinessImages));
+            services.AddAutoMapper(typeof(UIImage));
 
         }
 
@@ -115,6 +118,8 @@ namespace CoreDemo
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseUserDestroyer();
 
             app.UseEndpoints(endpoints =>
             {

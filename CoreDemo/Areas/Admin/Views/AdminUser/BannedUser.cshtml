@@ -1,0 +1,29 @@
+﻿@model BannedUserModel
+@{
+    ViewData["Title"] = "BannedUser";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Kullanıcı Yasakla</h1>
+<form method="post">
+    <input type="hidden" asp-for="Id" placeholder="Blog Adı" class="form-control">
+    <div class="col-lg-10 col-md-12 mb-3">
+        <h3>Kullanıcı Adı: @Model.UserName</h3>
+        <h3>Mail: @Model.Email</h3>
+        <h3>Yasak Bitiş Tarihi</h3>
+    </div>
+
+    <div class="col-lg-10 col-md-12 mb-3">
+        <input type="datetime-local" value="@DateTime.Now.AddDays(30).ToLongDateString()" asp-for="BanExpirationTime" placeholder="Yasağın Biteceği Tarih" class="form-control" required>
+    </div>
+    <div class="col-lg-10 col-md-12 mb-3">
+        <button class="btn btn-danger">Kullanıcıyı Siteden Belirtilen Tarihe Kadar Yasakla</button>
+        <a href="/Admin/AdminUser/Banned/300000" class="btn btn-danger ml-2">Kullanıcıyı Siteden Kalıcı Yasakla</a>
+        <a href="/Admin/AdminUser/Banned/30" class="btn btn-danger ml-2">Kullanıcıyı Siteden 30 Gün Yasakla</a>
+        <a href="/Admin/AdminUser/Banned/7" class="btn btn-danger ml-2">Kullanıcıyı Siteden 7 Gün Yasakla</a>
+        <a href="/Admin/AdminUser/Banned/1" class="btn btn-danger ml-2">Kullanıcıyı Siteden 1 Gün Yasakla</a>
+    </div>
+    <div asp-validation-summary="All"></div>
+</form>
+
+
