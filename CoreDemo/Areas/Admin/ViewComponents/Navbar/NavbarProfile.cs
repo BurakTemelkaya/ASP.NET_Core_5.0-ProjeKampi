@@ -22,7 +22,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
             string role = "";
             foreach (var item in roles)
                 role += item + ",";
-            role = role.Substring(0, role.Length - 1);
+            role = role[..^1];
             ViewBag.Role = role;
             return View(user);
         }

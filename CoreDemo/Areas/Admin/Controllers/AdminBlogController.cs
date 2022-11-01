@@ -56,7 +56,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
-            ViewBag.CategoryList = _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -84,7 +84,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
-            ViewBag.CategoryList = _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
     }

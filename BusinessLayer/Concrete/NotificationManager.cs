@@ -24,9 +24,9 @@ namespace BusinessLayer.Concrete
             return await _notificationDal.GetCountAsync(filter);
         }
 
-        public Task<List<Notification>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<List<Notification>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return _notificationDal.GetListAllAsync(filter);
+            return await _notificationDal.GetListAllAsync(filter);
         }
 
         public async Task TAddAsync(Notification t)

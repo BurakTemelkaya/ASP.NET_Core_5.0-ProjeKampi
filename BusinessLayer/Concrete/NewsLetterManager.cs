@@ -41,7 +41,7 @@ namespace BusinessLayer.Concrete
             return await _newsLetterDal.GetListAllAsync(filter);
         }
 
-        public async Task<bool> SendMail(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<bool> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
         {
             var value = await _newsLetterDal.GetListAllAsync(filter);
             bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);

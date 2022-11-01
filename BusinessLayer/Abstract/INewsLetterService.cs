@@ -12,6 +12,6 @@ namespace BusinessLayer.Abstract
     public interface INewsLetterService : IGenericService<NewsLetter>
     {
         Task<NewsLetter> GetByMailAsync(string mail);
-        Task<bool> SendMail(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
+        Task<bool> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
     }
 }

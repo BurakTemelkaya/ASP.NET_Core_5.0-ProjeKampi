@@ -31,8 +31,10 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Index", "Dashboard");
             }
-            UserSignUpViewModel signUpViewModel = new UserSignUpViewModel();
-            signUpViewModel.Cities = await _writerCity.GetCityListAsync();
+            UserSignUpViewModel signUpViewModel = new UserSignUpViewModel
+            {
+                Cities = await _writerCity.GetCityListAsync()
+            };
             return View(signUpViewModel);
         }
         [HttpPost]

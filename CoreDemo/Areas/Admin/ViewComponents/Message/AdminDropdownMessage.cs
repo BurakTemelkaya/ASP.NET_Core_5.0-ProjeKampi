@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Message
 {
@@ -20,7 +21,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             var values = await _messageService.GetInboxWithMessageListAsync(user.Id);
             if (values.Count > 3)
-                values = values.TakeLast(3).ToList();
+                values = await values.TakeLast(3).ToListAsync();
             ViewBag.UnreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUser.UserName == User.Identity.Name && x.MessageStatus);
             return View(values);
         }

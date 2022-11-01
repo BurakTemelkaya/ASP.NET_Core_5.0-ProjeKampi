@@ -74,7 +74,7 @@ namespace BusinessLayer.Concrete
                     }).ToList();
         }
 
-        public async Task ChangedStatus(int id)
+        public async Task ChangedStatusAsync(int id)
         {
             var value = await TGetByIDAsync(id);
             if (value.CategoryStatus)

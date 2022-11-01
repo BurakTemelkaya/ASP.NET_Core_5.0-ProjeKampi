@@ -46,7 +46,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             int rating = 0;
             foreach (var item in ratings)
                 rating += item;
-            rating = rating / ratings.Count();
+            rating /= ratings.Count();
             ViewBag.Rating = rating;
             return View();
         }

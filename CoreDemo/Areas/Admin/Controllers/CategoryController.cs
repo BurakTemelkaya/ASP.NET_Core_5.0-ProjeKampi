@@ -44,7 +44,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> ChangedStatus(int id)
         {
-            await _categoryService.ChangedStatus(id);
+            await _categoryService.ChangedStatusAsync(id);
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> CategoryDelete(int id)

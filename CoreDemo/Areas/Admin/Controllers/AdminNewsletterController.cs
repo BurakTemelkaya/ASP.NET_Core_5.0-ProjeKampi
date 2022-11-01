@@ -31,7 +31,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendNewsletter(NewsLetterSendMailsModel model)
         {
-            bool isSend = await _newsLetterService.SendMail(model);
+            bool isSend = await _newsLetterService.SendMailAsync(model);
             if (!isSend)
             {
                 ModelState.AddModelError("Subject", "Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
@@ -61,7 +61,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var value = await _newsLetterService.TGetByIDAsync(id);
             await _newsLetterService.TDeleteAsync(value);
-            return RedirectToAction("Index")
+            return RedirectToAction("Index");
         }
     }
 }
