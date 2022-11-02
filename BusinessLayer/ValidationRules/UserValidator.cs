@@ -14,7 +14,6 @@ namespace BusinessLayer.ValidationRules
         {
             RuleFor(x => x.NameSurname).NotEmpty();
             RuleFor(x => x.UserName).NotEmpty();
-            RuleFor(x => x.Password).NotEmpty();
             RuleFor(x => x.Email).EmailAddress();
         }
     }

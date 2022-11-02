@@ -21,10 +21,12 @@ namespace CoreDemo.Controllers
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IBusinessUserService _userService;
 
-        public LoginController(SignInManager<AppUser> signInManager)
+        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService)
         {
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -37,7 +39,7 @@ namespace CoreDemo.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(UserSignInViewModel appUser,string returnUrl)
+        public async Task<IActionResult> Index(UserSignInViewModel appUser, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +52,15 @@ namespace CoreDemo.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
+                    if (result.IsLockedOut)
+                    {
+                        var user = await _userService.FindByUserNameAsync(appUser.UserName);
+                        TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
+                    }
+                    if (result.IsNotAllowed)
+                    {
+                        TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
+                    }                   
                     return View(appUser);
                 }
             }
@@ -59,7 +69,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Blog");
+            return RedirectToAction("Index", "Blog");
         }
         public IActionResult AccessDenied()
         {

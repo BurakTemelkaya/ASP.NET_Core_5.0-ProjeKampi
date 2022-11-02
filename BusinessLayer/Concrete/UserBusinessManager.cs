@@ -3,12 +3,14 @@ using BusinessLayer.Abstract;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +23,12 @@ namespace BusinessLayer.Concrete
     public class UserBusinessManager : ManagerBase, IBusinessUserService
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IMailService _mailService;
 
-        public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper) : base(mapper)
+        public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper, IMailService mailService) : base(mapper)
         {
             _userManager = userManager;
+            _mailService = mailService;
         }
         [ValidationAspect(typeof(UserValidator))]
         public async Task RegisterUserAsync(AppUser T, string password)
@@ -48,19 +52,31 @@ namespace BusinessLayer.Concrete
             return await _userManager.FindByIdAsync(id);
         }
         [ValidationAspect(typeof(UserValidator))]
-        public async Task UpdateUserAsync(UserDto user)
+        public async Task<bool> UpdateUserAsync(UserDto user)
         {
-            var value = await _userManager.FindByNameAsync(user.UserName);
+            var value = await GetByIDAsync(user.Id.ToString());
             value.NameSurname = user.NameSurname;
             value.Email = user.Email;
-            value.UserName = user.UserName;
-            value.ImageUrl = user.ImageUrl;
+            value.UserName = user.UserName;           
             value.About = user.About;
             value.City = user.City;
-            bool oldPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
-            if (user.Password != null && oldPassword)
-                value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
-            await _userManager.UpdateAsync(value);
+            if(user.ImageUrl!=null)
+                value.ImageUrl = user.ImageUrl;               
+            if (user.Password != null)
+            {
+                bool checkPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
+                if (checkPassword)
+                    value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
+                else
+                {
+                    return false;
+                }
+            }
+            var result = await _userManager.UpdateAsync(value);
+            if (result.Succeeded)
+                return true;
+            else
+                return false;
         }
 
         public async Task<UserDto> FindByUserNameAsync(string userName)
@@ -98,28 +114,57 @@ namespace BusinessLayer.Concrete
             else
                 return await _userManager.Users.Where(filter).ToListAsync();
         }
-        public async Task<bool> BannedUser(AppUser appUser, DateTime expiration)
+        public async Task<bool> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
-            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(appUser, true);
+            var user = await GetByIDAsync(id);
+            if (user == null)
+                return false;
+            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(user, true);
             if (resultSetLockot.Succeeded)
             {
                 if (DateTime.Now < expiration)
                 {
-                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(appUser, expiration);
+                    var userRole = await _userManager.GetRolesAsync(user);
+                    foreach (var role in userRole)
+                    {
+                        if (role == "Admin")
+                            return false;
+                    }
+                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(user, expiration);
                     if (resultSetLockotEndDate.Succeeded)
+                    {
+                        _mailService.SendMail(user.Email, "Core Blog Hesabınız Yasaklandı", banMessageContent);
                         return true;
-                }             
+                    }
+                }
             }
             return false;
         }
-        public async Task<bool> BanOpenUser(AppUser appUser)
+        public async Task<bool> BanOpenUser(string id)
         {
-            appUser.LockoutEnabled = false;
-            var result = await _userManager.SetLockoutEnabledAsync(appUser, false);
+            var user = await GetByIDAsync(id);
+            if (user == null)
+                return false;
+            var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddMinutes(1));
             if (result.Succeeded)
+            {
+                _mailService.SendMail(user.Email, "Core Blog Hesabınız Banı Açıldı", "Core Blog Hesabınızın Banı Adminlerimiz Tarafından Açıldı.");
                 return true;
+            }
             else
                 return false;
+        }
+        public async Task UpdateUserName(string id, string userName)
+        {
+            var user = await GetByIDAsync(id);
+            user.UserName = userName;
+            await _userManager.UpdateNormalizedUserNameAsync(user);
+        }
+        public async Task UpdateEmail(string id, string email)
+        {
+            var user = await GetByIDAsync(id);
+            user.Email = email;
+            await _userManager.ChangeEmailAsync(user, email, "");
         }
 
 

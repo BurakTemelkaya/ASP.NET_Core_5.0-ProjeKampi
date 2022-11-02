@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
+    string hidden = "";
 }
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="col-lg-12">
@@ -41,6 +42,7 @@
                             <th>Hakkında</th>
                             <th>Kullanıcıya Ait Bloglar</th>
                             <th>Yasakla</th>
+                            <th>Yasağı Aç</th>
                             <th>Düzenle</th>
                         </tr>
                     </thead>
@@ -64,8 +66,15 @@
                                     }
 
                                 </td>
+                                @if (DateTime.Now.AddMinutes(1) > item.LockoutEnd || item.LockoutEnd == null)
+                                { hidden = "hidden"; }
+                                else
+                                {
+                                    hidden = null;
+                                }
                                 <td><a href="/Admin/AdminBlog/Index/@item.Id" class="btn btn-outline-primary">Listele</a></td>
                                 <td><a href="/Admin/AdminUser/BannedUser/@item.Id" class="btn btn-outline-danger">Yasakla</a></td>
+                                <td><a href="/Admin/AdminUser/OpenBanUser/@item.Id" class="btn btn-outline-success" @hidden>Yasağı Aç  @item.LockoutEnd</a></td>
                                 <td><a href="/Admin/AdminRole/UpdateUser/@item.Id" class="btn btn-outline-success">Kullanıcının Bilgilerini Düzenle</a></td>
                             </tr>
                         }

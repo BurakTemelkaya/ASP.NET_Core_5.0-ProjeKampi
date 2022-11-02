@@ -12,16 +12,18 @@
         <h3>Mail: @Model.Email</h3>
         <h3>Yasak Bitiş Tarihi</h3>
     </div>
-
+    <div class="ibox-content no-padding">
+        <textarea asp-for="BanMessage"></textarea>
+    </div>
     <div class="col-lg-10 col-md-12 mb-3">
         <input type="datetime-local" value="@DateTime.Now.AddDays(30).ToLongDateString()" asp-for="BanExpirationTime" placeholder="Yasağın Biteceği Tarih" class="form-control" required>
     </div>
     <div class="col-lg-10 col-md-12 mb-3">
         <button class="btn btn-danger">Kullanıcıyı Siteden Belirtilen Tarihe Kadar Yasakla</button>
-        <a href="/Admin/AdminUser/Banned/300000" class="btn btn-danger ml-2">Kullanıcıyı Siteden Kalıcı Yasakla</a>
-        <a href="/Admin/AdminUser/Banned/30" class="btn btn-danger ml-2">Kullanıcıyı Siteden 30 Gün Yasakla</a>
-        <a href="/Admin/AdminUser/Banned/7" class="btn btn-danger ml-2">Kullanıcıyı Siteden 7 Gün Yasakla</a>
-        <a href="/Admin/AdminUser/Banned/1" class="btn btn-danger ml-2">Kullanıcıyı Siteden 1 Gün Yasakla</a>
+        <a href="/Admin/AdminUser/BannedUserDay/@Model.Id?date=300000" class="btn btn-danger ml-2">Kullanıcıyı Siteden Kalıcı Yasakla</a>
+        <a href="/Admin/AdminUser/BannedUserDay/@Model.Id?date=30" class="btn btn-danger ml-2">Kullanıcıyı Siteden 30 Gün Yasakla</a>
+        <a href="/Admin/AdminUser/BannedUserDay/@Model.Id?date=7" class="btn btn-danger ml-2">Kullanıcıyı Siteden 7 Gün Yasakla</a>
+        <a href="/Admin/AdminUser/BannedUserDay/@Model.Id?date=1" class="btn btn-danger ml-2">Kullanıcıyı Siteden 1 Gün Yasakla</a>
     </div>
     <div asp-validation-summary="All"></div>
 </form>

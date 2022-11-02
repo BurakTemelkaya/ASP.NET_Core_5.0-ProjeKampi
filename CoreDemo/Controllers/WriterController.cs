@@ -4,6 +4,7 @@ using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,13 +23,15 @@ namespace CoreDemo.Controllers
         private readonly UserInfo _userInfo;
         private readonly WriterCity _writerCity;
         private readonly IBusinessUserService _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
         public WriterController(UserInfo userInfo, WriterCity writerCity
-        , IBusinessUserService userManager)
+        , IBusinessUserService userManager,SignInManager<AppUser> signInManager)
         {
             _userInfo = userInfo;
             _writerCity = writerCity;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [Authorize]
@@ -75,18 +78,22 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
         {
-            if (userDto.UserName == null || userDto.NameSurname == null || userDto.Email == null ||
-                userDto.City == null || userDto.About == null)
-            {
-                ModelState.AddModelError("UserName", "Lütfen profil bilgilerinizi boş bırakmayın.");
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
-                return View(userDto);
-            }
             if (imageFile != null)
             {
                 userDto.ImageUrl = AddImage.ImageAdd(imageFile, AddImage.StaticProfileImageLocation());
             }
-            await _userManager.UpdateUserAsync(userDto);
+            bool result = await _userManager.UpdateUserAsync(userDto);
+            if (!result)
+            {
+                ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
+                    " Lütfen daha sonra tekrar deneyiniz");
+                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                return View(userDto);
+            }
+            var user = await _userManager.GetByIDAsync(userDto.Id.ToString());
+            userDto.SecurityStamp = user.SecurityStamp;
+            await _signInManager.SignOutAsync();
+            await _signInManager.SignInAsync(userDto, isPersistent: true);
             return RedirectToAction("Index", "Dashboard");
         }
     }

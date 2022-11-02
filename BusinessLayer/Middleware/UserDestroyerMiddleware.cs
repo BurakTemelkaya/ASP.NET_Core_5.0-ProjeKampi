@@ -24,7 +24,7 @@ namespace BusinessLayer.Middleware
             if (!string.IsNullOrEmpty(httpContext.User.Identity.Name))
             {
                 var user = await userManager.FindByNameAsync(httpContext.User.Identity.Name);
-                if (user.LockoutEnd > DateTimeOffset.Now)
+                if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
                 {
                     await signInManager.SignOutAsync();
                     httpContext.Response.Redirect("/Blog/Index");

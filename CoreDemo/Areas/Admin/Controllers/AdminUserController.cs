@@ -5,6 +5,7 @@ using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -15,7 +16,7 @@ namespace CoreDemo.Areas.Admin.Controllers
     public class AdminUserController : Controller
     {
         readonly IBusinessUserService _userService;
-        
+
         public AdminUserController(IBusinessUserService userService, IMapper mapper)
         {
             _userService = userService;
@@ -43,18 +44,36 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BannedUser(BannedUserModel bannedUserModel)
         {
-            var user = await _userService.GetByIDAsync(bannedUserModel.Id.ToString());
-            if (user != null)
+            var user = await _userService.GetByIDAsync(bannedUserModel.Id);
+            if (user == null)
             {
                 return RedirectToAction("Index");
             }
-            bool result = await _userService.BannedUser(user, bannedUserModel.BanExpirationTime);
+            bool result = await _userService.BannedUser(bannedUserModel.Id, bannedUserModel.BanExpirationTime, bannedUserModel.BanMessage);
             if (!result)
             {
                 ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
                 return View(user);
             }
             return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> BannedUserDay(int date, string id)
+        {
+            bool result = await _userService.BannedUser(id, DateTime.Now.AddDays(date), "");
+            if (!result)
+            {
+                ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+            }
+            return RedirectToAction("BannedUser");
+        }
+        public async Task<IActionResult> OpenBanUser(string Id)
+        {
+            bool result = await _userService.BanOpenUser(Id);
+            if (!result)
+            {
+                ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+            }
+            return RedirectToAction("BannedUser");
         }
     }
 }
