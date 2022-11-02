@@ -17,6 +17,9 @@ namespace BusinessLayer.Middleware
         {
             _next = next;
         }
+        /// <summary>
+        /// Kullanıcı yasaklı ise sistemden çıkış yapmasını sağlayan kontrol mekanizması.
+        /// </summary>
         public async Task Invoke(HttpContext httpContext,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager)
@@ -24,7 +27,7 @@ namespace BusinessLayer.Middleware
             if (!string.IsNullOrEmpty(httpContext.User.Identity.Name))
             {
                 var user = await userManager.FindByNameAsync(httpContext.User.Identity.Name);
-                if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+                if (user.LockoutEnd > DateTime.Now)
                 {
                     await signInManager.SignOutAsync();
                     httpContext.Response.Redirect("/Blog/Index");

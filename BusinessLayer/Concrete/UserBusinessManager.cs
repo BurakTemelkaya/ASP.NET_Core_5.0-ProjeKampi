@@ -106,7 +106,11 @@ namespace BusinessLayer.Concrete
             else
                 return await _userManager.Users.CountAsync(filter);
         }
-
+        /// <summary>
+        /// Eğer verilirse filtreye göre verilmez bütün kullanıcı listesi Döner
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns>Kullanıcı listesi döner.</returns>
         public async Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
@@ -114,6 +118,15 @@ namespace BusinessLayer.Concrete
             else
                 return await _userManager.Users.Where(filter).ToListAsync();
         }
+        /// <summary>
+        /// Kullanıcıları belirli bir süre yasaklamayı sağlayan mekanizma.
+        /// Adminlerin birbirini banlayamaması için kontrol mekanizması var.
+        /// Kullanıcılara mail olarak bilgi veriliyor.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="expiration"></param>
+        /// <param name="banMessageContent"></param>
+        /// <returns></returns>
         public async Task<bool> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
             var user = await GetByIDAsync(id);
@@ -140,12 +153,18 @@ namespace BusinessLayer.Concrete
             }
             return false;
         }
+        /// <summary>
+        /// Kullanıcının yasaklamasını açılmasını sağlayan mekanizma.
+        /// Kullanıcılara mail olarak bilgi veriliyor.
+        /// </summary>
+        /// <param name="id">Kullanıcının id değeri</param>
+        /// <returns>İşlem başarılı ise true değil ise false döner.</returns>
         public async Task<bool> BanOpenUser(string id)
         {
             var user = await GetByIDAsync(id);
             if (user == null)
                 return false;
-            var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddMinutes(1));
+            var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now);
             if (result.Succeeded)
             {
                 _mailService.SendMail(user.Email, "Core Blog Hesabınız Banı Açıldı", "Core Blog Hesabınızın Banı Adminlerimiz Tarafından Açıldı.");
