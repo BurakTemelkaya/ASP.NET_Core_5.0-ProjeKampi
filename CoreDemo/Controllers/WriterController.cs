@@ -24,14 +24,16 @@ namespace CoreDemo.Controllers
         private readonly WriterCity _writerCity;
         private readonly IBusinessUserService _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        protected IMapper _mapper { get; }
 
         public WriterController(UserInfo userInfo, WriterCity writerCity
-        , IBusinessUserService userManager,SignInManager<AppUser> signInManager)
+        , IBusinessUserService userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _userInfo = userInfo;
             _writerCity = writerCity;
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -78,12 +80,9 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
         {
-            if (imageFile != null)
-            {
-                userDto.ImageUrl = AddImage.ImageAdd(imageFile, AddImage.StaticProfileImageLocation());
-            }
-            bool result = await _userManager.UpdateUserAsync(userDto);
-            if (!result)
+            var oldValue = await _userManager.GetByIDAsync(userDto.Id.ToString());
+            var result = await _userManager.UpdateUserAsync(userDto);
+            if (result != null)
             {
                 ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
                     " Lütfen daha sonra tekrar deneyiniz");
@@ -91,10 +90,16 @@ namespace CoreDemo.Controllers
                 return View(userDto);
             }
             var user = await _userManager.GetByIDAsync(userDto.Id.ToString());
-            userDto.SecurityStamp = user.SecurityStamp;
             await _signInManager.SignOutAsync();
-            await _signInManager.SignInAsync(userDto, isPersistent: true);
-            return RedirectToAction("Index", "Dashboard");
+            await _signInManager.SignInAsync(user, isPersistent: true);
+            if (user.PasswordHash == oldValue.PasswordHash && userDto.Password != null &&
+                userDto.PasswordAgain != null && userDto.OldPassword != null)
+            {
+                ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +
+                    "emin olunuz. Eğer Düzenlediyseniz diğer bilgileriniz güncellenmiştir.");
+            }
+            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            return View(userDto);
         }
     }
 }

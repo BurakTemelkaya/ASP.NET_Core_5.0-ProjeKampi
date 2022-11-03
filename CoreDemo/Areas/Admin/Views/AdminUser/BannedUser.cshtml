@@ -4,19 +4,33 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<h1>Kullanıcı Yasakla</h1>
 <form method="post">
     <input type="hidden" asp-for="Id" placeholder="Blog Adı" class="form-control">
-    <div class="col-lg-10 col-md-12 mb-3">
+    <div class="col-lg-12">
+        <h1>Kullanıcı Yasakla</h1>
         <h3>Kullanıcı Adı: @Model.UserName</h3>
         <h3>Mail: @Model.Email</h3>
         <h3>Yasak Bitiş Tarihi</h3>
-    </div>
-    <div class="ibox-content no-padding">
-        <textarea asp-for="BanMessage"></textarea>
-    </div>
-    <div class="col-lg-10 col-md-12 mb-3">
         <input type="datetime-local" value="@DateTime.Now.AddDays(30).ToLongDateString()" asp-for="BanExpirationTime" placeholder="Yasağın Biteceği Tarih" class="form-control" required>
+    </div>
+    <br />
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Kullanıcıyı Bilgilendirme Mesajı (Verilmezse Otomatik Mesaj Gönderilir)</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content no-padding">
+                <textarea asp-for="BanMessage" id="BanMessage"></textarea>
+            </div>
+        </div>
     </div>
     <div class="col-lg-10 col-md-12 mb-3">
         <button class="btn btn-danger">Kullanıcıyı Siteden Belirtilen Tarihe Kadar Yasakla</button>
@@ -27,5 +41,4 @@
     </div>
     <div asp-validation-summary="All"></div>
 </form>
-
 

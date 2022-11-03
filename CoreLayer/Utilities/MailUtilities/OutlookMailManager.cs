@@ -69,5 +69,6 @@ namespace CoreLayer.Utilities.MailUtilities
                 return false;
             }
         }
+       
     }
 }

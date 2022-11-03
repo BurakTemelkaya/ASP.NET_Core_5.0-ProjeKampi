@@ -3,7 +3,9 @@ using BusinessLayer.Abstract;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.MailUtilities;
+using CoreLayer.Utilities.MailUtilities.Models;
 using DataAccessLayer.Abstract;
 using EntityLayer;
 using EntityLayer.Concrete;
@@ -31,11 +33,30 @@ namespace BusinessLayer.Concrete
             _mailService = mailService;
         }
         [ValidationAspect(typeof(UserValidator))]
-        public async Task RegisterUserAsync(AppUser T, string password)
+        public async Task<IEnumerable<IdentityError>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
         {
-            T.RegistrationTime = DateTime.Now;
-            await _userManager.CreateAsync(T, password);
-            await CastUserRole(T, RolesTexts.WriterRole());
+            var user = Mapper.Map<AppUser>(userSignUpDto);
+            user.RegistrationTime = DateTime.Now;
+            if (userSignUpDto.ImageFile != null)
+            {
+                user.ImageUrl = await ImageFileManager.ImageAddAsync(userSignUpDto.ImageFile,
+                    ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (userSignUpDto.ImageUrl != null)
+            {
+                user.ImageUrl = userSignUpDto.ImageUrl;
+            }
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded)
+            {
+                await CastUserRole(user, RolesTexts.WriterRole());
+                return null;
+            }
+            else
+            {
+                return result.Errors;
+            }
+
         }
         public async Task CastUserRole(AppUser user, string role)
         {
@@ -52,31 +73,61 @@ namespace BusinessLayer.Concrete
             return await _userManager.FindByIdAsync(id);
         }
         [ValidationAspect(typeof(UserValidator))]
-        public async Task<bool> UpdateUserAsync(UserDto user)
+        public async Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user)
         {
             var value = await GetByIDAsync(user.Id.ToString());
             value.NameSurname = user.NameSurname;
             value.Email = user.Email;
-            value.UserName = user.UserName;           
+            value.UserName = user.UserName;
             value.About = user.About;
             value.City = user.City;
-            if(user.ImageUrl!=null)
-                value.ImageUrl = user.ImageUrl;               
-            if (user.Password != null)
+            value.ImageUrl = user.ImageUrl;
+            if (user.Password != null && user.Password == user.PasswordAgain)
             {
                 bool checkPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
                 if (checkPassword)
                     value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
-                else
-                {
-                    return false;
-                }
+            }
+            if (user.ProfileImageFile != null)
+            {
+                user.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile,
+                    ImageFileManager.StaticProfileImageLocation());
+            }
+            else if (user.ImageUrl != null)
+            {
+                value.ImageUrl = user.ImageUrl;
             }
             var result = await _userManager.UpdateAsync(value);
             if (result.Succeeded)
-                return true;
+            {
+                var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
+                _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
+                    MailTemplates.ChangedUserInformationMailTemplate(mailTemplate));
+                return null;
+            }
             else
-                return false;
+                return result.Errors;
+        }
+        [ValidationAspect(typeof(UserValidator))]
+        public async Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user)
+        {
+            var value = await GetByIDAsync(user.Id.ToString());
+            value.NameSurname = user.NameSurname;
+            value.Email = user.Email;
+            value.UserName = user.UserName;
+            value.About = user.About;
+            value.City = user.City;
+            user.ImageUrl = value.ImageUrl;
+            var result = await _userManager.UpdateAsync(value);
+            if (result.Succeeded)
+            {
+                var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
+                _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
+                    MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate));
+                return null;
+            }
+            else
+                return result.Errors;
         }
 
         public async Task<UserDto> FindByUserNameAsync(string userName)
@@ -93,7 +144,7 @@ namespace BusinessLayer.Concrete
             return userDto;
         }
 
-        public async Task<List<string>> FindUserRoleAsync(AppUser user)
+        public async Task<List<string>> GetUserRoleListAsync(AppUser user)
         {
             var value = await _userManager.GetRolesAsync(user);
             return value.ToList();
@@ -135,18 +186,17 @@ namespace BusinessLayer.Concrete
             var resultSetLockot = await _userManager.SetLockoutEnabledAsync(user, true);
             if (resultSetLockot.Succeeded)
             {
-                if (DateTime.Now < expiration)
+                if (expiration > DateTime.Now)
                 {
-                    var userRole = await _userManager.GetRolesAsync(user);
-                    foreach (var role in userRole)
-                    {
-                        if (role == "Admin")
-                            return false;
-                    }
+                    var isExistUserRole = await _userManager.IsInRoleAsync(user, RolesTexts.AdminRole());
+                    if (isExistUserRole)
+                        return false;
                     var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(user, expiration);
                     if (resultSetLockotEndDate.Succeeded)
                     {
-                        _mailService.SendMail(user.Email, "Core Blog Hesabınız Yasaklandı", banMessageContent);
+                        if (banMessageContent == "" || banMessageContent == null)
+                            banMessageContent = MailTemplates.BanMessageContent(expiration);
+                        _mailService.SendMail(user.Email, MailTemplates.BanMessageSubject(), banMessageContent);
                         return true;
                     }
                 }
@@ -167,25 +217,12 @@ namespace BusinessLayer.Concrete
             var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now);
             if (result.Succeeded)
             {
-                _mailService.SendMail(user.Email, "Core Blog Hesabınız Banı Açıldı", "Core Blog Hesabınızın Banı Adminlerimiz Tarafından Açıldı.");
+                _mailService.SendMail(user.Email, MailTemplates.BanOpenUserSubjectTemplate(),
+                    MailTemplates.BanOpenUserContentTemplate());
                 return true;
             }
             else
                 return false;
         }
-        public async Task UpdateUserName(string id, string userName)
-        {
-            var user = await GetByIDAsync(id);
-            user.UserName = userName;
-            await _userManager.UpdateNormalizedUserNameAsync(user);
-        }
-        public async Task UpdateEmail(string id, string email)
-        {
-            var user = await GetByIDAsync(id);
-            user.Email = email;
-            await _userManager.ChangeEmailAsync(user, email, "");
-        }
-
-
     }
 }

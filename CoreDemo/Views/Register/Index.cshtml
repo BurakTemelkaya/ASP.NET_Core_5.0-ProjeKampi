@@ -1,4 +1,4 @@
-﻿@model UserSignUpViewModel
+﻿@model UserSignUpDto
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
@@ -27,8 +27,8 @@
                     </div>
                     <div class="form-group">
                         <label>Mail Adresiniz</label>
-                        <span asp-validation-for="@Model.Mail" class="text-danger"></span>
-                        <input type="email" class="form-control" asp-for="@Model.Mail" placeholder="Email" required>
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                        <input type="email" class="form-control" asp-for="@Model.Email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <div class="form-row">
@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label>Yaşadığınız Şehir</label>
                         <span asp-validation-for="@Model.City" class="text-danger"></span>
-                        <select asp-items="@(new List<SelectListItem>(Model.Cities))" asp-for="@Model.City" class="form-control dropdown" required></select>
+                        <select asp-items="@(new List<SelectListItem>(ViewBag.Cities))" asp-for="@Model.City" class="form-control dropdown" required></select>
                     </div>
                     <div class="form-group">
                         <p>Profil Resmini Yükle</p>

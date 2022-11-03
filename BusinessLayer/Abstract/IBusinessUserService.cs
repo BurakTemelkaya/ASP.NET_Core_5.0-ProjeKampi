@@ -1,6 +1,7 @@
 ﻿using EntityLayer;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,18 @@ namespace BusinessLayer.Abstract
 {
     public interface IBusinessUserService
     {
-        Task RegisterUserAsync(AppUser T, string password);
+        Task<IEnumerable<IdentityError>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password);
         Task DeleteUserAsync(AppUser t);
         Task<AppUser> GetByIDAsync(string id);
-        Task<bool> UpdateUserAsync(UserDto user);
+        Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user);
+        Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user);
         Task<UserDto> FindByUserNameAsync(string userName);
         Task<UserDto> FindByMailAsync(string mail);
         Task CastUserRole(AppUser user, string role);
-        Task<List<string>> FindUserRoleAsync(AppUser user);
+        Task<List<string>> GetUserRoleListAsync(AppUser user);
         Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
         Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
         Task<bool> BannedUser(string id, DateTime expiration, string banMessageContent);
-        Task<bool> BanOpenUser(string id);
+        Task<bool> BanOpenUser(string id);       
     }
 }

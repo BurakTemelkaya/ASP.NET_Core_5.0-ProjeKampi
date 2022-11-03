@@ -16,5 +16,13 @@ namespace BusinessLayer.StaticTexts
         {
             return "Admin";
         }
+        public static string ModeratorRole()
+        {
+            return "Moderator";
+        }
+        public static string MemberRole()
+        {
+            return "Üye";
+        }
     }
 }

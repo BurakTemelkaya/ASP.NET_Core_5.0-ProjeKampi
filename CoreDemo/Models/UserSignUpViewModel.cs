@@ -11,7 +11,6 @@ namespace CoreDemo.Models
     {
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
-        public string Mail { get; set; }
         public bool IsAcceptTheContract { get; set; }
         public List<SelectListItem> Cities { get; set; }
         public IFormFile ImageFile { get; set; }

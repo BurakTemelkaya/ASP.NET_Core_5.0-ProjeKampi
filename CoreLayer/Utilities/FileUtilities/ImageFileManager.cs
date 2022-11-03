@@ -10,7 +10,7 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class ImageFileManager
     {
-        public static async Task<string> ImageAdd(IFormFile image, string folderLocation)
+        public static async Task<string> ImageAddAsync(IFormFile image, string folderLocation)
         {
             var extension = Path.GetExtension(image.FileName);
             var newImageName = Guid.NewGuid() + extension;

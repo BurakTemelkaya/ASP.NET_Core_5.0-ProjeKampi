@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
+using CoreLayer.Utilities.FileUtilities;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,9 +28,9 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(About about, IFormFile aboutImage1, IFormFile aboutImage2)
         {
             if (about.AboutImage1 == null && aboutImage1 != null)
-                about.AboutImage1 = AddImage.ImageAdd(aboutImage1, AddImage.StaticAboutImageLocation());
+                about.AboutImage1 = await ImageFileManager.ImageAddAsync(aboutImage1, ImageFileManager.StaticAboutImageLocation());
             if (about.AboutImage2 == null && aboutImage2 != null)
-                about.AboutImage2 = AddImage.ImageAdd(aboutImage2, AddImage.StaticAboutImageLocation());
+                about.AboutImage2 = await ImageFileManager.ImageAddAsync(aboutImage2, ImageFileManager.StaticAboutImageLocation());
             if (about.AboutImage1 == null || about.AboutImage2 == null)
             {
                 ModelState.AddModelError("AboutImage1", "Lütfen Hiçbir Resmi Boş Bırakmayınız");

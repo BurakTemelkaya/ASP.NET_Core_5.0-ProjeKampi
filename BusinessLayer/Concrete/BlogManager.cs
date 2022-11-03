@@ -65,8 +65,8 @@ namespace BusinessLayer.Concrete
                 return blog;
             if (blogImage != null && blogThumbnailImage != null)
             {
-                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
@@ -89,13 +89,13 @@ namespace BusinessLayer.Concrete
                 blogImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
                 blogThumbnailImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
@@ -119,13 +119,13 @@ namespace BusinessLayer.Concrete
                 blogImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = await ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
                 blogThumbnailImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;

@@ -41,30 +41,26 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserSignInViewModel appUser, string returnUrl)
         {
-            if (ModelState.IsValid)
+            var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
-                if (result.Succeeded)
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
+                return RedirectToAction("Index", "Dashboard");
+            }
+            else
+            {
+                if (result.IsLockedOut)
                 {
-                    if (!string.IsNullOrEmpty(returnUrl))
-                        return Redirect(returnUrl);
-                    return RedirectToAction("Index", "Dashboard");
+                    var user = await _userService.FindByUserNameAsync(appUser.UserName);
+                    TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
                 }
                 else
                 {
-                    if (result.IsLockedOut)
-                    {
-                        var user = await _userService.FindByUserNameAsync(appUser.UserName);
-                        TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
-                    }
-                    if (result.IsNotAllowed)
-                    {
-                        TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
-                    }                   
-                    return View(appUser);
+                    TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
                 }
+                return View(appUser);
             }
-            return View(appUser);
         }
         public async Task<IActionResult> Logout()
         {

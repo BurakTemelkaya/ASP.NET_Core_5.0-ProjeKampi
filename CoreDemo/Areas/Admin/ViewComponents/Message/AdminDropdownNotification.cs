@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Message
 {
@@ -14,7 +16,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = await _notificationService.GetListAsync();
+            var notifications = await _notificationService.GetListAsync(x=> x.NotificationStatus);
+            var values = await notifications.TakeLast(3).ToListAsync();
+            ViewBag.NotificationCount = notifications.Count;
             return View(values);
         }
     }

@@ -18,7 +18,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            var roles = await _businessUserService.FindUserRoleAsync(user);
+            var roles = await _businessUserService.GetUserRoleListAsync(user);
             string role = "";
             foreach (var item in roles)
                 role += item + ",";

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.Utilities.MailUtilities.Models;
 
 namespace BusinessLayer.AutoMapper.Profiles
 {
@@ -14,6 +15,8 @@ namespace BusinessLayer.AutoMapper.Profiles
         public BusinessImages()
         {
             CreateMap<AppUser, UserDto>().ReverseMap();
+            CreateMap<ChangedUserInformationModel, AppUser>().ReverseMap();
+            CreateMap<UserSignUpDto, AppUser>().ReverseMap();
         }
     }
 }
