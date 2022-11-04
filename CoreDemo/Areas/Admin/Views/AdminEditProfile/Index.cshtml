@@ -1,0 +1,49 @@
+﻿@model UserDto
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Id">
+    <div class="col-lg-10 col-md-12">
+        <h1>Kullanıcı Bilgilerini Düzenle</h1>
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Kullanıcı Adı</h3>
+        <input type="text" asp-for="UserName" placeholder="Kullanıcı Adı" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Email</h3>
+        <input type="text" asp-for="Email" placeholder="Email" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Eski Parola (Sadece parola değiştirmek için gerekli.)</h3>
+        <input type="text" asp-for="OldPassword" placeholder="Eski Parola" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Parola</h3>
+        <input type="text" asp-for="Password" placeholder="Yeni Parola" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Parolayı Onayla</h3>
+        <input type="text" asp-for="PasswordAgain" placeholder="Parola Onayı" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Ad Soyad</h3>
+        <input type="text" asp-for="NameSurname" placeholder="Ad Soyad" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Hakkında</h3>
+        <input type="text" asp-for="About" placeholder="Blog Adı" class="form-control">
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>Şehir</h3>
+        @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.Cities, new { @class = "form-control dropdown" })
+    </div>
+    <br />
+    <div class="col-lg-10 col-md-12">
+        <button class="btn btn-success">Düzenle</button>
+    </div>
+</form>
+

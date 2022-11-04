@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +45,8 @@ namespace CoreDemo
                 x.Password.RequireDigit = true;
                 x.Password.RequireLowercase = true;
                 x.Password.RequireNonAlphanumeric = true;
-            }).AddEntityFrameworkStores<Context>();
+            }).AddEntityFrameworkStores<Context>()
+            .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
 
@@ -58,6 +60,11 @@ namespace CoreDemo
                 config.Filters.Add(new AuthorizeFilter(policy));
 
             });
+
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromMinutes(30)
+            );
+
             services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -70,12 +77,13 @@ namespace CoreDemo
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(100);
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.LoginPath = "/Login/Index";
                 options.LogoutPath = "/Login/Logout";
                 options.AccessDeniedPath = new PathString("/Login/AccessDenied");
                 options.SlidingExpiration = true;
             });
+            
 
             services.AddSingleton(new UserInfo());
 

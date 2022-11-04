@@ -27,17 +27,17 @@
                     @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword4">Mevcut Şifre</label>
+                    <label for="exampleInputPassword4">Mevcut Parola (Sadece parola değiştirmek için gerekli.)</label>
                     @Html.PasswordFor(x => x.OldPassword, new { @class = "form-control", @placeholder = "Mevcut Şifrenizi Giriniz" })
                     @Html.ValidationMessageFor(x => x.OldPassword, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword5">Yeni Şifrenizi Giriniz</label>
+                    <label for="exampleInputPassword5">Yeni Parolanızı Giriniz</label>
                     @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Yeni Şifrenizi Giriniz" })
                     @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword5">Yeni Şifrenizi Tekrar Giriniz</label>
+                    <label for="exampleInputPassword5">Yeni Parolanızı Tekrar Giriniz</label>
                     @Html.PasswordFor(x => x.PasswordAgain, new { @class = "form-control", @placeholder = "Yeni Şifrenizi Giriniz" })
                     @Html.ValidationMessageFor(x => x.PasswordAgain, "", new { @class = "text-danger" })
                 </div>

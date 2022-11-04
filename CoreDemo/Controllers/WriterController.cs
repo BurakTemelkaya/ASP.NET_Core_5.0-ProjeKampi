@@ -20,16 +20,14 @@ namespace CoreDemo.Controllers
 {
     public class WriterController : Controller
     {
-        private readonly UserInfo _userInfo;
         private readonly WriterCity _writerCity;
         private readonly IBusinessUserService _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         protected IMapper _mapper { get; }
 
-        public WriterController(UserInfo userInfo, WriterCity writerCity
+        public WriterController(WriterCity writerCity
         , IBusinessUserService userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
-            _userInfo = userInfo;
             _writerCity = writerCity;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,18 +42,6 @@ namespace CoreDemo.Controllers
             ViewBag.id = id;
             ViewBag.mail = mail;
             ViewBag.Name = await _userManager.FindByMailAsync(mail);
-            return View();
-        }
-        public IActionResult WriterProfile()
-        {
-            return View();
-        }
-        public IActionResult WriterMail()
-        {
-            return View();
-        }
-        public IActionResult Test()
-        {
             return View();
         }
         [AllowAnonymous]
@@ -73,12 +59,12 @@ namespace CoreDemo.Controllers
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             var writer = await _userManager.FindByUserNameAsync(User.Identity.Name);
-            if (writer.ImageUrl[..5] != "https" || writer.ImageUrl[..4] != "http")
+            if (writer.ImageUrl != null && writer.ImageUrl[..5] != "https" || writer.ImageUrl[..4] != "http")
                 writer.ImageUrl = null;
             return View(writer);
         }
         [HttpPost]
-        public async Task<IActionResult> WriterEditProfile(UserDto userDto, IFormFile imageFile)
+        public async Task<IActionResult> WriterEditProfile(UserDto userDto)
         {
             var oldValue = await _userManager.GetByIDAsync(userDto.Id.ToString());
             var result = await _userManager.UpdateUserAsync(userDto);

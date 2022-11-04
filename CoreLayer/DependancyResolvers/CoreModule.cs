@@ -1,5 +1,6 @@
 ﻿using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.CrossCuttingConcerns.Caching.Microsoft;
+using CoreLayer.Utilities.CaptchaUtilities;
 using CoreLayer.Utilities.IoC;
 using CoreLayer.Utilities.MailUtilities;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ namespace CoreLayer.DependancyResolvers
             serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
             serviceCollection.AddSingleton<IMailService, OutlookMailManager>();
+            serviceCollection.AddSingleton<ICaptchaService, RecaptchaManager>();
         }
     }
 }

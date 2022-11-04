@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using CoreDemo.Models;
+using CoreLayer.Utilities.CaptchaUtilities;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -22,11 +23,13 @@ namespace CoreDemo.Controllers
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IBusinessUserService _userService;
+        private readonly ICaptchaService _captchaService;
 
-        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService)
+        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService, ICaptchaService captchaService)
         {
             _signInManager = signInManager;
             _userService = userService;
+            _captchaService = captchaService;
         }
 
         [HttpGet]
@@ -36,11 +39,19 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Index", "Dashboard");
             }
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserSignInViewModel appUser, string returnUrl)
         {
+            string captchaMessage = await _captchaService.RecaptchaControl(HttpContext);
+            if (!string.IsNullOrEmpty(captchaMessage))
+            {
+                ModelState.AddModelError("Captcha", captchaMessage);
+                ViewBag.SiteKey = _captchaService.GetSiteKey();
+                return View();
+            }
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
             if (result.Succeeded)
             {
@@ -59,6 +70,7 @@ namespace CoreDemo.Controllers
                 {
                     TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
                 }
+                ViewBag.SiteKey = _captchaService.GetSiteKey();
                 return View(appUser);
             }
         }

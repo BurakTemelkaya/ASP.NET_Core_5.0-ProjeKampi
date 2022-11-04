@@ -12,9 +12,9 @@ namespace BusinessLayer.ValidationRules
     {
         public UserValidator()
         {
-            RuleFor(x => x.NameSurname).NotEmpty();
-            RuleFor(x => x.UserName).NotEmpty();
-            RuleFor(x => x.Email).EmailAddress();
+            RuleFor(x => x.NameSurname).NotEmpty().NotNull().MinimumLength(3).MaximumLength(100);
+            RuleFor(x => x.UserName).NotEmpty().NotNull().MinimumLength(3).MaximumLength(30);
+            RuleFor(x => x.Email).NotEmpty().NotNull().EmailAddress().MinimumLength(3);
         }
     }
 }

@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Parolanı Değiştir";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<section class="main-content-w3layouts-agileits">
+    <div class="container">
+        <h3 class="tittle">Parolamı Unuttum</h3>
+        <div class="row inner-sec">
+            <div class="login p-5 bg-light mx-auto mw-100">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1 mb-2">Mail Adresiniz</label>
+                        <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-mail adresinizi Giriniz" required>
+                    </div>
+                    <div class="form-group">
+                        <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
+                    </div>
+                    <button type="submit" class="btn btn-primary submit mb-4">Parola Sıfırlama Maili Gönder</button>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <p class="text-danger">@TempData["ErrorMessage"]</p>
+                    <p><a href="/Register/Index"> Bir Hesabın Yok Mu?</a></p>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+

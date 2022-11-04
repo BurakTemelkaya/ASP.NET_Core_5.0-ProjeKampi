@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
+using CoreLayer.Utilities.CaptchaUtilities;
 using CoreLayer.Utilities.FileUtilities;
 using DocumentFormat.OpenXml.Vml;
 using EntityLayer.Concrete;
@@ -19,12 +20,15 @@ namespace CoreDemo.Controllers
         private readonly IBusinessUserService _userService;
         private readonly WriterCity _writerCity;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ICaptchaService _captchaService;
 
-        public RegisterController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager)
+        public RegisterController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager,
+            ICaptchaService captchaService)
         {
             _userService = userService;
             _writerCity = writerCity;
             _signInManager = signInManager;
+            _captchaService = captchaService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -34,16 +38,26 @@ namespace CoreDemo.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
             ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserSignUpDto userSignUpDto)
         {
+            string captchaMessage = await _captchaService.RecaptchaControl(HttpContext);
+            if (!string.IsNullOrEmpty(captchaMessage))
+            {
+                ModelState.AddModelError("Captcha", captchaMessage);
+                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.SiteKey = _captchaService.GetSiteKey();
+                return View();
+            }
             if (!userSignUpDto.IsAcceptTheContract)
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.SiteKey = _captchaService.GetSiteKey();
                 return View(userSignUpDto);
             }
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
@@ -55,6 +69,7 @@ namespace CoreDemo.Controllers
             }
             ModelState.AddModelError("Username",
                     "Bir hata oluştu lütfen girdiğiniz değerleri kontrol edin.");
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             return View(userSignUpDto);
         }

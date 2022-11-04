@@ -23,9 +23,14 @@
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                         <label class="form-check-label" asp-for="IsPersistent" for="exampleCheck1">Oturumu açık bırak</label>
                     </div>
+                    <div class="form-group">
+                        <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
+                    </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Giriş Yap</button>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <p class="text-danger">@TempData["ErrorMessage"]</p>
                     <p><a href="/Register/Index"> Bir Hesabın Yok Mu?</a></p>
+                    <p><a href="/ForgotPassword/Index"> Parolamı Unuttum</a></p>
                 </form>
             </div>
         </div>

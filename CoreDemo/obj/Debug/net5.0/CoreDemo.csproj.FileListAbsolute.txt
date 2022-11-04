@@ -479,12 +479,9 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\WriterLayout.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\Index.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\Test.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\WriterEditProfile.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\WriterFooterPartial.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\WriterMail.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\WriterNavbarPartial.cshtml.g.cs
-C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\Writer\WriterProfile.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\CoreDemo.RazorTargetAssemblyInfo.cache
@@ -505,3 +502,6 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminUser\Index.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminUser\BannedUser.cshtml.g.cs
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminUser\EditUser.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Areas\Admin\Views\AdminEditProfile\Index.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\ForgotPassword\Index.cshtml.g.cs
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\obj\Debug\net5.0\Razor\Views\ForgotPassword\ResetPassword.cshtml.g.cs

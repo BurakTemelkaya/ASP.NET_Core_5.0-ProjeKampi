@@ -81,7 +81,6 @@ namespace BusinessLayer.Concrete
             value.UserName = user.UserName;
             value.About = user.About;
             value.City = user.City;
-            value.ImageUrl = user.ImageUrl;
             if (user.Password != null && user.Password == user.PasswordAgain)
             {
                 bool checkPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
@@ -93,7 +92,7 @@ namespace BusinessLayer.Concrete
                 user.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile,
                     ImageFileManager.StaticProfileImageLocation());
             }
-            else if (user.ImageUrl != null)
+            else if (user.ImageUrl != null && user.ImageUrl != "")
             {
                 value.ImageUrl = user.ImageUrl;
             }
@@ -219,10 +218,34 @@ namespace BusinessLayer.Concrete
             {
                 _mailService.SendMail(user.Email, MailTemplates.BanOpenUserSubjectTemplate(),
                     MailTemplates.BanOpenUserContentTemplate());
-                return true;
             }
-            else
-                return false;
+            return result.Succeeded;
+        }
+        public async Task<string> GetPasswordResetTokenAsync(string mail)
+        {
+            var user = await _userManager.FindByEmailAsync(mail);
+            if (user == null)
+            {
+                return null;
+            }
+            var result = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+        public async Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            if (user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
+                _mailService.SendMail(user.Email, MailTemplates.ResetPasswordInformationSubject(),
+                    MailTemplates.ResetPasswordInformationMessage());
+                return result.Succeeded;
+            }
+            return false;
         }
     }
 }

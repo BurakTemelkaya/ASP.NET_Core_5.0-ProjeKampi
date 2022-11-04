@@ -27,6 +27,10 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<NewsLetterValidator>().As<IValidator<NewsLetter>>().SingleInstance();
 
             builder.RegisterType<NewsLetterSendMailsModelValidator>().As<IValidator<NewsLetterSendMailsModel>>().SingleInstance();
+
+            builder.RegisterType<UserSignUpDtoValidator>().As<IValidator<UserSignUpDto>>().SingleInstance();
+
+            builder.RegisterType<ResetPasswordDtoValidator>().As<IValidator<ResetPasswordDto>>().SingleInstance();
         }
     }
 }
