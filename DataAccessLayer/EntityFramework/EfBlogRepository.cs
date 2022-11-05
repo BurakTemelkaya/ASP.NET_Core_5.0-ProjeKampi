@@ -14,15 +14,19 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfBlogRepository : GenericRepository<Blog>, IBlogDal
     {
-        public async Task<List<Blog>> GetListWithCategoryAsync()
+        public async Task<List<Blog>> GetListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
             using var c = new Context();
-            return await c.Blogs.Include(x => x.Category).ToListAsync();
+            return filter == null ?
+            await c.Blogs.Include(x => x.Category).ToListAsync() :
+            await c.Blogs.Include(x => x.Category).Where(filter).ToListAsync();
         }
-        public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id)
+        public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null)
         {
             using var c = new Context();
-            return await c.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).ToListAsync();
+            return filter == null ?
+                await c.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).ToListAsync() :
+                await c.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).Where(filter).ToListAsync();
 
         }
     }

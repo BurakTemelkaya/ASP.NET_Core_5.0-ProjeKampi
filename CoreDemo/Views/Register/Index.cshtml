@@ -6,7 +6,7 @@
 <script src="/cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container">
     <div class="inner-sec">
-        <div class="login p-5 bg-light mx-auto mw-100">
+        <div class="login p-5 bg-light mx-auto mw-100 text-center">
             <div>
                 <h3 class="text-center">Yeni bir hesap oluştur !</h3>
                 <br />
@@ -15,50 +15,45 @@
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <label>Adınız Soyadınız</label>
-                                <span asp-validation-for="@Model.NameSurname" class="text-danger"></span>
                                 <input type="text" class="form-control" asp-for="@Model.NameSurname" placeholder="Adınız Soyadınız" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label>Kullanıcı Adınız</label>
-                                <span asp-validation-for="@Model.UserName" class="text-danger"></span>
                                 <input type="text" class="form-control" asp-for="@Model.UserName" placeholder="Kullanıcı Adı" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Mail Adresiniz</label>
-                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
                         <input type="email" class="form-control" asp-for="@Model.Email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <label>Parolanız</label>
-                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
                                 <input type="password" class="form-control" asp-for="@Model.Password" placeholder="Parola" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label>Parola Onayı</label>
-                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
                                 <input type="password" class="form-control" asp-for="@Model.ConfirmPassword" placeholder="Parola Tekrar" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Hakkınızda Yazmak İstedikleriniz</label>
-                        <span asp-validation-for="@Model.About" class="text-danger"></span>
                         <textarea type="text" class="form-control" asp-for="@Model.About" placeholder="Hakkınızda" required></textarea>
                     </div>
                     <div class="form-group">
                         <label>Yaşadığınız Şehir</label>
-                        <span asp-validation-for="@Model.City" class="text-danger"></span>
                         <select asp-items="@(new List<SelectListItem>(ViewBag.Cities))" asp-for="@Model.City" class="form-control dropdown" required></select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-4 mx-auto">
                         <p>Profil Resmini Yükle</p>
                         <input type="file" asp-for="ImageFile" class="form-control-file">
+                    </div>
+                    <div class="form-group">                       
                         <p>Yada Bir Resmin Linkini Yapıştır</p>
-                        <input type="url" asp-for="ImageUrl" class="form-control-file">
+                        <input type="url" asp-for="ImageUrl" class="form-control">
                     </div>
                     <div class="form-group">
                         <div class="checkbox i-checks">
@@ -68,16 +63,16 @@
                             </label>
                         </div>
                     </div>
+                    <div class="text-danger mb-3" asp-validation-summary="All"></div>
                     <div class="form-group text-center">
                         <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
                     </div>
                     <span asp-validation-for="@Model.IsAcceptTheContract" class="text-danger"></span>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary block full-width m-b">Kayıt Ol</button>
-                    </div>
+                    </div>                   
                     <p class="text-muted text-center"><small>Bir hesabınız var mı ?</small></p>
-                    <a class="btn btn-sm btn-white btn-block" href="/Login/Index">Giriş Yap</a>
-                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <a class="btn btn-sm btn-white btn-block" href="/Login/Index">Giriş Yap</a>                    
                 </form>
             </div>
         </div>

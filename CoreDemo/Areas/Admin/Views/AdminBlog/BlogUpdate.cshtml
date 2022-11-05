@@ -13,8 +13,8 @@
             <input type="text" asp-for="BlogTitle" placeholder="Blog Adı" class="form-control">
         </div>
     </div>
-    <div class="col-lg-12">
-        <div class="ibox ">
+    <div class="form-group row col-lg-12">
+        <div class="ibox col-md-12">
             <div class="ibox-title">
                 <h5>Blog İçeriği</h5>
                 <div class="ibox-tools">
@@ -53,16 +53,16 @@
     </div>
     <div class="form-group row col-md-12">
         <label class="col-lg-2 col-form-label">Blog Kategorisi</label>
-        @Html.DropDownListFor(x => x.CategoryID, (List<SelectListItem>)ViewBag.CategoryList, new { @class = "form-control" })
+        <div class="col-lg-10">@Html.DropDownListFor(x => x.CategoryID, (List<SelectListItem>)ViewBag.CategoryList, new { @class = "form-control" })</div>        
     </div>
     <div class="form-group row col-md-12">
         <div class="col-lg-offset-2 col-lg-10">
             <div class="i-checks"><label> <input asp-for="BlogStatus" type="checkbox"><i></i> Hemen Yayınla </label></div>
         </div>
     </div>
-    <div class="form-group row col-md-12 float-right">
+    <div class="form-group row col-md-12">
         <div class="col-lg-12">
-            <button class="btn btn-w-m btn-success" type="submit">Güncelle</button>
+            <button class="btn btn-w-m btn-success col-md-12" type="submit">Güncelle</button>
         </div>
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>

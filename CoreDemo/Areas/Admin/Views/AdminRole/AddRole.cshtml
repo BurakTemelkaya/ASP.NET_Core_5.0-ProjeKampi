@@ -7,11 +7,10 @@
 <h1>Rol Ekle</h1>
 <form method="post">
     <div class="form-group">
-        <label>Rol Başlığı</label>
+        <label>Rol İsmi</label>
         <input asp-for="@Model.Name" class="form-control" />
     </div>
-    <div asp-validation-summary="ModelOnly">
-
+    <div asp-validation-summary="All">
     </div>
     <button class="btn btn-info">Kaybet</button>
 </form>

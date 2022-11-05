@@ -1,14 +1,13 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title>@ViewData["Title"] - Bir Blog</title>
+    <title>@ViewData["Title"] - Core Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <meta name="keywords" content="Weblog Blog Web Site" />
+    <meta name="keywords" content="Core Blog" />
     <script>
         const { error } = require("jquery");
 
@@ -201,10 +200,10 @@
                     if (Comment.CommentUserName == "") {
                         alert("Lütfen isim alanını boş bırakmayınız.");
                     }
-                    else if (Comment.CommentContent == "") {
+                    else if (Comment.CommentTitle == "") {
                         alert("Lütfen içerik alanını boş bırakmayınız.")
                     }
-                    else if (Comment.CommentTitle == "") {
+                    else if (Comment.CommentContent == "") {
                         alert("Lütfen başlık alanını boş bırakmayınız.");
                     }
                     else {

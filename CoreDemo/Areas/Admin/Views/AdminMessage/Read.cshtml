@@ -55,9 +55,37 @@
         <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
         @if (Model.ReceiverUser == null)
         {
-            <a title="" href="/Admin/AdminMessage/Delete/@Model.MessageID" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Sil</a>
+            <a title="" href="/Admin/AdminMessage/Delete/@Model.MessageID" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white Sil"><i class="fa fa-trash-o"></i> Sil</a>
         }
     </div>
     <div class="clearfix"></div>
 </div>
+<script>
+    $('.Sil').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Mesajı silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    'Seçilen Mesaj Silindi .',
+                    'success'
+                )
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+            }
+        })
+    });
+</script>
 

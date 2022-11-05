@@ -135,6 +135,15 @@ namespace BusinessLayer.Concrete
             var userDto = Mapper.Map<UserDto>(user);
             return userDto;
         }
+        public async Task<UserDto> FindByUserNameForUpdateAsync(string userName)
+        {
+            var user = await FindByUserNameAsync(userName);
+            if (user.ImageUrl[..5] != "http" || user.ImageUrl[..5] != "https")
+            {
+                user.ImageUrl = null;
+            }
+            return user;
+        }
 
         public async Task<UserDto> FindByMailAsync(string mail)
         {

@@ -19,6 +19,7 @@ namespace BusinessLayer.Abstract
         Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user);
         Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user);
         Task<UserDto> FindByUserNameAsync(string userName);
+        Task<UserDto> FindByUserNameForUpdateAsync(string userName);
         Task<UserDto> FindByMailAsync(string mail);
         Task CastUserRole(AppUser user, string role);
         Task<List<string>> GetUserRoleListAsync(AppUser user);

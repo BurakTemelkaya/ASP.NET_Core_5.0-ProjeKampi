@@ -44,18 +44,19 @@ namespace CoreDemo.Controllers
             ViewData["Title"] = "Ana Sayfa";
             List<Blog> values = new();
             List<BlogandCommentCount> blogandCommentCount = new();
-            if (id == null)
+            if (id == null && search == null)
             {
                 values = await _blogService.GetBlogListWithCategoryAsync();
-                values = await values.Where(x => x.BlogStatus).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+                values = await values.Where(x => x.BlogStatus && x.Category.CategoryStatus).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
             }
-            if (id != null)
+            if (id != null && search == null)
             {
-                if (await _blogService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0)
+                if (await _blogService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0 &&
+                    await _categoryService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.CategoryStatus) != 0)
                 {
-                    values = await _blogService.GetBlogListWithCategoryAsync();
-                    values = await values.Where(x => x.BlogStatus && x.CategoryID == Convert.ToInt32(id))
-                        .OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
+                    x.CategoryID == Convert.ToInt32(id));
+                    values = await values.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
                     values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
                     ViewBag.id = id;
                     ViewData["Title"] = values.FirstOrDefault().Category.CategoryName + " Blogları";
@@ -68,15 +69,24 @@ namespace CoreDemo.Controllers
             }
             if (search != null)
             {
-                values = await values.Where(x => x.BlogTitle.ToLower().Contains(search.ToLower())).ToListAsync();
-                ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
+                if (id == null)
+                {
+                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()));
+                    ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
+                }
+                else
+                {
+                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
+                    x.CategoryID == Convert.ToInt32(id));
+                    ViewBag.Message = values.FirstOrDefault().Category.CategoryName + " kategorisinde " +
+                        " '" + search + "' aramanız dair sonuçlar.";
+                }
                 ViewData["Title"] = search;
                 ViewBag.Sonuc = true;
                 if (values.Count < 1)
                 {
                     values = null;
                     values = await _blogService.GetBlogListWithCategoryAsync();
-                    values = await values.ToListAsync();
                     ViewBag.Message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                     ViewBag.Sonuc = false;
                 }
@@ -85,8 +95,10 @@ namespace CoreDemo.Controllers
             int commentCount = 0;
             foreach (var item in values)
             {
-                BlogandCommentCount value = new();
-                value.Blog = item;
+                BlogandCommentCount value = new()
+                {
+                    Blog = item
+                };
                 foreach (var comment in comments)
                 {
                     if (comment.BlogID == item.BlogID)
@@ -152,14 +164,12 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIDAsync(id);
-            await _blogService.DeleteBlog(blogValue, User.Identity.Name);
-            Thread.Sleep(2000);
+            await _blogService.DeleteBlogAsync(blogValue, User.Identity.Name);
             return RedirectToAction("BlogListByWriter");
         }
         public async Task<IActionResult> ChangeStatusBlog(int id)
         {
-            await _blogService.ChangedBlogStatus(id, User.Identity.Name);
-            Thread.Sleep(2000);
+            await _blogService.ChangedBlogStatusAsync(id, User.Identity.Name);
             return RedirectToAction("BlogListByWriter");
         }
         [HttpGet]

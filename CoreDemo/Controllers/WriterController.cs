@@ -58,9 +58,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> WriterEditProfile()
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
-            var writer = await _userManager.FindByUserNameAsync(User.Identity.Name);
-            if (writer.ImageUrl != null && writer.ImageUrl[..5] != "https" || writer.ImageUrl[..4] != "http")
-                writer.ImageUrl = null;
+            var writer = await _userManager.FindByUserNameForUpdateAsync(User.Identity.Name);
             return View(writer);
         }
         [HttpPost]
@@ -70,8 +68,10 @@ namespace CoreDemo.Controllers
             var result = await _userManager.UpdateUserAsync(userDto);
             if (result != null)
             {
-                ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
-                    " Lütfen daha sonra tekrar deneyiniz");
+                foreach (var item in result)
+                {
+                    ModelState.AddModelError("Email", item.Description);
+                }                
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
                 return View(userDto);
             }

@@ -25,19 +25,35 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public async Task<List<Blog>> GetBlogListWithCategoryAsync()
+        public async Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            return await _blogDal.GetListWithCategoryAsync();
+            return await _blogDal.GetListWithCategoryAsync(filter);
         }
-        public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id)
+        public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id, Expression<Func<Blog, bool>> filter = null)
         {
-            return await _blogDal.GetListWithCategoryByWriterAsync(id);
+            return await _blogDal.GetListWithCategoryByWriterAsync(id, filter);
         }
         public async Task<Blog> GetBlogByIDAsync(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
             if (value == null)
                 return value;
+            value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
+            return value;
+        }
+        public async Task<Blog> GetBlogByIdForUpdate(int id)
+        {
+            var value = await _blogDal.GetByIDAsync(id);
+            if (value == null)
+                return value;
+            if (value.BlogThumbnailImage[..5] != "http" || value.BlogThumbnailImage[..5] != "https")
+            {
+                value.BlogThumbnailImage = null;
+            }
+            if (value.BlogImage[..5] != "http" || value.BlogImage[..5] != "https")
+            {
+                value.BlogImage = null;
+            }
             value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
             return value;
         }
@@ -51,11 +67,6 @@ namespace BusinessLayer.Concrete
         public async Task<List<Blog>> GetBlogByWriterAsync(int id)
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
-        }
-
-        public async Task TDeleteAsync(Blog t)
-        {
-            await _blogDal.DeleteAsync(t);
         }
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
@@ -141,7 +152,7 @@ namespace BusinessLayer.Concrete
             return blog;
         }
 
-        public async Task DeleteBlog(Blog blog, string userName)
+        public async Task DeleteBlogAsync(Blog blog, string userName)
         {
             var user = await _userService.FindByUserNameAsync(userName);
             if (user.Id == blog.WriterID)
@@ -158,7 +169,7 @@ namespace BusinessLayer.Concrete
             return await _blogDal.GetListAllAsync();
         }
 
-        public async Task ChangedBlogStatus(int id, string userName)
+        public async Task ChangedBlogStatusAsync(int id, string userName)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
             var user = await _userService.FindByUserNameAsync(userName);
@@ -174,9 +185,25 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public Task<Blog> GetFileNameContentBlogByIDAsync(int id)
+        public async Task<Blog> GetFileNameContentBlogByIDAsync(int id)
         {
-            return _blogDal.GetByIDAsync(id);
+            return await _blogDal.GetByIDAsync(id);
+        }
+
+        public async Task DeleteBlogByAdminAsync(Blog blog)
+        {
+            await _blogDal.DeleteAsync(blog);
+        }
+
+        public async Task ChangedBlogStatusByAdminAsync(int id)
+        {
+            var blog = await GetFileNameContentBlogByIDAsync(id);
+            var value = await _blogDal.GetByIDAsync(blog.BlogID);
+            if (value.BlogStatus)
+                value.BlogStatus = false;
+            else
+                value.BlogStatus = true;
+            await _blogDal.UpdateAsync(value);
         }
     }
 }

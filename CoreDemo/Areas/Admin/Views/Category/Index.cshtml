@@ -26,12 +26,12 @@
             @if (item.CategoryStatus)
             {
                 status = "Pasif Yap";
-                statusBtn = "btn-secondary";
+                statusBtn = "btn-secondary DurumPasif";
             }
             else
             {
                 status = "Aktif Yap";
-                statusBtn = "btn-primary";
+                statusBtn = "btn-primary DurumAktif";
             }
             <tr>
                 <th scope="row">@item.CategoryID</th>
@@ -39,7 +39,7 @@
                 <td><a href="/Admin/Category/ChangedStatus/@item.CategoryID" class="btn @statusBtn">@status</a></td>
                 <td><a href="/Admin/Category/EditCategory/@item.CategoryID" class="btn btn-success">Düzenle</a></td>
                 <td>
-                    <a href="/Admin/Category/CategoryDelete/@item.CategoryID" id="DeleteBtn"
+                    <a href="/Admin/Category/CategoryDelete/@item.CategoryID Sil" id="DeleteBtn"
                    onclick="return confirm('Silmek istediğinizden emin misiniz ?');"
                    class="btn btn-danger">Sil</a>
                 </td>
@@ -62,4 +62,78 @@ new X.PagedList.Web.Common.PagedListRenderOptions
     PageClasses=new[] {"page-link"},
     ActiveLiElementClass="active"
 })
+<script>
+    $('.Sil').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Kategoriyi silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    'Seçilen Mesaj Silindi .',
+                    'success'
+                )
+            }
+        })
+    });
+    $('.DurumAktif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
+    $('.DurumPasif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
+</script>
 

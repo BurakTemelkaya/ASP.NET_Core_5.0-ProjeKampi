@@ -16,7 +16,7 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Authorize(Roles = "Admin,Moderator")]
     public class AdminEditProfileController : Controller
     {
-        IBusinessUserService _businessUserService;
+        readonly IBusinessUserService _businessUserService;
         readonly WriterCity _writerCity;
         readonly SignInManager<AppUser> _signInManager;
         public AdminEditProfileController(IBusinessUserService businessUserService, WriterCity writerCity,
@@ -30,9 +30,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
-            var value = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            if (value.ImageUrl != null && value.ImageUrl[..5] != "https" || value.ImageUrl[..4] != "http")
-                value.ImageUrl = null;
+            var value = await _businessUserService.FindByUserNameForUpdateAsync(User.Identity.Name);
             return View(value);
         }
         [HttpPost]
@@ -42,8 +40,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             var result = await _businessUserService.UpdateUserAsync(userDto);
             if (result != null)
             {
-                ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
-                    " Lütfen daha sonra tekrar deneyiniz");
+                foreach (var item in result)
+                {
+                    ModelState.AddModelError("Email", item.Description);
+                }
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
                 return View(userDto);
             }

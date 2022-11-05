@@ -27,17 +27,17 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1, int id = 0)
         {
             var blogs = await _blogService.GetBlogListWithCategoryAsync();
+            blogs = await blogs.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());              
                 if (user != null)
                 {
-                    var value = await blogs.Where(x => x.WriterID == id).ToListAsync();
+                    var value = await blogs.Where(x => x.WriterID == id).OrderByDescending(x=> x.BlogCreateDate).ToListAsync();
                     if (value!=null)
                         blogs = value;
                     ViewBag.UserName = user.UserName;
-                }
-                    
+                }                   
             }
             var values = await blogs.ToPagedListAsync(page, 4);
             foreach (var item in values)
@@ -76,7 +76,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> BlogUpdate(int id)
         {
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-            var value = await _blogService.GetBlogByIDAsync(id);
+            var value = await _blogService.GetBlogByIdForUpdate(id);
             if (value != null)
                 return View(value);
             return RedirectToAction("Index");
@@ -98,6 +98,17 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return View(blog);
             }
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            var blog = await _blogService.GetFileNameContentBlogByIDAsync(id);
+            await _blogService.DeleteBlogByAdminAsync(blog);
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> ChangeStatusBlog(int id)
+        {
+            await _blogService.ChangedBlogStatusByAdminAsync(id);
             return RedirectToAction("Index");
         }
     }

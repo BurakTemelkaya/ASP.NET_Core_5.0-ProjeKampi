@@ -23,8 +23,8 @@ namespace CoreDemo.ViewComponents.Category
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = await _categoryService.GetListAsync();
-            var blogs = await _blogService.GetListAsync();
+            var values = await _categoryService.GetListAsync(x=> x.CategoryStatus);
+            var blogs = await _blogService.GetListAsync(x=> x.BlogStatus);
             var blogCategoryCount = new List<CategoryBlogandBlogCount>();
             int categoryCount = 0;
             foreach (var value in values)

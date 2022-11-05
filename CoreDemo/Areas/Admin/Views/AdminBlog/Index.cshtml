@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
+    string status = "";
+    string statusClass = "";
 }
 
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -17,20 +19,33 @@
         }
     <div class="row">       
         @foreach (var item in Model)
-        {           
-            <a href="/Admin/AdminBlog/BlogUpdate/@item.BlogID">
+        {     
+            @if(item.BlogStatus)
+            {
+                status = "Pasif Yap";
+                statusClass = "btn-secondary DurumPasif";
+            }
+            else
+            {
+                status = "Aktif Yap";
+                statusClass = "btn-success DurumAktif";
+            }
+            <a href="/Blog/BlogReadAll/@item.BlogID" target="_blank">
                 <div class="col-md-3">
                     <div class="ibox">
                         <div class="ibox-content product-box">
                             <div class="product-imitation">
                                 <img src="@item.BlogImage" class="col-sm-12">
                             </div>
-                            <div class="product-desc">
+                            <div class="product-desc text-center">
                                 <span class="product-price">
                                     @item.BlogCreateDate.ToShortDateString()
                                 </span>
                                 <small class="text-muted">@item.Category.CategoryName</small>
-                                <a href="#" class="product-name"> @item.BlogTitle</a>
+                                <a href="/Blog/BlogReadAll/@item.BlogID" target="_blank" class="product-name"> @item.BlogTitle</a>
+                                <a href="/Admin/AdminBlog/BlogUpdate/@item.BlogID" class="btn btn-primary mr-2">Güncelle</a>
+                                <a href="/Admin/AdminBlog/DeleteBlog/@item.BlogID" class="btn btn-danger mr-2 Sil"> Sil</a>
+                                <a href="/Admin/AdminBlog/ChangeStatusBlog/@item.BlogID" class="btn @statusClass">@status</a>                      
                                 <div class="small m-t-xs">
                                     @item.BlogContent
                                 </div>
@@ -55,4 +70,79 @@ new PagedListRenderOptions
     ActiveLiElementClass="active"
 })
 <script src="/admin/js/plugins/pace/pace.min.js"></script>
+<script>
+    $('.Sil').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Blog yazısını silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    'Seçilen Blog Silindi .',
+                    'success'
+                )
+            }
+        })
+    });
+
+    $('.DurumAktif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
+    $('.DurumPasif').click(function (e) {
+        e.preventDefault();
+        var linkURL = $(this).attr("href");
+        Swal.fire({
+            title: 'UYARI!',
+            text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = linkURL;
+                Swal.fire(
+                    'Başarılı!',
+                    onayMesaji,
+                    'success'
+                )
+            }
+        })
+    });
+</script>
 

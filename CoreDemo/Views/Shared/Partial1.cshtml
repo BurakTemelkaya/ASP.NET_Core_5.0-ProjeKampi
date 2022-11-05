@@ -18,9 +18,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/Contact/Index">İletişim</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Dashboard/Index">Yazar Paneli</a>
-                </li>
+                @if (User.IsInRole(role: "Yazar"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Dashboard/Index">Yazar Paneli</a>
+                    </li>
+                }
+                @if (User.IsInRole(role: "Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Widget/Index">Admin Paneli</a>
+                    </li>
+                }
+                
             </ul>
             <form class="form-inline my-2 my-lg-0 header-search">
                 <input class="form-control mr-sm-2" type="search" placeholder="Blog Ara" id="Search-Input" name="Search" required>

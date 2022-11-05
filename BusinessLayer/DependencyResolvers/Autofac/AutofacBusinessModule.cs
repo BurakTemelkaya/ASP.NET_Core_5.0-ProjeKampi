@@ -38,7 +38,6 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<EfNotificationRepository>().As<INotificationDal>().SingleInstance();
 
-
             builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
 
             builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();

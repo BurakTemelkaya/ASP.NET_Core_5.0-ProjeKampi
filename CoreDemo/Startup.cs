@@ -1,5 +1,6 @@
 using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
+using BusinessLayer.Errors;
 using BusinessLayer.Extension;
 using BusinessLayer.ValidationRules;
 using Core.Extensions;
@@ -46,6 +47,7 @@ namespace CoreDemo
                 x.Password.RequireLowercase = true;
                 x.Password.RequireNonAlphanumeric = true;
             }).AddEntityFrameworkStores<Context>()
+            .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
@@ -83,9 +85,6 @@ namespace CoreDemo
                 options.AccessDeniedPath = new PathString("/Login/AccessDenied");
                 options.SlidingExpiration = true;
             });
-            
-
-            services.AddSingleton(new UserInfo());
 
             services.AddSingleton(new WriterCity());
 

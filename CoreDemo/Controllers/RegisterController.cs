@@ -67,8 +67,10 @@ namespace CoreDemo.Controllers
                 await _signInManager.SignInAsync(user, true);
                 return RedirectToAction("Index", "Dashboard");
             }
-            ModelState.AddModelError("Username",
-                    "Bir hata oluştu lütfen girdiğiniz değerleri kontrol edin.");
+            foreach (var item in result)
+            {
+                ModelState.AddModelError("Username", item.Description);
+            }
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             return View(userSignUpDto);
