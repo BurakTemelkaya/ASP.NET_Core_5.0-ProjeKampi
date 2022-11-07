@@ -3,12 +3,11 @@
     ViewData["Title"] = "SendMessage";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
-
 <h1>Mesaj Gönder</h1>
 @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post))
 {
     @Html.Label("Alıcı Mail Adresi yada Kullanıcı Adı")
-    @Html.TextBox("Receiver","", new { @class = "form-control" })
+    @Html.TextBox("Receiver","", new { @class = "form-control"})
     @Html.ValidationMessageFor(x => x.ReceiverUser, "", new { @class = "text-danger" })
     <br />
     <br />
@@ -24,4 +23,12 @@
     <br />
     <button class="btn btn-info">Mesajı Gönder</button>
 }
+<script type="text/javascript">
+    $(function () {
+        $("#Receiver").autocomplete({
+            source: "/Message/OnUserNameGet/",
+            minLengt: 3
+        });
+    });
+</script>
 

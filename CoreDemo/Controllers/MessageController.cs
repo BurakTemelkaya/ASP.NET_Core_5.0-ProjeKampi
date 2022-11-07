@@ -57,6 +57,16 @@ namespace CoreDemo.Controllers
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             return user.Id;
         }
+        public async Task<JsonResult> OnUserNameGet(String term)
+        {
+            var values = new List<AppUser>();
+            if (term == null)
+                values = await _userService.GetUserListAsync();
+            else
+                values = await _userService.GetUserListAsync(x => x.UserName.ToLower().Contains(term.ToLower()));
+            var users = values.Select(x => x.UserName);
+            return new JsonResult(users);
+        }
         [HttpGet]
         public IActionResult SendMessage()
         {
