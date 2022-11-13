@@ -31,6 +31,8 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<UserSignUpDtoValidator>().As<IValidator<UserSignUpDto>>().SingleInstance();
 
             builder.RegisterType<ResetPasswordDtoValidator>().As<IValidator<ResetPasswordDto>>().SingleInstance();
+
+            builder.RegisterType<MessageValidator>().As<IValidator<Message>>().SingleInstance();
         }
     }
 }

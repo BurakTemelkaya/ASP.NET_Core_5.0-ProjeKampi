@@ -94,8 +94,8 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return RedirectToAction("Inbox");
             if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                 return RedirectToAction("Inbox");
-            value.MessageStatus = false;
-            await _messageService.TUpdateAsync(value);
+            if (value.MessageStatus)
+                await _messageService.MarkChangedAsync(id, user.UserName);
             return View(value);
         }
         public async Task<IActionResult> Delete(int id)

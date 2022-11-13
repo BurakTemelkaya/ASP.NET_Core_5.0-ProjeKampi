@@ -21,9 +21,16 @@
     @Html.ValidationMessageFor(x => x.Details, "", new { @class = "text-danger" })
     <br />
     <br />
+    <div asp-validation-summary="All" class="text-danger"></div>
     <button class="btn btn-info">Mesajı Gönder</button>
 }
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#Details').summernote({
+            height: 300
+        });
+    });
+
     $(function () {
         $("#Receiver").autocomplete({
             source: "/Message/OnUserNameGet/",

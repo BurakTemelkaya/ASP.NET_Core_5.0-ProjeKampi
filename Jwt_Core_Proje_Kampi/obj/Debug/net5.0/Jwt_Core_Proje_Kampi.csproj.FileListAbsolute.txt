@@ -33,3 +33,8 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\Jwt_Core_Proje_Kampi.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\Jwt_Core_Proje_Kampi.genruntimeconfig.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\ref\Jwt_Core_Proje_Kampi.dll
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\staticwebassets\Jwt_Core_Proje_Kampi.StaticWebAssets.Pack.cache
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\staticwebassets\msbuild.Jwt_Core_Proje_Kampi.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\staticwebassets\msbuild.build.Jwt_Core_Proje_Kampi.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.Jwt_Core_Proje_Kampi.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\Jwt_Core_Proje_Kampi\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.Jwt_Core_Proje_Kampi.props

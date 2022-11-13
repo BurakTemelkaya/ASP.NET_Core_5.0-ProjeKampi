@@ -1,0 +1,1 @@
+<p>Merhaba <b>Murat&nbsp;</b><b style="background-color: rgb(255, 255, 0);">hocam</b><b style="background-color: rgb(255, 255, 255);">&nbsp;</b>nasılsınız ?</p>

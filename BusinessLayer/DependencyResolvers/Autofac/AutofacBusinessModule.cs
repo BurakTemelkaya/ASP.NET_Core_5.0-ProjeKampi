@@ -38,6 +38,11 @@ namespace BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<EfNotificationRepository>().As<INotificationDal>().SingleInstance();
 
+            builder.RegisterType<EfMessageDraftRepository>().As<IMessageDraftDal>().SingleInstance();
+
+            builder.RegisterType<EfNewsLetterDraftRepository>().As<INewsLetterDraftDal>().SingleInstance();
+
+
             builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
 
             builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();
@@ -55,6 +60,10 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
 
             builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
+
+            builder.RegisterType<MessageDraftManager>().As<IMessageDraftService>().SingleInstance();
+
+            builder.RegisterType<NewsLetterDraftManager>().As<INewsLetterDraftService>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

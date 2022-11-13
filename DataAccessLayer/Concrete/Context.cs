@@ -31,14 +31,16 @@ namespace DataAccessLayer.Concrete
                 .OnDelete(DeleteBehavior.ClientSetNull);
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<About> Abouts { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<NewsLetter> NewsLetters { get; set; }
-        public DbSet<BlogRayting> BlogRaytings { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Message> Messages { get; set; }
+        public virtual DbSet<About> Abouts { get; set; }
+        public virtual DbSet<Blog> Blogs { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<NewsLetter> NewsLetters { get; set; }
+        public virtual DbSet<BlogRayting> BlogRaytings { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<MessageDraft> MessagesDrafts { get; set; }
+        public virtual DbSet<NewsLetterDraft> NewsLetterDrafts { get; set; }
     }
 }

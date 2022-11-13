@@ -46,8 +46,8 @@ namespace CoreDemo.Controllers
                     return RedirectToAction("Inbox");
                 if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                     return RedirectToAction("Inbox");
-                value.MessageStatus = false;
-                await _messageService.TUpdateAsync(value);
+                if (value.MessageStatus)
+                    await _messageService.MarkChangedAsync(id, user.UserName);
                 return View(value);
             }
             return RedirectToAction("Inbox");
@@ -77,9 +77,13 @@ namespace CoreDemo.Controllers
         {
             var sender = await _userService.FindByUserNameAsync(User.Identity.Name);
             message.SenderUserId = sender.Id;
+            if (Receiver == null)
+            {
+                ModelState.AddModelError("Receiver", "Gönderilen kullanıcı boş geçilemez.");
+                return View(message);
+            }
             var mailUser = await _userService.FindByMailAsync(Receiver);
             var userNameUser = await _userService.FindByUserNameAsync(Receiver);
-
             if (mailUser != null)
                 message.ReceiverUserId = mailUser.Id;
             else if (userNameUser != null)
@@ -87,6 +91,11 @@ namespace CoreDemo.Controllers
             else
             {
                 ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
+                return View(message);
+            }
+            if (message.ReceiverUserId == sender.Id)
+            {
+                ModelState.AddModelError("Receiver", "Kendi kendinize mesaj gönderemezsiniz.");
                 return View(message);
             }
             await _messageService.TAddAsync(message);
@@ -109,7 +118,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> MarkUsUnreadInbox(int id)
         {
-            bool isChanged = await _messageService.MarkChangedAsync(id, User.Identity.Name);
+            await _messageService.MarkChangedAsync(id, User.Identity.Name);
             return RedirectToAction("Inbox");
         }
     }

@@ -38,7 +38,7 @@ namespace BusinessLayer.Concrete
             var value = await _blogDal.GetByIDAsync(id);
             if (value == null)
                 return value;
-            value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
+            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return value;
         }
         public async Task<Blog> GetBlogByIdForUpdate(int id)
@@ -54,7 +54,7 @@ namespace BusinessLayer.Concrete
             {
                 value.BlogImage = null;
             }
-            value.BlogContent = await TextFileManager.ReadTextFile(value.BlogContent);
+            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return value;
         }
 
@@ -81,7 +81,7 @@ namespace BusinessLayer.Concrete
             }
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
-            blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             blog.WriterID = user.Id;
             blog.BlogCreateDate = DateTime.Now;
             await _blogDal.InsertAsync(blog);
@@ -114,7 +114,7 @@ namespace BusinessLayer.Concrete
             if (blog.BlogContent != oldValue.BlogContent)
             {
                 DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
-                blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.BlogContent;
@@ -144,7 +144,7 @@ namespace BusinessLayer.Concrete
             if (blog.BlogContent != oldValue.BlogContent)
             {
                 DeleteFileManager.DeleteFile(oldBlogValue.BlogContent);
-                blog.BlogContent = await TextFileManager.TextFileAdd(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.BlogContent;

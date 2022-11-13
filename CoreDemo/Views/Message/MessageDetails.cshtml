@@ -10,9 +10,15 @@
 @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", disabled = "disabled" })
 <br />
 @Html.Label("Mesaj İçeriği")
-@Html.TextAreaFor(x => x.Details, 20, 3, new { @class = "form-control", disabled = "disabled" })
+<div class="bg-gradient-secondary aligncenter">
+    <div class="ml-4">
+        <br />
+        @Html.Raw(Model.Details)
+        <br />
+    </div>
+</div>
 <br />
-@if(Model.SenderUser!=null)
+@if (Model.SenderUser != null)
 {
     @Html.Label("Gönderen Kullanıcı Adı")
     @Html.TextBoxFor(x => x.SenderUser.UserName, new { @class = "form-control", disabled = "disabled" })

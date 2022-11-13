@@ -13,6 +13,7 @@
             <th scope="row">#</th>
             <th>Konu</th>
             <th>Gönderen</th>
+            <th>İçerik</th>
             <th>Tarih</th>
             <th>Mesajı Aç</th>
             <th>Okundu/Okunmadı Olarak İşaretle</th>
@@ -25,6 +26,7 @@
                 <td scope="row">@item.MessageID</td>
                 <td>@item.Subject</td>
                 <td>@item.SenderUser.NameSurname</td>
+                <td>@item.Details...</td>
                 <td>@item.MessageDate</td>
                 <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
                 <td>

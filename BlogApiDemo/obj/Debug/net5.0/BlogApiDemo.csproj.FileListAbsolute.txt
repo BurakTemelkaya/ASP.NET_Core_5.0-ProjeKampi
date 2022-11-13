@@ -120,3 +120,8 @@ C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDe
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.pdb
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\BlogApiDemo.genruntimeconfig.cache
 C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\ref\BlogApiDemo.dll
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\staticwebassets\BlogApiDemo.StaticWebAssets.Pack.cache
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\staticwebassets\msbuild.BlogApiDemo.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\staticwebassets\msbuild.build.BlogApiDemo.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.BlogApiDemo.props
+C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\BlogApiDemo\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.BlogApiDemo.props

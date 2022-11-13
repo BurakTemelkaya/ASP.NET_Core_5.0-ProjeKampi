@@ -42,9 +42,7 @@
 </div>
 <div class="mail-box">
     <div class="mail-body">
-        <p>
-            @Model.Details
-        </p>
+        @Html.Raw(Model.Details)
     </div>
     <div class="mail-body text-right tooltip-demo">
         @if (Model.ReceiverUser == null)
@@ -82,8 +80,6 @@
                     'Seçilen Mesaj Silindi .',
                     'success'
                 )
-            }
-            else if (result.dismiss === Swal.DismissReason.cancel) {
             }
         })
     });
