@@ -1,0 +1,42 @@
+﻿@model MessageDraft
+@{
+    ViewData["Title"] = "AddMessageDraft";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>Taslak Oluştur</h1>
+@using (Html.BeginForm())
+{
+    @Html.Label("Alıcı Mail Adresi yada Kullanıcı Adı")
+    @Html.TextBox("Receiver","", new { @class = "form-control"})
+    @Html.ValidationMessageFor(x => x.ReceiverUser, "", new { @class = "text-danger" })
+        <br />
+        <br />
+    @Html.Label("Konu")
+    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.Subject, "", new { @class = "text-danger" })
+        <br />
+        <br />
+    @Html.Label("Mesajınız")
+    @Html.TextAreaFor(x => x.Details, 4, 10, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.Details, "", new { @class = "text-danger" })
+        <br />
+        <br />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <button class="btn btn-info">Taslak Oluştur</button>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Details').summernote({
+            height: 300
+        });
+    });
+
+    $(function () {
+        $("#Receiver").autocomplete({
+            source: "/Message/OnUserNameGet/",
+            minLengt: 3
+        });
+    });
+</script>
+

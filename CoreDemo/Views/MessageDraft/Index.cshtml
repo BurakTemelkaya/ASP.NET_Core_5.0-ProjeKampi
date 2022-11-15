@@ -1,0 +1,38 @@
+﻿@model List<MessageDraft>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>Gelen Kutusu</h1>
+
+<table class="table table-bordered table-responsive">
+    <thead>
+        <tr>
+            <th scope="row">#</th>
+            <th>Konu</th>
+            <th>İçerik</th>
+            <th>Alıcı</th>
+            <th>Taslağı Aç</th>
+            <th>Mesaj Gönder</th>
+            <th>Sil</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td scope="row">@item.MessageDraftID</td>
+                <td>@item.Subject</td>
+                <td>@item.Details...</td>
+                <td>@item.ReceiverUser</td>
+                <td><a href="/MessageDraft/EditMessageDraft/@item.MessageDraftID" class="btn btn-primary">Taslağı Düzenle</a></td>
+                <td><a href="/Message/SendMessage/@item.MessageDraftID" class="btn btn-success">Mesaj Gönder</a></td>
+                <td><a href="/MessageDraft/DeleteMessageDraft/@item.MessageDraftID" class="btn btn-danger">Sil</a></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<a href="/MessageDraft/AddMessageDraft/" class="btn btn-primary">Yeni Taslak Oluştur</a>
+
