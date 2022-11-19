@@ -97,6 +97,7 @@ namespace CoreDemo
 
             services.AddAutoMapper(typeof(BusinessImages));
             services.AddAutoMapper(typeof(UIImage));
+            services.AddAutoMapper(typeof(DBOImages));
 
         }
 

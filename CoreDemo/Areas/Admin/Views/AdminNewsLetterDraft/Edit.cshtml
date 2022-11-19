@@ -1,0 +1,39 @@
+﻿@model NewsLetterDraft
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="NewsLetterDraftId"/>
+    <div class="col-lg-12 col-md-12">
+        <h3 class="mx-1">Haber Başlığı</h3>
+        <input type="text" asp-for="Subject" placeholder="Mail Başlığı" class="form-control" required>
+    </div>
+    <div class="col-lg-12 my-1">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Haber İçeriği</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content no-padding">
+                <textarea asp-for="Content" required></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row col-md-12 float-right">
+        <div class="col-lg-12">
+            <button class="btn btn-w-m btn-success" type="submit">Düzenle</button>
+        </div>
+    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <br /><br />
+</form>
+

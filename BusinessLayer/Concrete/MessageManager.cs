@@ -49,6 +49,7 @@ namespace BusinessLayer.Concrete
 
         public async Task TDeleteAsync(Message t)
         {
+            DeleteFileManager.DeleteFile(t.Details);
             await _messageDal.DeleteAsync(t);
         }
 

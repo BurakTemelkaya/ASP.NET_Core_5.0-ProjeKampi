@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
 using System.Threading.Tasks;
 using BusinessLayer.Models;
+using AutoMapper;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -13,9 +14,13 @@ namespace CoreDemo.Areas.Admin.Controllers
     public class AdminNewsletterController : Controller
     {
         readonly INewsLetterService _newsLetterService;
-        public AdminNewsletterController(INewsLetterService newsLetterService)
+        readonly INewsLetterDraftService _newsLetterDraftService;
+        readonly IMapper _mapper;
+        public AdminNewsletterController(INewsLetterService newsLetterService, INewsLetterDraftService newsLetterDraftService, IMapper mapper)
         {
             _newsLetterService = newsLetterService;
+            _newsLetterDraftService = newsLetterDraftService;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index(int page = 1)
         {
@@ -24,8 +29,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             return View(value);
         }
         [HttpGet]
-        public IActionResult SendNewsletter()
+        public async Task<IActionResult> SendNewsletter(int id)
         {
+            if (id != 0)
+            {
+                var value = await _newsLetterDraftService.TGetByIDAsync(id);
+                if (value!=null)
+                {
+                    var NewsLetterSendMailsModel = new NewsLetterSendMailsModel();
+                    var newsLetter = _mapper.Map(value, NewsLetterSendMailsModel);
+                    return View(newsLetter);
+                }               
+            }
             return View();
         }
         [HttpPost]

@@ -60,6 +60,10 @@
               "target": "Package",
               "version": "[11.2.2, )"
             },
+            "HtmlAgilityPack.NetCore": {
+              "target": "Package",
+              "version": "[1.5.0.1, )"
+            },
             "Microsoft.AspNetCore.Http.Features": {
               "target": "Package",
               "version": "[5.0.13, )"
