@@ -1,17 +1,9 @@
-﻿@model Message
+﻿@model MessageDraft
 @{
-    ViewData["Title"] = "ComposeMessage";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
-    string receiver = "";
-    if (Model != null)
-    {
-        receiver = Model.ReceiverUser.UserName;
-    }
-    if (ViewBag.ReceiverUser != null)
-    {
-        receiver = ViewBag.ReceiverUser;
-    }
 }
+
 <div class="wrapper wrapper-content">
     <div class="row">
         @await Component.InvokeAsync("MessageFolders")
@@ -22,7 +14,7 @@
                     <a href="/Admin/AdminMessage/SendMessage" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Vazgeç"><i class="fa fa-times"></i> Vazgeç</a>
                 </div>
                 <h2>
-                    Mail Gönder
+                    Taslağı Düzenle
                 </h2>
             </div>
             <div class="mail-box">
@@ -31,10 +23,12 @@
                 <div class="mail-body">
 
                     <form method="post">
+                        <input type="hidden" asp-for="MessageDraftID"/>
+                        <input type="hidden" asp-for="UserId"/>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Gönderilecek Kişi (Kullanıcı Adı yada Mail Adresi):</label>
 
-                            <div class="col-sm-10"><input type="text" name="Receiver" id="Receiver" value="@receiver" class="form-control"></div>
+                            <div class="col-sm-10"><input type="text" asp-for="ReceiverUser" class="form-control"></div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Başlık:</label>
@@ -70,68 +64,8 @@
     });
 
     $(function () {
-        $("#Receiver").autocomplete({
+        $("#ReceiverUser").autocomplete({
             source: "/Message/OnUserNameGet/",
-        });
-    });
-
-    $("#btnSaveDraft").click(function () {
-        let messageDraft = {
-            Subject: $("#Subject").val(),
-            Details: $("#Details").val(),
-            ReceiverUser: $("#Receiver").val(),
-        };
-        $.ajax({
-            type: "post",
-            url: "/Admin/AdminMessageDraft/Add",
-            data: messageDraft,
-            success: function (func) {
-                alert("Mesajınız taslaklara eklendi.");
-            },
-            error: function (func) {
-                if (Comment.CommentUserName == "") {
-                    alert("Lütfen isim alanını boş bırakmayınız.");
-                }
-                else if (Comment.CommentTitle == "") {
-                    alert("Lütfen içerik alanını boş bırakmayınız.")
-                }
-                else if (Comment.CommentContent == "") {
-                    alert("Lütfen başlık alanını boş bırakmayınız.");
-                }
-                else {
-                    alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
-                }
-            }
-        });
-    });
-
-    $("#btnSaveDraft2").click(function () {
-        let messageDraft = {
-            Subject: $("#Subject").val(),
-            Details: $("#Details").val(),
-            ReceiverUser: $("#Receiver").val(),
-        };
-        $.ajax({
-            type: "post",
-            url: "/Admin/AdminMessageDraft/Add",
-            data: messageDraft,
-            success: function (func) {
-                alert("Mesajınız taslaklara eklendi.");
-            },
-            error: function (func) {
-                if (Comment.CommentUserName == "") {
-                    alert("Lütfen isim alanını boş bırakmayınız.");
-                }
-                else if (Comment.CommentTitle == "") {
-                    alert("Lütfen içerik alanını boş bırakmayınız.")
-                }
-                else if (Comment.CommentContent == "") {
-                    alert("Lütfen başlık alanını boş bırakmayınız.");
-                }
-                else {
-                    alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
-                }
-            }
         });
     });
 </script>

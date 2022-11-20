@@ -12,7 +12,8 @@ namespace BusinessLayer.AutoMapper.Profiles
     {
         public DBOImages()
         {
-            CreateMap<Message, MessageDraft>().ReverseMap();
+            CreateMap<MessageDraft, Message>()
+                .ForPath(x => x.ReceiverUser.UserName, y => y.MapFrom(z => z.ReceiverUser)).ReverseMap();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,17 @@ namespace CoreDemo.Areas.Admin.Controllers
     public class AdminMessageController : Controller
     {
         private readonly IMessageService _messageService;
+        private readonly IMessageDraftService _messageDraftService;
         private readonly IBusinessUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AdminMessageController(IMessageService messageService, IBusinessUserService userService)
+        public AdminMessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService,
+            IMapper mapper)
         {
             _messageService = messageService;
             _userService = userService;
+            _messageDraftService = messageDraftService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Inbox(string search = null)
@@ -61,8 +67,21 @@ namespace CoreDemo.Areas.Admin.Controllers
             return user.Id;
         }
         [HttpGet]
-        public IActionResult SendMessage()
+        public async Task<IActionResult> SendMessage(int id, string ReceiverUser = null)
         {
+            if (id != 0)
+            {
+                var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
+                if (value != null)
+                {
+                    var message = _mapper.Map<Message>(value);
+                    return View(message);
+                }
+            }
+            if (ReceiverUser != null)
+            {
+                ViewBag.ReceiverUser = ReceiverUser;
+            }
             return View();
         }
         [HttpPost]
@@ -101,9 +120,9 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var message = await _messageService.GetReceivedMessageAsync(user.Id, x => x.MessageID == id);
-            if (id != 0 && message.ReceiverUserId == user.Id)
-               await _messageService.TDeleteAsync(message);
+            var message = await _messageService.TGetByIDAsync(id);
+            if (message != null && message.ReceiverUserId == user.Id)
+                await _messageService.TDeleteAsync(message);
             return RedirectToAction("Inbox");
         }
     }

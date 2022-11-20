@@ -28,5 +28,12 @@ namespace DataAccessLayer.EntityFramework
                 await c.MessagesDrafts.Include(x => x.User).Where(x => x.UserId == id).ToListAsync() :
                 await c.MessagesDrafts.Include(x => x.User).Where(x => x.UserId == id).Where(filter).ToListAsync();
         }
+        public async Task<MessageDraft> GetMessageDraftByUserIdAsync(int id, Expression<Func<MessageDraft, bool>> filter = null)
+        {
+            using var c = new Context();
+            return filter == null ?
+                await c.MessagesDrafts.Include(x => x.User).Where(x => x.UserId == id).FirstOrDefaultAsync() :
+                await c.MessagesDrafts.Include(x => x.User).Where(x => x.UserId == id).Where(filter).FirstOrDefaultAsync();
+        }
     }
 }

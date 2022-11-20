@@ -34,12 +34,11 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (id != 0)
             {
                 var value = await _newsLetterDraftService.TGetByIDAsync(id);
-                if (value!=null)
+                if (value != null)
                 {
-                    var NewsLetterSendMailsModel = new NewsLetterSendMailsModel();
-                    var newsLetter = _mapper.Map(value, NewsLetterSendMailsModel);
+                    var newsLetter = _mapper.Map<NewsLetter>(value);
                     return View(newsLetter);
-                }               
+                }
             }
             return View();
         }

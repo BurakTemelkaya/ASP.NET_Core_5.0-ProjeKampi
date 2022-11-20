@@ -9,34 +9,10 @@
                 <ul class="folder-list m-b-md" style="padding: 0">
                     <li><a href="/Admin/AdminMessage/Inbox"> <i class="fa fa-inbox "></i> Gelen Mesajlar <span class="label label-warning float-right">@ViewBag.ReceivedUnreadMessage</span> </a></li>
                     <li><a href="/Admin/AdminMessage/SendBox"> <i class="fa fa-envelope-o"></i> Giden Mesajlar</a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-certificate"></i> Önemli Mesajlar</a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-file-text-o"></i> Taslaklar <span class="label label-danger float-right">0</span></a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-trash-o"></i> Çöp Kutusu</a></li>
-                </ul>
-                <h5>Kategoriler</h5>
-                <ul class="category-list" style="padding: 0">
-                    <li><a href="#"> <i class="fa fa-circle text-navy"></i> İş </a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-danger"></i> Dökümanlar</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-primary"></i> Sosyal</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-info"></i> Tanıtımlar</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-warning"></i> Talepler</a></li>
+                    <li><a href="/Admin/AdminMessageDraft/Index"> <i class="fa fa-file-text-o"></i> Taslaklar <span class="label label-danger float-right">@ViewBag.MessageDraftCount</span></a></li>
                 </ul>
                 <div class="clearfix"></div>
             </div>
-
-
-            <h5 class="tag-title">Etiketler</h5>
-            <ul class="tag-list" style="padding: 0">
-                <li><a href=""><i class="fa fa-tag"></i> Aile</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> İş</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Ev</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Çocuklar</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Tatil</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Müzik</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Fotoğrafçılık</a></li>
-                <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
-            </ul>
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>

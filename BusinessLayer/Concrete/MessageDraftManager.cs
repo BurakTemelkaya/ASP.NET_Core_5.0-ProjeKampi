@@ -60,15 +60,15 @@ namespace BusinessLayer.Concrete
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
             t.UserId = user.Id;
-            t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageContentFileLocation());
+            t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
             await _messageDraftDal.InsertAsync(t);
         }
 
         public async Task DeleteAsync(int id, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var value = await _messageDraftDal.GetByIDAsync(id);
-            if (user.Id == value.UserId)
+            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(id);
+            if (user.Id != 0 && user.Id == value.UserId)
             {
                 await _messageDraftDal.DeleteAsync(value);
             }
@@ -77,8 +77,8 @@ namespace BusinessLayer.Concrete
         public async Task<MessageDraft> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var value = await _messageDraftDal.GetByFilterAsync(filter);
-            if (user.Id == value.UserId)
+            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Id, filter);
+            if (user.Id != 0 && user.Id == value.UserId)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
                 return value;
@@ -89,8 +89,8 @@ namespace BusinessLayer.Concrete
         public async Task<MessageDraft> GetByIDAsync(int id, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var value = await _messageDraftDal.GetByIDAsync(id);
-            if (user.Id == value.UserId)
+            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Id, x => x.MessageDraftID == id);
+            if (user.Id != 0 && user.Id == value.UserId)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
                 return value;
@@ -101,9 +101,15 @@ namespace BusinessLayer.Concrete
         public async Task UpdateAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var value = await _messageDraftDal.GetByIDAsync(t.MessageDraftID);
-            if (user.Id == value.UserId)
+            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Id, x => x.MessageDraftID == t.MessageDraftID);
+            if (user.Id != 0 && user.Id == value.UserId)
+            {
+                if (await TextFileManager.ReadTextFileAsync(value.Details) != t.Details)
+                {
+                    t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
+                }
                 await _messageDraftDal.UpdateAsync(t);
+            }               
         }
     }
 }

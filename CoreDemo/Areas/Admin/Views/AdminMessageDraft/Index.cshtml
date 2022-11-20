@@ -1,0 +1,56 @@
+﻿@model List<MessageDraft>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        @await Component.InvokeAsync("MessageFolders")
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+                <form method="get" class="float-right mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" name="search" placeholder="Mail ara">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Ara
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <h2>
+                    Taslaklar
+                </h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <div class="btn-group float-right">
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+
+                    </div>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
+
+                </div>
+            </div>
+            <div class="mail-box">
+
+                <table class="table table-hover table-mail">
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="read">
+                                <td class="check-mail">
+                                    <input type="checkbox" class="i-checks">
+                                </td>
+                                <td class="mail-contact"><a href="/Admin/AdminMessageDraft/Edit/@item.MessageDraftID">@item.Subject</a></td>
+                                <td class="mail-subject"><a href="/Admin/AdminMessageDraft/Edit/@item.MessageDraftID">@item.Details</a></td>
+                                <td class="mail-content"><a href="/Admin/AdminMessage/SendMessage/@item.MessageDraftID" class="btn btn-success text-white">Mesaj Gönder</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
