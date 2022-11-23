@@ -15,7 +15,7 @@ namespace BusinessLayer.Abstract
         Task<Blog> GetBlogByIdForUpdate(int id);
         Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id, Expression<Func<Blog, bool>> filter = null);
         Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
-        Task<List<Blog>> GetBlogByWriterAsync(int id);
+        Task<List<Blog>> GetBlogListByWriterAsync(int id);
         Task<List<Blog>> GetLastBlogAsync(int count);
         Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<Blog> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);

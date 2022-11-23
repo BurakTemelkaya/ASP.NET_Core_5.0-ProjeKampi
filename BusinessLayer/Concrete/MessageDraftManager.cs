@@ -67,7 +67,7 @@ namespace BusinessLayer.Concrete
         public async Task DeleteAsync(int id, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(id);
+            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Id, x => x.MessageDraftID == id);
             if (user.Id != 0 && user.Id == value.UserId)
             {
                 await _messageDraftDal.DeleteAsync(value);
@@ -109,7 +109,7 @@ namespace BusinessLayer.Concrete
                     t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
                 }
                 await _messageDraftDal.UpdateAsync(t);
-            }               
+            }
         }
     }
 }

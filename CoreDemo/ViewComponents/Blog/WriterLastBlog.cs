@@ -21,7 +21,7 @@ namespace CoreDemo.ViewComponents.Blog
 
         public async Task<IViewComponentResult> InvokeAsync(int writerId, int blogId)
         {
-            var blogs = await _blogService.GetBlogByWriterAsync(writerId);
+            var blogs = await _blogService.GetBlogListByWriterAsync(writerId);
             var values = await blogs.Where(x => x.BlogStatus).ToListAsync();
             var currentBlog = values.FirstOrDefault(x => x.BlogID == blogId);
             values.Remove(currentBlog);

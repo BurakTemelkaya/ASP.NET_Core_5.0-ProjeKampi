@@ -27,11 +27,17 @@ namespace BusinessLayer.Concrete
 
         public async Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            return await _blogDal.GetListWithCategoryAsync(filter);
+            var values = await _blogDal.GetListWithCategoryAsync(filter);
+            foreach (var item in values)
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            return values;
         }
         public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id, Expression<Func<Blog, bool>> filter = null)
         {
-            return await _blogDal.GetListWithCategoryByWriterAsync(id, filter);
+            var values = await _blogDal.GetListWithCategoryByWriterAsync(id, filter);
+            foreach (var item in values)
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            return values;
         }
         public async Task<Blog> GetBlogByIDAsync(int id)
         {
@@ -54,7 +60,7 @@ namespace BusinessLayer.Concrete
             {
                 value.BlogImage = null;
             }
-            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
+            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent,50);
             return value;
         }
 
@@ -64,7 +70,7 @@ namespace BusinessLayer.Concrete
             return value.TakeLast(count).ToList();
         }
 
-        public async Task<List<Blog>> GetBlogByWriterAsync(int id)
+        public async Task<List<Blog>> GetBlogListByWriterAsync(int id)
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
@@ -166,7 +172,10 @@ namespace BusinessLayer.Concrete
 
         public async Task<List<Blog>> GetListAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            return await _blogDal.GetListAllAsync();
+            var values = await _blogDal.GetListAllAsync();
+            foreach (var item in values)
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            return values;
         }
 
         public async Task ChangedBlogStatusAsync(int id, string userName)
