@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IMessageService : IGenericService<Message>
+    public interface IMessageService
     {
+        Task AddMessageAsync(Message message, string senderUserName, string receiverUserName);
+        Task UpdateMessageAsync(Message message, string userName);
+        Task DeleteMessageAsync(int id, string userName);
+        Task<Message> GetByIdAsync(int id);
+        Task<Message> GetByFilterAsync(Expression<Func<Message, bool>> filter = null);
+        Task<int> GetCountAsync(Expression<Func<Message, bool>> filter = null);
         Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null);
         Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null);
         Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null);

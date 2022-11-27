@@ -87,20 +87,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message, string receiver)
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            message.SenderUserId = user.Id;
-            var userNameUser = await _userService.FindByUserNameAsync(receiver);
-            var mailUser = await _userService.FindByMailAsync(receiver);
-            if (userNameUser != null)
-                message.ReceiverUserId = userNameUser.Id;
-            else if (mailUser != null)
-                message.ReceiverUserId = mailUser.Id;
-            else
-            {
-                ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
-                return View(message);
-            }
-            await _messageService.TAddAsync(message);
+            await _messageService.AddMessageAsync(message, User.Identity.Name, receiver);
             return RedirectToAction("SendBox");
         }
         public async Task<IActionResult> Read(int id)
@@ -119,10 +106,8 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var message = await _messageService.TGetByIDAsync(id);
-            if (message != null && message.ReceiverUserId == user.Id)
-                await _messageService.TDeleteAsync(message);
+            if (id != 0)
+                await _messageService.DeleteMessageAsync(id, User.Identity.Name);
             return RedirectToAction("Inbox");
         }
     }

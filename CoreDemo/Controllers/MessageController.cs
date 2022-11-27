@@ -75,35 +75,10 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message, string Receiver)
         {
-            var sender = await _userService.FindByUserNameAsync(User.Identity.Name);
-            message.SenderUserId = sender.Id;
-            if (Receiver == null)
-            {
-                ModelState.AddModelError("Receiver", "Gönderilen kullanıcı boş geçilemez.");
-                return View(message);
-            }
-            var mailUser = await _userService.FindByMailAsync(Receiver);
-            var userNameUser = await _userService.FindByUserNameAsync(Receiver);
-            if (mailUser != null)
-                message.ReceiverUserId = mailUser.Id;
-            else if (userNameUser != null)
-                message.ReceiverUserId = userNameUser.Id;
-            else
-            {
-                ModelState.AddModelError("Receiver", "Girdiğiniz gönderici bilgileri bulunamadı.");
-                return View(message);
-            }
-            if (message.ReceiverUserId == sender.Id)
-            {
-                ModelState.AddModelError("Receiver", "Kendi kendinize mesaj gönderemezsiniz.");
-                return View(message);
-            }
-            await _messageService.TAddAsync(message);
+            await _messageService.AddMessageAsync(message, User.Identity.Name, Receiver);
             return RedirectToAction("Inbox");
         }
         /// <summary>
-        /// Id değeri kontrolü
-        /// Mesaj kullanıcının mesajı mı kontrolü
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
