@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Swedish Translation
  * Harald Normann harald.normann@wts.se, harald.normann@gmail.com

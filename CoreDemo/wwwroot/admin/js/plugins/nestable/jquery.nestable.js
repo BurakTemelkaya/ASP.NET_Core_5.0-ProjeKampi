@@ -2,7 +2,7 @@
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  * Dual-licensed under the BSD or MIT licenses
  */
-;(function($, window, document, undefined)
+(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in document;
 

@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Arabic Translation
  * 

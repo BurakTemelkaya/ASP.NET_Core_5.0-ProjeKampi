@@ -6,7 +6,7 @@
  *  Made by István Ujj-Mészáros
  *  Under Apache License v2.0 License
  */
-;(function ($, window, document, undefined) {
+(function ($, window, document, undefined) {
     // Create the defaults once
     var pluginName = 'bootstrapDualListbox',
         defaults = {

@@ -4,7 +4,7 @@
  * Licensed under MIT (https://github.com/weareoutman/clockpicker/blob/gh-pages/LICENSE)
  */
 
-;(function(){
+(function(){
 	var $ = window.jQuery,
 		$win = $(window),
 		$doc = $(document),

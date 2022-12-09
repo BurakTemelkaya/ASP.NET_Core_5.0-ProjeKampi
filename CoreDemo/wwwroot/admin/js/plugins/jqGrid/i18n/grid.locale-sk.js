@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Slovak Translation
  * Milan Cibulka

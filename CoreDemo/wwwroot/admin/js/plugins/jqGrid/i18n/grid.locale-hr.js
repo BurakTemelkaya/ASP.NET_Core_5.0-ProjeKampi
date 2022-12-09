@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Croatian Translation
  * Version 1.0.1 (developed for jQuery Grid 4.4)

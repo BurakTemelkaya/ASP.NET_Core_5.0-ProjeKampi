@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid (fi) Finnish Translation
  * Jukka Inkeri  awot.fi  2010-05-19

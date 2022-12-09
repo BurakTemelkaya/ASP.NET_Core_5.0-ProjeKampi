@@ -536,8 +536,7 @@
                             var li_accumulate = "";
 
                             // Loop over the lines in this block looking for tight lists.
-                            tight_search:
-                                for (var line_no=0; line_no < lines.length; line_no++) {
+                            for (var line_no=0; line_no < lines.length; line_no++) {
                                     var nl = "",
                                         l = lines[line_no].replace(/^\n/, function(n) { nl = n; return ""; });
 

@@ -6176,7 +6176,7 @@ var _util = __w_pdfjs_require__(0);
 
 var _api = __w_pdfjs_require__(2);
 
-;
+
 var OK_RESPONSE = 200;
 var PARTIAL_CONTENT_RESPONSE = 206;
 function NetworkManager(url, args) {

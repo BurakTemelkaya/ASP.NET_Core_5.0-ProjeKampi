@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Montenegrian Translation
  * Bild Studio info@bild-studio.net

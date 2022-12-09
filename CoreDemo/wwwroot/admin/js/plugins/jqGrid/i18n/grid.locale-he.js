@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Hebrew Translation
  * Shuki Shukrun shukrun.shuki@gmail.com

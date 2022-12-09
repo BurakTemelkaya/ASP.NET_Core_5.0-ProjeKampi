@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Japanese Translation
  * OKADA Yoshitada okada.dev@sth.jp

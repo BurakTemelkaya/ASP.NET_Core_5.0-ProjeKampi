@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Icelandic Translation
  * jtm@hi.is Univercity of Iceland

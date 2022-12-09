@@ -20,7 +20,7 @@ body {
   position: relative;
   max-width: 1298px;
   height: auto;
-  margin: 2em auto 0 auto;
+  margin: 2em auto 0;
   background: transparent url("https://www.dropbox.com/s/qq5n8w99q40wtrg/wood-fence.png?raw=1") no-repeat center top 24em;
 }
 
@@ -29,13 +29,13 @@ body {
   max-width: 70%;
   min-height: 600px;
   margin: 0 auto;
-  padding: 1em 1em;
+  padding: 1em;
   text-align: center;
   background: transparent url("https://www.dropbox.com/s/ft9vhk6720t1k86/dog-family-colored-doodle-drawing.jpg?raw=1") no-repeat top 10em center;
 }
 
 h1 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   font-size: 8em;
   text-shadow: 0 0 6px #8b4d1a;
 }

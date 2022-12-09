@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Lithuanian Translation
  * aur1mas aur1mas@devnet.lt

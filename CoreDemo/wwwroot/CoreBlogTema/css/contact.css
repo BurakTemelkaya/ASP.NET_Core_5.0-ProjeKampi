@@ -32,7 +32,7 @@ p.sub {
 .contact_grid_right input[type="email"],
 .contact_grid_right textarea {
     outline: none;
-    padding: 15px 15px;
+    padding: 15px;
     font-size: 14px;
     color: #777;
     background: #f7f7f7;

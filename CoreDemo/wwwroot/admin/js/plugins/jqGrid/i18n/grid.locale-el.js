@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Greek (el) Translation
  * Alex Cicovic

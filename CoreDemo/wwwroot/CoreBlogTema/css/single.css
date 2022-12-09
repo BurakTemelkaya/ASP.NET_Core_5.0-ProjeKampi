@@ -16,7 +16,6 @@ body a:focus {
 }
 
 ul.inner_breadcrumb {
-    list-style: none;
     display: inline-block;
     padding: 15px 15px 0;
     list-style: none;
@@ -109,7 +108,7 @@ ul.blog_list li a {
 }
 
 .blog_info p {
-    margin: 0 0 1em 0;
+    margin: 0 0 1em;
     color: #777;
 }
 
@@ -328,7 +327,7 @@ h5.mt-0 {
 @media screen and (max-width: 991px) {
     .blog_info {
         min-height: auto;
-        padding:2em 2em;
+        padding:2em;
     }
     .blog_info.blog-right {
         min-height: auto;

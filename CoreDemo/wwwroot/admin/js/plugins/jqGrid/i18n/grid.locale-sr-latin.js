@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Serbian latin Translation
  * Bild Studio info@bild-studio.net

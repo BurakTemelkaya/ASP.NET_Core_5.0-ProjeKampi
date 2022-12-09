@@ -234,7 +234,7 @@
 .chosen-container-multi .chosen-choices .search-choice-focus .search-choice-close {
     background-position: right -11px; }
 .chosen-container-multi .chosen-results {
-    margin: 0 0 0 0;
+    margin: 0;
     padding: 0; }
 .chosen-container-multi .chosen-drop .result-selected {
     display: none; }
@@ -328,5 +328,3 @@
         background-image: url("chosen-sprite@2x.png") !important;
         background-size: 52px 37px !important;
         background-repeat: no-repeat !important; } }
-
-/*# sourceMappingURL=bootstrap-chosen.css.map */

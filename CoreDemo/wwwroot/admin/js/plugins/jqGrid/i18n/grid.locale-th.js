@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Thai Translation
  * Kittituch Manakul m.kittituch@Gmail.com

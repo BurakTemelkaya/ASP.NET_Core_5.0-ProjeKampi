@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Danish Translation
  * Aesiras A/S

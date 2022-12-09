@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Bulgarian Translation 
  * Tony Tomov tony@trirand.com

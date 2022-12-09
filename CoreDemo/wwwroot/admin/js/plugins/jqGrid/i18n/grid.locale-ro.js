@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Romanian Translation
  * Alexandru Emil Lupu contact@alecslupu.ro

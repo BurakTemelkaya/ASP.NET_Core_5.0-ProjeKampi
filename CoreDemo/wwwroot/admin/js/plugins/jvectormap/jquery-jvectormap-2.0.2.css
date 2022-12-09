@@ -87,7 +87,7 @@
 .jvectormap-legend-cnt-h .jvectormap-legend {
     float: left;
     margin: 0 10px 10px 0;
-    padding: 3px 3px 1px 3px;
+    padding: 3px 3px 1px;
 }
 
 .jvectormap-legend-cnt-h .jvectormap-legend .jvectormap-legend-tick {

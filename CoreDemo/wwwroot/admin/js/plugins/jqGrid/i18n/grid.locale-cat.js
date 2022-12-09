@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Catalan Translation
  * Traducció jqGrid en Catatà per Faserline, S.L.

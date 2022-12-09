@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Vietnamese Translation
  * Lê Đình Dũng dungtdc@gmail.com

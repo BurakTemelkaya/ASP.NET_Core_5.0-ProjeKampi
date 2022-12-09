@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Spanish Translation
  * Traduccion jqGrid en Español por Yamil Bracho

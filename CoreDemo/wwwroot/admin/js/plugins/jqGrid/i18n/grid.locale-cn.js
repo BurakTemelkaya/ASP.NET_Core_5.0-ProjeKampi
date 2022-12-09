@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Chinese Translation
  * 咖啡兔 yanhonglei@gmail.com

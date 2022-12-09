@@ -23902,7 +23902,7 @@ var WorkerTask = function WorkerTaskClosure() {
   };
   return WorkerTask;
 }();
-;
+
 var PDFWorkerStream = function PDFWorkerStreamClosure() {
   function PDFWorkerStream(msgHandler) {
     this._msgHandler = msgHandler;

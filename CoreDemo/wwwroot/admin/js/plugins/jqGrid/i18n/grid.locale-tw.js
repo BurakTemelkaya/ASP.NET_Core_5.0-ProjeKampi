@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Chinese (Taiwan) Translation for v4.2
  * linquize

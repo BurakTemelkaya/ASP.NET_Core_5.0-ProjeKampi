@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Brazilian-Portuguese Translation
  * Sergio Righi sergio.righi@gmail.com

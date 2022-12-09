@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Turkish Translation
  * Erhan Gündoğan (erhan@trposta.net)

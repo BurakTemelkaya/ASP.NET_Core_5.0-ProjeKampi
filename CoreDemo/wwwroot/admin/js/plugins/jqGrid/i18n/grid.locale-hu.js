@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 /**
  * jqGrid Hungarian Translation
  * Őrszigety Ádám udx6bs@freemail.hu

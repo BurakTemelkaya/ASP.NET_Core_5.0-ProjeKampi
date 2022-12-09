@@ -68,6 +68,6 @@ html { overflow-y: scroll; } /*to prevent the loop when the scrollbar appear and
     font-size: 12px; 
     border: 1px solid red; 
     background-color: #faa; 
-    margin: 10px 0px 10px 0px; 
+    margin: 10px 0px; 
     padding: 5px 0px 5px 5px;
 }
