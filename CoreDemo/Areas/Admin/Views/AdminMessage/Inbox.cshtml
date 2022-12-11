@@ -29,13 +29,13 @@
 
                     </div>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
 
                 </div>
             </div>
-            <div class="mail-box">
+            <div class="mail-box" id="mailList">
 
                 <table class="table table-hover table-mail">
                     <tbody>
@@ -47,7 +47,7 @@
                                 read = "unread";
                             <tr class="@read">
                                 <td class="check-mail">
-                                    <input type="checkbox" class="i-checks">
+                                    <input type="checkbox" class="i-checks" id="@item.MessageID">
                                 </td>
                                 <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.SenderUser.NameSurname</a></td>
                                 <td class="mail-subject"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.Details</a></td>
@@ -61,4 +61,24 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $("#btnReadMessages").click(function () {
+        var idSelector = function () { return this.id; };
+        var selectedCheckbox = $(":checkbox:checked").map(idSelector).get();
+        var newselectedCheckbox = JSON.stringify(selectedCheckbox);
+
+        console.log(newselectedCheckbox);
+
+        $.ajax({
+            type: 'post',
+            url: '/Admin/AdminMessage/MarkReadMessages',
+            dateType: 'json',
+            data: newselectedCheckbox,
+            success: function (data) {
+                alert("Başarılı");
+            }
+        });
+    });
+
+</script>
 

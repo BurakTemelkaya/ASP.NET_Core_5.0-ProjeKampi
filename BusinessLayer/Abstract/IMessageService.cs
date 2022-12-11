@@ -21,6 +21,8 @@ namespace BusinessLayer.Abstract
         Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null);
         Task<Message> GetSendMessageAsync(int id, Expression<Func<Message, bool>> filter = null);
         Task<bool> MarkChangedAsync(int messageId, string userName);
+        Task<bool> MarkUsReadAsync(int messageId, string userName);
+        Task<bool> MarkUsUnreadAsync(int messageId, string userName);
         Task<Message> GetByFilterFileName(Expression<Func<Message, bool>> filter = null);
     }
 }

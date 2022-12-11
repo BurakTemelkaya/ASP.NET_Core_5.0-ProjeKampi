@@ -49,7 +49,7 @@ namespace BusinessLayer.Concrete
             message.SenderUserId = senderUser.Id;
             var receiverUser = await _userService.FindByUserNameAsync(receiverUserName);
             if (receiverUser == null)
-                return;           
+                return;
             message.ReceiverUserId = receiverUser.Id;
             message.Details = await TextFileManager.TextFileAddAsync(message.Details, TextFileManager.GetMessageContentFileLocation());
             message.MessageDate = DateTime.Now;
@@ -108,14 +108,17 @@ namespace BusinessLayer.Concrete
             {
                 var message = await GetByFilterFileName(x => x.MessageID == messageId);
                 var activeUser = await _userService.FindByUserNameAsync(userName);
+
                 if (activeUser.UserName != userName)
-                {
                     return false;
-                }
+
+
                 if (message.MessageStatus)
                     message.MessageStatus = false;
+
                 else
                     message.MessageStatus = true;
+
                 await _messageDal.UpdateAsync(message);
                 return true;
             }
@@ -141,6 +144,48 @@ namespace BusinessLayer.Concrete
         public async Task<Message> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
         {
             return await _messageDal.GetByFilterAsync(filter);
+        }
+
+        public async Task<bool> MarkUsReadAsync(int messageId, string userName)
+        {
+            if (messageId != 0)
+            {
+                var message = await GetByFilterFileName(x => x.MessageID == messageId);
+                var activeUser = await _userService.FindByUserNameAsync(userName);
+
+                if (activeUser.UserName != userName)
+                {
+                    return false;
+                }
+
+                if (!message.MessageStatus)
+                    message.MessageStatus = true;
+
+                await _messageDal.UpdateAsync(message);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> MarkUsUnreadAsync(int messageId, string userName)
+        {
+            if (messageId != 0)
+            {
+                var message = await GetByFilterFileName(x => x.MessageID == messageId);
+                var activeUser = await _userService.FindByUserNameAsync(userName);
+
+                if (activeUser.UserName != userName)
+                {
+                    return false;
+                }
+
+                if (message.MessageStatus)
+                    message.MessageStatus = false;
+
+                await _messageDal.UpdateAsync(message);
+                return true;
+            }
+            return false;
         }
     }
 }

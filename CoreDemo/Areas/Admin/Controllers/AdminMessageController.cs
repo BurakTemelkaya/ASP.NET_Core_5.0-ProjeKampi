@@ -110,5 +110,19 @@ namespace CoreDemo.Areas.Admin.Controllers
                 await _messageService.DeleteMessageAsync(id, User.Identity.Name);
             return RedirectToAction("Inbox");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkReadMessages(List<string> messageIds)
+        {
+            if (messageIds != null)
+            {
+                foreach (var id in messageIds)
+                {
+                    await _messageService.MarkUsReadAsync(Convert.ToInt32(id), User.Identity.Name);
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }
