@@ -51,3 +51,5 @@ Video 72: <del>Yazar Profil Sayfasında yazar bilgileri güncellenmeden önce pa
  Video 76: <del>Yazar'ın Bildirimler kısmında bütün bildirimler gözükmesin sadece durumu aktif olanlar gözüksün.</del>
  
  Video 79: <del>Notificationların ne kadar süre önce gönderildiği yazdırılacak.</del>
+ 
+ Video 100: Projeyi canlıya taşımak.
