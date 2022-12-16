@@ -112,16 +112,28 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MarkReadMessages(List<string> messageIds)
+        public async Task<IActionResult> MarkReadMessages(List<string> selectedItems)
         {
-            if (messageIds != null)
+            var result = await _messageService.MarksUsReadAsync(selectedItems, User.Identity.Name);
+
+            if (result)
             {
-                foreach (var id in messageIds)
-                {
-                    await _messageService.MarkUsReadAsync(Convert.ToInt32(id), User.Identity.Name);
-                }
                 return Ok();
             }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMessages(List<string> selectedItems)
+        {
+            var result = await _messageService.DeleteMessagesAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
             return BadRequest();
         }
     }

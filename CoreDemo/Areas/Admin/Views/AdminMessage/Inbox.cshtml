@@ -31,7 +31,7 @@
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
 
                 </div>
             </div>
@@ -61,24 +61,45 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $("#btnReadMessages").click(function () {
-        var idSelector = function () { return this.id; };
-        var selectedCheckbox = $(":checkbox:checked").map(idSelector).get();
-        var newselectedCheckbox = JSON.stringify(selectedCheckbox);
+<script>
+    $(document).ready(function () {
+        $("#btnReadMessages").click(function () {
+            var selected = [];
+            $('input:checked').each(function () {
+                selected.push($(this).attr("id"));
+            });
 
-        console.log(newselectedCheckbox);
+            console.log(selected)
 
-        $.ajax({
-            type: 'post',
-            url: '/Admin/AdminMessage/MarkReadMessages',
-            dateType: 'json',
-            data: newselectedCheckbox,
-            success: function (data) {
-                alert("Başarılı");
-            }
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/AdminMessage/MarkReadMessages',
+                data: { selectedItems: selected },
+                success: function (data) {
+                    alert("Başarılı");
+                }
+            });
         });
     });
 
+    $(document).ready(function () {
+        $("#btnDeleteMessages").click(function () {
+            var selected = [];
+            $('input:checked').each(function () {
+                selected.push($(this).attr("id"));
+            });
+
+            console.log(selected)
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/AdminMessage/DeleteMessages',
+                data: { selectedItems: selected },
+                success: function (data) {
+                    alert("Başarılı");
+                }
+            });
+        });
+    });
 </script>
 

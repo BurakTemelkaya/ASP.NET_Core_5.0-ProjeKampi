@@ -187,5 +187,47 @@ namespace BusinessLayer.Concrete
             }
             return false;
         }
+
+        public async Task<bool> DeleteMessagesAsync(List<string> ids, string userName)
+        {
+            if (ids == null || userName == null)
+            {
+                return false;
+            }
+            foreach (var id in ids)
+            {
+                var message = await GetByIdAsync(Convert.ToInt32(id));
+                DeleteFileManager.DeleteFile(message.Details);
+                await _messageDal.DeleteAsync(message);
+            }
+            return true;
+        }
+
+        public async Task<bool> MarksUsReadAsync(List<string> messageIds, string userName)
+        {
+            foreach (var id in messageIds)
+            {
+                if (Convert.ToInt32(id) != 0)
+                {
+                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
+                    var activeUser = await _userService.FindByUserNameAsync(userName);
+
+                    if (activeUser.UserName != userName)
+                    {
+                        return false;
+                    }
+
+                    if (!message.MessageStatus)
+                        message.MessageStatus = true;
+
+                    await _messageDal.UpdateAsync(message);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
