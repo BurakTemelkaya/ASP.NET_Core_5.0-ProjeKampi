@@ -1,8 +1,6 @@
-﻿@model List<Message>
-@{
+﻿@{
     ViewData["Title"] = "Inbox";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
-    string read = "";
 }
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -28,78 +26,41 @@
                         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
 
                     </div>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
+                    <button type="button" class="btn btn-white btn-sm checkbox-toggle" id="select-all-checkbox" data-toggle="tooltip"
+                    data-placement="left" title="Hepsini Seç"><i class="checkbox-toggle fa fa-square-o"></i></></button>
+
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i></button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
 
                 </div>
             </div>
-            <div class="mail-box" id="mailList">
-
-                <table class="table table-hover table-mail">
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            @if (!item.MessageStatus)
-                                read = "read";
-                            else
-                                read = "unread";
-                            <tr class="@read">
-                                <td class="check-mail">
-                                    <input type="checkbox" class="i-checks" id="@item.MessageID">
-                                </td>
-                                <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.SenderUser.NameSurname</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.Details</a></td>
-                                <td class=""><i class="fa fa-paperclip"></i></td>
-                                <td class="text-right mail-date">@item.MessageDate.ToShortDateString()</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="mail-box mailbox-messages" id="mailList">
             </div>
+
+            @*<table class="table table-hover table-mail">
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if (!item.MessageStatus)
+                            read = "read";
+                        else
+                            read = "unread";
+                        <tr class="@read">
+                            <td class="check-mail">
+                                <input type="checkbox" class="i-checks" id="@item.MessageID">
+                            </td>
+                            <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.SenderUser.NameSurname</a></td>
+                            <td class="mail-subject"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.Details</a></td>
+                            <td class=""><i class="fa fa-paperclip"></i></td>
+                            <td class="text-right mail-date">@item.MessageDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>*@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#btnReadMessages").click(function () {
-            var selected = [];
-            $('input:checked').each(function () {
-                selected.push($(this).attr("id"));
-            });
-
-            console.log(selected)
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/AdminMessage/MarkReadMessages',
-                data: { selectedItems: selected },
-                success: function (data) {
-                    alert("Başarılı");
-                }
-            });
-        });
-    });
-
-    $(document).ready(function () {
-        $("#btnDeleteMessages").click(function () {
-            var selected = [];
-            $('input:checked').each(function () {
-                selected.push($(this).attr("id"));
-            });
-
-            console.log(selected)
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/AdminMessage/DeleteMessages',
-                data: { selectedItems: selected },
-                success: function (data) {
-                    alert("Başarılı");
-                }
-            });
-        });
-    });
-</script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="~/js/inbox.js"></script>

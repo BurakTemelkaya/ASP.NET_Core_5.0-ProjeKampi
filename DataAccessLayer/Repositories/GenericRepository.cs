@@ -19,11 +19,19 @@ namespace DataAccessLayer.Repositories
             await c.SaveChangesAsync();
         }
 
+        public async Task DeleteRangeAsync(List<T> t)
+        {
+            using var c = new Context();
+            c.RemoveRange(t);
+            await c.SaveChangesAsync();
+        }
+
         public async Task<T> GetByIDAsync(int id)
         {
             using var c = new Context();
             return await c.Set<T>().FindAsync(id);
         }
+
         public async Task<List<T>> GetListAllAsync(Expression<Func<T, bool>> filter = null)
         {
             using var c = new Context();
@@ -36,6 +44,13 @@ namespace DataAccessLayer.Repositories
         {
             using var c = new Context();
             await c.AddAsync(t);
+            await c.SaveChangesAsync();
+        }
+
+        public async Task InsertRangeAsync(List<T> t)
+        {
+            using var c = new Context();
+            await c.AddRangeAsync(t);
             await c.SaveChangesAsync();
         }
 
@@ -52,6 +67,13 @@ namespace DataAccessLayer.Repositories
         {
             using var c = new Context();
             c.Update(t);
+            await c.SaveChangesAsync();
+        }
+
+        public async Task UpdateRangeAsync(List<T> t)
+        {
+            using var c = new Context();
+            c.UpdateRange(t);
             await c.SaveChangesAsync();
         }
 

@@ -3,6 +3,7 @@ using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,21 +30,32 @@ namespace CoreDemo.Areas.Admin.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Inbox(string search = null)
+        public IActionResult Inbox()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInboxMessages(string search = null)
         {
             List<Message> values = new();
             if (search != null)
             {
                 values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID(),
                     x => x.Subject.ToLower().Contains(search.ToLower()));
-                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+                values = await values.OrderByDescending(x => x.MessageDate).ToListAsync();
             }
             if (values.Count == 0)
             {
                 values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID());
-                values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
+                values = await values.OrderByDescending(x => x.MessageDate).ToListAsync();
+                foreach (var item in values)
+                {
+                    item.SenderUser.SenderUserInfo = null;
+                }
             }
-            return View(values);
+            var jsonValues = JsonConvert.SerializeObject(values);
+            return Json(jsonValues);
         }
         public async Task<IActionResult> SendBox(string search = null)
         {
