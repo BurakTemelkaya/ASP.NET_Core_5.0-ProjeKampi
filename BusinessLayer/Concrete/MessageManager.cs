@@ -189,22 +189,28 @@ namespace BusinessLayer.Concrete
         }
 
         public async Task<bool> DeleteMessagesAsync(List<string> ids, string userName)
-        {
+        {           
             if (ids == null || userName == null)
             {
                 return false;
             }
+
+            List<Message> messages = new();
+
             foreach (var id in ids)
             {
                 var message = await GetByIdAsync(Convert.ToInt32(id));
                 DeleteFileManager.DeleteFile(message.Details);
-                await _messageDal.DeleteAsync(message);
+                messages.Add(message);
             }
+            await _messageDal.DeleteRangeAsync(messages);
             return true;
         }
 
         public async Task<bool> MarksUsReadAsync(List<string> messageIds, string userName)
         {
+            List<Message> messages = new();
+
             foreach (var id in messageIds)
             {
                 if (Convert.ToInt32(id) != 0)
@@ -220,13 +226,44 @@ namespace BusinessLayer.Concrete
                     if (!message.MessageStatus)
                         message.MessageStatus = true;
 
-                    await _messageDal.UpdateAsync(message);
+                    messages.Add(message);
                 }
                 else
                 {
                     return false;
                 }
             }
+            await _messageDal.UpdateRangeAsync(messages);
+            return true;
+        }
+
+        public async Task<bool> MarksUsUnreadAsync(List<string> messageIds, string userName)
+        {
+            List<Message> messages = new();
+
+            foreach (var id in messageIds)
+            {
+                if (Convert.ToInt32(id) != 0)
+                {
+                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
+                    var activeUser = await _userService.FindByUserNameAsync(userName);
+
+                    if (activeUser.UserName != userName)
+                    {
+                        return false;
+                    }
+
+                    if (message.MessageStatus)
+                        message.MessageStatus = false;
+
+                    messages.Add(message);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            await _messageDal.UpdateRangeAsync(messages);
             return true;
         }
     }

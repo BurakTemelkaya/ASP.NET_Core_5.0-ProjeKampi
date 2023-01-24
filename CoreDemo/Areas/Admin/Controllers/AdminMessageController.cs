@@ -137,6 +137,19 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> MarkUnreadMessages(List<string> selectedItems)
+        {
+            var result = await _messageService.MarksUsUnreadAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteMessages(List<string> selectedItems)
         {
             var result = await _messageService.DeleteMessagesAsync(selectedItems, User.Identity.Name);

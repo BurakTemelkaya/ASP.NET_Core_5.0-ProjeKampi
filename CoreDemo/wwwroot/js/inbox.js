@@ -12,9 +12,9 @@
                     if (message.length > 75) {
                         message = message.substring(0, 75) + "...";
                     }
-                    var isRead = `${item.IsRead}`;
+                    var isRead = `${item.MessageStatus}`;
                     var read = "";
-                    if (isRead == "true") {
+                    if (isRead == "false") {
                         isReadClass = "fa-envelope";
                         read = "unread";
                     }
@@ -23,14 +23,16 @@
                         read = "read";
                     }
 
+                    console.log()
+
                     var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
                     tablehtml += `<tr class="${read}">
                                 <td class="check-mail">
-                                    <input type="checkbox" class="i-checks mailbox-messages" id="${item.Id}">
+                                    <input type="checkbox" class="i-checks mailbox-messages" id="${item.MessageID}">
                                 </td>
-                                <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/${item.Id}">${item.SenderUser.NameSurname}</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.Id}">${item.Details}</a></td>
+                                <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderUser.NameSurname}</a></td>
+                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.Details}</a></td>
                                 <td class=""><i class="fa fa-paperclip"></i></td>
                                 <td class="text-right mail-date">${date}</td>
                             </tr>`;
@@ -72,14 +74,35 @@ $(document).ready(function () {
             selected.push($(this).attr("id"));
         });
 
-        console.log(selected)
-
         $.ajax({
             type: 'POST',
             url: '/Admin/AdminMessage/MarkReadMessages',
             data: { selectedItems: selected },
             success: function (data) {
-                alert("Başarılı");
+                $('.checkbox-toggle').click();
+                AllCheckboxSetUnchecked();
+                GetContactList();       
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $("#btnUnreadMessages").click(function () {
+        var selected = [];
+        $('input:checked').each(function () {
+            selected.push($(this).attr("id"));
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/AdminMessage/MarkUnreadMessages',
+            data: { selectedItems: selected },
+            success: function (data) {                
+                GetContactList();
+
+                $('.checkbox-toggle').click();
+                AllCheckboxSetUnchecked();               
             }
         });
     });
@@ -92,16 +115,15 @@ $(document).ready(function () {
             selected.push($(this).attr("id"));
         });
 
-        console.log(selected)
-
         $.ajax({
             type: 'POST',
             url: '/Admin/AdminMessage/DeleteMessages',
             data: { selectedItems: selected },
             success: function (data) {
-                alert("Başarılı");
+                AllCheckboxSetUnchecked();
+                GetContactList();              
             }
-        });
+        });       
     });
 });
 
@@ -117,7 +139,7 @@ function GetContactCount() {
                     badgeHtml += data;
                     badgeHtml += '</span>';
                 }
-                $("#ContactCountBadge").html(badgeHtml);
+                $("#MessageCountBadge").html(badgeHtml);
             }
         });
     });

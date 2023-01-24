@@ -25,6 +25,7 @@ namespace BusinessLayer.Abstract
         Task<bool> MarkUsReadAsync(int messageId, string userName);
         Task<bool> MarksUsReadAsync(List<string> messageIds, string userName);
         Task<bool> MarkUsUnreadAsync(int messageId, string userName);
+        Task<bool> MarksUsUnreadAsync(List<string> messageIds, string userName);
         Task<Message> GetByFilterFileName(Expression<Func<Message, bool>> filter = null);
     }
 }
