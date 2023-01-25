@@ -23,8 +23,6 @@
                         read = "read";
                     }
 
-                    console.log()
-
                     var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
                     tablehtml += `<tr class="${read}">
@@ -78,9 +76,9 @@ $(document).ready(function () {
             type: 'POST',
             url: '/Admin/AdminMessage/MarkReadMessages',
             data: { selectedItems: selected },
-            success: function (data) {
-                $('.checkbox-toggle').click();
+            success: function (data) {               
                 AllCheckboxSetUnchecked();
+                $('#select-all-checkbox').click();
                 GetContactList();       
             }
         });
@@ -100,8 +98,7 @@ $(document).ready(function () {
             data: { selectedItems: selected },
             success: function (data) {                
                 GetContactList();
-
-                $('.checkbox-toggle').click();
+                $('#select-all-checkbox').click();
                 AllCheckboxSetUnchecked();               
             }
         });
@@ -119,9 +116,10 @@ $(document).ready(function () {
             type: 'POST',
             url: '/Admin/AdminMessage/DeleteMessages',
             data: { selectedItems: selected },
-            success: function (data) {
+            success: function (data) {              
+                GetContactList();          
+                $('#select-all-checkbox').click();
                 AllCheckboxSetUnchecked();
-                GetContactList();              
             }
         });       
     });
