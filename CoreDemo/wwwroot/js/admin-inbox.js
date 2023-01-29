@@ -45,6 +45,8 @@
 
 GetContactList();
 
+var isClickCheckboxToggle;
+
 $('.checkbox-toggle').click(function () {
     var clicks = $(this).data('clicks')
     if (clicks) {
@@ -52,6 +54,7 @@ $('.checkbox-toggle').click(function () {
     } else {
         AllCheckboxSetChecked();
     }
+    isClickCheckboxToggle = clicks;
     $(this).data('clicks', !clicks)
 });
 
@@ -76,10 +79,13 @@ $(document).ready(function () {
             type: 'POST',
             url: '/Admin/AdminMessage/MarkReadMessages',
             data: { selectedItems: selected },
-            success: function (data) {               
-                AllCheckboxSetUnchecked();
-                $('#select-all-checkbox').click();
-                GetContactList();       
+            success: function (data) {
+                GetContactList();
+                if (!isClickCheckboxToggle) {          
+                    console.log(isClickCheckboxToggle);
+                    AllCheckboxSetUnchecked();
+                    $('#select-all-checkbox').click();
+                }              
             }
         });
     });
@@ -98,8 +104,11 @@ $(document).ready(function () {
             data: { selectedItems: selected },
             success: function (data) {                
                 GetContactList();
-                $('#select-all-checkbox').click();
-                AllCheckboxSetUnchecked();               
+                if (!isClickCheckboxToggle) {
+                    console.log(isClickCheckboxToggle);
+                    AllCheckboxSetUnchecked();
+                    $('#select-all-checkbox').click();
+                }               
             }
         });
     });
@@ -117,28 +126,13 @@ $(document).ready(function () {
             url: '/Admin/AdminMessage/DeleteMessages',
             data: { selectedItems: selected },
             success: function (data) {              
-                GetContactList();          
-                $('#select-all-checkbox').click();
-                AllCheckboxSetUnchecked();
+                GetContactList();
+                if (!isClickCheckboxToggle) {
+                    console.log(isClickCheckboxToggle);
+                    AllCheckboxSetUnchecked();
+                    $('#select-all-checkbox').click();
+                }
             }
         });       
     });
 });
-
-function GetContactCount() {
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Contact/GetUnreadContactCount',
-            type: "GET",
-            success: function (data) {
-                var badgeHtml = 'Contact';
-                if (data != '0') {
-                    badgeHtml += ' <span class="right badge badge-danger">';
-                    badgeHtml += data;
-                    badgeHtml += '</span>';
-                }
-                $("#MessageCountBadge").html(badgeHtml);
-            }
-        });
-    });
-};

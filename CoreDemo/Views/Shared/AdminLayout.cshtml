@@ -83,6 +83,22 @@
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+                type: "GET",
+                success: function (data) {
+                    var badgeHtml = '<i class="fa fa-envelope">';
+                    if (data != '0') {
+                        badgeHtml += '<span class="label label-warning">' + data + '</span>';
+                    }
+                    badgeHtml += '</i>';
+                    $("#UnreadMessagesCountBadge").html(badgeHtml);
+                }
+            });
+        });
+
         $(document).ready(function () {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',

@@ -5,13 +5,10 @@
 }
 <li class="dropdown">
     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-        <i class="fa fa-envelope"></i> @if (ViewBag.UnreadMessageCount > 0)
-        {
-            <span class="label label-warning">@ViewBag.UnreadMessageCount</span>
-        }
-
-
+        <div id="UnreadMessagesCountBadge">
+        </div>
     </a>
+
     <ul class="dropdown-menu dropdown-messages">
         @foreach (var item in Model)
         {

@@ -22,7 +22,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
             var values = await _messageService.GetInboxWithMessageListAsync(user.Id);
             if (values.Count > 3)
                 values = await values.TakeLast(3).ToListAsync();
-            ViewBag.UnreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUser.UserName == User.Identity.Name && x.MessageStatus);
+            ViewBag.UnreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUser.UserName == User.Identity.Name && !x.MessageStatus);
             return View(values);
         }
     }

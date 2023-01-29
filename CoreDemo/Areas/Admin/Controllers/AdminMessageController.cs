@@ -57,6 +57,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
         }
+
         public async Task<IActionResult> SendBox(string search = null)
         {
             List<Message> values = new();
@@ -160,6 +161,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUnreadMessagesCount()
+        {
+            var value = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
+            var jsonValues = JsonConvert.SerializeObject(value);
+            return Ok(jsonValues);
         }
     }
 }

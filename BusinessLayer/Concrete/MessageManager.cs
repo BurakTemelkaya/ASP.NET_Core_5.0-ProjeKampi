@@ -94,6 +94,12 @@ namespace BusinessLayer.Concrete
             return await _messageDal.GetCountAsync(filter);
         }
 
+        public async Task<int> GetUnreadMessagesCountByUserNameAsync(string userName)
+        {
+            var receiverUser = await _userService.FindByUserNameAsync(userName);
+            return await GetCountAsync(x => x.ReceiverUserId == receiverUser.Id && x.MessageStatus == false);
+        }
+
         public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
             var values = await _messageDal.GetSendBoxWithMessageListAsync(id, filter);
@@ -189,7 +195,7 @@ namespace BusinessLayer.Concrete
         }
 
         public async Task<bool> DeleteMessagesAsync(List<string> ids, string userName)
-        {           
+        {
             if (ids == null || userName == null)
             {
                 return false;
