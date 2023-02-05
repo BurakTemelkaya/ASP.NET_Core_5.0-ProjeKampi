@@ -27,6 +27,12 @@ namespace BusinessLayer.Concrete
             return await _messageDraftDal.GetCountAsync(filter);
         }
 
+        public async Task<int> GetCountByUserNameAsync(string userName)
+        {
+            var user = await _businessUserService.FindByUserNameAsync(userName);
+            return await _messageDraftDal.GetCountAsync(x => x.UserId == user.Id);
+        }
+
         public async Task<List<MessageDraft>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null)
         {
             var values = await _messageDraftDal.GetListAllAsync(filter);

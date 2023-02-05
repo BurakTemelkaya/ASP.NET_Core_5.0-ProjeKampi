@@ -20,6 +20,7 @@
                 <h2>
                     Gelen Kutusu
                 </h2>
+
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group float-right">
                         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
@@ -27,7 +28,9 @@
 
                     </div>
                     <button type="button" class="btn btn-white btn-sm checkbox-toggle" id="select-all-checkbox" data-toggle="tooltip"
-                    data-placement="left" title="Hepsini Seç"><i class="checkbox-toggle fa fa-square-o"></i></></button>
+                            data-placement="left" title="Hepsini Seç">
+                        <i class="checkbox-toggle fa fa-square-o"></i></>
+                    </button>
 
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnRefresh" onclick="GetContactList()" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i></button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
@@ -37,10 +40,13 @@
 
                 </div>
             </div>
-            <div class="mail-box mailbox-messages" id="mailList">
+            <div class="mail-box">
             </div>
         </div>
     </div>
 </div>
+<section ></section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<script src="~/js/admin-inbox.js"></script>
+@section ScriptSection{
+    <script src="~/js/admin-inbox.js"></script>
+}

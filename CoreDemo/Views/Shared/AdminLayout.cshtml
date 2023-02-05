@@ -10,16 +10,15 @@
     <title>Admin Paneli</title>
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/admin/css/animate.css" rel="stylesheet">
     <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
     <link href="~/admin/css/style.css" rel="stylesheet">
-    <link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="~/admin/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
     <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
     <script src="~/writer/assets/js/SweetAlert2.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
 </head>
 <body>
 
@@ -83,21 +82,56 @@
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
-
         $(document).ready(function () {
-            $.ajax({
-                url: '/Admin/AdminMessage/GetUnreadMessagesCount',
-                type: "GET",
-                success: function (data) {
-                    var badgeHtml = '<i class="fa fa-envelope">';
-                    if (data != '0') {
-                        badgeHtml += '<span class="label label-warning">' + data + '</span>';
+            function GetContactListForDropDown() {
+
+                $.ajax({
+                    url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+                    type: "GET",
+                    success: function (data) {
+                        var badgeHtml = '<i class="fa fa-envelope">';
+                        if (data != '0') {
+                            badgeHtml += '<span class="label label-warning">' + data + '</span>';
+                        }
+                        badgeHtml += '</i>';
+                        $("#UnreadMessagesCountBadge").html(badgeHtml);
                     }
-                    badgeHtml += '</i>';
-                    $("#UnreadMessagesCountBadge").html(badgeHtml);
-                }
-            });
+                });
+            };
+
+            function GetContactListForMessageFolder() {
+                $.ajax({
+                    url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+                    type: "GET",
+                    success: function (data) {
+                        var badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
+                        if (data != '0') {
+                            badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
+                        }
+                        badgeHtml += '</i>';
+                        $("#messageFolderBadge").html(badgeHtml);
+                    }
+                });
+            };
+
+            function GetMessageDraftListForMessageFolder() {
+                $.ajax({
+                    url: '/Admin/AdminMessage/GetDraftMessagesCount',
+                    type: "GET",
+                    success: function (data) {
+                        var badgeHtml = '<i class="fa fa-file-text-o"> Taslaklar </i>';
+                        if (data != '0') {
+                            badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
+                        }
+                        $("#messageFolderDraftBadge").html(badgeHtml);
+                    }
+                });
+            };
         });
+
+        GetContactListForDropDown();
+
+        GetMessageDraftListForMessageFolder();
 
         $(document).ready(function () {
             $('.i-checks').iCheck({
@@ -120,7 +154,11 @@
                 height: 300
             });
         });
+
+
     </script>
+
+    @RenderSection("ScriptSection",false);
 </body>
 </html>
 

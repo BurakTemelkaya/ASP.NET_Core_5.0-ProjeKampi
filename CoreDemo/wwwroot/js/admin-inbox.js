@@ -27,17 +27,25 @@
 
                     tablehtml += `<tr class="${read}">
                                 <td class="check-mail">
-                                    <input type="checkbox" class="i-checks mailbox-messages" id="${item.MessageID}">
+                                    <input type="checkbox" class="i-checks" id="${item.MessageID}">
                                 </td>
-                                <td class="mail-ontact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderUser.NameSurname}</a></td>
+                                <td class="mail-contact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderUser.NameSurname}</a></td>
                                 <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.Details}</a></td>
                                 <td class=""><i class="fa fa-paperclip"></i></td>
                                 <td class="text-right mail-date">${date}</td>
                             </tr>`;
                 });
                 tablehtml += '</tbody></table>';
-                $("#mailList").html(tablehtml);
+                $(".mail-box").html(tablehtml);
+                $(document).ready(function () {
+                    $('.i-checks').iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green',
+                    });
+                });
                 //GetContactCount();
+                GetContactListForDropDown();
+                GetContactListForMessageFolder();
             }
         });
     });
@@ -59,13 +67,15 @@ $('.checkbox-toggle').click(function () {
 });
 
 function AllCheckboxSetChecked() {
-    $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
-    $('.checkbox-toggle .fa.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square')
+    $('.i-checks').attr("checked", "true");
+    $('.icheckbox_square-green').addClass(' checked');
+    $('.checkbox-toggle .fa.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
 }
 
 function AllCheckboxSetUnchecked() {
-    $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
-    $('.checkbox-toggle .fa.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o')
+    $('.i-checks').prop('checked', "false");
+    $('.icheckbox_square-green.checked').removeClass('icheckbox_square-green checked').addClass('icheckbox_square-green');
+    $('.checkbox-toggle .fa.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
 }
 
 $(document).ready(function () {
@@ -82,7 +92,6 @@ $(document).ready(function () {
             success: function (data) {
                 GetContactList();
                 if (!isClickCheckboxToggle) {          
-                    console.log(isClickCheckboxToggle);
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
                 }              
@@ -105,7 +114,6 @@ $(document).ready(function () {
             success: function (data) {                
                 GetContactList();
                 if (!isClickCheckboxToggle) {
-                    console.log(isClickCheckboxToggle);
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
                 }               
@@ -128,7 +136,6 @@ $(document).ready(function () {
             success: function (data) {              
                 GetContactList();
                 if (!isClickCheckboxToggle) {
-                    console.log(isClickCheckboxToggle);
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
                 }

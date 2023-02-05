@@ -114,7 +114,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                 return RedirectToAction("Inbox");
             if (value.MessageStatus)
-                await _messageService.MarkChangedAsync(id, user.UserName);
+                await _messageService.MarkUsReadAsync(id, user.UserName);
             return View(value);
         }
         public async Task<IActionResult> Delete(int id)
@@ -167,6 +167,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> GetUnreadMessagesCount()
         {
             var value = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
+            var jsonValues = JsonConvert.SerializeObject(value);
+            return Ok(jsonValues);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDraftMessagesCount()
+        {
+            var value = await _messageDraftService.GetCountByUserNameAsync(User.Identity.Name);
             var jsonValues = JsonConvert.SerializeObject(value);
             return Ok(jsonValues);
         }
