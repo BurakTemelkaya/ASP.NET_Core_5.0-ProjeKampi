@@ -1,31 +1,31 @@
-﻿function GetContactList(Search) {
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Admin/AdminMessage/GetInboxMessages',
-            type: "GET",
-            success: function (data) {
-                let jsonData = jQuery.parseJSON(data);
-                let tablehtml = '<table class="table table-hover table-mail"><tbody>';
-                data: { search: Search }
-                $.each(jsonData, (index, item) => {
-                    var message = `${item.Message}`;
-                    if (message.length > 75) {
-                        message = message.substring(0, 75) + "...";
-                    }
-                    var isRead = `${item.MessageStatus}`;
-                    var read = "";
-                    if (isRead == "false") {
-                        isReadClass = "fa-envelope";
-                        read = "unread";
-                    }
-                    else {
-                        isReadClass = "fa-envelope-open";
-                        read = "read";
-                    }
+﻿
+function GetContactList(Search) {
+    $.ajax({
+        url: '/Admin/AdminMessage/GetInboxMessages',
+        type: "GET",
+        success: function (data) {
+            let jsonData = jQuery.parseJSON(data);
+            let tablehtml = '<table class="table table-hover table-mail"><tbody>';
+            data: { search: Search }
+            $.each(jsonData, (index, item) => {
+                var message = `${item.Message}`;
+                if (message.length > 75) {
+                    message = message.substring(0, 75) + "...";
+                }
+                var isRead = `${item.MessageStatus}`;
+                var read = "";
+                if (isRead == "false") {
+                    isReadClass = "fa-envelope";
+                    read = "unread";
+                }
+                else {
+                    isReadClass = "fa-envelope-open";
+                    read = "read";
+                }
 
-                    var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
+                var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
-                    tablehtml += `<tr class="${read}">
+                tablehtml += `<tr class="${read}">
                                 <td class="check-mail">
                                     <input type="checkbox" class="i-checks" id="${item.MessageID}">
                                 </td>
@@ -34,24 +34,25 @@
                                 <td class=""><i class="fa fa-paperclip"></i></td>
                                 <td class="text-right mail-date">${date}</td>
                             </tr>`;
+            });
+            tablehtml += '</tbody></table>';
+            $(".mail-box").html(tablehtml);
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
                 });
-                tablehtml += '</tbody></table>';
-                $(".mail-box").html(tablehtml);
-                $(document).ready(function () {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
-                });
-                //GetContactCount();
-                GetContactListForDropDown();
-                GetContactListForMessageFolder();
-            }
-        });
+            });
+            GetContactListForDropDown();
+            GetContactListForMessageFolder();
+        }
     });
 };
 
+
 GetContactList();
+
+
 
 var isClickCheckboxToggle;
 
@@ -91,10 +92,10 @@ $(document).ready(function () {
             data: { selectedItems: selected },
             success: function (data) {
                 GetContactList();
-                if (!isClickCheckboxToggle) {          
+                if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
-                }              
+                }
             }
         });
     });
@@ -111,12 +112,12 @@ $(document).ready(function () {
             type: 'POST',
             url: '/Admin/AdminMessage/MarkUnreadMessages',
             data: { selectedItems: selected },
-            success: function (data) {                
+            success: function (data) {
                 GetContactList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
-                }               
+                }
             }
         });
     });
@@ -128,18 +129,69 @@ $(document).ready(function () {
         $('input:checked').each(function () {
             selected.push($(this).attr("id"));
         });
-
         $.ajax({
             type: 'POST',
             url: '/Admin/AdminMessage/DeleteMessages',
             data: { selectedItems: selected },
-            success: function (data) {              
+            success: function (data) {
                 GetContactList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
                 }
             }
-        });       
+        });
     });
 });
+
+function GetContactListForDropDown() {
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+            type: "GET",
+            success: function (data) {
+                let badgeHtml = '<i class="fa fa-envelope">';
+                if (data != '0') {
+                    badgeHtml += '<span class="label label-warning">' + data + '</span>';
+                }
+                badgeHtml += '</i>';
+                $("#UnreadMessagesCountBadge").html(badgeHtml);
+            }
+        });
+    });
+};
+
+function GetContactListForMessageFolder() {
+    $(document).ready(function () {      
+        $.ajax({
+            url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+            type: "GET",
+            success: function (data) {
+                let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
+                if (data != '0') {
+                    badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
+                }
+                badgeHtml += '</i>';
+                $("#messageFolderBadge").html(badgeHtml);
+            }
+        });
+
+        
+    });
+};
+
+function GetMessageDraftListForMessageFolder() {
+    $(document).ready(function () {
+        let badgeHtml = '<i class="fa fa-file-text-o"> Taslaklar </i>';
+        $.ajax({
+            url: '/Admin/AdminMessage/GetDraftMessagesCount',
+            type: "GET",
+            success: function (data) {
+                if (data != '0') {
+                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
+                }
+            }
+        });
+        $("#messageFolderDraftBadge").html(badgeHtml);
+    });
+};

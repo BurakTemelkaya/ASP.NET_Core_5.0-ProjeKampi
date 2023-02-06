@@ -167,16 +167,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> GetUnreadMessagesCount()
         {
             var value = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
-            var jsonValues = JsonConvert.SerializeObject(value);
-            return Ok(jsonValues);
+            return Json(value);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetDraftMessagesCount()
         {
             var value = await _messageDraftService.GetCountByUserNameAsync(User.Identity.Name);
-            var jsonValues = JsonConvert.SerializeObject(value);
-            return Ok(jsonValues);
+            return Json(value);
         }
     }
 }

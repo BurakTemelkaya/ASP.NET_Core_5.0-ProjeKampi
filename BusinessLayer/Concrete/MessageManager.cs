@@ -136,6 +136,11 @@ namespace BusinessLayer.Concrete
             var value = await _messageDal.GetReceivedMessageAsync(id, filter);
             if (value != null)
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+            if (!value.MessageStatus)
+            {
+                var user = await _userService.GetByIDAsync(value.ReceiverUserId.ToString());
+                await MarkUsReadAsync(value.MessageID, user.UserName);
+            }
             return value;
         }
 

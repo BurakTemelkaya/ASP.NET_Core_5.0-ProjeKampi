@@ -82,14 +82,14 @@
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
-        $(document).ready(function () {
-            function GetContactListForDropDown() {
 
+        function GetContactListForDropDown() {
+            $(document).ready(function () {
                 $.ajax({
                     url: '/Admin/AdminMessage/GetUnreadMessagesCount',
                     type: "GET",
                     success: function (data) {
-                        var badgeHtml = '<i class="fa fa-envelope">';
+                        let badgeHtml = '<i class="fa fa-envelope">';
                         if (data != '0') {
                             badgeHtml += '<span class="label label-warning">' + data + '</span>';
                         }
@@ -97,14 +97,18 @@
                         $("#UnreadMessagesCountBadge").html(badgeHtml);
                     }
                 });
-            };
+            });
+        };
 
-            function GetContactListForMessageFolder() {
+        GetContactListForDropDown();
+
+        function GetContactListForMessageFolder() {
+            $(document).ready(function () {
                 $.ajax({
                     url: '/Admin/AdminMessage/GetUnreadMessagesCount',
                     type: "GET",
                     success: function (data) {
-                        var badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
+                        let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
                         if (data != '0') {
                             badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
                         }
@@ -112,24 +116,29 @@
                         $("#messageFolderBadge").html(badgeHtml);
                     }
                 });
-            };
 
-            function GetMessageDraftListForMessageFolder() {
+
+            });
+        };
+
+        GetContactListForMessageFolder();
+
+        function GetMessageDraftListForMessageFolder() {
+            $(document).ready(function () {
                 $.ajax({
                     url: '/Admin/AdminMessage/GetDraftMessagesCount',
                     type: "GET",
                     success: function (data) {
-                        var badgeHtml = '<i class="fa fa-file-text-o"> Taslaklar </i>';
+                        let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
                         if (data != '0') {
                             badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
                         }
                         $("#messageFolderDraftBadge").html(badgeHtml);
                     }
                 });
-            };
-        });
 
-        GetContactListForDropDown();
+            });
+        };
 
         GetMessageDraftListForMessageFolder();
 
