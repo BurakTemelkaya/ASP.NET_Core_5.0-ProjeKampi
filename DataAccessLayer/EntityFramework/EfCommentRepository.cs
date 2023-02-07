@@ -13,9 +13,15 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfCommentRepository : GenericRepository<Comment>, ICommentDal
     {
+        private readonly DbContextOptions<Context> _context;
+        public EfCommentRepository(DbContextOptions<Context> context) : base(context)
+        {
+            _context = context;
+        }
+
         public async Task<List<Comment>> GetListWithCommentByBlogAsync()
         {
-            using var c = new Context();
+            using var c = new Context(_context);
             return await c.Comments.Include(x => x.Blog).ToListAsync();
         }
     }

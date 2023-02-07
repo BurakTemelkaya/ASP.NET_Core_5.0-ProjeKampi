@@ -14,16 +14,22 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfBlogRepository : GenericRepository<Blog>, IBlogDal
     {
+        private readonly DbContextOptions<Context> _context;
+        public EfBlogRepository(DbContextOptions<Context> context) : base(context)
+        {
+            _context=context;
+        }
+
         public async Task<List<Blog>> GetListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            using var c = new Context();
+            using var c = new Context(_context);
             return filter == null ?
             await c.Blogs.Include(x => x.Category).ToListAsync() :
             await c.Blogs.Include(x => x.Category).Where(filter).ToListAsync();
         }
         public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null)
         {
-            using var c = new Context();
+            using var c = new Context(_context);
             return filter == null ?
                 await c.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).ToListAsync() :
                 await c.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).Where(filter).ToListAsync();

@@ -81,15 +81,16 @@ namespace CoreDemo.Areas.Admin.Controllers
         public List<BlogModel2> GetBlogTitleList()
         {
             List<BlogModel2> blogModels = new List<BlogModel2>();
-            using (var c = new Context())
-            {
-                blogModels = c.Blogs.Select(x => new BlogModel2
-                {
-                    ID = x.BlogID,
-                    BlogName = x.BlogTitle
-                }).ToList();
-                return blogModels;
-            }
+            //using (var c = new Context())
+            //{
+            //    blogModels = c.Blogs.Select(x => new BlogModel2
+            //    {
+            //        ID = x.BlogID,
+            //        BlogName = x.BlogTitle
+            //    }).ToList();
+                
+            //}
+            return blogModels;
         }
         public IActionResult BlogTitleListExcel()
         {

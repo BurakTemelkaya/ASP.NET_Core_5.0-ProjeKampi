@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(Concrete.Context))]
     [Migration("20221006151537_Admin_Table_Removed")]
     partial class Admin_Table_Removed
     {

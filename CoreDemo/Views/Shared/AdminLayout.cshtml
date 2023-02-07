@@ -83,7 +83,7 @@
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script>
 
-        function GetContactListForDropDown() {
+        function GetMessageListForDropDown() {
             $(document).ready(function () {
                 $.ajax({
                     url: '/Admin/AdminMessage/GetUnreadMessagesCount',
@@ -100,9 +100,9 @@
             });
         };
 
-        GetContactListForDropDown();
+        GetMessageListForDropDown();
 
-        function GetContactListForMessageFolder() {
+        function GetMessageListForMessageFolder() {
             $(document).ready(function () {
                 $.ajax({
                     url: '/Admin/AdminMessage/GetUnreadMessagesCount',
@@ -121,7 +121,7 @@
             });
         };
 
-        GetContactListForMessageFolder();
+        GetMessageListForMessageFolder();
 
         function GetMessageDraftListForMessageFolder() {
             $(document).ready(function () {
@@ -136,7 +136,6 @@
                         $("#messageFolderDraftBadge").html(badgeHtml);
                     }
                 });
-
             });
         };
 

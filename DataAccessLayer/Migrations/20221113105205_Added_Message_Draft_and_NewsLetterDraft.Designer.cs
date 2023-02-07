@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(Concrete.Context))]
     [Migration("20221113105205_Added_Message_Draft_and_NewsLetterDraft")]
     partial class Added_Message_Draft_and_NewsLetterDraft
     {

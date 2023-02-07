@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(Concrete.Context))]
     [Migration("20221002171243_AppUser_Added_RegistrationTime")]
     partial class AppUser_Added_RegistrationTime
     {
