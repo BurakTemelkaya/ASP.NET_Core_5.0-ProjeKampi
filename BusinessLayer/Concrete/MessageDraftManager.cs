@@ -30,7 +30,7 @@ namespace BusinessLayer.Concrete
         public async Task<int> GetCountByUserNameAsync(string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
-            return await _messageDraftDal.GetCountAsync(x => x.UserId == user.Id);
+            return await GetCountAsync(x => x.UserId == user.Id);
         }
 
         public async Task<List<MessageDraft>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null)

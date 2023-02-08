@@ -43,8 +43,8 @@ namespace DataAccessLayer.Repositories
         {
             using var c = new Context(_context);
             return filter == null ?
-                await c.Set<T>().ToListAsync() ://null ise
-                await c.Set<T>().Where(filter).ToListAsync();//null değilse
+                await c.Set<T>().ToListAsync() :
+                await c.Set<T>().Where(filter).ToListAsync();
         }
 
         public async Task InsertAsync(T t)

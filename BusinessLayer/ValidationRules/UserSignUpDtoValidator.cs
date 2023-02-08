@@ -11,11 +11,6 @@ namespace BusinessLayer.ValidationRules
 {
     public class UserSignUpDtoValidator : AbstractValidator<UserSignUpDto>
     {
-        readonly IBusinessUserService _businessUserService;
-        public UserSignUpDtoValidator(IBusinessUserService businessUserService)
-        {
-            _businessUserService = businessUserService;
-        }
         public UserSignUpDtoValidator()
         {
             RuleFor(x => x.NameSurname).NotEmpty().NotNull().Length(3, 100);

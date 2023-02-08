@@ -8,6 +8,7 @@ using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Utilities.IoC;
+using DataAccessLayer;
 using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
@@ -39,7 +40,7 @@ namespace CoreDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options=>
-            options.UseSqlServer("server=BLACKMONSTER\\SQLEXPRESS;database=CoreBlogDb; integrated security=true;")
+            options.UseSqlServer("server=BLACKMONSTER\\SQLEXPRESS;database=CoreBlogDb; integrated security=true; MultipleActiveResultSets=true;")
             ,ServiceLifetime.Transient);
 
             services.AddIdentity<AppUser, AppRole>(x =>
@@ -91,17 +92,18 @@ namespace CoreDemo
             });
 
             services.AddSingleton(new WriterCity());
-
-            services.AddDependencyResolvers(new ICoreModule[] {
-               new CoreModule()
-            });
-
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
 
             services.AddAutoMapper(typeof(BusinessImages));
             services.AddAutoMapper(typeof(UIImage));
             services.AddAutoMapper(typeof(DBOImages));
+
+            services.IocCoreInstall();
+
+            services.IocDataAccessInstall();
+
+            services.IocBusinessInstall();
 
         }
 
