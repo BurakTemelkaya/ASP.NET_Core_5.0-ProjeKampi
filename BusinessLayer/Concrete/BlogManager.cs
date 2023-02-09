@@ -60,7 +60,7 @@ namespace BusinessLayer.Concrete
             {
                 value.BlogImage = null;
             }
-            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent,50);
+            value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return value;
         }
 
