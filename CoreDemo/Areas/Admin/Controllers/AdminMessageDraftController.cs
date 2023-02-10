@@ -2,6 +2,8 @@
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Areas.Admin.Controllers
@@ -21,6 +23,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             var values = await _messageDraftService.GetListAsync();
             return View(values);
         }
+
+        public async Task<IActionResult> GetMessageDraftList()
+        {
+            var values = await _messageDraftService.GetListAsync();
+            var jsonValues = JsonConvert.SerializeObject(values);
+            return Json(jsonValues);
+        }     
+
         [HttpPost]
         public async Task<IActionResult> Add(MessageDraft messageDraft)
         {
@@ -55,6 +65,19 @@ namespace CoreDemo.Areas.Admin.Controllers
                 await _messageDraftService.DeleteAsync(id, User.Identity.Name);
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMessageDrafts(List<string> selectedItems)
+        {
+            var result = await _messageDraftService.DeleteMessageDraftsAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

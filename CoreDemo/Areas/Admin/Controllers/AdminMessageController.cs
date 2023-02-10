@@ -36,24 +36,9 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetInboxMessages(string search = null)
+        public async Task<IActionResult> GetInboxMessages(string search)
         {
-            List<Message> values = new();
-            if (search != null)
-            {
-                values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID(),
-                    x => x.Subject.ToLower().Contains(search.ToLower()));
-                values = await values.OrderByDescending(x => x.MessageDate).ToListAsync();
-            }
-            if (values.Count == 0)
-            {
-                values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID());
-                values = await values.OrderByDescending(x => x.MessageDate).ToListAsync();
-                foreach (var item in values)
-                {
-                    item.SenderUser.SenderUserInfo = null;
-                }
-            }
+            var values = await _messageService.GetInboxWithMessageListAsync(await GetByUserIDAsync(),search);
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
         }
@@ -63,18 +48,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             List<Message> values = new();
             if (search != null)
             {
-                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserID(),
+                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserIDAsync(),
                 x => x.Subject.ToLower().Contains(search.ToLower()));
                 values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
             }
             if (values.Count == 0)
             {
-                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserID());
+                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserIDAsync());
                 values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
             }
             return View(values);
         }
-        public async Task<int> GetByUserID()
+        public async Task<int> GetByUserIDAsync()
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
             return user.Id;

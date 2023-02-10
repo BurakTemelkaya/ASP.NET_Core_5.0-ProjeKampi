@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,11 +24,25 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, string search = null, Expression<Func<Message, bool>> filter = null)
         {
-            var values = await _messageDal.GetInboxWithMessageListAsync(id, filter);
+            var values = new List<Message>();
+            if (search == null)
+            {
+                values = await _messageDal.GetInboxWithMessageListAsync(id);
+                values = values.OrderByDescending(x => x.MessageDate).ToList();
+            }
+            else
+            {
+                values = await _messageDal.GetInboxWithMessageListAsync(id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
+                values = values.OrderByDescending(x => x.MessageDate).ToList();
+            }
             foreach (var item in values)
+            {
+                item.SenderUser.SenderUserInfo = null;
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
+            }
+
             return values;
         }
 
@@ -135,12 +150,15 @@ namespace BusinessLayer.Concrete
         {
             var value = await _messageDal.GetReceivedMessageAsync(id, filter);
             if (value != null)
-                value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            if (!value.MessageStatus)
             {
-                var user = await _userService.GetByIDAsync(value.ReceiverUserId.ToString());
-                await MarkUsReadAsync(value.MessageID, user.UserName);
+                value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+                if (!value.MessageStatus)
+                {
+                    var user = await _userService.GetByIDAsync(value.ReceiverUserId.ToString());
+                    await MarkUsReadAsync(value.MessageID, user.UserName);
+                }
             }
+
             return value;
         }
 

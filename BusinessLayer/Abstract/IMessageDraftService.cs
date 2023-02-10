@@ -17,6 +17,7 @@ namespace BusinessLayer.Abstract
         Task<List<MessageDraft>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null);
         Task AddAsync(MessageDraft t, string userName);
         Task DeleteAsync(int id, string userName);
+        Task<bool> DeleteMessageDraftsAsync(List<string> ids, string userName);
         Task<MessageDraft> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null);
         Task<MessageDraft> GetByIDAsync(int id, string userName);
         Task UpdateAsync(MessageDraft t, string userName);

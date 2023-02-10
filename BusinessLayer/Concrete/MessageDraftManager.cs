@@ -80,6 +80,25 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        public async Task<bool> DeleteMessageDraftsAsync(List<string> ids, string userName)
+        {
+            if (ids == null || userName == null)
+            {
+                return false;
+            }
+
+            List<MessageDraft> messageDrafts = new();
+
+            foreach (var id in ids)
+            {
+                var message = await GetByIDAsync(Convert.ToInt32(id), userName);
+                DeleteFileManager.DeleteFile(message.Details);
+                messageDrafts.Add(message);
+            }
+            await _messageDraftDal.DeleteRangeAsync(messageDrafts);
+            return true;
+        }
+
         public async Task<MessageDraft> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);

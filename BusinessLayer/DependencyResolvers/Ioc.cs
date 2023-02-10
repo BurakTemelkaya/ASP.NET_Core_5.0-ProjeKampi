@@ -48,7 +48,6 @@ namespace BusinessLayer.DependencyResolvers
             services.AddTransient<IContactService, ContactManager>();
 
             services.AddTransient<IMessageDraftService, MessageDraftManager>();
-
             
 
             //validators ioc
