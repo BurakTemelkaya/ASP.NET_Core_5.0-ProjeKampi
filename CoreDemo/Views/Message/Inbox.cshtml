@@ -4,7 +4,60 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
-<h1>Gelen Kutusu</h1>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+                <form method="get" class="float-right mail-search">
+                    <div class="input-group">
+                        <input type="search" class="form-control form-control-sm" name="search" id="search" placeholder="Mail ara">
+                        <div class="input-group-btn">
+                            <a class="btn btn-sm btn-primary" onclick="">
+                                Ara
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <h2>
+                    Gelen Kutusu
+                </h2>
+
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <div class="btn-group float-right">
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+
+                    </div>
+                    <button type="button" class="btn btn-white btn-sm checkbox-toggle" id="select-all-checkbox" data-toggle="tooltip"
+                            data-placement="left" title="Hepsini Seç">
+                        <i class="checkbox-toggle fa fa-square-o"></i></>
+                    </button>
+
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnRefresh" onclick="" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i></button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnUnreadMessages" data-placement="top" title="Okunmadı Olarak İşaretle"><i class="fa fa-eye-slash"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
+
+                </div>
+            </div>
+            <div class="mail-box">
+                <table class="table table-hover table-mail"><tbody>
+                        <tr class="${read}">
+                            <td class="check-mail">
+                                <input type="checkbox" class="i-checks" id="${item.MessageID}">
+                            </td>
+                            <td class="mail-contact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">ad soyad</a></td>
+                            <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}"> <b> başlk </b> - detay</a></td>
+                            <td class="text-right mail-date">1.1.1.1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
 <table class="table table-bordered table-responsive">
     <thead>
