@@ -1,12 +1,24 @@
 ﻿
 function GetMessageList() {
     $.ajax({
-        url: '/Admin/AdminMessage/GetInboxMessages',
+        url: '/Message/GetMessageList',
         type: "GET",
         data: { search: $('#search').val() },
         success: function (data) {
             let jsonData = jQuery.parseJSON(data);
-            let tablehtml = '<table class="table table-hover table-mail"><tbody>';
+            let tablehtml = `<table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th scope="row">#</th>
+                    <th>Konu</th>
+                    <th>Gönderen</th>
+                    <th>İçerik</th>
+                    <th>Tarih</th>
+                    <th>Mesajı Aç</th>
+                    <th>Okundu/Okunmadı Olarak İşaretle</th>
+                </tr>
+                </thead >
+                <tbody>`;
             if (jsonData != "") {
                 $.each(jsonData, (index, item) => {
                     var message = `${item.Message}`;
@@ -15,41 +27,46 @@ function GetMessageList() {
                     }
                     var isRead = `${item.MessageStatus}`;
                     var read = "";
+                    var readHtml = "";
                     if (isRead == "false") {
-                        isReadClass = "fa-envelope";
-                        read = "unread";
+                        readHtml = "<p>Okundu olarak işaretle</p>";
+                        read = "bg-secondary";
                     }
                     else {
-                        isReadClass = "fa-envelope-open";
-                        read = "read";
+                        readHtml = "<p>Okunmadı olarak işaretle</p>";
+                        read = "";
                     }
 
                     var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
                     tablehtml += `<tr class="${read}">
-                                <td class="check-mail">
-                                    <input type="checkbox" class="i-checks" id="${item.MessageID}">
-                                </td>
-                                <td class="mail-contact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderUser.NameSurname}</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}"> <b> ${item.Subject} </b> - ${item.Details}</a></td>
-                                <td class="text-right mail-date">${date}</td>
-                            </tr>`;
-                });
-                
-                $(document).ready(function () {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
+                <td scope="row">
+                    <div class="form-check form-check-flat form-check-primary">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" id="${item.MessageID}">
+                        </label>
+                      </div>
+                </td>
+                <td>${item.Subject}</td>
+                <td>${item.SenderUser.NameSurname} </td>
+                <td>${item.Details}</td>
+                <td>${date}</td>
+                <td><a href="/Message/MessageDetails/${item.MessageID}" class="btn btn-primary">Mesajı Aç</a></td>
+                <td>
+                    <a href="/Message/MarkUsUnreadInbox/${item.MessageID}" class="btn btn-gradient-dark">
+                    ${readHtml}
+                    </a>
+                </td>
+            </tr>`;
                 });
             }
             else {
                 tablehtml += `<tr class="read">
-                                <td class="mail-contact">Aramanızla eşleşen mesajınız bulunmamaktadır.</td>
+                                <td>Aramanızla eşleşen mesajınız bulunmamaktadır.</td>
                             </tr>`;
             }
             tablehtml += '</tbody></table>';
-            $(".mail-box").html(tablehtml);
+            $("#mail-box").html(tablehtml);
             GetMessageListForDropDown();
             GetMessageListForMessageFolder();
         }
@@ -57,7 +74,7 @@ function GetMessageList() {
 };
 
 
-GetContactList();
+GetMessageList();
 
 var isClickCheckboxToggle;
 
@@ -96,7 +113,7 @@ $(document).ready(function () {
             url: '/Admin/AdminMessage/MarkReadMessages',
             data: { selectedItems: selected },
             success: function () {
-                GetContactList();
+                GetMessageList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();

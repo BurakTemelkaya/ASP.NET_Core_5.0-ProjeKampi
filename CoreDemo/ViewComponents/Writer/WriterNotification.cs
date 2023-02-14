@@ -22,7 +22,7 @@ namespace CoreDemo.ViewComponents.Writer
         {
             var values = await _notificationService.GetListAsync(x => x.NotificationStatus == true
             && x.NotificationStatus == true);
-            if (values.Count() > 3)
+            if (values.Count > 3)
             {
                 values = await values.Take(3).ToListAsync();
             }

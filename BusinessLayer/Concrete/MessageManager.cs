@@ -24,17 +24,18 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
-        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, string search = null, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
         {
+            var user = await _userService.FindByUserNameAsync(userName);
             var values = new List<Message>();
             if (search == null)
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(id);
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Id);
                 values = values.OrderByDescending(x => x.MessageDate).ToList();
             }
             else
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
                 values = values.OrderByDescending(x => x.MessageDate).ToList();
             }
             foreach (var item in values)
@@ -115,9 +116,10 @@ namespace BusinessLayer.Concrete
             return await GetCountAsync(x => x.ReceiverUserId == receiverUser.Id && !x.MessageStatus);
         }
 
-        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var values = await _messageDal.GetSendBoxWithMessageListAsync(id, filter);
+            var user = await _userService.FindByUserNameAsync(userName);
+            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Id, filter);
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
             return values;
@@ -146,15 +148,15 @@ namespace BusinessLayer.Concrete
             return false;
         }
 
-        public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var value = await _messageDal.GetReceivedMessageAsync(id, filter);
+            var user = await _userService.FindByUserNameAsync(userName);
+            var value = await _messageDal.GetReceivedMessageAsync(user.Id, filter);
             if (value != null)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
                 if (!value.MessageStatus)
                 {
-                    var user = await _userService.GetByIDAsync(value.ReceiverUserId.ToString());
                     await MarkUsReadAsync(value.MessageID, user.UserName);
                 }
             }
@@ -162,9 +164,10 @@ namespace BusinessLayer.Concrete
             return value;
         }
 
-        public async Task<Message> GetSendMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<Message> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var value = await _messageDal.GetSendedMessageAsync(id, filter);
+            var user = await _userService.FindByUserNameAsync(userName);
+            var value = await _messageDal.GetSendedMessageAsync(user.Id, filter);
             if (value != null)
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
             return value;

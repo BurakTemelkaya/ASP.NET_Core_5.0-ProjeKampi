@@ -38,7 +38,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetInboxMessages(string search)
         {
-            var values = await _messageService.GetInboxWithMessageListAsync(await GetByUserIDAsync(),search);
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name,search);
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
         }
@@ -48,13 +48,13 @@ namespace CoreDemo.Areas.Admin.Controllers
             List<Message> values = new();
             if (search != null)
             {
-                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserIDAsync(),
+                values = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name,
                 x => x.Subject.ToLower().Contains(search.ToLower()));
                 values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
             }
             if (values.Count == 0)
             {
-                values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserIDAsync());
+                values = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name);
                 values = await values.OrderByDescending(x => x.MessageID).ToListAsync();
             }
             return View(values);
@@ -90,16 +90,13 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Read(int id)
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var value = await _messageService.GetReceivedMessageAsync(user.Id, x => x.MessageID == id);
+            var value = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
             if (value == null)
-                value = await _messageService.GetSendMessageAsync(user.Id, x => x.MessageID == id);
+                value = await _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id);
             if (value == null)
-                return RedirectToAction("Inbox");
-            if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
                 return RedirectToAction("Inbox");
             if (value.MessageStatus)
-                await _messageService.MarkUsReadAsync(id, user.UserName);
+                await _messageService.MarkUsReadAsync(id, User.Identity.Name);
             return View(value);
         }
         public async Task<IActionResult> Delete(int id)

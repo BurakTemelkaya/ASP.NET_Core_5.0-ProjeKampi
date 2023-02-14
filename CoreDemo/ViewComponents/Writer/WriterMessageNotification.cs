@@ -24,12 +24,12 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            var values = await _messageService.GetInboxWithMessageListAsync(user.Id);
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
             if (values.Count > 3)
                 values = await values.TakeLast(3).ToListAsync();
             ViewBag.NewMessage = values.Where(x => x.MessageStatus).Count();
             return View(values);
+
         }
     }
 }

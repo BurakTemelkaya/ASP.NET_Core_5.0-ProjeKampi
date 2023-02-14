@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,38 +26,34 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Inbox()
         {
-            var values = await _messageService.GetInboxWithMessageListAsync(await GetByUserID());
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
             return View(values);
         }
         public async Task<IActionResult> SendBox()
         {
-            var values = await _messageService.GetSendBoxWithMessageListAsync(await GetByUserID());
+            var values = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name);
             return View(values);
         }
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            if (id != 0)
-            {
-                var value = await _messageService.GetReceivedMessageAsync(await GetByUserID(), x => x.MessageID == id);
-                if (value == null)
-                    value = await _messageService.GetSendMessageAsync(await GetByUserID(), x => x.MessageID == id);
-                if (value == null)
-                    return RedirectToAction("Inbox");
-                if (value.ReceiverUserId != user.Id && value.SenderUserId != user.Id)
-                    return RedirectToAction("Inbox");
-                if (value.MessageStatus)
-                    await _messageService.MarkChangedAsync(id, user.UserName);
-                return View(value);
-            }
-            return RedirectToAction("Inbox");
+            var value = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            if (value == null)
+                value = await _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            if (value == null)
+                return RedirectToAction("Inbox");
+            if (value.MessageStatus)
+                await _messageService.MarkUsReadAsync(id, User.Identity.Name);
+            return View(value);
         }
-        public async Task<int> GetByUserID()
+
+        public async Task<IActionResult> GetMessageList()
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            return user.Id;
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
+            var jsonValues = JsonConvert.SerializeObject(values);
+            return Json(jsonValues);
         }
+
         public async Task<JsonResult> OnUserNameGet(String term)
         {
             var values = new List<AppUser>();
@@ -67,22 +64,21 @@ namespace CoreDemo.Controllers
             var users = values.Select(x => x.UserName);
             return new JsonResult(users);
         }
+
         [HttpGet]
         public IActionResult SendMessage()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message, string Receiver)
         {
             await _messageService.AddMessageAsync(message, User.Identity.Name, Receiver);
             return RedirectToAction("Inbox");
         }
-        /// <summary>
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> MarkAsUnread(int id)
+
+        public async Task<IActionResult> MarkChangedAsync(int id)
         {
             bool isChanged = await _messageService.MarkChangedAsync(id, User.Identity.Name);
             if (isChanged)
@@ -90,11 +86,6 @@ namespace CoreDemo.Controllers
                 return Ok();
             }
             return NotFound();
-        }
-        public async Task<IActionResult> MarkUsUnreadInbox(int id)
-        {
-            await _messageService.MarkChangedAsync(id, User.Identity.Name);
-            return RedirectToAction("Inbox");
         }
     }
 }
