@@ -78,14 +78,15 @@ namespace CoreDemo.Controllers
             return RedirectToAction("Inbox");
         }
 
-        public async Task<IActionResult> MarkChangedAsync(int id)
+        [HttpPost]
+        public async Task<IActionResult> MarkChanged(int id)
         {
             bool isChanged = await _messageService.MarkChangedAsync(id, User.Identity.Name);
             if (isChanged)
             {
                 return Ok();
             }
-            return NotFound();
+            return BadRequest();
         }
     }
 }

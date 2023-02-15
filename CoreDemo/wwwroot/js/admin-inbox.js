@@ -1,32 +1,33 @@
 ﻿
 function GetMessageList() {
-    $.ajax({
-        url: '/Admin/AdminMessage/GetInboxMessages',
-        type: "GET",
-        data: { search: $('#search').val() },
-        success: function (data) {
-            let jsonData = jQuery.parseJSON(data);
-            let tablehtml = '<table class="table table-hover table-mail"><tbody>';
-            if (jsonData != "") {
-                $.each(jsonData, (index, item) => {
-                    var message = `${item.Message}`;
-                    if (message.length > 75) {
-                        message = message.substring(0, 75) + "...";
-                    }
-                    var isRead = `${item.MessageStatus}`;
-                    var read = "";
-                    if (isRead == "false") {
-                        isReadClass = "fa-envelope";
-                        read = "unread";
-                    }
-                    else {
-                        isReadClass = "fa-envelope-open";
-                        read = "read";
-                    }
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Admin/AdminMessage/GetInboxMessages',
+            type: "GET",
+            data: { search: $('#search').val() },
+            success: function (data) {
+                let jsonData = jQuery.parseJSON(data);
+                let tablehtml = '<table class="table table-hover table-mail"><tbody>';
+                if (jsonData != "") {
+                    $.each(jsonData, (index, item) => {
+                        var message = `${item.Message}`;
+                        if (message.length > 75) {
+                            message = message.substring(0, 75) + "...";
+                        }
+                        var isRead = `${item.MessageStatus}`;
+                        var read = "";
+                        if (isRead == "false") {
+                            isReadClass = "fa-envelope";
+                            read = "unread";
+                        }
+                        else {
+                            isReadClass = "fa-envelope-open";
+                            read = "read";
+                        }
 
-                    var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
+                        var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
-                    tablehtml += `<tr class="${read}">
+                        tablehtml += `<tr class="${read}">
                                 <td class="check-mail">
                                     <input type="checkbox" class="i-checks" id="${item.MessageID}">
                                 </td>
@@ -34,25 +35,26 @@ function GetMessageList() {
                                 <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}"> <b> ${item.Subject} </b> - ${item.Details}</a></td>
                                 <td class="text-right mail-date">${date}</td>
                             </tr>`;
-                });
-                
-                $(document).ready(function () {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
                     });
-                });
-            }
-            else {
-                tablehtml += `<tr class="read">
+
+                    $(document).ready(function () {
+                        $('.i-checks').iCheck({
+                            checkboxClass: 'icheckbox_square-green',
+                            radioClass: 'iradio_square-green',
+                        });
+                    });
+                }
+                else {
+                    tablehtml += `<tr class="read">
                                 <td class="mail-contact">Aramanızla eşleşen mesajınız bulunmamaktadır.</td>
                             </tr>`;
+                }
+                tablehtml += '</tbody></table>';
+                $(".mail-box").html(tablehtml);
+                GetMessageListForDropDown();
+                GetMessageListForMessageFolder();
             }
-            tablehtml += '</tbody></table>';
-            $(".mail-box").html(tablehtml);
-            GetMessageListForDropDown();
-            GetMessageListForMessageFolder();
-        }
+        });
     });
 };
 

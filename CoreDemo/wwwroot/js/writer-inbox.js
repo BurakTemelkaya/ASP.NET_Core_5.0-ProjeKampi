@@ -6,7 +6,7 @@ function GetMessageList() {
         data: { search: $('#search').val() },
         success: function (data) {
             let jsonData = jQuery.parseJSON(data);
-            let tablehtml = `<table class="table table-responsive">
+            let tablehtml = `<table class="table">
                 <thead>
                 <tr>
                     <th scope="row">#</th>
@@ -26,26 +26,28 @@ function GetMessageList() {
                         message = message.substring(0, 75) + "...";
                     }
                     var isRead = `${item.MessageStatus}`;
+                    var isReadClass = "";
                     var read = "";
-                    var readHtml = "";
+                    var isReadTitle = "";
                     if (isRead == "false") {
-                        readHtml = "<p>Okundu olarak işaretle</p>";
+                        isReadClass = "fa-envelope-open";
                         read = "bg-secondary";
+                        isReadTitle = "Okundu olarak işaretle";
                     }
                     else {
-                        readHtml = "<p>Okunmadı olarak işaretle</p>";
+                        isReadClass = "fa-envelope";
                         read = "";
+                        isReadTitle = "Okunmadı olarak işaretle";
                     }
 
                     var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
                     tablehtml += `<tr class="${read}">
                 <td scope="row">
-                    <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input" id="${item.MessageID}">
-                        </label>
-                      </div>
+                         <div class="form-check">
+                           <label class="form-check-label">
+                             <input type="checkbox" class="form-check-input mail-check" id="${item.MessageID}"> </label>
+                        </div>
                 </td>
                 <td>${item.Subject}</td>
                 <td>${item.SenderUser.NameSurname} </td>
@@ -53,9 +55,7 @@ function GetMessageList() {
                 <td>${date}</td>
                 <td><a href="/Message/MessageDetails/${item.MessageID}" class="btn btn-primary">Mesajı Aç</a></td>
                 <td>
-                    <a href="/Message/MarkUsUnreadInbox/${item.MessageID}" class="btn btn-gradient-dark">
-                    ${readHtml}
-                    </a>
+                <i class="fa ${isReadClass} pointer col-12" onclick="MarkChangedMessage(${item.MessageID})" title="${isReadTitle}"></i>
                 </td>
             </tr>`;
                 });
@@ -90,15 +90,13 @@ $('.checkbox-toggle').click(function () {
 });
 
 function AllCheckboxSetChecked() {
-    $('.i-checks').attr("checked", "true");
-    $('.icheckbox_square-green').addClass(' checked');
-    $('.checkbox-toggle .fa.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
+    $('.mail-check').prop('checked', true);
+    $('.mdi.mdi-checkbox-blank-outline').removeClass('mdi mdi-checkbox-blank-outline').addClass('mdi mdi-checkbox-marked');
 }
 
 function AllCheckboxSetUnchecked() {
-    $('.i-checks').prop('checked', "false");
-    $('.icheckbox_square-green.checked').removeClass('icheckbox_square-green checked').addClass('icheckbox_square-green');
-    $('.checkbox-toggle .fa.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
+    $('.mail-check').prop('checked', false);
+    $('.mdi.mdi-checkbox-marked').removeClass('mdi mdi-checkbox-marked').addClass('mdi mdi-checkbox-blank-outline');
 }
 
 $(document).ready(function () {
@@ -122,6 +120,17 @@ $(document).ready(function () {
         });
     });
 });
+
+function MarkChangedMessage(id) {
+    $.ajax({
+        type: 'POST',
+        url: '/Message/MarkChanged',
+        data: { id: id },
+        success: function (data) {
+            GetMessageList();
+        }
+    });
+};
 
 $(document).ready(function () {
     $("#btnUnreadMessages").click(function () {
@@ -197,8 +206,6 @@ function GetMessageListForMessageFolder() {
                 $("#messageFolderBadge").html(badgeHtml);
             }
         });
-
-
     });
 };
 
