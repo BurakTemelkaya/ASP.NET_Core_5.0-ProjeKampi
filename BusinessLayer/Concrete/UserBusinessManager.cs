@@ -89,7 +89,7 @@ namespace BusinessLayer.Concrete
             }
             if (user.ProfileImageFile != null)
             {
-                user.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile,
+                value.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile,
                     ImageFileManager.StaticProfileImageLocation());
             }
             else if (user.ImageUrl != null && user.ImageUrl != "")

@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
+<h1> Gelen Kutusu </h1>
+<br />
+
 <div class="m-t-md">
     <div class="btn-group float-right">
         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
@@ -21,62 +24,20 @@
     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnUnreadMessages" data-placement="top" title="Okunmadı Olarak İşaretle"><i class="fa fa-eye-slash"></i> </button>
     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
-    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
+    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash"></i> </button>
 
 </div>
 
 <div id="mail-box">
 </div>
 
-@*<table class="table table-responsive">
-    <thead>
-        <tr>
-            <th scope="row">#</th>
-            <th>Konu</th>
-            <th>Gönderen</th>
-            <th>İçerik</th>
-            <th>Tarih</th>
-            <th>Mesajı Aç</th>
-            <th>Okundu/Okunmadı Olarak İşaretle</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr class="bg-secondary">
-                <td scope="row">
-                    <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"> </label>
-                      </div>
-                </td>
-                <td>@item.Subject</td>
-                <td>@item.SenderUser.NameSurname</td>
-                <td>@item.Details...</td>
-                <td>@item.MessageDate</td>
-                <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
-                <td>
-
-                    <a href="/Message/MarkUsUnreadInbox/@item.MessageID" class="btn btn-gradient-dark">
-                        @if (item.MessageStatus)
-                        {
-                            <p>Okundu olarak işaretle</p>
-                        }
-                        else
-                        {
-                            <p>Okunmadı olarak işaretle</p>
-                        }
-                    </a>
-                </td>
-            </tr>
-        }
-
-    </tbody>
-</table>*@
 <br />
 <a href="/Message/SendMessage/" class="btn btn-primary">Yeni Mesaj Oluştur</a>
 @section ScriptSection{
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/writer-inbox.js"></script>
+    <script>
+        GetMessageList();
+    </script>
+    
 }
 

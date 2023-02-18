@@ -17,11 +17,13 @@ namespace CoreDemo.Controllers
     {
         private readonly IMessageService _messageService;
         private readonly IBusinessUserService _userService;
+        private readonly IMessageDraftService _messageDraftService;
 
-        public MessageController(IMessageService messageService, IBusinessUserService userService)
+        public MessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService)
         {
             _messageService = messageService;
             _userService = userService;
+            _messageDraftService = messageDraftService;
         }
 
         public async Task<IActionResult> Inbox()
@@ -47,22 +49,11 @@ namespace CoreDemo.Controllers
             return View(value);
         }
 
-        public async Task<IActionResult> GetMessageList()
+        public async Task<IActionResult> GetMessageList(int take = 0)
         {
-            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name,null,x=>take!=0);
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
-        }
-
-        public async Task<JsonResult> OnUserNameGet(String term)
-        {
-            var values = new List<AppUser>();
-            if (term == null)
-                values = await _userService.GetUserListAsync();
-            else
-                values = await _userService.GetUserListAsync(x => x.UserName.ToLower().Contains(term.ToLower()));
-            var users = values.Select(x => x.UserName);
-            return new JsonResult(users);
         }
 
         [HttpGet]
@@ -87,6 +78,59 @@ namespace CoreDemo.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkReadMessages(List<string> selectedItems)
+        {
+            var result = await _messageService.MarksUsReadAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkUnreadMessages(List<string> selectedItems)
+        {
+            var result = await _messageService.MarksUsUnreadAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMessages(List<string> selectedItems)
+        {
+            var result = await _messageService.DeleteMessagesAsync(selectedItems, User.Identity.Name);
+
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUnreadMessagesCount()
+        {
+            var value = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
+            return Json(value);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDraftMessagesCount()
+        {
+            var value = await _messageDraftService.GetCountByUserNameAsync(User.Identity.Name);
+            return Json(value);
         }
     }
 }

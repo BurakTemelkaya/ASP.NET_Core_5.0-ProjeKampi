@@ -94,25 +94,8 @@
     <link rel="stylesheet" src="~/js/jquery-validate/jquery.validate.min.js">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>   
-    <script>
-        $("#MarkUsUnread").click(function () {
-            let mail = {
-                id: $("#MessageID").val()
-            };
-            $.ajax({
-                type: "post",
-                url: "/Message/MarkAsUnread",
-                data: mail,
-                success: function (func) {
-                    alert("Mesaj okunmadı olarak işaretlendi.");
-                },
-                error: function (func) {
-                    alert("Bir hata oluştu lütfen tekrar deneyin.");
-                }
-            });
-        });
-        
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="~/js/writer-message-notification.js"></script>
     @RenderSection("ScriptSection",false);
 </body>
 </html>

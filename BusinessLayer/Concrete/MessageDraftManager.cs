@@ -91,9 +91,17 @@ namespace BusinessLayer.Concrete
 
             foreach (var id in ids)
             {
-                var message = await GetByIDAsync(Convert.ToInt32(id), userName);
-                DeleteFileManager.DeleteFile(message.Details);
-                messageDrafts.Add(message);
+                try
+                {
+                    var message = await GetByIDAsync(Convert.ToInt32(id), userName);
+                    messageDrafts.Add(message);
+                    DeleteFileManager.DeleteFile(message.Details);
+                }
+                catch
+                {
+                    continue;
+                }
+                
             }
             await _messageDraftDal.DeleteRangeAsync(messageDrafts);
             return true;

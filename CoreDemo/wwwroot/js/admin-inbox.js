@@ -154,7 +154,7 @@ $(document).ready(function () {
 function GetMessageListForDropDown() {
     $(document).ready(function () {
         $.ajax({
-            url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+            url: '/Message/GetUnreadMessagesCount',
             type: "GET",
             success: function (data) {
                 let badgeHtml = '<i class="fa fa-envelope">';
@@ -171,7 +171,7 @@ function GetMessageListForDropDown() {
 function GetMessageListForMessageFolder() {
     $(document).ready(function () {
         $.ajax({
-            url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+            url: '/Message/GetUnreadMessagesCount',
             type: "GET",
             success: function (data) {
                 let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
@@ -191,7 +191,7 @@ function GetMessageDraftListForMessageFolder() {
     $(document).ready(function () {
         let badgeHtml = '<i class="fa fa-file-text-o"> Taslaklar </i>';
         $.ajax({
-            url: '/Admin/AdminMessage/GetDraftMessagesCount',
+            url: '/Message/GetDraftMessagesCount',
             type: "GET",
             success: function (data) {
                 if (data != '0') {

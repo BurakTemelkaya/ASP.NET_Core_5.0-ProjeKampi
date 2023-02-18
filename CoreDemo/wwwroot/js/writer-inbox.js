@@ -1,12 +1,13 @@
 ﻿
 function GetMessageList() {
-    $.ajax({
-        url: '/Message/GetMessageList',
-        type: "GET",
-        data: { search: $('#search').val() },
-        success: function (data) {
-            let jsonData = jQuery.parseJSON(data);
-            let tablehtml = `<table class="table">
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Message/GetMessageList',
+            type: "GET",
+            data: { search: $('#search').val() },
+            success: function (data) {
+                let jsonData = jQuery.parseJSON(data);
+                let tablehtml = `<table class="table">
                 <thead>
                 <tr>
                     <th scope="row">#</th>
@@ -19,35 +20,34 @@ function GetMessageList() {
                 </tr>
                 </thead >
                 <tbody>`;
-            if (jsonData != "") {
-                $.each(jsonData, (index, item) => {
-                    var message = `${item.Message}`;
-                    if (message.length > 75) {
-                        message = message.substring(0, 75) + "...";
-                    }
-                    var isRead = `${item.MessageStatus}`;
-                    var isReadClass = "";
-                    var read = "";
-                    var isReadTitle = "";
-                    if (isRead == "false") {
-                        isReadClass = "fa-envelope-open";
-                        read = "bg-secondary";
-                        isReadTitle = "Okundu olarak işaretle";
-                    }
-                    else {
-                        isReadClass = "fa-envelope";
-                        read = "";
-                        isReadTitle = "Okunmadı olarak işaretle";
-                    }
+                if (jsonData != "") {
+                    $.each(jsonData, (index, item) => {
+                        var message = `${item.Message}`;
+                        if (message.length > 75) {
+                            message = message.substring(0, 75) + "...";
+                        }
+                        var isRead = `${item.MessageStatus}`;
+                        var isReadClass = "";
+                        var read = "";
+                        var isReadTitle = "";
+                        if (isRead == "false") {
+                            isReadClass = "fa-envelope-open";
+                            read = "bg-secondary";
+                            isReadTitle = "Okundu olarak işaretle";
+                        }
+                        else {
+                            isReadClass = "fa-envelope";
+                            read = "";
+                            isReadTitle = "Okunmadı olarak işaretle";
+                        }
 
-                    var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
+                        var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
-                    tablehtml += `<tr class="${read}">
+                        tablehtml += `<tr class="${read}">
                 <td scope="row">
-                         <div class="form-check">
-                           <label class="form-check-label">
-                             <input type="checkbox" class="form-check-input mail-check" id="${item.MessageID}"> </label>
-                        </div>
+                <div class="float-right">
+                        <input type="checkbox" class="form-check-input mail-check" id="${item.MessageID}"> </label>     
+                <div/>
                 </td>
                 <td>${item.Subject}</td>
                 <td>${item.SenderUser.NameSurname} </td>
@@ -58,23 +58,21 @@ function GetMessageList() {
                 <i class="fa ${isReadClass} pointer col-12" onclick="MarkChangedMessage(${item.MessageID})" title="${isReadTitle}"></i>
                 </td>
             </tr>`;
-                });
-            }
-            else {
-                tablehtml += `<tr class="read">
+                    });
+                }
+                else {
+                    tablehtml += `<tr class="read">
                                 <td>Aramanızla eşleşen mesajınız bulunmamaktadır.</td>
                             </tr>`;
+                }
+                tablehtml += '</tbody></table>';
+                $("#mail-box").html(tablehtml);
+                GetMessageListForDropDown();
+                GetMessageListForMessageFolder();
             }
-            tablehtml += '</tbody></table>';
-            $("#mail-box").html(tablehtml);
-            GetMessageListForDropDown();
-            GetMessageListForMessageFolder();
-        }
+        });
     });
 };
-
-
-GetMessageList();
 
 var isClickCheckboxToggle;
 
@@ -108,7 +106,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/Admin/AdminMessage/MarkReadMessages',
+            url: '/Message/MarkReadMessages',
             data: { selectedItems: selected },
             success: function () {
                 GetMessageList();
@@ -138,13 +136,14 @@ $(document).ready(function () {
         $('input:checked').each(function () {
             selected.push($(this).attr("id"));
         });
+        console.log(selected);
 
         $.ajax({
             type: 'POST',
-            url: '/Admin/AdminMessage/MarkUnreadMessages',
+            url: '/Message/MarkUnreadMessages',
             data: { selectedItems: selected },
             success: function () {
-                GetContactList();
+                GetMessageList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
@@ -162,7 +161,7 @@ $(document).ready(function () {
         });
         $.ajax({
             type: 'POST',
-            url: '/Admin/AdminMessage/DeleteMessages',
+            url: '/Message/DeleteMessages',
             data: { selectedItems: selected },
             success: function () {
                 GetContactList();
@@ -178,7 +177,7 @@ $(document).ready(function () {
 function GetMessageListForDropDown() {
     $(document).ready(function () {
         $.ajax({
-            url: '/Admin/AdminMessage/GetUnreadMessagesCount',
+            url: '/Message/GetUnreadMessagesCount',
             type: "GET",
             success: function (data) {
                 let badgeHtml = '<i class="fa fa-envelope">';

@@ -247,18 +247,26 @@ namespace BusinessLayer.Concrete
             {
                 if (Convert.ToInt32(id) != 0)
                 {
-                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-                    var activeUser = await _userService.FindByUserNameAsync(userName);
+                    try
+                    {
+                        var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
+                        var activeUser = await _userService.FindByUserNameAsync(userName);
 
-                    if (activeUser.UserName != userName)
+                        if (activeUser.UserName != userName)
+                        {
+                            return false;
+                        }
+
+                        if (!message.MessageStatus)
+                            message.MessageStatus = true;
+
+                        messages.Add(message);
+                    }
+                    catch
                     {
                         return false;
                     }
-
-                    if (!message.MessageStatus)
-                        message.MessageStatus = true;
-
-                    messages.Add(message);
+                    
                 }
                 else
                 {
@@ -277,18 +285,25 @@ namespace BusinessLayer.Concrete
             {
                 if (Convert.ToInt32(id) != 0)
                 {
-                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-                    var activeUser = await _userService.FindByUserNameAsync(userName);
+                    try
+                    {
+                        var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
+                        var activeUser = await _userService.FindByUserNameAsync(userName);
 
-                    if (activeUser.UserName != userName)
+                        if (activeUser.UserName != userName)
+                        {
+                            return false;
+                        }
+
+                        if (message.MessageStatus)
+                            message.MessageStatus = false;
+
+                        messages.Add(message);
+                    }
+                    catch
                     {
                         return false;
                     }
-
-                    if (message.MessageStatus)
-                        message.MessageStatus = false;
-
-                    messages.Add(message);
                 }
                 else
                 {
