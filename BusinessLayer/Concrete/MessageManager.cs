@@ -69,7 +69,6 @@ namespace BusinessLayer.Concrete
             message.ReceiverUserId = receiverUser.Id;
             message.Details = await TextFileManager.TextFileAddAsync(message.Details, TextFileManager.GetMessageContentFileLocation());
             message.MessageDate = DateTime.Now;
-            message.MessageStatus = true;
             await _messageDal.InsertAsync(message);
         }
 

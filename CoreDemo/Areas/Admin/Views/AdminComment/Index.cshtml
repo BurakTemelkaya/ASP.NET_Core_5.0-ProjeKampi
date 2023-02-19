@@ -68,7 +68,7 @@
                                 <td>@item.Blog.BlogTitle</td>
                                 <td class="text-navy"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
                                 <td>@item.CommentDate.ToShortDateString()</td>
-                                <td><a href="/Admin/AdminComment/DeleteComment/@item.CommentID" class="btn btn-outline-danger">Sil</a></td>
+                                <td><a href="/Admin/AdminComment/DeleteComment/@item.CommentID" class="btn btn-outline-danger Sil">Sil</a></td>
                                 <td><a href="/Admin/AdminComment/EditComment/@item.CommentID" class="btn btn-outline-success">Düzenle</a></td>
                             </tr>
                         }
@@ -90,4 +90,32 @@ new PagedListRenderOptions
     PageClasses=new[] {"page-link"},
     ActiveLiElementClass="active"
 })
+@section ScriptSection{
+    <script>
+        $('.Sil').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: "Yorumu silmek istediğinize emin misiniz?",
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        'Seçilen Mesaj Silindi .',
+                        'success'
+                    )
+                }
+            })
+        });
+    </script>
+}
 

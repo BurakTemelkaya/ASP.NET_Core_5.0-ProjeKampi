@@ -59,7 +59,7 @@ function GetMessageList() {
 };
 
 
-GetContactList();
+GetMessageList();
 
 var isClickCheckboxToggle;
 
@@ -98,7 +98,7 @@ $(document).ready(function () {
             url: '/Admin/AdminMessage/MarkReadMessages',
             data: { selectedItems: selected },
             success: function () {
-                GetContactList();
+                GetMessageList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
@@ -120,7 +120,7 @@ $(document).ready(function () {
             url: '/Admin/AdminMessage/MarkUnreadMessages',
             data: { selectedItems: selected },
             success: function () {
-                GetContactList();
+                GetMessageList();
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
@@ -132,22 +132,36 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $("#btnDeleteMessages").click(function () {
-        var selected = [];
-        $('input:checked').each(function () {
-            selected.push($(this).attr("id"));
-        });
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/AdminMessage/DeleteMessages',
-            data: { selectedItems: selected },
-            success: function () {
-                GetContactList();
-                if (!isClickCheckboxToggle) {
-                    AllCheckboxSetUnchecked();
-                    $('#select-all-checkbox').click();
-                }
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Seçilen mesajları silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var selected = [];
+                $('input:checked').each(function () {
+                    selected.push($(this).attr("id"));
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/AdminMessage/DeleteMessages',
+                    data: { selectedItems: selected },
+                    success: function () {
+                        GetMessageList();
+                        if (!isClickCheckboxToggle) {
+                            AllCheckboxSetUnchecked();
+                            $('#select-all-checkbox').click();
+                        }
+                    }
+                });
             }
-        });
+        })       
     });
 });
 

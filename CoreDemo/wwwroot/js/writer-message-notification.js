@@ -1,4 +1,4 @@
-﻿function WriterMessageNotification{
+﻿function WriterMessageNotification(){
     $(document).ready(function () {
         $.ajax({
             url: '/Message/GetMessageList',
@@ -16,11 +16,11 @@
                         var isRead = `${item.MessageStatus}`;
                         var readTitle = "";
                         if (isRead == "false") {
-                            readTitle = "okunmadı";
+                            readTitle = "okunmadı";     
                             readClass = "count-symbol";
                         }
                         else {
-                            readTitle = "okundu";
+                            readTitle = "okundu";                           
                         }
 
                         var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');

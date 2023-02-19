@@ -4,8 +4,13 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
+@section HeaderSection{
+
+}
+
 <h1> Gelen Kutusu </h1>
 <br />
+
 
 <div class="m-t-md">
     <div class="btn-group float-right">
@@ -23,7 +28,6 @@
     </button>
     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadMessages" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnUnreadMessages" data-placement="top" title="Okunmadı Olarak İşaretle"><i class="fa fa-eye-slash"></i> </button>
-    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
     <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteMessages" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash"></i> </button>
 
 </div>
@@ -38,6 +42,5 @@
     <script>
         GetMessageList();
     </script>
-    
 }
 

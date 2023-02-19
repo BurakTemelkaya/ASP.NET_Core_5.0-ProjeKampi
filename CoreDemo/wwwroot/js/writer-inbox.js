@@ -1,5 +1,5 @@
 ﻿
-function GetMessageList() {
+async function GetMessageList() {
     $(document).ready(function () {
         $.ajax({
             url: '/Message/GetMessageList',
@@ -31,12 +31,12 @@ function GetMessageList() {
                         var read = "";
                         var isReadTitle = "";
                         if (isRead == "false") {
-                            isReadClass = "fa-envelope-open";
+                            isReadClass = "fa-envelope-open text-white";
                             read = "bg-secondary";
                             isReadTitle = "Okundu olarak işaretle";
                         }
                         else {
-                            isReadClass = "fa-envelope";
+                            isReadClass = "fa-envelope text-dark";
                             read = "";
                             isReadTitle = "Okunmadı olarak işaretle";
                         }
@@ -46,9 +46,9 @@ function GetMessageList() {
                         tablehtml += `<tr class="${read}">
                 <td scope="row">
                 <div class="float-right">
-                        <input type="checkbox" class="form-check-input mail-check" id="${item.MessageID}"> </label>     
-                <div/>
-                </td>
+                      <input type="checkbox" class="mail-check form-check-input" id="${item.MessageID}"> 
+                </div>
+                </td>              
                 <td>${item.Subject}</td>
                 <td>${item.SenderUser.NameSurname} </td>
                 <td>${item.Details}</td>
@@ -71,6 +71,7 @@ function GetMessageList() {
                 GetMessageListForMessageFolder();
             }
         });
+
     });
 };
 
@@ -114,6 +115,7 @@ $(document).ready(function () {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
                 }
+                WriterMessageNotification();
             }
         });
     });
@@ -126,6 +128,7 @@ function MarkChangedMessage(id) {
         data: { id: id },
         success: function (data) {
             GetMessageList();
+            WriterMessageNotification();
         }
     });
 };
@@ -136,7 +139,6 @@ $(document).ready(function () {
         $('input:checked').each(function () {
             selected.push($(this).attr("id"));
         });
-        console.log(selected);
 
         $.ajax({
             type: 'POST',
@@ -147,6 +149,7 @@ $(document).ready(function () {
                 if (!isClickCheckboxToggle) {
                     AllCheckboxSetUnchecked();
                     $('#select-all-checkbox').click();
+                    WriterMessageNotification();
                 }
             }
         });
@@ -155,21 +158,36 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $("#btnDeleteMessages").click(function () {
-        var selected = [];
-        $('input:checked').each(function () {
-            selected.push($(this).attr("id"));
-        });
-        $.ajax({
-            type: 'POST',
-            url: '/Message/DeleteMessages',
-            data: { selectedItems: selected },
-            success: function () {
-                GetContactList();
-                if (!isClickCheckboxToggle) {
-                    AllCheckboxSetUnchecked();
-                    $('#select-all-checkbox').click();
-                }
-            }
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Seçilen mesajları silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var selected = [];
+                $('input:checked').each(function () {
+                    selected.push($(this).attr("id"));
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '/Message/DeleteMessages',
+                    data: { selectedItems: selected },
+                    success: function () {
+                        GetMessageList();
+                        if (!isClickCheckboxToggle) {
+                            AllCheckboxSetUnchecked();
+                            $('#select-all-checkbox').click();
+                            WriterMessageNotification();
+                        }
+                    }
+                });
+            };
         });
     });
 });

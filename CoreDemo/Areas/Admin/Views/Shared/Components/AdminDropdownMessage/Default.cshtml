@@ -36,11 +36,11 @@
                     <a class="dropdown-item float-left" href="/Admin/AdminMessage/Read/@item.MessageID">
                         <img alt="image" class="rounded-circle" src="@item.SenderUser.ImageUrl">
                     </a>
-                    <div class="media-body">
-                        <small class="float-right">@sure</small>
-                        <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
-                        <small class="text-muted">@item.MessageDate</small>
-                    </div>
+                    <div class="media-body" onclick='location.href="/Admin/AdminMessage/Read/@item.MessageID"'>
+                            <small class="float-right">@sure</small>
+                            <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
+                            <small class="text-muted">@item.MessageDate</small>
+                        </div>                  
                 </div>
             </li>
         }
