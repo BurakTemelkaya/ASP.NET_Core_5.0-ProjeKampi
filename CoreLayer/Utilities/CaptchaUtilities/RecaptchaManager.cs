@@ -25,13 +25,26 @@ namespace CoreLayer.Utilities.CaptchaUtilities
 
         private IConfiguration Configuration { get; }
 
-        public async Task<bool> CheckCaptchaValidate(HttpContext httpContext)
+        public async Task<bool> CheckCaptchaValidate(HttpContext httpContext, string captcharesponse = null)
         {
+            var responseRecaptchaValue = "";
+            if (captcharesponse == null)
+            {
+                responseRecaptchaValue = httpContext.Request.Form["g-recaptcha-response"];
+            }
+            else if (captcharesponse != null)
+            {
+                responseRecaptchaValue = captcharesponse;
+            }
+            else
+            {
+                return false;
+            }
             var postData = new List<KeyValuePair<string, string>>()
             {
                 new KeyValuePair<string, string>("secret", GetSecretKey()),
                 new KeyValuePair<string, string>("remoteip", httpContext.Connection.RemoteIpAddress.ToString()),
-                new KeyValuePair<string, string>("response", httpContext.Request.Form["g-recaptcha-response"])
+                new KeyValuePair<string, string>("response", responseRecaptchaValue)
             };
 
             var client = new HttpClient();
@@ -42,18 +55,19 @@ namespace CoreLayer.Utilities.CaptchaUtilities
             return (bool)o["success"];
         }
 
-        public async Task<string> RecaptchaControl(HttpContext httpContext)
+        public async Task<string> RecaptchaControl(HttpContext httpContext, string captcharesponse = null)
         {
-            bool verified = await CheckCaptchaValidate(httpContext);
+            string image = CheckCaptchaImage(httpContext);
+            if (string.IsNullOrEmpty(image) && captcharesponse == null)
+            {
+                return "Lütfen doğrulamayı yapın.";
+            }
+            bool verified = await CheckCaptchaValidate(httpContext, captcharesponse);
             if (!verified)
             {
                 return "Recaptcha doğrulamasını yanlış yaptınız.";
             }
-            string image = CheckCaptchaImage(httpContext);
-            if (string.IsNullOrEmpty(image))
-            {
-                return "Lütfen doğrulamayı yapın.";
-            }
+            
             return null;
         }
         public string CheckCaptchaImage(HttpContext httpContext)

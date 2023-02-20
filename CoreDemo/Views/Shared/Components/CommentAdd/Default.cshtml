@@ -8,7 +8,6 @@
             <input class="form-control" type="text" id="CommentTitle" placeholder="Konu" required>
 
             <textarea class="form-control" id="CommentContent" placeholder="Mesajın..." required></textarea>
-
         </div>
         <div class="container-wrapper">
             <div class="container d-flex align-items-center justify-content-center">
@@ -51,10 +50,21 @@
                 </div>
             </div>
             <br>
+
+            <div class="row justify-content-center">
+                <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
+            </div>
+
+            <br />
+
             <div class="row justify-content-center">
                 <button type="submit" id="btnSendComment" class="btn btn-primary submit">Yorum Yap</button>
             </div>
+
+            
         </div>
+
+        
 
     </div>
 

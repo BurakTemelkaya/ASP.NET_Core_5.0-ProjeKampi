@@ -52,6 +52,7 @@
     <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
           rel="stylesheet">
     <link href="~/css/recaptcha.css" rel="stylesheet" />
+    @RenderSection("HeaderSection",false);
 </head>
 
 <body>
@@ -122,97 +123,7 @@
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script type="text/javascript">
-        $("#btnSubscribe").click(function () {
-            let mail = {
-                Mail: $("#txtEmail").val()
-            };
-            $.ajax({
-                type: "post",
-                url: "/NewsLetter/SubscribeMail",
-                data: mail,
-                success: function (func) {
-                    alert("Mail bültenimize abone oldunuz, teşekkürler.");
-                },
-                error: function (func) {
-                    if (mail.Mail == "") {
-                        alert("Lütfen mail alanını boş bırakmayınız.");
-                    }
-                    else {
-                        alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
-                    }
-                }
-            });
-        });        
-        $("#btnFooterSubscribe").click(function () {
-            let mail = {
-                Mail: $("#txtFooterEmail").val()
-            };
-            $.ajax({
-                type: "post",
-                url: "/NewsLetter/SubscribeMail",
-                data: mail,
-                success: function (func) {
-                    alert("Mail bültenimize abone oldunuz, teşekkürler.");
-                },
-                error: function (func) {
-                    if (mail.Mail == "") {
-                        alert("Lütfen mail alanını boş bırakmayınız.");
-                    }
-                    else {
-                        alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
-                    }
-                }
-            });
-        });
-        $("#btnSendComment").click(function () {
-            let BlogScore = 0;
-            if (document.getElementById("5-star-rating").checked == true) {
-                BlogScore = 5;
-            }
-            else if (document.getElementById("4-star-rating").checked == true) {
-                BlogScore = 4;
-            }
-            else if (document.getElementById("3-star-rating").checked == true) {
-                BlogScore = 3;
-            }
-            else if (document.getElementById("2-star-rating").checked == true) {
-                BlogScore = 2;
-            }
-            else if (document.getElementById("1-star-rating").checked == true) {
-                BlogScore = 1;
-            }
-            let Comment = {
-                BlogId: $("#blogId").val(),
-                CommentUserName: $("#CommentUserName").val(),
-                CommentTitle: $("#CommentTitle").val(),
-                CommentContent: $("#CommentContent").val(),
-                BlogScore: BlogScore
-            };
-            $.ajax({
-                type: "post",
-                url: "/Comment/PartialAddComment",
-                data: Comment,
-                success: function (func) {
-                    alert("Yorumunuz başarıyla gönderildi teşekkürler..");
-                },
-                error: function (func) {
-                    if (Comment.CommentUserName == "") {
-                        alert("Lütfen isim alanını boş bırakmayınız.");
-                    }
-                    else if (Comment.CommentTitle == "") {
-                        alert("Lütfen içerik alanını boş bırakmayınız.")
-                    }
-                    else if (Comment.CommentContent == "") {
-                        alert("Lütfen başlık alanını boş bırakmayınız.");
-                    }
-                    else {
-                        alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
-                    }
-                }
-            });
-        });       
-    </script>
-
+    <script src="~/js/newsletter-subscribe.js"></script>
+    @RenderSection("ScriptSection",false);
 </body>
 </html>

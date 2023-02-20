@@ -2,6 +2,9 @@
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
+@section HeaderSection{
+    <link href="~/css/recaptcha.css" rel="stylesheet" />
+}
 <!--//banner-->
 <section class="banner-bottom">
     <!--/blog-->
@@ -39,7 +42,7 @@
                         <a href="#">@Model.BlogTitle.ToString() </a>
                     </h3>
                     <article>
-                    @Html.Raw(Model.BlogContent)
+                        @Html.Raw(Model.BlogContent)
                     </article>
                     <p>
                         Yazar Adı : <b>@ViewBag.WriterName</b>
@@ -63,7 +66,7 @@
 
                     @await Component.InvokeAsync("CategoryList")
 
-                    @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId,blogId=ViewBag.i })
+                    @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId, blogId=ViewBag.i })
 
                     @await Component.InvokeAsync("LastBlogs")
                 </div>
@@ -73,4 +76,11 @@
         </div>
     </div>
 </section>
+@section ScriptSection{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="~/js/blog-comment-add.js"></script>
+    <script>
+        blogId=@Model.BlogID;
+    </script>
+}
 

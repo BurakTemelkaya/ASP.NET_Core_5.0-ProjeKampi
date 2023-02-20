@@ -22,6 +22,8 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(CommentValidator))]
         public async Task TAddAsync(Comment comment)
         {
+            comment.CommentDate= DateTime.Now;
+            comment.CommentStatus = true;
             await _commentDal.InsertAsync(comment);
         }
 

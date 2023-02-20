@@ -9,8 +9,8 @@ namespace CoreLayer.Utilities.CaptchaUtilities
 {
     public interface ICaptchaService
     {
-        Task<bool> CheckCaptchaValidate(HttpContext httpContext);
-        Task<string> RecaptchaControl(HttpContext httpContext);
+        Task<bool> CheckCaptchaValidate(HttpContext httpContext, string captcharesponse = null);
+        Task<string> RecaptchaControl(HttpContext httpContext, string captcharesponse = null);
         public string GetSiteKey();
         public string GetSecretKey();
     }
