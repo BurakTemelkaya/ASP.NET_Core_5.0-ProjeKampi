@@ -3,6 +3,11 @@
     ViewData["Title"] = "SendMessage";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
+
+@section HeaderSection{
+    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+}
+
 <h1>Mesaj Gönder</h1>
 @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post))
 {
@@ -17,25 +22,15 @@
     <br />
     <br />
     @Html.Label("Mesajınız")
-    @Html.TextAreaFor(x => x.Details, 4, 10, new { @class = "form-control" })
+    <textarea asp-for="Details" id="Details" name="Details"></textarea>
     @Html.ValidationMessageFor(x => x.Details, "", new { @class = "text-danger" })
     <br />
     <br />
     <div asp-validation-summary="All" class="text-danger"></div>
     <button class="btn btn-info">Mesajı Gönder</button>
 }
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#Details').summernote({
-            height: 300
-        });
-    });
-
-    $(function () {
-        $("#Receiver").autocomplete({
-            source: "/Message/OnUserNameGet/",
-            minLengt: 3
-        });
-    });       
-</script>
+@section ScriptSection{
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/js/writer-send-message.js"></script>
+}
 

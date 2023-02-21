@@ -41,7 +41,7 @@ namespace CoreDemo.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Recaptcha error.");
             }
         }
         public async Task<PartialViewResult> CommentListByBlog(int id)

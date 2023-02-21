@@ -85,90 +85,15 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/js/admin-folders.js"></script>
+    
     <script>
-
-        function GetMessageListForDropDown() {
-            $(document).ready(function () {
-                $.ajax({
-                    url: '/Admin/AdminMessage/GetUnreadMessagesCount',
-                    type: "GET",
-                    success: function (data) {
-                        let badgeHtml = '<i class="fa fa-envelope">';
-                        if (data != '0') {
-                            badgeHtml += '<span class="label label-warning">' + data + '</span>';
-                        }
-                        badgeHtml += '</i>';
-                        $("#UnreadMessagesCountBadge").html(badgeHtml);
-                    }
-                });
-            });
-        };
-
-        GetMessageListForDropDown();
-
-        function GetMessageListForMessageFolder() {
-            $(document).ready(function () {
-                $.ajax({
-                    url: '/Admin/AdminMessage/GetUnreadMessagesCount',
-                    type: "GET",
-                    success: function (data) {
-                        let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
-                        if (data != '0') {
-                            badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
-                        }
-                        badgeHtml += '</i>';
-                        $("#messageFolderBadge").html(badgeHtml);
-                    }
-                });
-
-
-            });
-        };
-
-        GetMessageListForMessageFolder();
-
-        function GetMessageDraftListForMessageFolder() {
-            $(document).ready(function () {
-                $.ajax({
-                    url: '/Admin/AdminMessage/GetDraftMessagesCount',
-                    type: "GET",
-                    success: function (data) {
-                        let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
-                        if (data != '0') {
-                            badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
-                        }
-                        $("#messageFolderDraftBadge").html(badgeHtml);
-                    }
-                });
-            });
-        };
-
-        GetMessageDraftListForMessageFolder();
-
         $(document).ready(function () {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
         });
-        $(document).ready(function () {
-            $('#BlogContent').summernote({
-                height: 300
-            });
-        });
-        $(document).ready(function () {
-            $('#Content').summernote({
-                height: 300
-            });
-        });
-        $(document).ready(function () {
-            $('#BanMessage').summernote({
-                height: 300
-            });
-        });
-
-
     </script>
 
     @RenderSection("ScriptSection",false);

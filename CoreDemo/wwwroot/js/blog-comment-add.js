@@ -33,21 +33,35 @@ $("#btnSendComment").click(function () {
             comment: Comment, blogId: blogId, captcharesponse: captcharesponse
         },
         success: function () {
-            alert("Yorumunuz başarıyla gönderildi teşekkürler..");            
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı !',
+                text: "Yorumunuz başarıyla gönderildi, teşekkürler.."
+            })       
         },
         error: function (func) {
+            var text = "";
+            console.log(func);
             if (Comment.CommentUserName == "") {
-                alert("Lütfen isim alanını boş bırakmayınız.");
+                text = 'Lütfen isim alanını boş bırakmayınız.';
             }
             else if (Comment.CommentTitle == "") {
-                alert("Lütfen içerik alanını boş bırakmayınız.")
+                text = 'Lütfen başlık alanını boş bırakmayınız';
             }
             else if (Comment.CommentContent == "") {
-                alert("Lütfen başlık alanını boş bırakmayınız.");
+                text = 'Lütfen içerik alanını boş bırakmayınız.';
+            }
+            else if (func.responseText =="Recaptcha error.") {
+                text = 'Lütfen doğrulamayı yapınız.';
             }
             else {
-                alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                text = 'Bir hata oluştu lütfen daha sonra tekrar deneyiniz.';     
             }
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata !',
+                text: text
+            })
         }
     });
     grecaptcha.reset();

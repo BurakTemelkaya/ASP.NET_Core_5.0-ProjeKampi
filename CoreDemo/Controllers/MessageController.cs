@@ -132,5 +132,16 @@ namespace CoreDemo.Controllers
             var value = await _messageDraftService.GetCountByUserNameAsync(User.Identity.Name);
             return Json(value);
         }
+
+        public async Task<JsonResult> OnUserNameGet(String term)
+        {
+            var values = new List<AppUser>();
+            if (term == null)
+                values = await _userService.GetUserListAsync();
+            else
+                values = await _userService.GetUserListAsync(x => x.UserName.ToLower().Contains(term.ToLower()));
+            var users = values.Select(x => x.UserName);
+            return new JsonResult(users);
+        }
     }
 }

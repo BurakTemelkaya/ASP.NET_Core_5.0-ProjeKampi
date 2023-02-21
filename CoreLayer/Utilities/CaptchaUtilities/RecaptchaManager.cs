@@ -28,11 +28,11 @@ namespace CoreLayer.Utilities.CaptchaUtilities
         public async Task<bool> CheckCaptchaValidate(HttpContext httpContext, string captcharesponse = null)
         {
             var responseRecaptchaValue = "";
-            if (captcharesponse == null)
+            if (string.IsNullOrEmpty(captcharesponse))
             {
                 responseRecaptchaValue = httpContext.Request.Form["g-recaptcha-response"];
             }
-            else if (captcharesponse != null)
+            else if (!string.IsNullOrEmpty(captcharesponse))
             {
                 responseRecaptchaValue = captcharesponse;
             }
@@ -58,7 +58,7 @@ namespace CoreLayer.Utilities.CaptchaUtilities
         public async Task<string> RecaptchaControl(HttpContext httpContext, string captcharesponse = null)
         {
             string image = CheckCaptchaImage(httpContext);
-            if (string.IsNullOrEmpty(image) && captcharesponse == null)
+            if (string.IsNullOrEmpty(image) && string.IsNullOrEmpty(captcharesponse))
             {
                 return "Lütfen doğrulamayı yapın.";
             }

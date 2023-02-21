@@ -5,7 +5,7 @@
 }
 
 <form method="post">
-    <input type="hidden" asp-for="NewsLetterDraftId"/>
+    <input type="hidden" asp-for="NewsLetterDraftId" />
     <div class="col-lg-12 col-md-12">
         <h3 class="mx-1">Haber Başlığı</h3>
         <input type="text" asp-for="Subject" placeholder="Mail Başlığı" class="form-control" required>
@@ -36,4 +36,14 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <br /><br />
 </form>
+@section ScriptSection{
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Content').summernote({
+                height: 300
+            });
+        });
+    </script>
+}
 

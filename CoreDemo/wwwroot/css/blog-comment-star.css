@@ -1,0 +1,27 @@
+﻿.card {
+    width: 300px;
+    border: none;
+}
+
+.ratings {
+    margin-right: 10px;
+}
+
+    .ratings i {
+        color: #cecece;
+        font-size: 32px;
+    }
+
+.rating-color {
+    color: #fbc634 !important;
+}
+
+.small-ratings i {
+    color: #cecece;
+}
+
+.review-stat {
+    font-weight: 300;
+    font-size: 18px;
+    margin-bottom: 2px;
+}

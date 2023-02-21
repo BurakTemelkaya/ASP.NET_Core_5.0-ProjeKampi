@@ -7,14 +7,26 @@
         url: "/NewsLetter/SubscribeMail",
         data: mail,
         success: function (func) {
-            alert("Mail bültenimize abone oldunuz, teşekkürler.");
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı !',
+                text: "Mail bültenimize abone oldunuz, teşekkürler."
+            })
         },
         error: function (func) {
             if (mail.Mail == "") {
-                alert("Lütfen mail alanını boş bırakmayınız.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: "Lütfen mail alanını boş bırakmayınız."
+                })
             }
             else {
-                alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: "Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır."
+                })
             }
         }
     });
@@ -28,14 +40,26 @@ $("#btnFooterSubscribe").click(function () {
         url: "/NewsLetter/SubscribeMail",
         data: mail,
         success: function (func) {
-            alert("Mail bültenimize abone oldunuz, teşekkürler.");
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı !',
+                text: "Mail bültenimize abone oldunuz, teşekkürler."
+            })
         },
         error: function (func) {
             if (mail.Mail == "") {
-                alert("Lütfen mail alanını boş bırakmayınız.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: "Lütfen mail alanını boş bırakmayınız."
+                })
             }
             else {
-                alert("Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: "Girdiğiniz mail adresinin bültenimize aboneliği bulunmaktadır."
+                })
             }
         }
     });
