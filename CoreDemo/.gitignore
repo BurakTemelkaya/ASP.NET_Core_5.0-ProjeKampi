@@ -5,6 +5,13 @@
 
 appsettings.json
 
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
 # User-specific files
 *.rsuser
 *.suo
@@ -28,11 +35,16 @@ x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
+build/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+[Oo]ut/
 [Ll]ogs/
+msbuild.log
+msbuild.err
+msbuild.wrn
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

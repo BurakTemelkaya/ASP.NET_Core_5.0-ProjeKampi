@@ -39,9 +39,9 @@ namespace CoreDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Context>(options=>
-            options.UseSqlServer("server=BLACKMONSTER\\SQLEXPRESS;database=CoreBlogDb; integrated security=true; MultipleActiveResultSets=true;")
-            ,ServiceLifetime.Transient);
+            services.AddDbContext<Context>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("SQLServer"))
+            , ServiceLifetime.Transient);
 
             services.AddIdentity<AppUser, AppRole>(x =>
             {
