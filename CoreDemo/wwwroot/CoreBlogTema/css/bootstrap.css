@@ -5373,7 +5373,17 @@ tbody.collapse.show {
     -ms-flex-align: start;
     align-items: flex-start;
 }
-
+.media-comment {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    background-color: #f7f7f7;
+    border-radius: 1rem;
+    padding: 1rem;
+}
 .media-body {
     -webkit-box-flex: 1;
     -ms-flex: 1;

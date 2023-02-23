@@ -1,19 +1,17 @@
 
 .rating-wrapper {
-  align-self: center;
-  box-shadow: 7px 7px 25px rgba(198, 206, 237, 0.7), -7px -7px 35px rgba(255, 255, 255, 0.7), inset 0px 0px 4px rgba(255, 255, 255, 0.9), inset 7px 7px 15px rgba(198, 206, 237, 0.8);
-  border-radius: 5rem;
-  display: inline-flex;
-  direction: rtl !important;
-  padding: 1.5rem 2.5rem;
-  margin-left: auto;
+    align-self: center;
+    box-shadow: 4px 4px 25px rgb(198 206 237 / 50%), -4px -4px 35px rgb(255 255 255 / 50%), inset 0px 0px 4px rgb(255 255 255 / 10%), inset 4px 4px 15px rgb(198 206 237 / 10%);
+    border-radius: 1.5rem;
+    direction: rtl !important;
+    padding: 1.1rem 1.5rem;
+    margin-left: auto;
 }
 .rating-wrapper label {
   color: #E1E6F6;
   cursor: pointer;
   display: inline-flex;
-  font-size: 3rem;
-  padding: 1rem 0.6rem;
+  font-size: 2rem;
   transition: color 0.5s;
 }
 .rating-wrapper svg {

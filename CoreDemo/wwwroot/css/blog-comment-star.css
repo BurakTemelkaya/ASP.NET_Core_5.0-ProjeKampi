@@ -1,10 +1,9 @@
 ﻿.card {
-    width: 300px;
     border: none;
 }
 
 .ratings {
-    margin-right: 10px;
+    background-color: #f7f7f7;
 }
 
     .ratings i {
