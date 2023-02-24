@@ -452,3 +452,15 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/CoreDemo/bin/Debug/net5.0/appsettings.json
+/CoreDemo/bin/Debug/net5.0/CoreDemo.dll
+/CoreDemo/bin/Debug/net5.0/CoreDemo.pdb
+/CoreDemo/bin/Debug/net5.0/CoreDemo.Views.dll
+/CoreDemo/bin/Debug/net5.0/CoreDemo.Views.pdb
+/CoreDemo/.vs/CoreDemo/v17/.suo
+/CoreDemo/.vs/CoreDemo/DesignTimeBuild/.dtbcache.v2
+/CoreDemo/obj/Debug/net5.0/CoreDemo.assets.cache
+/CoreDemo/obj/Debug/net5.0/CoreDemo.csproj.CoreCompileInputs.cache
+/CoreDemo/obj/Release/net5.0/CoreDemo.csproj.AssemblyReference.cache
+/CoreDemo/obj/Debug/net5.0/ref/CoreDemo.dll
+*.json
