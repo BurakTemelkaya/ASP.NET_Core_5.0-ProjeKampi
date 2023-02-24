@@ -7,7 +7,7 @@ async function GetMessageList() {
             data: { search: $('#search').val() },
             success: function (data) {
                 let jsonData = jQuery.parseJSON(data);
-                let tablehtml = `<table class="table">
+                let tablehtml = `<table class="table table-responsive col-12">
                 <thead>
                 <tr>
                     <th scope="row">#</th>

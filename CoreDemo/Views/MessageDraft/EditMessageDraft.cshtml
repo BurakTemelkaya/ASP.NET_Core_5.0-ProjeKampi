@@ -3,6 +3,9 @@
     ViewData["Title"] = "EditMessageDraft";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
+@section HeaderSection{
+    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+}
 <h1>Taslağı Düzenle</h1>
 @using (Html.BeginForm())
 {
@@ -23,21 +26,29 @@
     <br />
     <div asp-validation-summary="All" class="text-danger"></div>
     <button class="btn btn-info">Taslak Oluştur</button>
+    <a href="/MessageDraft/DeleteMessageDraft/@Model.MessageDraftID" class="btn btn-danger float-right mr-2">Sil</a>
 }
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#Details').summernote({
-            height: 300
-        });
-    });
+<br />
 
-    $(function () {
-        $("#Receiver").autocomplete({
-            source: "/Message/OnUserNameGet/",
-            minLengt: 3
+
+@section ScriptSection{
+    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Details').summernote({
+                height: 300
+            });
         });
-    });
-</script>
+
+        $(function () {
+            $("#Receiver").autocomplete({
+                source: "/Message/OnUserNameGet/",
+                minLengt: 3
+            });
+        });
+    </script>
+}
+
 
 
 

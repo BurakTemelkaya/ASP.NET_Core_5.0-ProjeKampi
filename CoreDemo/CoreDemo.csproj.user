@@ -14,6 +14,6 @@
     <WebStackScaffolding_DependencyDialogWidth>650</WebStackScaffolding_DependencyDialogWidth>
     <ShowAllFiles>false</ShowAllFiles>
     <WebStackScaffolding_LayoutPageFile>~/Views/Shared/AdminLayout.cshtml</WebStackScaffolding_LayoutPageFile>
-    <NameOfLastUsedPublishProfile>C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Properties\PublishProfiles\CoreBlogSite - Zip Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\burak\source\repos\BurakTemelkaya\ASP.NET_Core_5.0-ProjeKampi\CoreDemo\Properties\PublishProfiles\CoreBlogSite - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

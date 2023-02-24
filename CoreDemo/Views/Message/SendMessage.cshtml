@@ -2,6 +2,15 @@
 @{
     ViewData["Title"] = "SendMessage";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
+    string receiver = "";
+    if (Model != null)
+    {
+        receiver = Model.ReceiverUser.UserName;
+    }
+    if (ViewBag.ReceiverUser != null)
+    {
+        receiver = ViewBag.ReceiverUser;
+    }
 }
 
 @section HeaderSection{
@@ -12,7 +21,7 @@
 @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post))
 {
     @Html.Label("Alıcı Mail Adresi yada Kullanıcı Adı")
-    @Html.TextBox("Receiver","", new { @class = "form-control"})
+    <input type="text" name="Receiver" id="Receiver" value="@receiver" class="form-control">
     @Html.ValidationMessageFor(x => x.ReceiverUser, "", new { @class = "text-danger" })
     <br />
     <br />

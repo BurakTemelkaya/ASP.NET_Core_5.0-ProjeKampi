@@ -13576,4 +13576,8 @@ dl {
   -ms-flex-positive: 1;
   flex-grow: 1; }
 
+.pointer {
+    cursor: pointer;
+}
+
 /*# sourceMappingURL=style.css.map */

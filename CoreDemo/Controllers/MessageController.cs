@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -18,12 +19,14 @@ namespace CoreDemo.Controllers
         private readonly IMessageService _messageService;
         private readonly IBusinessUserService _userService;
         private readonly IMessageDraftService _messageDraftService;
+        private readonly IMapper _mapper;
 
-        public MessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService)
+        public MessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService, IMapper mapper)
         {
             _messageService = messageService;
             _userService = userService;
             _messageDraftService = messageDraftService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Inbox()
@@ -57,8 +60,21 @@ namespace CoreDemo.Controllers
         }
 
         [HttpGet]
-        public IActionResult SendMessage()
+        public async Task<IActionResult> SendMessage(int id, string ReceiverUser = null)
         {
+            if (id != 0)
+            {
+                var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
+                if (value != null)
+                {
+                    var message = _mapper.Map<Message>(value);
+                    return View(message);
+                }
+            }
+            if (ReceiverUser != null)
+            {
+                ViewBag.ReceiverUser = ReceiverUser;
+            }
             return View();
         }
 
