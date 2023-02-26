@@ -12,12 +12,20 @@ namespace CoreLayer.Utilities.FileUtilities
     {
         public static async Task<string> ImageAddAsync(IFormFile image, string folderLocation)
         {
-            var extension = Path.GetExtension(image.FileName);
-            var newImageName = Guid.NewGuid() + extension;
-            var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
-            using var stream = new FileStream(location, FileMode.Create);
-            await image.CopyToAsync(stream);
-            return folderLocation + newImageName;
+            try
+            {
+                var extension = Path.GetExtension(image.FileName);
+                var newImageName = Guid.NewGuid() + extension;
+                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
+                using var stream = new FileStream(location, FileMode.Create);
+                await image.CopyToAsync(stream);
+                return folderLocation + newImageName;
+            }
+            catch
+            {
+                return null;
+            }
+            
         }
         public static string StaticProfileImageLocation()
         {

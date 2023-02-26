@@ -31,19 +31,19 @@ namespace CoreDemo.Areas.Admin.Controllers
             blogs = await blogs.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
             if (id != 0)
             {
-                var user = await _businessUserService.GetByIDAsync(id.ToString());              
+                var user = await _businessUserService.GetByIDAsync(id.ToString());
                 if (user != null)
                 {
-                    var value = await blogs.Where(x => x.WriterID == id).OrderByDescending(x=> x.BlogCreateDate).ToListAsync();
-                    if (value!=null)
+                    var value = await blogs.Where(x => x.WriterID == id).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+                    if (value != null)
                         blogs = value;
                     ViewBag.UserName = user.UserName;
-                }                   
+                }
             }
             var values = await blogs.ToPagedListAsync(page, 4);
             foreach (var item in values)
             {
-                if (item.BlogContent.Length > 150)
+                if (item.BlogContent != null && item.BlogContent.Length > 150)
                 {
                     item.BlogContent = item.BlogContent[..130] + "...";
                 }
@@ -77,24 +77,22 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> BlogUpdate(int id)
         {
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-            var value = await _blogService.GetBlogByIdForUpdate(id);
-            if (value != null)
-                return View(value);
-            return RedirectToAction("Index");
-
+            var blogValue = await _blogService.GetBlogByIdForUpdate(id);
+            return View(blogValue);
         }
         [HttpPost]
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var blogUser = await _businessUserService.GetByIDAsync(blog.WriterID.ToString());
             var value = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
             if (value.BlogImage == null)
             {
+                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
                 ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
             if (value.BlogThumbnailImage == null)
             {
+                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }

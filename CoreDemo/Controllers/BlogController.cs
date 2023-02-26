@@ -179,10 +179,6 @@ namespace CoreDemo.Controllers
             {
                 var blogValue = await _blogService.GetBlogByIDAsync(id);
                 ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-                if (blogValue.BlogImage[..5] != "https" || blogValue.BlogImage[..4] != "http")
-                    blogValue.BlogImage = null;
-                if (blogValue.BlogThumbnailImage[..5] != "https" || blogValue.BlogThumbnailImage[..4] != "http")
-                    blogValue.BlogThumbnailImage = null;
                 return View(blogValue);
             }
             return RedirectToAction("Error404", "ErrorPage");

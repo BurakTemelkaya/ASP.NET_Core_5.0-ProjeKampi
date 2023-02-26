@@ -47,6 +47,7 @@ namespace BusinessLayer.Concrete
             value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return value;
         }
+
         public async Task<Blog> GetBlogByIdForUpdate(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
@@ -74,6 +75,7 @@ namespace BusinessLayer.Concrete
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
+
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -108,13 +110,13 @@ namespace BusinessLayer.Concrete
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
-            else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
+            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
                 blogThumbnailImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
-            else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
+            if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
@@ -127,6 +129,7 @@ namespace BusinessLayer.Concrete
             await _blogDal.UpdateAsync(blog);
             return blog;
         }
+
         public async Task<Blog> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var oldValue = await GetBlogByIDAsync(blog.BlogID);
@@ -138,13 +141,13 @@ namespace BusinessLayer.Concrete
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
-            else if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
+            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
                 blogThumbnailImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
-            else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
+            if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
