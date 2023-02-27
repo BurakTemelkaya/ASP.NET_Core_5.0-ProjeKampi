@@ -84,18 +84,6 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var value = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
-            if (value.BlogImage == null)
-            {
-                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-                ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
-                return View(blog);
-            }
-            if (value.BlogThumbnailImage == null)
-            {
-                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-                ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
-                return View(blog);
-            }
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }

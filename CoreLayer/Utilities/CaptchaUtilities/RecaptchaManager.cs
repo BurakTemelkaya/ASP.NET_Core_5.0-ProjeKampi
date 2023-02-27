@@ -17,17 +17,17 @@ namespace CoreLayer.Utilities.CaptchaUtilities
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        private IConfiguration Configuration { get; }
+
         public RecaptchaManager(IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _webHostEnvironment = webHostEnvironment;
             Configuration = configuration;
-        }
-
-        private IConfiguration Configuration { get; }
+        }  
 
         public async Task<bool> CheckCaptchaValidate(HttpContext httpContext, string captcharesponse = null)
         {
-            var responseRecaptchaValue = "";
+            string responseRecaptchaValue;
             if (string.IsNullOrEmpty(captcharesponse))
             {
                 responseRecaptchaValue = httpContext.Request.Form["g-recaptcha-response"];
