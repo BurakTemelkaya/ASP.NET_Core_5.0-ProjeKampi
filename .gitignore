@@ -530,3 +530,7 @@ $RECYCLE.BIN/
 /CoreLayer/obj/Release/net5.0/CoreLayer.dll
 /CoreLayer/obj/Release/net5.0/CoreLayer.csproj.AssemblyReference.cache
 /CoreLayer/obj/Release/net5.0/CoreLayer.assets.cache
+/CoreLayer/obj/Release/net5.0/refint/CoreLayer.dll
+/CoreLayer/obj/Release/net5.0/CoreLayer.csproj.CoreCompileInputs.cache
+/CoreLayer/obj/Release/net5.0/ref/CoreLayer.dll
+/CoreDemo/CoreDemo.csproj.user
