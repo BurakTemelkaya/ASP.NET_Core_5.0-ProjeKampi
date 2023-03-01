@@ -19,10 +19,19 @@ namespace BusinessLayer.Concrete
         {
             _commentDal = commentDal;
         }
+
         [ValidationAspect(typeof(CommentValidator))]
         public async Task TAddAsync(Comment comment)
         {
             comment.CommentDate= DateTime.Now;
+            comment.CommentStatus = true;
+            await _commentDal.InsertAsync(comment);
+        }
+
+        [ValidationAspect(typeof(CommentValidator))]
+        public async Task AddAsync(Comment comment)
+        {
+            comment.CommentDate = DateTime.Now;
             comment.CommentStatus = true;
             await _commentDal.InsertAsync(comment);
         }

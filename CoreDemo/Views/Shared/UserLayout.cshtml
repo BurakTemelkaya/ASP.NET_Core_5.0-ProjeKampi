@@ -8,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <meta name="keywords" content="Core Blog" />
-    <script>
-        const { error } = require("jquery");
+    <script>       
 
         addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
@@ -18,31 +17,6 @@
         function hideURLbar() {
             window.scrollTo(0, 1);
         }
-
-        jQuery(document).ready(function ($) {
-            $(".scroll").click(function (event) {
-                event.preventDefault();
-                $('html,body').animate({
-                    scrollTop: $(this.hash).offset().top
-                }, 900);
-            });
-        });
-
-        $(document).ready(function () {
-
-            var defaults = {
-                containerID: 'toTop', // fading element id
-                containerHoverID: 'toTopHover', // fading element hover id
-                scrollSpeed: 1200,
-                easingType: 'linear'
-            };
-
-
-            $().UItoTop({
-                easingType: 'easeOutQuart'
-            });
-
-        });
     </script>
     <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
     <script src="~/writer/assets/js/SweetAlert2.js"></script>
@@ -110,11 +84,28 @@
     <!---->
     <!-- js -->
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
-    <!-- //js -->
-    <!--/ start-smoth-scrolling -->
     <script src="~/CoreBlogTema/js/move-top.js"></script>
     <script src="~/CoreBlogTema/js/easing.js"></script>
-    <script></script>
+    <script>
+        jQuery(document).ready(function () {
+
+            var defaults = {
+                containerID: 'toTop',
+                containerHoverID: 'toTopHover',
+                scrollSpeed: 1200,
+                easingType: 'linear'
+            };
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+
+        });
+    </script>
+
+
+    <!-- //js -->
+    <!--/ start-smoth-scrolling -->
+    
     <!--// end-smoth-scrolling -->
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
@@ -125,6 +116,7 @@
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/newsletter-subscribe.js"></script>
+    
     @RenderSection("ScriptSection",false)
 </body>
 </html>

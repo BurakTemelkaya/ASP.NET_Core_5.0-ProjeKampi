@@ -37,11 +37,10 @@ $("#btnSendComment").click(function () {
                 icon: 'success',
                 title: 'Başarılı !',
                 text: "Yorumunuz başarıyla gönderildi, teşekkürler.."
-            })       
+            });       
         },
         error: function (func) {
             var text = "";
-            console.log(func);
             if (Comment.CommentUserName == "") {
                 text = 'Lütfen isim alanını boş bırakmayınız.';
             }
@@ -54,6 +53,9 @@ $("#btnSendComment").click(function () {
             else if (func.responseText =="Recaptcha error.") {
                 text = 'Lütfen doğrulamayı yapınız.';
             }
+            else if (BlogScore == 0) {
+                text = 'Lütfen puan seçiniz.';
+            }
             else {
                 text = 'Bir hata oluştu lütfen daha sonra tekrar deneyiniz.';     
             }
@@ -61,7 +63,7 @@ $("#btnSendComment").click(function () {
                 icon: 'error',
                 title: 'Hata !',
                 text: text
-            })
+            });
         }
     });
     grecaptcha.reset();

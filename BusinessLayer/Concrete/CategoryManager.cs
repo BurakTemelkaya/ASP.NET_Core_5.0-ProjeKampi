@@ -28,6 +28,7 @@ namespace BusinessLayer.Concrete
         {
             return await _categoryDal.GetByIDAsync(id);
         }
+
         [ValidationAspect(typeof(CategoryValidator))]
         public async Task TAddAsync(Category t)
         {

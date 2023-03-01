@@ -99,11 +99,15 @@ namespace CoreDemo
             services.AddAutoMapper(typeof(UIImage));
             services.AddAutoMapper(typeof(DBOImages));
 
-            services.IocCoreInstall();
+            services.AddDependencyResolvers(new ICoreModule[] {
+               new CoreModule()
+            });
 
             services.IocDataAccessInstall();
 
             services.IocBusinessInstall();
+
+
 
         }
 

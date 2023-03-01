@@ -2,7 +2,9 @@
 using BusinessLayer.Concrete;
 using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using Castle.DynamicProxy;
 using Core.Extensions;
+using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,30 +28,30 @@ namespace BusinessLayer.DependencyResolvers
         {
             //services ioc
 
-            services.AddTransient<IAboutService, AboutManager>();
+            //services.AddTransient<IAboutService, AboutManager>();
 
-            services.AddTransient<IBlogService, BlogManager>();
+            //services.AddTransient<IBlogService, BlogManager>();
 
-            services.AddTransient<IBusinessUserService, UserBusinessManager>();
+            //services.AddTransient<IBusinessUserService, UserBusinessManager>();
 
-            services.AddTransient<ICategoryService, CategoryManager>();
+            //services.AddTransient<ICategoryService, CategoryManager>();
 
-            services.AddTransient<ICommentService, CommentManager>();
+            //services.AddTransient<ICommentService, CommentManager>();
 
-            services.AddTransient<IContactService, ContactManager>();
+            //services.AddTransient<IContactService, ContactManager>();
 
-            services.AddTransient<IMessageService, MessageManager>();
+            //services.AddTransient<IMessageService, MessageManager>();
 
-            services.AddTransient<INewsLetterService, NewsLetterManager>();
+            //services.AddTransient<INewsLetterService, NewsLetterManager>();
 
-            services.AddTransient<INewsLetterDraftService, NewsLetterDraftManager>();
+            //services.AddTransient<INewsLetterDraftService, NewsLetterDraftManager>();
 
-            services.AddTransient<INotificationService, NotificationManager>();
+            //services.AddTransient<INotificationService, NotificationManager>();
 
-            services.AddTransient<IContactService, ContactManager>();
+            //services.AddTransient<IContactService, ContactManager>();
 
-            services.AddTransient<IMessageDraftService, MessageDraftManager>();
-            
+            //services.AddTransient<IMessageDraftService, MessageDraftManager>();
+
 
             //validators ioc
 

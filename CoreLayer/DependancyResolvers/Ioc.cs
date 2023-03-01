@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.DynamicProxy;
+using CoreLayer.Utilities.Interceptors;
 
 namespace CoreLayer.DependancyResolvers
 {
@@ -29,6 +31,8 @@ namespace CoreLayer.DependancyResolvers
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<ICacheManager, MemoryCacheManager>();
+
+            services.AddTransient<IInterceptorSelector, AspectInterceptorSelector>();
         }
     }
 }

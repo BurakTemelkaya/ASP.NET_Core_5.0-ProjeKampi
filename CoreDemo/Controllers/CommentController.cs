@@ -36,7 +36,7 @@ namespace CoreDemo.Controllers
             if (isValid == null)
             { 
                 comment.BlogID = blogId;
-                await _commentService.TAddAsync(comment);
+                await _commentService.AddAsync(comment);
                 return Ok();
             }
             else

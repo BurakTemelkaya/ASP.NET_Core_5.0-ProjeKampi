@@ -13,8 +13,14 @@ namespace BusinessLayer.ValidationRules
         public CommentValidator()
         {
             RuleFor(x => x.CommentUserName).NotEmpty().NotNull().MinimumLength(3);
+
             RuleFor(x => x.CommentTitle).NotEmpty().NotNull().MinimumLength(5);
+
             RuleFor(x => x.CommentContent).NotEmpty().NotNull().MinimumLength(10);
+
+            RuleFor(x => x.BlogScore).LessThan(6).GreaterThan(0);
+
+            RuleFor(x => x.BlogID).NotEmpty().NotNull();
         }
     }
 }

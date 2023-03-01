@@ -12,5 +12,7 @@ namespace BusinessLayer.Abstract
     {
         Task<List<Comment>> GetListByIdAsync(int id);
         Task<List<Comment>> GetBlogListWithCommentAsync();
+
+        Task AddAsync(Comment comment);
     }
 }
