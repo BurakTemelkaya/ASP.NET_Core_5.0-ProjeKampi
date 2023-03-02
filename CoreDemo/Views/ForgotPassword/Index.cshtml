@@ -18,12 +18,37 @@
                     </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Parola Sıfırlama Maili Gönder</button>
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <p class="text-danger">@TempData["ErrorMessage"]</p>
                     <p><a href="/Register/Index"> Bir Hesabın Yok Mu?</a></p>
                 </form>
             </div>
         </div>
-
     </div>
 </section>
+
+@section ScriptSection{
+    @{
+        if (TempData["OkMessage"]!=null)
+        {
+            <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Başarılı !',
+                        html: '@TempData["OkMessage"].ToString()'
+                    });   
+            </script>
+        }
+
+        if (TempData["ErrorMessage"] != null)
+        {
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    html: '@TempData["ErrorMessage"].ToString()'
+                });
+            </script>
+        }
+    }
+    
+}
 

@@ -56,12 +56,12 @@ namespace CoreDemo.Controllers
                 {
                     var callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token, email }, Request.Scheme);
                     _mailService.SendMail(email, MailTemplates.ResetPasswordSubject(), MailTemplates.ResetPasswordContent(callBack));
-                    @TempData["ErrorMessage"] = "Parola sıfırlama maili gönderildi.";
-                }
-                return View();
+                    TempData["OkMessage"] = "Parola sıfırlama maili gönderildi.";
+                    return View();
+                }                
             }
             ViewBag.SiteKey = _captchaService.GetSiteKey();
-            @TempData["ErrorMessage"] = "Böyle bir mail adresine sahip hesap bulunamadı.";
+            TempData["ErrorMessage"] = "Böyle bir mail adresine sahip hesap bulunamadı.";
             return View();
         }
         [HttpGet]
@@ -95,7 +95,7 @@ namespace CoreDemo.Controllers
             }
             var user = await _businessUserService.FindByMailAsync(resetPasswordDto.Email);
             await _signInManager.SignInAsync(user, true);
-            return RedirectToAction("Index", "Contact");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }
