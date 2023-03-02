@@ -11,6 +11,8 @@
     <div class="col-sm-12"><input type="text" class="form-control" asp-for="CommentTitle"></div>
     <label class="col-sm-2 col-form-label">İçerik</label>
     <div class="col-sm-12"><textarea class="form-control" asp-for="CommentContent" cols="10" rows="10"></textarea></div>
+    <input type="hidden" asp-for="BlogScore"/>
+    <input type="hidden" asp-for="BlogID" />
     <div asp-validation-summary="All"></div>
     <button class="btn btn-primary col-md-12">Düzenle</button>
 

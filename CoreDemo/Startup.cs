@@ -8,8 +8,8 @@ using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Utilities.IoC;
-using DataAccessLayer;
 using DataAccessLayer.Concrete;
+using DataAccessLayer.DependancyInjection;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -99,16 +99,13 @@ namespace CoreDemo
             services.AddAutoMapper(typeof(UIImage));
             services.AddAutoMapper(typeof(DBOImages));
 
-            services.AddDependencyResolvers(new ICoreModule[] {
-               new CoreModule()
-            });
-
             services.IocDataAccessInstall();
 
             services.IocBusinessInstall();
 
-
-
+            services.AddDependencyResolvers(new ICoreModule[] {
+               new CoreModule()
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

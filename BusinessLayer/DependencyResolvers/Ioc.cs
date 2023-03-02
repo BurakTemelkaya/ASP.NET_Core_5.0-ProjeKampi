@@ -28,52 +28,52 @@ namespace BusinessLayer.DependencyResolvers
         {
             //services ioc
 
-            //services.AddTransient<IAboutService, AboutManager>();
+            services.AddSingleton<IAboutService, AboutManager>();
 
-            //services.AddTransient<IBlogService, BlogManager>();
+            services.AddTransient<IBlogService, BlogManager>();
 
-            //services.AddTransient<IBusinessUserService, UserBusinessManager>();
+            services.AddTransient<IBusinessUserService, UserBusinessManager>();
 
-            //services.AddTransient<ICategoryService, CategoryManager>();
+            services.AddTransient<ICategoryService, CategoryManager>();
 
-            //services.AddTransient<ICommentService, CommentManager>();
+            services.AddTransient<ICommentService, CommentManager>();
 
-            //services.AddTransient<IContactService, ContactManager>();
+            services.AddTransient<IContactService, ContactManager>();
 
-            //services.AddTransient<IMessageService, MessageManager>();
+            services.AddTransient<IMessageService, MessageManager>();
 
-            //services.AddTransient<INewsLetterService, NewsLetterManager>();
+            services.AddTransient<INewsLetterService, NewsLetterManager>();
 
-            //services.AddTransient<INewsLetterDraftService, NewsLetterDraftManager>();
+            services.AddTransient<INewsLetterDraftService, NewsLetterDraftManager>();
 
-            //services.AddTransient<INotificationService, NotificationManager>();
+            services.AddTransient<INotificationService, NotificationManager>();
 
-            //services.AddTransient<IContactService, ContactManager>();
+            services.AddTransient<IContactService, ContactManager>();
 
-            //services.AddTransient<IMessageDraftService, MessageDraftManager>();
+            services.AddTransient<IMessageDraftService, MessageDraftManager>();
 
 
             //validators ioc
 
-            services.AddSingleton<IValidator<Blog>, BlogValidator>();
+            //services.AddSingleton<IValidator<Blog>, BlogValidator>();
 
-            services.AddSingleton<IValidator<Category>, CategoryValidator>();
+            //services.AddSingleton<IValidator<Category>, CategoryValidator>();
 
-            services.AddSingleton<IValidator<Comment>, CommentValidator>();
+            //services.AddSingleton<IValidator<Comment>, CommentValidator>();
 
-            services.AddSingleton<IValidator<Contact>, ContactValidator>();
+            //services.AddSingleton<IValidator<Contact>, ContactValidator>();
 
-            services.AddSingleton<IValidator<UserDto>, UserValidator>();
+            //services.AddSingleton<IValidator<UserDto>, UserValidator>();
 
-            services.AddSingleton<IValidator<NewsLetter>, NewsLetterValidator>();
+            //services.AddSingleton<IValidator<NewsLetter>, NewsLetterValidator>();
 
-            services.AddSingleton<IValidator<NewsLetterSendMailsModel>, NewsLetterSendMailsModelValidator>();
+            //services.AddSingleton<IValidator<NewsLetterSendMailsModel>, NewsLetterSendMailsModelValidator>();
 
-            services.AddSingleton<IValidator<UserSignUpDto>, UserSignUpDtoValidator>();
+            //services.AddSingleton<IValidator<UserSignUpDto>, UserSignUpDtoValidator>();
 
-            services.AddSingleton<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
+            //services.AddSingleton<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
 
-            services.AddSingleton<IValidator<Message>, MessageValidator>();
+            //services.AddSingleton<IValidator<Message>, MessageValidator>();
         }
     }
 }

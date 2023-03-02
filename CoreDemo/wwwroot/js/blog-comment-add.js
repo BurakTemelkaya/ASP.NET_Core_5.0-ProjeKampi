@@ -26,45 +26,63 @@ $("#btnSendComment").click(function () {
         CommentContent: $("#CommentContent").val(),
         BlogScore: BlogScore
     };
-    $.ajax({
-        type: "post",
-        url: "/Comment/PartialAddComment",
-        data: {
-            comment: Comment, blogId: blogId, captcharesponse: captcharesponse
-        },
-        success: function () {
-            Swal.fire({
-                icon: 'success',
-                title: 'Başarılı !',
-                text: "Yorumunuz başarıyla gönderildi, teşekkürler.."
-            });       
-        },
-        error: function (func) {
-            var text = "";
-            if (Comment.CommentUserName == "") {
-                text = 'Lütfen isim alanını boş bırakmayınız.';
+
+    var text = "";
+    if (Comment.CommentUserName == "") {
+        text += 'Lütfen isim alanını boş bırakmayınız.<br/>';
+    }
+    if (Comment.CommentTitle == "") {
+        text += 'Lütfen başlık alanını boş bırakmayınız.<br/>';
+    }
+    if (Comment.CommentContent == "") {
+        text += 'Lütfen içerik alanını boş bırakmayınız.<br/>';
+    }   
+    if (BlogScore == 0) {
+        text += 'Lütfen puan seçiniz.<br/>';
+    }
+    if (captcharesponse == "") {
+        text += 'Lütfen doğrulamayı yapınız.<br/>';
+    }
+
+    if (text != "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata !',
+            html: text
+        });
+    }
+    else {
+        $.ajax({
+            type: "post",
+            url: "/Comment/PartialAddComment",
+            data: {
+                comment: Comment, blogId: blogId, captcharesponse: captcharesponse
+            },
+            success: function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı !',
+                    text: "Yorumunuz başarıyla gönderildi, teşekkürler.."
+                });
+            },
+            error: function (func) {
+
+                if (func.responseText == "Recaptcha error.") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata !',
+                        text: "Lütfen doğrulamayı yapınız."
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata !',
+                        text: "Bir hata oluştu lütfen daha sonra tekrar deneyiniz."
+                    });
+                }
             }
-            else if (Comment.CommentTitle == "") {
-                text = 'Lütfen başlık alanını boş bırakmayınız';
-            }
-            else if (Comment.CommentContent == "") {
-                text = 'Lütfen içerik alanını boş bırakmayınız.';
-            }
-            else if (func.responseText =="Recaptcha error.") {
-                text = 'Lütfen doğrulamayı yapınız.';
-            }
-            else if (BlogScore == 0) {
-                text = 'Lütfen puan seçiniz.';
-            }
-            else {
-                text = 'Bir hata oluştu lütfen daha sonra tekrar deneyiniz.';     
-            }
-            Swal.fire({
-                icon: 'error',
-                title: 'Hata !',
-                text: text
-            });
-        }
-    });
-    grecaptcha.reset();
+        });
+        grecaptcha.reset();
+    }
 });       

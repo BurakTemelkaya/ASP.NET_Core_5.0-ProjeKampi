@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.FileUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -55,6 +57,7 @@ namespace BusinessLayer.Concrete
             return values;
         }
 
+        [ValidationAspect(typeof(MessageValidator))]
         public async Task AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
             if (senderUserName == receiverUserName)

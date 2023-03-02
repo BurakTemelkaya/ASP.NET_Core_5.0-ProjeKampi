@@ -1663,6 +1663,8 @@
       },
       "DataAccessLayer/1.0.0": {
         "dependencies": {
+          "Autofac": "6.5.0",
+          "Autofac.Extras.DynamicProxy": "6.0.1",
           "EntityLayer": "1.0.0",
           "Microsoft.AspNetCore.Identity": "2.2.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.17",

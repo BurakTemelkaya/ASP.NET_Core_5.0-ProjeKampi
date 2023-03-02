@@ -16,27 +16,27 @@ namespace BusinessLayer.DependencyResolvers
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
+            //builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
 
-            builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();
+            //builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();
 
-            builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
+            //builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
 
-            builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
+            //builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
 
-            builder.RegisterType<CommentManager>().As<ICommentService>().SingleInstance();
+            //builder.RegisterType<CommentManager>().As<ICommentService>().SingleInstance();
 
-            builder.RegisterType<ContactManager>().As<IContactService>().SingleInstance();
+            //builder.RegisterType<ContactManager>().As<IContactService>().SingleInstance();
 
-            builder.RegisterType<MessageDraftManager>().As<IMessageDraftService>().SingleInstance();
+            //builder.RegisterType<MessageDraftManager>().As<IMessageDraftService>().InstancePerDependency();
 
-            builder.RegisterType<MessageManager>().As<IMessageService>().SingleInstance();
+            //builder.RegisterType<MessageManager>().As<IMessageService>().InstancePerDependency();
 
-            builder.RegisterType<NewsLetterDraftManager>().As<INewsLetterDraftService>().SingleInstance();
+            //builder.RegisterType<NewsLetterDraftManager>().As<INewsLetterDraftService>().SingleInstance();
 
-            builder.RegisterType<NewsLetterManager>().As<INewsLetterService>().SingleInstance();
+            //builder.RegisterType<NewsLetterManager>().As<INewsLetterService>().SingleInstance();
 
-            builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
+            //builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
@@ -44,7 +44,7 @@ namespace BusinessLayer.DependencyResolvers
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
                 {
                     Selector = new AspectInterceptorSelector()
-                }).SingleInstance();
+                }).InstancePerDependency();
         }
     }
 }
