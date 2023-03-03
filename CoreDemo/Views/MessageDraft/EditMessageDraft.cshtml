@@ -9,6 +9,8 @@
 <h1>Taslağı Düzenle</h1>
 @using (Html.BeginForm())
 {
+    @Html.HiddenFor(x=> x.MessageDraftID)
+
     @Html.Label("Alıcı Mail Adresi yada Kullanıcı Adı")
     @Html.TextBoxFor(x=> x.ReceiverUser,"", new { @class = "form-control"})
     @Html.ValidationMessageFor(x => x.ReceiverUser, "", new { @class = "text-danger" })
@@ -25,7 +27,7 @@
     <br />
     <br />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <button class="btn btn-info">Taslak Oluştur</button>
+    <button class="btn btn-info">Taslağı Düzenle</button>
     <a href="/MessageDraft/DeleteMessageDraft/@Model.MessageDraftID" class="btn btn-danger float-right mr-2">Sil</a>
 }
 <br />

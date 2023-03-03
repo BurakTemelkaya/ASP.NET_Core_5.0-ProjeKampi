@@ -20,7 +20,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var values = await _messageDraftService.GetListAsync();
+            var values = await _messageDraftService.GetMessageDraftListByUserNameAsync(User.Identity.Name, null, 50);
             return View(values);
         }
 
@@ -29,7 +29,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var values = await _messageDraftService.GetListAsync();
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
-        }     
+        }
 
         [HttpPost]
         public async Task<IActionResult> Add(MessageDraft messageDraft)
@@ -50,7 +50,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(MessageDraft messageDraft)
         {
-            if (messageDraft.MessageDraftID == 0 || messageDraft.UserId == 0)
+            if (messageDraft.MessageDraftID == 0)
             {
                 ModelState.AddModelError("Subject", "Bir hata oluştu lütfen daha sonra tekrar deneyiniz");
                 return View(messageDraft);

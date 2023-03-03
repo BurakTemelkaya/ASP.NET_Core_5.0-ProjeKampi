@@ -43,7 +43,7 @@ namespace BusinessLayer.Concrete
             foreach (var item in values)
             {
                 item.SenderUser.SenderUserInfo = null;
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
+                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
             }
 
             return values;
@@ -123,7 +123,7 @@ namespace BusinessLayer.Concrete
             var user = await _userService.FindByUserNameAsync(userName);
             var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Id, filter);
             foreach (var item in values)
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
+                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
             return values;
         }
 

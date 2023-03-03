@@ -15,7 +15,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var values = await _messageDraftService.GetMessageDraftListByUserNameAsync(User.Identity.Name);
+            var values = await _messageDraftService.GetMessageDraftListByUserNameAsync(User.Identity.Name, null, 50);
             return View(values);
         }
         [HttpGet]

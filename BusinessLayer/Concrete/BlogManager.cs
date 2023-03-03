@@ -32,9 +32,10 @@ namespace BusinessLayer.Concrete
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
             return values;
         }
-        public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id, Expression<Func<Blog, bool>> filter = null)
+        public async Task<List<Blog>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryByWriterAsync(id, filter);
+            var user = await _userService.FindByUserNameAsync(userName);
+            var values = await _blogDal.GetListWithCategoryByWriterAsync(user.Id, filter);
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
             return values;

@@ -43,13 +43,14 @@ namespace CoreLayer.Utilities.FileUtilities
                 if (numberOfLetters > 0)
                 {
                     content = await streamReader.ReadLineAsync();
+                    content = Regex.Replace(content, "&nbsp;", " ");
                     var htmlDoc = new HtmlDocument();
                     htmlDoc.LoadHtml(content);
                     content = htmlDoc.DocumentNode.InnerText;
                     if (content.Length > numberOfLetters)
                     {
                         content = content[..numberOfLetters];
-                    }
+                    }                 
                 }
                 else
                 {

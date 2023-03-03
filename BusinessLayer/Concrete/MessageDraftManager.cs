@@ -51,14 +51,14 @@ namespace BusinessLayer.Concrete
             return values;
         }
 
-        public async Task<List<MessageDraft>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null)
+        public async Task<List<MessageDraft>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
             if (user != null)
             {
                 var values = await _messageDraftDal.GetMessageDraftListByUserIdAsync(user.Id, filter);
                 foreach (var item in values)
-                    item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
+                    item.Details = await TextFileManager.ReadTextFileAsync(item.Details, length);
                 return values;
             }
             return null;
@@ -133,8 +133,7 @@ namespace BusinessLayer.Concrete
             }
             return null;
         }
-
-        [ValidationAspect(typeof(MessageValidator))]
+       
         public async Task UpdateAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
@@ -145,6 +144,7 @@ namespace BusinessLayer.Concrete
                 {
                     t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
                 }
+                t.UserId=user.Id;
                 await _messageDraftDal.UpdateAsync(t);
             }
         }

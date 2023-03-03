@@ -83,7 +83,7 @@ namespace CoreDemo.Controllers
                 }
                 ViewData["Title"] = search;
                 ViewBag.Sonuc = true;
-                if (values.Count < 1)
+                if (values.Count == 0)
                 {
                     values = null;
                     values = await _blogService.GetBlogListWithCategoryAsync();
@@ -131,12 +131,10 @@ namespace CoreDemo.Controllers
             ViewData["Title"] = value.BlogTitle;
             return View(value);
         }
-        public async Task<IActionResult> BlogListByWriter()
+        public async Task<IActionResult> BlogListByWriter(int page = 1)
         {
-            var userName = User.Identity.Name;
-            var user = await _businessUserService.FindByUserNameAsync(userName);
-            var values = await _blogService.GetListWithCategoryByWriterBmAsync(user.Id);
-            return View(values);
+            var values = await _blogService.GetListWithCategoryByWriterBmAsync(User.Identity.Name);
+            return View(await values.ToPagedListAsync(page, 5));
         }
         [HttpGet]
         public async Task<IActionResult> BlogAdd()

@@ -28,6 +28,7 @@ namespace CoreDemo.Controllers
         {
             return PartialView();
         }
+
         [HttpPost]
         public async Task<IActionResult> SubscribeMail(NewsLetter newsLetter)
         {

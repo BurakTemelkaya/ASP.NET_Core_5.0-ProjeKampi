@@ -1,5 +1,4 @@
-﻿@using EntityLayer.Concrete
-@model List<Notification>
+﻿@model List<Notification>
 @{
     ViewData["Title"] = "AllNotification";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
@@ -9,12 +8,12 @@
 
 <h1>Bildirimler</h1>
 
-<table class="table table-responsive col-12">
+<table class="table table-bordered table-responsive">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Bildirim</th>
-            <td>Süre</td>
+            <th class="col-1">#</th>
+            <th class="col-8">Bildirim</th>
+            <th class="col-3">Süre</th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +33,7 @@
                 sure = item.NotificationDate.ToString();
             }
             <tr>
-                <td>@item.NotificationID</td>
+                <td scope="row">@item.NotificationID</td>
                 <td>@item.NotificationDetails</td>
                 <td>@sure</td>
             </tr>

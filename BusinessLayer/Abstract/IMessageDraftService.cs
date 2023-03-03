@@ -11,7 +11,7 @@ namespace BusinessLayer.Abstract
     public interface IMessageDraftService
     {
         Task<List<MessageDraft>> GetMessageDraftListAsync(Expression<Func<MessageDraft, bool>> filter = null);
-        Task<List<MessageDraft>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null);
+        Task<List<MessageDraft>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30);
         Task<int> GetCountAsync(Expression<Func<MessageDraft, bool>> filter = null);
         Task<int> GetCountByUserNameAsync(string userName);
         Task<List<MessageDraft>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null);

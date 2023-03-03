@@ -11,12 +11,12 @@ async function GetMessageList() {
                 <thead>
                 <tr>
                     <th scope="row">#</th>
-                    <th>Konu</th>
-                    <th>Gönderen</th>
-                    <th>İçerik</th>
-                    <th>Tarih</th>
-                    <th>Mesajı Aç</th>
-                    <th>Okundu/Okunmadı Olarak İşaretle</th>
+                    <th class="col-2">Konu</th>
+                    <th class="col-2">Gönderen</th>
+                    <th class="col-3">İçerik</th>
+                    <th class="col-1">Tarih</th>
+                    <th class="col-1">Mesajı Aç</th>
+                    <th class="col-2">Okundu/Okunmadı Olarak İşaretle</th>
                 </tr>
                 </thead >
                 <tbody>`;

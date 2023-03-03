@@ -24,7 +24,6 @@
 
                     <form method="post">
                         <input type="hidden" asp-for="MessageDraftID"/>
-                        <input type="hidden" asp-for="UserId"/>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Gönderilecek Kişi (Kullanıcı Adı yada Mail Adresi):</label>
 
@@ -43,7 +42,7 @@
                         <div class="mail-body text-right tooltip-demo">
                             <button class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Kaydet"><i class="fa fa-reply"></i>Kaydet</button>
                             <a href="/Admin/AdminMessage/SendMessage" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mail Yollamaktan Vazgeç"><i class="fa fa-times"></i> Vazgeç</a>
-                            <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" id="btnSaveDraft2" title="Taslak Olarak Kaydet"><i class="fa fa-pencil"></i> Taslak</a>
+                            <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" id="btnSaveDraft2" title="Taslağı Düzenle"><i class="fa fa-pencil"></i> Taslak</a>
                         </div>
                         <div class="clearfix"></div>
                         <div asp-validation-summary="All"></div>

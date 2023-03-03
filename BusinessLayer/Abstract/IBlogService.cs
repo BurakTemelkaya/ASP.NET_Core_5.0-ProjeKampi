@@ -13,7 +13,7 @@ namespace BusinessLayer.Abstract
     {
         Task<Blog> GetBlogByIDAsync(int id);
         Task<Blog> GetBlogByIdForUpdate(int id);
-        Task<List<Blog>> GetListWithCategoryByWriterBmAsync(int id, Expression<Func<Blog, bool>> filter = null);
+        Task<List<Blog>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null);
         Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
         Task<List<Blog>> GetBlogListByWriterAsync(int id);
         Task<List<Blog>> GetLastBlogAsync(int count);

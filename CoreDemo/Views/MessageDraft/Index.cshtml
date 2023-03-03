@@ -10,13 +10,13 @@
 <table class="table table-bordered table-responsive">
     <thead>
         <tr>
-            <th scope="row">#</th>
-            <th>Konu</th>
-            <th>İçerik</th>
-            <th>Alıcı</th>
-            <th>Taslağı Aç</th>
-            <th>Mesaj Gönder</th>
-            <th>Sil</th>
+            <th scope="col">#</th>
+            <th class="col-2">Konu</th>
+            <th class="col-3">İçerik</th>
+            <th class="col-2">Alıcı</th>
+            <th class="col-2">Taslağı Aç</th>
+            <th class="col-2">Mesaj Gönder</th>
+            <th class="col-1">Sil</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
             <tr>
                 <td scope="row">@item.MessageDraftID</td>
                 <td>@item.Subject</td>
-                <td>@item.Details...</td>
+                <td>@item.Details ...</td>
                 <td>@item.ReceiverUser</td>
                 <td><a href="/MessageDraft/EditMessageDraft/@item.MessageDraftID" class="btn btn-primary">Taslağı Düzenle</a></td>
                 <td><a href="/Message/SendMessage/@item.MessageDraftID" class="btn btn-success">Mesaj Gönder</a></td>
@@ -35,5 +35,6 @@
 
     </tbody>
 </table>
+<br />
 <a href="/MessageDraft/AddMessageDraft/" class="btn btn-primary">Yeni Taslak Oluştur</a>
 

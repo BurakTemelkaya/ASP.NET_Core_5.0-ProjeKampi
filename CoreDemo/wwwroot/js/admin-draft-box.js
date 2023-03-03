@@ -4,7 +4,7 @@
         type: "GET",
         success: function (data) {
             let jsonData = jQuery.parseJSON(data);
-            let tablehtml = '<table class="table table-hover table-mail"><tbody>';
+            let tablehtml = '<table class="table table-hover table-mail table-responsive"><tbody>';
             $.each(jsonData, (index, item) => {
                 var message = `${item.Message}`;
                 if (message.length > 75) {
@@ -12,12 +12,14 @@
                 }
 
                 tablehtml += `<tr class="read">
-                                <td class="check-mail">
+                                <td class="check-mail col-1">
                                     <input type="checkbox" class="i-checks" id="${item.MessageDraftID}">
                                 </td>
-                                <td class="mail-contact"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}">${item.Subject}</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}">${item.Details}</a></td>
-                                <td class="mail-content"><a href="/Admin/AdminMessage/SendMessage/${item.MessageDraftID}" class="btn btn-success text-white">Mesaj Gönder</a></td>
+                                <td class="mail-contact col-2"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}">${item.ReceiverUser}</a></td>
+                                <td class="mail-subject col-3"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}">${item.Subject}</a></td>
+                                <td class="mail-content col-4"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}">${item.Details} ...</a></td>
+                                <td class="mail- col-2"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}" class="btn btn-info text-white">Taslağı Düzenle</a></td>
+                                <td class="col-2"><a href="/Admin/AdminMessage/SendMessage/${item.MessageDraftID}" class="btn btn-success text-white">Mesaj Gönder</a></td>
                             </tr>`
                 });
 
