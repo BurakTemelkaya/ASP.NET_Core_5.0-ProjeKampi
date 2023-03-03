@@ -75,7 +75,6 @@ namespace BusinessLayer.Concrete
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
-
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -96,6 +95,7 @@ namespace BusinessLayer.Concrete
             return blog;
         }
 
+        [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -130,6 +130,7 @@ namespace BusinessLayer.Concrete
             return blog;
         }
 
+        [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var oldValue = await GetBlogByIDAsync(blog.BlogID);

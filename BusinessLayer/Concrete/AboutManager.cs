@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;

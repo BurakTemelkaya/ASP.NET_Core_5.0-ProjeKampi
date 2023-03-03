@@ -12,7 +12,7 @@ namespace BusinessLayer.ValidationRules
     {
         public NewsLetterValidator()
         {
-            RuleFor(x => x.Mail).NotEmpty().NotNull().EmailAddress();
+            RuleFor(x => x.Mail).NotEmpty().WithMessage("Abone bülteni kaydının mail adresi boş olamaz").EmailAddress().WithMessage("Abone bülteni kaydının mail adresi geçerli olmalıdır.");
         }
     }
 }

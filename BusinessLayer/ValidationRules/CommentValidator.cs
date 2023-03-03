@@ -12,11 +12,11 @@ namespace BusinessLayer.ValidationRules
     {
         public CommentValidator()
         {
-            RuleFor(x => x.CommentUserName).NotEmpty().NotNull().MinimumLength(3);
+            RuleFor(x => x.CommentUserName).NotEmpty().WithMessage("Ad Soyad adı boş olamaz").MinimumLength(3).WithMessage("Ad Soyad adı en az 3 karekter olabilir.").MaximumLength(30).WithMessage("Ad Soyad en az fazla 30 karekter olabilir.");
 
-            RuleFor(x => x.CommentTitle).NotEmpty().NotNull().MinimumLength(5);
+            RuleFor(x => x.CommentTitle).NotEmpty().WithMessage("Başlık boş olamaz").MinimumLength(5).WithMessage("Başlık en az 3 karekter olabilir.").MaximumLength(50).WithMessage("Başlık en az fazla 50 karekter olabilir.");
 
-            RuleFor(x => x.CommentContent).NotEmpty().NotNull().MinimumLength(10);
+            RuleFor(x => x.CommentContent).NotEmpty().WithMessage("İçerik boş olamaz").MinimumLength(10).WithMessage("İçerik en az 10 karekter olabilir.").MaximumLength(500).WithMessage("İçerik en fazla 500 karekter olabilir");
 
             RuleFor(x => x.BlogScore).LessThan(6).GreaterThan(0);
 

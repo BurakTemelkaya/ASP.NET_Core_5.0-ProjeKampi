@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.FileUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -62,6 +64,7 @@ namespace BusinessLayer.Concrete
             return null;
         }
 
+        
         public async Task AddAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
@@ -131,6 +134,7 @@ namespace BusinessLayer.Concrete
             return null;
         }
 
+        [ValidationAspect(typeof(MessageValidator))]
         public async Task UpdateAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);

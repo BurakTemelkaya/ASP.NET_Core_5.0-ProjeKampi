@@ -13,13 +13,13 @@ namespace BusinessLayer.ValidationRules
     {
         public UserSignUpDtoValidator()
         {
-            RuleFor(x => x.NameSurname).NotEmpty().NotNull().Length(3, 100);
-            RuleFor(x => x.UserName).NotEmpty().NotNull().Length(3, 30);
-            RuleFor(x => x.Email).NotEmpty().NotNull().EmailAddress().MinimumLength(3);
-            RuleFor(x => x.Password).NotEmpty().NotNull().MinimumLength(5).Equal(x => x.ConfirmPassword);
-            RuleFor(x => x.ConfirmPassword).NotEmpty().NotNull();
-            RuleFor(x => x.City).NotEmpty().NotNull();
-            RuleFor(x => x.About).NotEmpty().NotNull();
+            RuleFor(x => x.NameSurname).NotEmpty().WithMessage("Ad soyad boş olamaz.").Length(3, 100).WithMessage("Ad soyad en az 3 en fazla 100 karekter olabilir");
+            RuleFor(x => x.UserName).NotEmpty().WithMessage("Kullanıcı adı boş olamaz").Length(3, 30).WithMessage("Kullanıcı adı boş en az 3 en fazla 30 karekter olabilir.");
+            RuleFor(x => x.Email).NotEmpty().WithMessage("Mail adresi boş olamaz.").EmailAddress().WithMessage("Mail adresi geçerli olmak zorundadır.").Length(5,250).WithMessage("Mail adresi en az 5 en fazla 250 karekter olabilir");
+            RuleFor(x => x.Password).NotEmpty().WithMessage("Parola boş olamaz.").Length(5,50).WithMessage("Parola en az 5 en fazla 50 karekter olabilir").Equal(x => x.ConfirmPassword).WithMessage("Parola ile parola tekrarı aynı olmak zorunda");
+            RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("Parola tekrarı boş geçilemez");
+            RuleFor(x => x.City).NotEmpty();
+            RuleFor(x => x.About).NotEmpty().WithMessage("Hakkında kısmı boş geçilemez");
         }
     }
 }

@@ -50,6 +50,7 @@ namespace BusinessLayer.Concrete
             else
                 return false;
         }
+
         [ValidationAspect(typeof(NewsLetterValidator))]
         public async Task TAddAsync(NewsLetter t)
         {
@@ -71,6 +72,7 @@ namespace BusinessLayer.Concrete
         {
             return await _newsLetterDal.GetByIDAsync(id);
         }
+
         [ValidationAspect(typeof(NewsLetterValidator))]
         public async Task TUpdateAsync(NewsLetter t)
         {

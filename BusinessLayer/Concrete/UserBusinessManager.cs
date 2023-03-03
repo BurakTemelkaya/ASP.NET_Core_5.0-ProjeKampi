@@ -32,7 +32,8 @@ namespace BusinessLayer.Concrete
             _userManager = userManager;
             _mailService = mailService;
         }
-        [ValidationAspect(typeof(UserValidator))]
+
+        [ValidationAspect(typeof(UserSignUpDtoValidator))]
         public async Task<IEnumerable<IdentityError>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
         {
             var user = Mapper.Map<AppUser>(userSignUpDto);
@@ -72,7 +73,8 @@ namespace BusinessLayer.Concrete
         {
             return await _userManager.FindByIdAsync(id);
         }
-        [ValidationAspect(typeof(UserValidator))]
+
+        [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user)
         {
             var value = await GetByIDAsync(user.Id.ToString());
@@ -107,7 +109,8 @@ namespace BusinessLayer.Concrete
             else
                 return result.Errors;
         }
-        [ValidationAspect(typeof(UserValidator))]
+
+        [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user)
         {
             var value = await GetByIDAsync(user.Id.ToString());

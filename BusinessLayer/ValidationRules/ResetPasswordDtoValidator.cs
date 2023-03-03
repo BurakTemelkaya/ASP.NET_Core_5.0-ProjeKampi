@@ -13,8 +13,8 @@ namespace BusinessLayer.ValidationRules
     {
         public ResetPasswordDtoValidator()
         {
-            RuleFor(x => x.Password).NotEmpty().NotNull().Equal(x=> x.PasswordConfirm);
-            RuleFor(x => x.PasswordConfirm).NotEmpty().NotNull();
+            RuleFor(x => x.Password).NotEmpty().WithMessage("Parola boş olamaz").Equal(x=> x.PasswordConfirm);
+            RuleFor(x => x.PasswordConfirm).NotEmpty().WithMessage("Parola tekrarı boş olamaz");
         }
     }
 }

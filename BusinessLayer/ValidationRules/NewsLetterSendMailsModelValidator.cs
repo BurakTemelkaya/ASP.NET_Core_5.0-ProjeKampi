@@ -13,8 +13,8 @@ namespace BusinessLayer.ValidationRules
     {
         public NewsLetterSendMailsModelValidator()
         {
-            RuleFor(x => x.Subject).NotEmpty().NotNull();
-            RuleFor(x => x.Content).NotEmpty().NotNull();
+            RuleFor(x => x.Subject).NotEmpty().WithMessage("Mesaj taslağının başlığı boş olamaz");
+            RuleFor(x => x.Content).NotEmpty().WithMessage("Mesaj taslağının içeriği boş olamaz");
         }
     }
 }

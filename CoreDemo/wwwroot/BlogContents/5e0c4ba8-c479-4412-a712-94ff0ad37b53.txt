@@ -1,0 +1,1 @@
+<p>var entities = invocation.Arguments.Where(t =&gt; t.GetType() == entityType);</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; foreach (var entity in entities)</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ValidationTool.Validate(validator, entity);</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</p>

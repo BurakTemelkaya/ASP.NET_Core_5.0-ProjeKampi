@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.FileUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -44,6 +46,7 @@ namespace BusinessLayer.Concrete
             return values;
         }
 
+        
         public async Task TAddAsync(NewsLetterDraft t)
         {
             t.TimeToAdd = DateTime.Now;

@@ -11,23 +11,23 @@
 <h1>Yeni Blog Girişi</h1>
 <form class="form-group" method="post" enctype="multipart/form-data">
     @Html.Label("Blog Başlığı")
-    @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" , @required="required" })
     @Html.ValidationMessageFor(x => x.BlogTitle, "", new { @class = "text-danger" })
     <br />
     <br />
-    <textarea asp-for="BlogContent" itemid="BlogContent" name="BlogContent"></textarea>
+    <textarea asp-for="BlogContent" itemid="BlogContent" name="BlogContent" required></textarea>
     @Html.ValidationMessageFor(x => x.BlogContent, "", new { @class = "text-danger" })
     <br />
     <br />
     @Html.Label("Blog Görseli Linki")
-    @Html.TextBoxFor(x => x.BlogImage, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.BlogImage, new { @class = "form-control" , @required="required"})
     <br />
     @Html.Label("Yada Blog Görseli Yükle")
     <input type="file" name="blogImage" class="form-control-file">
     <br />
     <br />
     @Html.Label("Blog Küçük Görseli")
-    @Html.TextBoxFor(x => x.BlogThumbnailImage, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.BlogThumbnailImage, new { @class = "form-control", @required="required" })
     <br />
     @Html.Label("Yada Blog Küçük Görseli Yükle")
     <input type="file" name="blogThumbnailImage" class="form-control-file">
@@ -38,7 +38,7 @@
     <br />
     <br />
     @Html.Label("Blog Hemen Yayınlansın Mı ? (İşaretli Evet, İşaretsiz Hayır)")
-    @Html.CheckBoxFor(x => x.BlogStatus, new { @class = "form-check" })
+    @Html.CheckBoxFor(x => x.BlogStatus, new { @class = "form-check", @checked="true" })
     <br />
     <br />
     <div asp-validation-summary="All" class="text-danger">

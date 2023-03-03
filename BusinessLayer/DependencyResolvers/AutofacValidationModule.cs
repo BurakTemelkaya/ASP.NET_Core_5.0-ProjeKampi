@@ -37,7 +37,7 @@ namespace BusinessLayer.DependencyResolvers
 
             builder.RegisterType<UserSignUpDtoValidator>().As<IValidator<UserSignUpDto>>().SingleInstance();
 
-            builder.RegisterType<UserValidator>().As<IValidator<UserDto>>().SingleInstance();
+            builder.RegisterType<UserDtoValidator>().As<IValidator<UserDto>>().SingleInstance();
         }
         
     }

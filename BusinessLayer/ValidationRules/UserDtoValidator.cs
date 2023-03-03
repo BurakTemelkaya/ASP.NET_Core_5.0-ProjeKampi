@@ -8,9 +8,9 @@ using EntityLayer.DTO;
 
 namespace BusinessLayer.ValidationRules
 {
-    public class UserValidator : AbstractValidator<UserDto>
+    public class UserDtoValidator : AbstractValidator<UserDto>
     {
-        public UserValidator()
+        public UserDtoValidator()
         {
             RuleFor(x => x.NameSurname).NotEmpty().NotNull().MinimumLength(3).MaximumLength(100);
             RuleFor(x => x.UserName).NotEmpty().NotNull().MinimumLength(3).MaximumLength(30);

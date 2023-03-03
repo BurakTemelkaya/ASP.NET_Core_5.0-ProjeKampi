@@ -37,6 +37,7 @@ namespace BusinessLayer.Concrete
             return await _contactDal.GetListAllAsync(filter);
         }
 
+        [ValidationAspect(typeof(ContactValidator))]
         public async Task TAddAsync(Contact t)
         {
             await _contactDal.InsertAsync(t);
@@ -56,6 +57,7 @@ namespace BusinessLayer.Concrete
         {
             return await _contactDal.GetByIDAsync(id);
         }
+
         [ValidationAspect(typeof(ContactValidator))]
         public async Task TUpdateAsync(Contact t)
         {
