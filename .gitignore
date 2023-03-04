@@ -536,3 +536,7 @@ $RECYCLE.BIN/
 /CoreDemo/CoreDemo.csproj.user
 /BusinessLayer/obj/Debug/net5.0/refint/BusinessLayer.dll
 /BusinessLayer/obj/Debug/net5.0/ref/BusinessLayer.dll
+/Jwt_Core_Proje_Kampi/bin/Debug/net5.0/Jwt_Core_Proje_Kampi.dll
+/Jwt_Core_Proje_Kampi/obj/Debug/net5.0/Jwt_Core_Proje_Kampi.pdb
+/Jwt_Core_Proje_Kampi/obj/Debug/net5.0/Jwt_Core_Proje_Kampi.dll
+/Jwt_Core_Proje_Kampi/bin/Debug/net5.0/Jwt_Core_Proje_Kampi.pdb
