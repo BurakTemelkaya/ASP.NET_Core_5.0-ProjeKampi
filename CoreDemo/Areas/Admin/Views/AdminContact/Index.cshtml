@@ -29,15 +29,21 @@
                         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
 
                     </div>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
+                    <button type="button" class="btn btn-white btn-sm checkbox-toggle" id="select-all-checkbox" data-toggle="tooltip"
+                            data-placement="left" title="Hepsini Seç">
+                        <i class="checkbox-toggle fa fa-square-o"></i></>
+                    </button>
+
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnRefresh" onclick="GetContactList()" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i></button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnReadContacts" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnUnreadContacts" data-placement="top" title="Okunmadı Olarak İşaretle"><i class="fa fa-eye-slash"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" id="btnDeleteContacts" data-placement="top" title="Çöp kutusuna taşı"><i class="fa fa-trash-o"></i> </button>
                 </div>
             </div>
             <div class="mail-box">
 
-                <table class="table table-hover table-mail">
+                @*<table class="table table-hover table-mail">
                     <tbody>
                         @foreach (var item in Model)
                         {
@@ -57,11 +63,16 @@
                             </tr>
                         }
                     </tbody>
-                </table>
+                </table>*@
 
 
             </div>
         </div>
     </div>
 </div>
+
+@section ScriptSection{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="~/js/admin-contact.js"></script>
+}
 

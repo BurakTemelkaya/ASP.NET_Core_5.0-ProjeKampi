@@ -3,11 +3,11 @@
         <div class="form-row">
             <input type="hidden" id="blogId" value="@ViewBag.blogId" />
 
-            <input class="form-control" type="text" id="CommentUserName" placeholder="Adınız Soyadınız" required>
+            <input class="form-control" type="text" id="CommentUserName" placeholder="Adınız Soyadınız" required minlength="3" maxlength="50">
 
-            <input class="form-control" type="text" id="CommentTitle" placeholder="Konu" required>
+            <input class="form-control" type="text" id="CommentTitle" placeholder="Konu" required minlength="5" maxlength="50">
 
-            <textarea class="form-control" id="CommentContent" placeholder="Mesajın..." required></textarea>
+            <textarea class="form-control" id="CommentContent" placeholder="Mesajın..." required minlength="10" maxlength="500"></textarea>
         </div>
         <div class="container-wrapper">
             <div class="container d-flex align-items-center justify-content-center">

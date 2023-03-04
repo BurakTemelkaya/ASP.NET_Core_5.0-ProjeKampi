@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using CoreLayer.Utilities.CaptchaUtilities;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -17,29 +18,32 @@ namespace CoreDemo.Controllers
     public class ContactController : Controller
     {
         private readonly IContactService _contactService;
+        private readonly ICaptchaService _captchaService;
 
-        public ContactController(IContactService contactService)
+        public ContactController(IContactService contactService, ICaptchaService captchaService)
         {
             _contactService = contactService;
+            _captchaService = captchaService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            ViewData["Title"] = "İletişim";
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Index(Contact contact)
         {
-            if (ModelState.IsValid)
+            string validationMessage = await _captchaService.RecaptchaControl(HttpContext);
+            if (!string.IsNullOrEmpty(validationMessage))
             {
-                contact.ContactDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                contact.ContactStatus = true;
-                await _contactService.ContactAddAsync(contact);
-                return RedirectToAction("Index");
+                ModelState.AddModelError("Recaptcha", validationMessage);
+                return View();
             }
-            return View();
+
+            await _contactService.ContactAddAsync(contact);
+            return RedirectToAction("Index");
         }
     }
 }

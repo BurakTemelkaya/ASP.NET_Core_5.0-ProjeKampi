@@ -9,7 +9,6 @@
     <meta charset="utf-8">
     <meta name="keywords" content="Core Blog" />
     <script>       
-
         addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
         }, false);
@@ -47,25 +46,25 @@
                     <ul class="social_list1 mt-3">
 
                         <li>
-                            <a href="https://www.facebook.com/profile.php?id=100011652821384" class="facebook1 mx-2">
+                            <a href="https://www.facebook.com/profile.php?id=100011652821384" target="_blank" class="facebook1 mx-2">
                                 <i class="fab fa-facebook-f"></i>
 
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="twitter2">
-                                <i class="fab fa-twitter"></i>
+                            <a href="https://www.linkedin.com/in/buraktemelkaya/" target="_blank" class="twitter2 mx-2">
+                                <i class="fab fa-linkedin"></i>
 
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="dribble3 mx-2">
-                                <i class="fab fa-dribbble"></i>
+                            <a href="https://github.com/BurakTemelkaya" target="_blank" class="github mx-2">
+                                <i class="fab fa-github"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="pin">
-                                <i class="fab fa-pinterest-p"></i>
+                            <a href="https://www.youtube.com/channel/UC250K8wIDdyJPI9o2L2hy8w" target="_blank" class="pin mx-2">
+                                <i class="fab fa-youtube"></i>
                             </a>
                         </li>
                     </ul>
@@ -75,14 +74,11 @@
 
         @await Html.PartialAsync("Partial1")
     </header>
-    <!--/main-->
+
     @RenderBody()
-    <!--//main-->
-    <!--footer-->
+
     @await Html.PartialAsync("Partial3")
 
-    <!---->
-    <!-- js -->
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
     <script src="~/CoreBlogTema/js/move-top.js"></script>
     <script src="~/CoreBlogTema/js/easing.js"></script>
@@ -101,22 +97,15 @@
 
         });
     </script>
-
-
-    <!-- //js -->
-    <!--/ start-smoth-scrolling -->
-    
-    <!--// end-smoth-scrolling -->
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
-    </a>
-    <!-- //Custom-JavaScript-File-Links -->
+    </a>    
     <script src="~/admin/js/bootstrap.js"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/newsletter-subscribe.js"></script>
-    
+    <script src="~/js/blog-search.js"></script>
     @RenderSection("ScriptSection",false)
 </body>
 </html>

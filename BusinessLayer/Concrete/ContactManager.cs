@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.FileUtilities;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -23,7 +24,8 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(ContactValidator))]
         public async Task ContactAddAsync(Contact contact)
         {
-            contact.ContactStatus = false;
+            contact.ContactDate = DateTime.Now;
+            contact.ContactStatus = true;
             await _contactDal.InsertAsync(contact);
         }
 
@@ -62,6 +64,128 @@ namespace BusinessLayer.Concrete
         public async Task TUpdateAsync(Contact t)
         {
             await _contactDal.UpdateAsync(t);
+        }
+
+        public async Task<bool> MarkUsReadAsync(int contactId)
+        {
+            if (contactId != 0)
+            {
+                var contact = await TGetByIDAsync(contactId);
+
+                if (!contact.ContactStatus)
+                {
+                    contact.ContactStatus = true;
+                }
+                else
+                {
+                    return false;
+                }
+
+                await _contactDal.UpdateAsync(contact);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> MarkUsUnreadAsync(int contactId)
+        {
+            if (contactId != 0)
+            {
+                var contact = await TGetByIDAsync(contactId);
+
+                if (contact.ContactStatus)
+                {
+                    contact.ContactStatus = false;
+                }
+                else
+                {
+                    return false;
+                }
+
+                await _contactDal.UpdateAsync(contact);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteContactsAsync(List<string> ids)
+        {
+            if (ids == null)
+            {
+                return false;
+            }
+
+            List<Contact> contacts = new();
+
+            foreach (var id in ids)
+            {
+                var message = await TGetByIDAsync(Convert.ToInt32(id));
+                contacts.Add(message);
+            }
+            await _contactDal.DeleteRangeAsync(contacts);
+            return true;
+        }
+
+        public async Task<bool> MarksUsReadAsync(List<string> Ids)
+        {
+            List<Contact> contacts = new();
+
+            foreach (var id in Ids)
+            {
+                if (Convert.ToInt32(id) != 0)
+                {
+                    try
+                    {
+                        var contact = await TGetByIDAsync(Convert.ToInt32(id));
+
+                        if (!contact.ContactStatus)
+                            contact.ContactStatus = true;
+
+                        contacts.Add(contact);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            await _contactDal.UpdateRangeAsync(contacts);
+            return true;
+        }
+
+        public async Task<bool> MarksUsUnreadAsync(List<string> Ids)
+        {
+            List<Contact> contacts = new();
+
+            foreach (var id in Ids)
+            {
+                if (Convert.ToInt32(id) != 0)
+                {
+                    try
+                    {
+                        var contact = await TGetByIDAsync(Convert.ToInt32(id));
+
+                        if (contact.ContactStatus)
+                            contact.ContactStatus = false;
+
+                        contacts.Add(contact);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            await _contactDal.UpdateRangeAsync(contacts);
+            return true;
         }
     }
 }

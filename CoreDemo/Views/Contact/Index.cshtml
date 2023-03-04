@@ -1,33 +1,13 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "İletişim Sayfası";
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
-<head>
-    <title>İletişim Sayfası</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-    <meta name="keywords" content="Weblog a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+@section HeaderSection{
+        <link href="~/CoreBlogTema/css/contact.css" rel='stylesheet' type='text/css' />
+}
 
-    <script>
-        addEventListener("load", function () {
-            setTimeout(hideURLbar, 0);
-        }, false);
 
-        function hideURLbar() {
-            window.scrollTo(0, 1);
-        }
-    </script>
-    <link href="~/CoreBlogTema/css/bootstrap.css" rel='stylesheet' type='text/css' />
-    <link href="~/CoreBlogTema/css/contact.css" rel='stylesheet' type='text/css' />
-    <link href="~/CoreBlogTema/css/style.css" rel='stylesheet' type='text/css' />
-    <link href="~/CoreBlogTema/css/fontawesome-all.css" rel="stylesheet">
-    <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
-          rel="stylesheet">
-</head>
-
-<body>
     <!--/main-->
     <section class="main-content-w3layouts-agileits">
         <h3 class="tittle">Bizimle İletişime Geçin</h3>
@@ -76,9 +56,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <i class="fas fa-mobile-alt"></i>
                             </div>
                             <div class="col-md-8 address-right text-left">
-                                <h6>Phone</h6>
+                                <h6>Telefon</h6>
                                 <a href="tel:905465000000">+5465123456</a>
-
                             </div>
 
                         </div>
@@ -98,20 +77,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlInput1">Email</label>
-                                <input class="form-control" type="email" name="ContactMail" placeholder="Email adresinizi yazınız" required="">
+                                <input class="form-control" type="email" name="ContactMail" placeholder="Email adresinizi yazınız" required>
                                 @Html.ValidationMessage("ContactMail", "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 <label for="validationCustom03 my-2">Mesajın Konusu</label>
-                                <input class="form-control" type="text" name="ContactSubject" placeholder="Mesajın Konusunu Yazınız" required="">
+                                <input class="form-control" type="text" name="ContactSubject" placeholder="Mesajın Konusunu Yazınız" required>
                                 @Html.ValidationMessage("ContactSubject", "", new { @class = "text-danger" })
-                            </div>
+                            </div>                        
                         </div>
                         <div class="col-md-6 con-right">
                             <div class="form-group">
                                 <label for="textarea">Mesajınız</label>
-                                <textarea id="textarea" name="ContactMessage" placeholder="Mesajınızı Yazınız"></textarea>
-                                @Html.ValidationMessage("ContactMessage", "", new { @class = "text-danger" })
+                                <textarea id="textarea" name="ContactMessage" placeholder="Mesajınızı Yazınız" required></textarea>
+                            @Html.ValidationMessage("ContactMessage", "", new { @class = "text-danger" })
+                            <div class="row form-group justify-content-center">
+                                <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
+                            </div>
+                            @Html.ValidationMessage("Recaptcha", "", new { @class = "text-danger" })
                             </div>
                             <input class="form-control" type="submit" value="Gönder">
 
@@ -121,7 +104,4 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
         </div>
     </section>
-
-</body>
-
 

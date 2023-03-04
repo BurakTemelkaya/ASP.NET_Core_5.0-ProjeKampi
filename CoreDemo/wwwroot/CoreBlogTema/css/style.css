@@ -197,6 +197,10 @@ ul.social_list1 li a {
 .pin {
     background: #BD081C;
 }
+
+.github {
+    background: #171515;
+}
 /*-- top-bar_sub_w3layouts --*/
 
 /*--/navbar--*/
@@ -251,6 +255,10 @@ li.nav-item {
 }
 /*--/search--*/
 form.header-search {
+    width: 25%;
+}
+
+div.header-search {
     width: 25%;
 }
 

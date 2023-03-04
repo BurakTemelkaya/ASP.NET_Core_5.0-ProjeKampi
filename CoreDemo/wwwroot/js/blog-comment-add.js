@@ -31,12 +31,21 @@ $("#btnSendComment").click(function () {
     if (Comment.CommentUserName == "") {
         text += 'Lütfen isim alanını boş bırakmayınız.<br/>';
     }
+    else if (Comment.CommentUserName.length < 5) {
+        text += 'İsim 5 karekterden az olamaz.<br/>';
+    }
     if (Comment.CommentTitle == "") {
         text += 'Lütfen başlık alanını boş bırakmayınız.<br/>';
     }
+    else if (Comment.CommentTitle.length < 3) {
+        text += 'Başlık 3 karekterden az olamaz.<br/>';
+    }
     if (Comment.CommentContent == "") {
         text += 'Lütfen içerik alanını boş bırakmayınız.<br/>';
-    }   
+    }
+    else if (Comment.CommentContent.length < 10) {
+        text += 'İçerik 10 karekterden az olamaz.<br/>';
+    }
     if (BlogScore == 0) {
         text += 'Lütfen puan seçiniz.<br/>';
     }
