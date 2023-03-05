@@ -25,7 +25,7 @@ namespace BusinessLayer.Concrete
         public async Task ContactAddAsync(Contact contact)
         {
             contact.ContactDate = DateTime.Now;
-            contact.ContactStatus = true;
+            contact.ContactStatus = false;
             await _contactDal.InsertAsync(contact);
         }
 
@@ -42,6 +42,7 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(ContactValidator))]
         public async Task TAddAsync(Contact t)
         {
+            t.ContactStatus = false;
             await _contactDal.InsertAsync(t);
         }
 

@@ -49,7 +49,7 @@
                                 <td>@item.MailID</td>
                                 <td>@item.Mail</td>
                                 <td>@status</td>
-                                <td><a href="/Admin/AdminNewsLetter/Delete/@item.MailID" class="btn btn-outline-danger Sil">Sil</a></td>
+                                <td><a href="/Admin/AdminNewsLetter/DeleteNewsLetter/@item.MailID" class="btn btn-outline-danger Sil">Sil</a></td>
                                 <td><a href="/Admin/AdminNewsLetter/EditNewsletter/@item.MailID" class="btn btn-outline-success">Düzenle</a></td>
                             </tr>
                         }
@@ -71,7 +71,7 @@ new PagedListRenderOptions
     LiElementClasses= new[] {"page-item"},
     PageClasses=new[] {"page-link"},
     ActiveLiElementClass="active"
-});
+})
 
 @section ScriptSection{
     <script>

@@ -15,12 +15,40 @@
             <div class="i-checks"><label> <input asp-for="MailStatus" type="checkbox"><i></i> Mail Almaya Devam Edicek Mi ? </label></div>
         </div>
     </div>
-    <div class="form-group row col-md-12 float-right">
-        <div class="col-lg-12">
-            <button class="btn btn-w-m btn-success" type="submit">Düzenle</button>
-        </div>
+    <div class="form-group row col-12 float-right">
+            <button class="btn btn-w-m btn-success col-4 mx-2" type="submit">Düzenle</button>
+            <a href="/Admin/AdminNewsLetter/DeleteNewsLetter/@Model.MailID" id="Sil" class="btn btn-w-m btn-danger col-4" type="submit">Sil</A>
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>
     <br /><br />
 </form>
+
+@section ScriptSection{
+    <script>
+        $('#Sil').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: "Haber bülteninden kayıtlı kişiyi silmek istediğinize emin misiniz?",
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        'Seçilen Mesaj Silindi .',
+                        'success'
+                    )
+                }
+            })
+        });
+    </script>
+}
 

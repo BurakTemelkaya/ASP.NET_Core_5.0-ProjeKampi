@@ -2,7 +2,6 @@ using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
 using BusinessLayer.Errors;
 using BusinessLayer.Extension;
-using BusinessLayer.ValidationRules;
 using Core.Extensions;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
