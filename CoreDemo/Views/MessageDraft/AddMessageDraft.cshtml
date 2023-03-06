@@ -1,12 +1,12 @@
 ﻿@model MessageDraft
 @{
-    ViewData["Title"] = "AddMessageDraft";
+    ViewData["Title"] = "Mesaj Taslağı Oluştur";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 @section HeaderSection{
     <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
 }
-<h1>Taslak Oluştur</h1>
+<h1>Mesaj Taslağı Oluştur</h1>
 @using (Html.BeginForm())
 {
     @Html.Label("Alıcı Mail Adresi yada Kullanıcı Adı")

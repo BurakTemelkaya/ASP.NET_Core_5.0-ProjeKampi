@@ -1,10 +1,10 @@
 ﻿@model Message
 @{
-    ViewData["Title"] = "MessageDetails";
+    ViewData["Title"] = "Mesaj Detayı";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
-<h1>Mesaj Detay</h1>
+<h1>Mesaj Detayı</h1>
 @Html.HiddenFor(x=> x.MessageID)
 @Html.Label("Mesaj Başlığı")
 @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", disabled = "disabled" })
