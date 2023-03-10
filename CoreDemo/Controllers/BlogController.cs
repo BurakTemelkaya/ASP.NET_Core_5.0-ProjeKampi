@@ -173,13 +173,9 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> EditBlog(int id)
         {
-            if (id != 0)
-            {
-                var blogValue = await _blogService.GetBlogByIDAsync(id);
-                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-                return View(blogValue);
-            }
-            return RedirectToAction("Error404", "ErrorPage");
+            var blogValue = await _blogService.GetBlogByIdForUpdate(id);
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            return View(blogValue);
         }
         [HttpPost]
         public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)

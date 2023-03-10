@@ -50,12 +50,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             return View(values);
         }
+
         [HttpGet]
         public async Task<IActionResult> BlogAdd()
         {
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -73,6 +75,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public async Task<IActionResult> BlogUpdate(int id)
         {
@@ -80,6 +83,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
             return View(blogValue);
         }
+
         [HttpPost]
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -87,12 +91,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blog = await _blogService.GetFileNameContentBlogByIDAsync(id);
             await _blogService.DeleteBlogByAdminAsync(blog);
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> ChangeStatusBlog(int id)
         {
             await _blogService.ChangedBlogStatusByAdminAsync(id);

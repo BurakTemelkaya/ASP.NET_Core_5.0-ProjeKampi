@@ -52,13 +52,15 @@ namespace BusinessLayer.Concrete
         public async Task<Blog> GetBlogByIdForUpdate(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
+
             if (value == null)
                 return value;
-            if (value.BlogThumbnailImage[..5] != "http" || value.BlogThumbnailImage[..5] != "https")
+
+            if (value.BlogThumbnailImage[..4] != "http")
             {
                 value.BlogThumbnailImage = null;
             }
-            if (value.BlogImage[..5] != "http" || value.BlogImage[..5] != "https")
+            if (value.BlogImage[..4] != "http")
             {
                 value.BlogImage = null;
             }
