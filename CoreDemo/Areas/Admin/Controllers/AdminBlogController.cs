@@ -83,7 +83,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var value = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
+            await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("Index");
         }

@@ -103,22 +103,26 @@ namespace BusinessLayer.Concrete
             var oldValue = await GetBlogByIDAsync(blog.BlogID);
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
+
             if (user == null || user.Id != oldValue.WriterID)
                 return blog;
-            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage &&
-                blogImage != null)
+
+            if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
-            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
-                blogThumbnailImage != null)
+
+            if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
-            if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
-                return blog;
+
+            blog.BlogImage ??= oldValue.BlogImage;
+
+            blog.BlogThumbnailImage ??= oldValue.BlogThumbnailImage;
+
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
@@ -137,20 +141,23 @@ namespace BusinessLayer.Concrete
             var oldValue = await GetBlogByIDAsync(blog.BlogID);
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
-            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage &&
-                blogImage != null)
+
+            if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
-            if (ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage &&
-                blogThumbnailImage != null)
+
+            if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
-            if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
-                return blog;
+
+            blog.BlogImage ??= oldValue.BlogImage;
+
+            blog.BlogThumbnailImage ??= oldValue.BlogThumbnailImage;
+
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
