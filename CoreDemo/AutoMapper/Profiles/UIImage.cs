@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLayer.Models;
 using CoreDemo.Areas.Admin.Models;
 using CoreDemo.Models;
 using EntityLayer.Concrete;
@@ -12,6 +13,7 @@ namespace CoreDemo.AutoMapper.Profiles
         {
             CreateMap<BannedUserModel, AppUser>().ReverseMap();
             CreateMap<ResetPasswordDto, ForgotPasswordModel>().ReverseMap();
+            CreateMap<NewsLetterSendMailsModel, NewsLetterDraft>().ForMember(x => x.TimeToAdd, opt => opt.Ignore()).ForMember(x => x.NewsLetterDraftId, opt=> opt.Ignore()).ReverseMap();
         }
     }
 }

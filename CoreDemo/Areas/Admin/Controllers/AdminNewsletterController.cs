@@ -28,6 +28,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var value = await newsletter.ToPagedListAsync(page, 5);
             return View(value);
         }
+
         [HttpGet]
         public async Task<IActionResult> SendNewsletter(int id)
         {
@@ -36,12 +37,13 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var value = await _newsLetterDraftService.TGetByIDAsync(id);
                 if (value != null)
                 {
-                    var newsLetter = _mapper.Map<NewsLetter>(value);
+                    var newsLetter = _mapper.Map<NewsLetterSendMailsModel>(value);
                     return View(newsLetter);
                 }
             }
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> SendNewsletter(NewsLetterSendMailsModel model)
         {
@@ -57,18 +59,21 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
 
         }
+
         [HttpGet]
         public async Task<IActionResult> EditNewsletter(int id)
         {
             var value = await _newsLetterService.TGetByIDAsync(id);
             return value == null ? RedirectToAction("Index") : View(value);
         }
+
         [HttpPost]
         public async Task<IActionResult> EditNewsletter(NewsLetter newsLetter)
         {
             await _newsLetterService.TUpdateAsync(newsLetter);
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> DeleteNewsLetter(int id)
         {
             var value = await _newsLetterService.TGetByIDAsync(id);
