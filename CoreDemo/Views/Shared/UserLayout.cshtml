@@ -86,8 +86,12 @@
             </div>
         </div>
 
-        @await Html.PartialAsync("Partial1")
+
     </header>
+
+    <div style="position: sticky; top: 0; z-index:999;">
+        @await Html.PartialAsync("Partial1")
+    </div>
 
     @RenderBody()
 
@@ -113,7 +117,7 @@
     </script>
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
-    </a>    
+    </a>
     <script src="~/admin/js/bootstrap.js"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>

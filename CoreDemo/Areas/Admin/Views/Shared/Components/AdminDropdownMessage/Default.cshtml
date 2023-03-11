@@ -30,13 +30,13 @@
                     sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
             }
             else
-                sure = item.MessageDate.ToString("dd.mm.yyyy") + " tarihinde";
+                sure = item.MessageDate.ToString("dd.MM.yyyy") + " tarihinde";
             <li>
                 <div class="dropdown-messages-box">
                     <a class="dropdown-item float-left" href="/Admin/AdminMessage/Read/@item.MessageID">
                         <img alt="image" class="rounded-circle" src="@item.SenderUser.ImageUrl">
                     </a>
-                    <div class="media-body" onclick='location.href="/Admin/AdminMessage/Read/@item.MessageID"'>
+                    <div class="media-body cursor" onclick='location.href="/Admin/AdminMessage/Read/@item.MessageID"'>
                             <small class="float-right">@sure</small>
                             <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
                             <small class="text-muted">@item.MessageDate</small>
