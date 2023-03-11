@@ -17,12 +17,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace CoreDemo
 {
@@ -41,6 +44,23 @@ namespace CoreDemo
             services.AddDbContext<Context>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SQLServer"))
             , ServiceLifetime.Transient);
+
+            CultureInfo[] supportedCultures = new[]
+            {
+                new CultureInfo("tr"),
+            };
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("tr");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new QueryStringRequestCultureProvider(),
+                    new CookieRequestCultureProvider()
+                };
+            });
 
             services.AddIdentity<AppUser, AppRole>(x =>
             {
@@ -145,7 +165,7 @@ namespace CoreDemo
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Blog}/{action=Index}/{id?}");              
+                    pattern: "{controller=Blog}/{action=Index}/{id?}");
             });
 
 

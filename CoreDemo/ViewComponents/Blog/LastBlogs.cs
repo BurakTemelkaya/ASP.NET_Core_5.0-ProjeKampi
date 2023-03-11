@@ -14,11 +14,14 @@ namespace CoreDemo.ViewComponents.Blog
         {
             _blogService = blogService;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int writerId, int blogId)
         {
             var blogs = await _blogService.GetListAsync();
-            var last3Blog = await blogs.Where(x => x.BlogStatus).TakeLast(3).ToListAsync();
-            return View(last3Blog);
+            var lastBlogs = await blogs.Where(x => x.BlogStatus).ToListAsync();
+            lastBlogs.RemoveAll(x => x.WriterID == writerId);
+            var currentBlog = blogs.FirstOrDefault(x => x.BlogID == blogId);
+            lastBlogs.Remove(currentBlog);
+            return View(await lastBlogs.TakeLast(4).ToListAsync());
         }
     }
 }

@@ -54,7 +54,7 @@
                                 <td>@item.NameSurname</td>
                                 <td>@item.UserName</td>
                                 <td>@item.Email</td>
-                                <td>@item.RegistrationTime</td>
+                                <td>@item.RegistrationTime.ToString("dd.mm.yyyy")</td>
                                 <td>
                                     @if (item.About.Length < 36)
                                     {

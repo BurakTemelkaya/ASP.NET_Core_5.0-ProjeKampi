@@ -39,7 +39,7 @@
                             </div>
                             <div class="product-desc text-center">
                                 <span class="product-price">
-                                    @item.BlogCreateDate.ToShortDateString()
+                                    @item.BlogCreateDate.ToString("dd.mm.yyyy")
                                 </span>
                                 <small class="text-muted">@item.Category.CategoryName</small>
                                 <a href="/Blog/BlogReadAll/@item.BlogID" target="_blank" class="product-name"> @item.BlogTitle</a>

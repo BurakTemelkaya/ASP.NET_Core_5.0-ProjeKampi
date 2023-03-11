@@ -1,20 +1,27 @@
 ﻿@model IEnumerable<Blog>
-<div class="single-gd tech-btm">
+<div class="tech-btm">
     <h4>Son Eklenen Bloglar</h4>
     @foreach (var item in Model)
     {
-
-        <div class="blog-grids">
-            <div class="blog-grid-left">
-                <a href="/Blog/BlogReadAll/@item.BlogID">
-                    <img src="@item.BlogImage" class="img-fluid">
-                </a>
+        <div class="blog-grids row mb-3">
+            <div class="col-md-5 blog-grid-left">
+                <div class="blog-grid-left">
+                    <a href="/Blog/BlogReadAll/@item.BlogID">
+                        <img src="@item.BlogThumbnailImage" class="card-img-top img-fluid">
+                    </a>
+                </div>
             </div>
-            <div class="blog-grid-right">
 
+            <div class="col-md-7 blog-grid-right">
                 <h5>
                     <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogTitle</a>
                 </h5>
+
+                <div class="sub-meta">
+                    <span>
+                        <i class="far fa-clock"></i> @item.BlogCreateDate.ToString("dd.mm.yyyy")
+                    </span>
+                </div>
             </div>
             <div class="clearfix"> </div>
         </div>

@@ -7,7 +7,7 @@
         <div class="blog-grids row mb-3">
             <div class="col-md-5 blog-grid-left">
                 <a href="/Blog/BlogReadAll/@item.BlogID">
-                    <img src="@item.BlogImage" class="card-img-top img-fluid" alt="">
+                    <img src="@item.BlogImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
                 </a>
             </div>
             <div class="col-md-7 blog-grid-right">
@@ -26,7 +26,7 @@
                 </h5>
                 <div class="sub-meta">
                     <span>
-                        <i class="far fa-clock"></i> @(((DateTime)item.BlogCreateDate).ToString("dd-MMM-yyyy"))
+                        <i class="far fa-clock"></i> @(((DateTime)item.BlogCreateDate).ToString("dd-MM-yyyy"))
                     </span>
                 </div>
             </div>

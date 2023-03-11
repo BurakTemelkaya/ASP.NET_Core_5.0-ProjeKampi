@@ -78,7 +78,7 @@
                                         }
                                         </td>
                                         <td class="text-navy col-1"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
-                                <td class="col-1">@item.CommentDate.ToShortDateString()</td>
+                                <td class="col-1">@item.CommentDate.ToString("dd.mm.yyyy")</td>
                                 <td class="col-1"><a href="/Admin/AdminComment/DeleteComment/@item.CommentID" class="btn btn-outline-danger Sil">Sil</a></td>
                                 <td class="col-1"><a href="/Admin/AdminComment/EditComment/@item.CommentID" class="btn btn-outline-success">Düzenle</a></td>
                             </tr>
@@ -89,6 +89,7 @@
         </div>
     </div>
 </div>
+
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
 new PagedListRenderOptions
 {
@@ -101,6 +102,7 @@ new PagedListRenderOptions
     PageClasses=new[] {"page-link"},
     ActiveLiElementClass="active"
 })
+
 @section ScriptSection{
     <script>
         $('.Sil').click(function (e) {

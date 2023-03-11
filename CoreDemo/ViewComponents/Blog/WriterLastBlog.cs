@@ -25,7 +25,7 @@ namespace CoreDemo.ViewComponents.Blog
             var values = await blogs.Where(x => x.BlogStatus).ToListAsync();
             var currentBlog = values.FirstOrDefault(x => x.BlogID == blogId);
             values.Remove(currentBlog);
-            return View(values);
+            return View(await values.TakeLast(4).ToListAsync());
         }
     }
 }

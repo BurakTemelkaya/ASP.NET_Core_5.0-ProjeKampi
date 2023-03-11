@@ -12,9 +12,7 @@ namespace EntityLayer.Concrete
     {
         [Key]
         public int BlogID { get; set; }
-        [MaxLength(150)]
         public string BlogTitle { get; set; }
-        [MaxLength(4000)]
         public string BlogContent { get; set; }
         public string BlogThumbnailImage { get; set; }
         public string BlogImage { get; set; }

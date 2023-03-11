@@ -30,7 +30,7 @@
                     sure = zaman.Days + " gün " + zaman.Hours + " saat önce";
             }
             else
-                sure = item.MessageDate.ToShortDateString() + " tarihinde";
+                sure = item.MessageDate.ToString("dd.mm.yyyy") + " tarihinde";
             <li>
                 <div class="dropdown-messages-box">
                     <a class="dropdown-item float-left" href="/Admin/AdminMessage/Read/@item.MessageID">

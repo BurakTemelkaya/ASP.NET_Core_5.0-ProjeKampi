@@ -78,6 +78,7 @@ namespace BusinessLayer.Concrete
         {
             return await _blogDal.GetListAllAsync(x => x.WriterID == id);
         }
+
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {

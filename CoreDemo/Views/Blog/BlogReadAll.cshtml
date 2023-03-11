@@ -22,7 +22,7 @@
                             <ul>
                                 <li>
                                     <a href="#">
-                                        <i class="far fa-calendar-alt"></i> @(((DateTime)Model.BlogCreateDate).ToString("dd-MMM-yyyy"))
+                                        <i class="far fa-calendar-alt"></i> @(((DateTime)Model.BlogCreateDate).ToString("dd-MM-yyyy"))
                                     </a>
                                 </li>
                                 <li class="mx-2">
@@ -67,10 +67,17 @@
 
                     @await Component.InvokeAsync("CategoryList")
 
+                    
+                </div>
+
+                <div class="right-blog-info text-left" style="position: sticky; top: 0;">
+
                     @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId, blogId=ViewBag.i })
 
-                    @await Component.InvokeAsync("LastBlogs")
+                    @await Component.InvokeAsync("LastBlogs", new { writerId = ViewBag.WriterId, blogId=ViewBag.i })
+
                 </div>
+
 
             </aside>
             <!--//right-->

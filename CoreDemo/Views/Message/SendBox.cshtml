@@ -23,7 +23,7 @@
                 <td>@item.Subject</td>
                 <td>@item.ReceiverUser.NameSurname</td>
                 <td>@item.Details...</td>
-                <td>@item.MessageDate</td>
+                <td>@item.MessageDate.ToString("dd.mm.yyyy")</td>
                 <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
             </tr>
         }

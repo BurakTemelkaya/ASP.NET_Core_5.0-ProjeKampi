@@ -42,30 +42,6 @@
                 </div>
             </div>
             <div class="mail-box">
-
-                @*<table class="table table-hover table-mail">
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            @if (item.ContactStatus)
-                                read = "read";
-                            else
-                            {
-                                read = "unread";
-                            }
-                            <tr class="@read">
-                                <td class="check-mail">
-                                    <input type="checkbox" class="i-checks">
-                                </td>
-                                <td class="mail-ontact"><a href="/Admin/AdminContact/Read/@item.ContactID">@item.ContactUserName</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminContact/Read/@item.ContactID">@item.ContactMessage</a></td>
-                                <td class="text-right mail-date">@item.ContactDate</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>*@
-
-
             </div>
         </div>
     </div>

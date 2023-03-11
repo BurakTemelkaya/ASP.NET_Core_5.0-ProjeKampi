@@ -44,8 +44,8 @@
                         {
                             <tr class="read">
                                 <td class="mail-contact"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.ReceiverUser.NameSurname</a></td>
-                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.Details</a></td>
-                                <td class="text-right mail-date">@item.MessageDate.ToShortDateString()</td>
+                                <td class="mail-subject"><a href="/Admin/AdminMessage/Read/@item.MessageID">@item.Subject - @item.Details</a></td>
+                                <td class="text-right mail-date">@item.MessageDate.ToString("dd.mm.yyyy")</td>
                             </tr>
                         }
                     </tbody>
