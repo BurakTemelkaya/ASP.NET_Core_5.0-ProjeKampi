@@ -44,7 +44,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserSignUpDto userSignUpDto)
         {
-            string captchaMessage = await _captchaService.RecaptchaControl(HttpContext);
+            string captchaMessage = await _captchaService.RecaptchaControl();
             if (!string.IsNullOrEmpty(captchaMessage))
             {
                 ModelState.AddModelError("Captcha", captchaMessage);

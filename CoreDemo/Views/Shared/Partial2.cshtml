@@ -1,14 +1,28 @@
 ﻿
 <div class="col-md-4 top-forms text-center mt-lg-3 mt-md-1 mt-0">
-    <span>Tekrar Hoşgeldin!</span>
-    <span class="mx-lg-4 mx-md-2  mx-1">
-        <a href="/Login/Index/">
-            <i class="fas fa-lock"></i> Giriş Yap
-        </a>
-    </span>
-    <span>
-        <a href="/Register/Index/">
-            <i class="far fa-user"></i> Kayıt Ol
-        </a>
-    </span>
+
+    @if (User.Identity.Name == null)
+    {
+        <span>Sitemize Hoşgeldin!</span>
+        <span class="mx-lg-4 mx-md-2  mx-1">
+            <a href="/Login/Index/">
+                <i class="fas fa-lock"></i> Giriş Yap
+            </a>
+        </span>
+        <span>
+            <a href="/Register/Index/">
+                <i class="far fa-user"></i> Kayıt Ol
+            </a>
+        </span>
+    }
+    else
+    {
+        <span>Tekrar Hoşgeldin @User.Identity.Name</span>
+        <span class="mx-lg-4 mx-md-2  mx-1">
+            <a href="/Login/LogOut/">
+                <i class="far fa-user"></i> Çıkış Yap
+            </a>
+        </span>
+    }
+
 </div>

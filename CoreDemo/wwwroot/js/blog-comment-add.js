@@ -37,8 +37,8 @@ $("#btnSendComment").click(function () {
     if (Comment.CommentTitle == "") {
         text += 'Lütfen başlık alanını boş bırakmayınız.<br/>';
     }
-    else if (Comment.CommentTitle.length < 3) {
-        text += 'Başlık 3 karekterden az olamaz.<br/>';
+    else if (Comment.CommentTitle.length < 5) {
+        text += 'Başlık 5 karekterden az olamaz.<br/>';
     }
     if (Comment.CommentContent == "") {
         text += 'Lütfen içerik alanını boş bırakmayınız.<br/>';

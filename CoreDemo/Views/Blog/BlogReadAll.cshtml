@@ -72,6 +72,8 @@
 
                 <div class="right-blog-info text-left" style="position: sticky; top: 0;">
 
+                    <br /> <br />
+
                     @await Component.InvokeAsync("WriterLastBlog", new { writerId = ViewBag.WriterId, blogId=ViewBag.i })
 
                     @await Component.InvokeAsync("LastBlogs", new { writerId = ViewBag.WriterId, blogId=ViewBag.i })

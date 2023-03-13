@@ -35,7 +35,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Contact contact)
         {
-            string validationMessage = await _captchaService.RecaptchaControl(HttpContext);
+            string validationMessage = await _captchaService.RecaptchaControl();
             if (!string.IsNullOrEmpty(validationMessage))
             {
                 ModelState.AddModelError("Recaptcha", validationMessage);

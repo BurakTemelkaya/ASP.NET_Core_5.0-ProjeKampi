@@ -32,7 +32,7 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> PartialAddComment(Comment comment, int blogId, string captcharesponse)
         {
-            string isValid = await _captchaService.RecaptchaControl(HttpContext, captcharesponse);
+            string isValid = await _captchaService.RecaptchaControl(captcharesponse);
             if (isValid == null)
             { 
                 comment.BlogID = blogId;
