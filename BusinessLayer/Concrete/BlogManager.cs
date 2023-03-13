@@ -83,15 +83,23 @@ namespace BusinessLayer.Concrete
         public async Task<Blog> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var user = await _userService.FindByUserNameAsync(userName);
+
             if (user == null)
                 return blog;
-            if (blogImage != null && blogThumbnailImage != null)
+
+            if (blogImage != null)
             {
-                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());               
+            }
+
+            if (blogThumbnailImage != null)
+            {
                 blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
             }
+
             else if (blog.BlogImage == null || blog.BlogThumbnailImage == null)
                 return blog;
+
             blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
             blog.WriterID = user.Id;
             blog.BlogCreateDate = DateTime.Now;

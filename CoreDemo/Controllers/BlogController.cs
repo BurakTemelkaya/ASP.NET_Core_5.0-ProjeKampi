@@ -146,6 +146,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             if (value.BlogImage == null)
             {
                 ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
@@ -156,7 +157,6 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
                 return View(blog);
             }
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
             return RedirectToAction("BlogListByWriter", "Blog");
         }
         public async Task<IActionResult> DeleteBlog(int id)
