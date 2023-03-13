@@ -542,3 +542,5 @@ $RECYCLE.BIN/
 /Jwt_Core_Proje_Kampi/bin/Debug/net5.0/Jwt_Core_Proje_Kampi.pdb
 /EntityLayer/obj/Debug/net5.0/ref/EntityLayer.dll
 /EntityLayer/obj/Debug/net5.0/refint/EntityLayer.dll
+/CoreLayer/obj/Debug/net5.0/refint/CoreLayer.dll
+/CoreLayer/obj/Debug/net5.0/ref/CoreLayer.dll
