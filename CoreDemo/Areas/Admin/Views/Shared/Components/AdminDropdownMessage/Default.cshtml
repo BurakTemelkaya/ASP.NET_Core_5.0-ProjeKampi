@@ -39,7 +39,7 @@
                     <div class="media-body cursor" onclick='location.href="/Admin/AdminMessage/Read/@item.MessageID"'>
                             <small class="float-right">@sure</small>
                             <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
-                            <small class="text-muted">@item.MessageDate</small>
+                        <small class="text-muted">@item.MessageDate.ToString("dd.MM.yyyy hh:mm")</small>
                         </div>                  
                 </div>
             </li>

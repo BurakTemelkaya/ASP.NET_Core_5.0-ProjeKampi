@@ -30,9 +30,6 @@
             @if (User.IsInRole(role: "Admin"))
             {
                 <li>
-                    <a href="/admin/writer"><i class="fa fa-user"></i> <span class="nav-label">Yazarlar</span></a>
-                </li>
-                <li>
                     <a href="/admin/AdminUser"><i class="fa fa-user"></i> <span class="nav-label">Kullanıcı İşlemleri</span></a>
                 </li>
             }
@@ -65,11 +62,9 @@
             <li>
                 <a href="/Dashboard"><i class="fa fa-book"></i> <span class="nav-label">Yazar Paneline Git</span></a>
             </li>
+
             <li>
-                <a href="/Admin/Chart"><i class="fa fa-flask"></i> <span class="nav-label">Statik Rapor</span></a>
-            </li>
-            <li>
-                <a href="/Admin/Chart"><i class="fa fa-pencil"></i> <span class="nav-label">Dinamik Rapor</span></a>
+                <a href="/Admin/Chart"><i class="fa fa-pencil"></i> <span class="nav-label">Kategorilerin Blog Sayısı Raporu</span></a>
             </li>
             <li>
                 <a href="/Login/Logout"><i class="fa fa-close"></i> <span class="nav-label">Çıkış Yap</span></a>

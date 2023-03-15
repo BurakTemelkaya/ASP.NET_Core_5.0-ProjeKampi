@@ -1,4 +1,6 @@
-﻿using CoreDemo.Areas.Admin.Models;
+﻿using BusinessLayer.Abstract;
+using CoreDemo.Areas.Admin.Models;
+using DataAccessLayer.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,29 +14,38 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Authorize(Roles = "Admin,Moderator")]
     public class ChartController : Controller
     {
-        
+
+        private readonly ICategoryService _categoryService;
+        private readonly IBlogService _blogService;
+
+        public ChartController(ICategoryService categoryService, IBlogService blogService)
+        {
+            _categoryService = categoryService;
+            _blogService = blogService;
+
+        }
+
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult CategoryChart()
+
+        public async Task<IActionResult> CategoryChart()
         {
-            List<CategoryModel> list = new List<CategoryModel>();
-            list.Add(new CategoryModel
+            var categoryList = await _categoryService.GetListAsync();
+
+            List<CategoryModel> list = new();
+
+            foreach (var item in categoryList)
             {
-                categoryname = "Teknoloji",
-                categorycount = 14
-            });
-            list.Add(new CategoryModel
-            {
-                categoryname = "Yazılım",
-                categorycount = 5
-            });
-            list.Add(new CategoryModel
-            {
-                categoryname = "Spor",
-                categorycount = 2
-            });
+                int categoryCount = await _blogService.GetCountAsync(x => x.CategoryID == item.CategoryID);
+                list.Add(new CategoryModel
+                {
+                    categoryname = item.CategoryName,
+                    categorycount = categoryCount
+                });
+            }
+
             return Json(new { jsonlist = list });
         }
     }
