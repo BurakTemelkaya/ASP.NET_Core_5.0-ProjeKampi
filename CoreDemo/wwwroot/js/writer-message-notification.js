@@ -7,7 +7,6 @@
                 let jsonData = jQuery.parseJSON(data);
                 if (jsonData != "") {
                     var tableHtml = '';
-                    var readClass = "";
                     $.each(jsonData, (index, item) => {
                         var message = `${item.Message}`;
                         if (message.length > 50) {
@@ -16,13 +15,13 @@
                         var isRead = `${item.MessageStatus}`;
                         var readTitle = "";
                         if (isRead == "false") {
-                            readTitle = "okunmadı";     
-                            readClass = "count-symbol";
+                            readTitle = "okunmadı";   
+                            $("#messageNotificationSpan").addClass('count-symbol');
                         }
                         else {
-                            readTitle = "okundu";                           
+                            readTitle = "okundu";                            
+                            $("#messageNotificationSpan").removeClass('count-symbol');
                         }
-
                         var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
                         tableHtml += `
@@ -42,8 +41,7 @@
                     </div>
                     </a>`
                     });
-                    $("#MessageNotificationDiv").html(tableHtml);
-                    $("#messageNotificationSpan").addClass(readClass);
+                    $("#MessageNotificationDiv").html(tableHtml);                                       
                 }
             }
         });
