@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#Details').summernote({
+    $('#BlogContent').summernote({
         height: 300,
         toolbar: [
             ['style', ['style']],
@@ -13,9 +13,3 @@
         ]
     });
 });
-$(function () {
-    $("#Receiver").autocomplete({
-        source: "/Message/OnUserNameGet/",
-        minLengt: 3
-    });
-}); 

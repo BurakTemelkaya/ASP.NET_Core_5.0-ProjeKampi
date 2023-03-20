@@ -21,15 +21,15 @@
                                 <td class="mail- col-2"><a href="/Admin/AdminMessageDraft/Edit/${item.MessageDraftID}" class="btn btn-info text-white">Taslağı Düzenle</a></td>
                                 <td class="col-2"><a href="/Admin/AdminMessage/SendMessage/${item.MessageDraftID}" class="btn btn-success text-white">Mesaj Gönder</a></td>
                             </tr>`
-                });
+            });
 
-                $(document).ready(function () {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
                 });
-            
+            });
+
             tablehtml += '</tbody></table>';
             $(".mail-box").html(tablehtml);
             GetMessageDraftListForMessageFolder();
@@ -67,20 +67,35 @@ function AllCheckboxSetUnchecked() {
 
 $(document).ready(function () {
     $("#btnDeleteDrafts").click(function () {
-        var selected = [];
-        $('input:checked').each(function () {
-            selected.push($(this).attr("id"));
-        });
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/AdminMessageDraft/DeleteMessageDrafts',
-            data: { selectedItems: selected },
-            success: function (data) {
-                GetDraftList();
-                if (!isClickCheckboxToggle) {
-                    AllCheckboxSetUnchecked();
-                    $('#select-all-checkbox').click();
-                }
+
+        Swal.fire({
+            title: 'UYARI!',
+            text: "Seçilen mesajları silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#5CBA6C',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var selected = [];
+                $('input:checked').each(function () {
+                    selected.push($(this).attr("id"));
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/AdminMessageDraft/DeleteMessageDrafts',
+                    data: { selectedItems: selected },
+                    success: function () {
+                        GetDraftList();
+                        if (!isClickCheckboxToggle) {
+                            AllCheckboxSetUnchecked();
+                            $('#select-all-checkbox').click();
+                        }
+                    }
+                });
             }
         });
     });

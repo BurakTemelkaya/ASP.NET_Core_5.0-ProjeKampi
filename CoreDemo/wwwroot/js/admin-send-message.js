@@ -1,6 +1,16 @@
 ﻿$(document).ready(function () {
     $('#Details').summernote({
-        height: 300
+        height: 300,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['fontname', 'fontsize', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['height', ['height']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['undo', 'redo', 'fullscreen', 'codeview', 'help']],
+        ]
     });
 });
 
@@ -20,21 +30,41 @@ $("#btnSaveDraft").click(function () {
         type: "post",
         url: "/Admin/AdminMessageDraft/Add",
         data: messageDraft,
-        success: function (func) {
-            alert("Mesajınız taslaklara eklendi.");
+        success: function () {
+            Swal.fire(
+                'Başarılı!',
+                'Mesajınız taslaklara eklendi.',
+                'success'
+            ); 
         },
-        error: function (func) {
+        error: function () {
             if (Comment.CommentUserName == "") {
-                alert("Lütfen isim alanını boş bırakmayınız.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen isim alanını boş bırakmayınız.',
+                    'error'
+                );            
             }
             else if (Comment.CommentTitle == "") {
-                alert("Lütfen içerik alanını boş bırakmayınız.")
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen içerik alanını boş bırakmayınız.',
+                    'error'
+                );
             }
             else if (Comment.CommentContent == "") {
-                alert("Lütfen başlık alanını boş bırakmayınız.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen başlık alanını boş bırakmayınız.',
+                    'error'
+                );
             }
             else {
-                alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Bir hata oluştu lütfen daha sonra tekrar deneyiniz.',
+                    'error'
+                );
             }
         }
     });
@@ -50,21 +80,41 @@ $("#btnSaveDraft2").click(function () {
         type: "post",
         url: "/Admin/AdminMessageDraft/Add",
         data: messageDraft,
-        success: function (func) {
-            alert("Mesajınız taslaklara eklendi.");
+        success: function () {
+            Swal.fire(
+                'Başarılı!',
+                'Mesajınız taslaklara eklendi.',
+                'success'
+            ); 
         },
-        error: function (func) {
+        error: function () {
             if (Comment.CommentUserName == "") {
-                alert("Lütfen isim alanını boş bırakmayınız.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen isim alanını boş bırakmayınız.',
+                    'error'
+                );
             }
             else if (Comment.CommentTitle == "") {
-                alert("Lütfen içerik alanını boş bırakmayınız.")
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen içerik alanını boş bırakmayınız.',
+                    'error'
+                );
             }
             else if (Comment.CommentContent == "") {
-                alert("Lütfen başlık alanını boş bırakmayınız.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Lütfen başlık alanını boş bırakmayınız.',
+                    'error'
+                );
             }
             else {
-                alert("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                Swal.fire(
+                    'Uyarı!',
+                    'Bir hata oluştu lütfen daha sonra tekrar deneyiniz.',
+                    'error'
+                );
             }
         }
     });
