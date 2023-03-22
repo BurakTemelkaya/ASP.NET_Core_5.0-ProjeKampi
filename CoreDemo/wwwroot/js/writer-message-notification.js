@@ -1,4 +1,4 @@
-﻿function WriterMessageNotification(){
+﻿function WriterMessageNotification() {
     $(document).ready(function () {
         $.ajax({
             url: '/Message/GetMessageList',
@@ -15,11 +15,11 @@
                         var isRead = `${item.MessageStatus}`;
                         var readTitle = "";
                         if (isRead == "false") {
-                            readTitle = "okunmadı";   
+                            readTitle = "okunmadı";
                             $("#messageNotificationSpan").addClass('count-symbol');
                         }
                         else {
-                            readTitle = "okundu";                            
+                            readTitle = "okundu";
                             $("#messageNotificationSpan").removeClass('count-symbol');
                         }
                         var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
@@ -41,10 +41,31 @@
                     </div>
                     </a>`
                     });
-                    $("#MessageNotificationDiv").html(tableHtml);                                       
+                    $("#MessageNotificationDiv").html(tableHtml);
                 }
+            }
+        });
+        GetUnreadMessageInfo();
+    });
+};
+
+function GetUnreadMessageInfo() {
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Message/GetUnreadMessagesCount',
+            type: "GET",
+            success: function (data) {
+                var notificationMessageHtml = "";
+                if (data == 0) {
+                    notificationMessageHtml = '<h6 class="p-3 mb-0 text-center">Şu anda yeni bir mesajın yok :(</h6>';
+                }
+                else {
+                    notificationMessageHtml = `<h6 class="p-3 mb-0 text-center">${data} tane yeni mesajın var :)</h6>`;
+                }
+                $("#WriterMessageNotificationUnreadMessageInfoDiv").html(notificationMessageHtml);
             }
         });
     });
 };
+
 WriterMessageNotification();

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CoreDemo.Controllers
 {
@@ -52,10 +53,10 @@ namespace CoreDemo.Controllers
             return View(value);
         }
 
-        public async Task<IActionResult> GetMessageList(int take = 0)
+        public async Task<IActionResult> GetMessageList(int take = 3)
         {
-            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name,null,x=>take!=0);
-            var jsonValues = JsonConvert.SerializeObject(values);
+            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null);
+            var jsonValues = JsonConvert.SerializeObject(await values.TakeLast(take).ToListAsync());
             return Json(jsonValues);
         }
 

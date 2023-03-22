@@ -8,14 +8,11 @@
         <div id="MessageNotificationDiv">
         </div>
         <div class="dropdown-divider"></div>
-        @if (ViewBag.NewMessage != 0)
-        {
-            <h6 class="p-3 mb-0 text-center">@ViewBag.NewMessage tane yeni mesajın var :)</h6>
-        }
-        else
-        {
-            <h6 class="p-3 mb-0 text-center">Şu anda yeni bir mesajın yok :(</h6>
-        }
+
+        <div id="WriterMessageNotificationUnreadMessageInfoDiv">
+
+        </div>
+
         <div class="dropdown-divider"></div>
 
         <a href="/Message/Inbox"><h6 class="p-3 mb-0 text-center">Tüm Mesajlarını Gör</h6></a>
