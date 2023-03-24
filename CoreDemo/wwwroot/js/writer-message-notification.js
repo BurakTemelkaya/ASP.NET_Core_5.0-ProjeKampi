@@ -1,5 +1,6 @@
 ﻿function WriterMessageNotification() {
     $(document).ready(function () {
+        GetUnreadMessageInfo();
         $.ajax({
             url: '/Message/GetMessageList',
             type: "GET",
@@ -16,11 +17,10 @@
                         var readTitle = "";
                         if (isRead == "false") {
                             readTitle = "okunmadı";
-                            $("#messageNotificationSpan").addClass('count-symbol');
+                            
                         }
                         else {
-                            readTitle = "okundu";
-                            $("#messageNotificationSpan").removeClass('count-symbol');
+                            readTitle = "okundu";                            
                         }
                         var date = moment(`${item.MessageDate}`).format('DD-MM-YYYY hh:mm');
 
@@ -44,8 +44,7 @@
                     $("#MessageNotificationDiv").html(tableHtml);
                 }
             }
-        });
-        GetUnreadMessageInfo();
+        });       
     });
 };
 
@@ -57,10 +56,12 @@ function GetUnreadMessageInfo() {
             success: function (data) {
                 var notificationMessageHtml = "";
                 if (data == 0) {
+                    $("#messageNotificationSpan").removeClass('count-symbol');                    
                     notificationMessageHtml = '<h6 class="p-3 mb-0 text-center">Şu anda yeni bir mesajın yok :(</h6>';
                 }
                 else {
-                    notificationMessageHtml = `<h6 class="p-3 mb-0 text-center">${data} tane yeni mesajın var :)</h6>`;
+                    $("#messageNotificationSpan").addClass('count-symbol');
+                    notificationMessageHtml = `<h6 class="p-3 mb-0 text-center">${data} tane yeni mesajın var :)</h6>`;                   
                 }
                 $("#WriterMessageNotificationUnreadMessageInfoDiv").html(notificationMessageHtml);
             }
