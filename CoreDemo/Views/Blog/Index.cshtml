@@ -1,4 +1,5 @@
-﻿@model IPagedList<BlogandCommentCount>
+﻿@using BusinessLayer.Models
+@model IPagedList<BlogandCommentCount>
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
@@ -14,16 +15,8 @@
         }
         @if (ViewBag.Message != null)
         {
-            @if (ViewBag.Sonuc)
-            {
-                <br />
-                <h3 class="tittle text-success">@ViewBag.Message</h3>
-            }
-            else
-            {
-                <br />
-                <h3 class="tittle text-danger">@ViewBag.Message</h3>
-            }
+            <br />
+            <h3 class="tittle text-success">@ViewBag.Message</h3>
         }
 
         <div class="inner-sec">

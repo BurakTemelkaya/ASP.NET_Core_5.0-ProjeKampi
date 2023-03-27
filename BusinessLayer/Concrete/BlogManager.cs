@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using CoreLayer.Utilities.FileUtilities;
+using CoreDemo.Models;
 
 namespace BusinessLayer.Concrete
 {
@@ -18,11 +19,13 @@ namespace BusinessLayer.Concrete
     {
         private readonly IBlogDal _blogDal;
         private readonly IBusinessUserService _userService;
+        private readonly ICategoryService _categoryService;
 
-        public BlogManager(IBlogDal blogDal, IBusinessUserService userService)
+        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, ICategoryService categoryService)
         {
             _blogDal = blogDal;
             _userService = userService;
+            _categoryService = categoryService;
         }
 
         public async Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
@@ -89,7 +92,7 @@ namespace BusinessLayer.Concrete
 
             if (blogImage != null)
             {
-                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());               
+                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
             }
 
             if (blogThumbnailImage != null)
@@ -236,6 +239,69 @@ namespace BusinessLayer.Concrete
             else
                 value.BlogStatus = true;
             await _blogDal.UpdateAsync(value);
+        }
+
+        public async Task<List<BlogandCommentCount>> GetBlogListByMainPage(string id, int page = 1, string search = null)
+        {
+            List<Blog> values = new();
+            List<BlogandCommentCount> blogandCommentCount = new();
+            if (id == null && search == null)
+            {
+                values = await GetBlogListWithCategoryAsync(x => x.BlogStatus && x.Category.CategoryStatus);
+                values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+            }
+            if (id != null && search == null)
+            {
+                if (await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0 && await _categoryService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.CategoryStatus) != 0)
+                {
+                    values = await GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
+                    x.CategoryID == Convert.ToInt32(id));
+                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                }
+                else
+                {
+                    values = await GetBlogListWithCategoryAsync();
+                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                }
+            }
+            if (search != null)
+            {
+                if (id == null)
+                {
+                    values = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()));
+                }
+                else
+                {
+                    values = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
+                    x.CategoryID == Convert.ToInt32(id));
+                }
+                if (values.Count == 0)
+                {
+                    values = await GetBlogListWithCategoryAsync();
+                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                }
+            }
+            var comments = await GetListAsync();
+            int commentCount = 0;
+            foreach (var item in values)
+            {
+                BlogandCommentCount value = new()
+                {
+                    Blog = item
+                };
+                foreach (var comment in comments)
+                {
+                    if (comment.BlogID == item.BlogID)
+                    {
+                        commentCount++;
+                    }
+                }
+                value.ContentCount = commentCount;
+                blogandCommentCount.Add(value);
+                commentCount = 0;
+            }
+
+            return blogandCommentCount;
         }
     }
 }

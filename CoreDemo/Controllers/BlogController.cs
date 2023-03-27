@@ -3,7 +3,6 @@ using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
 using DataAccessLayer.EntityFramework;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation.Results;
@@ -41,74 +40,29 @@ namespace CoreDemo.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string id, int page = 1, string search = null)
         {
-            ViewData["Title"] = "Ana Sayfa";
-            List<Blog> values = new();
-            List<BlogandCommentCount> blogandCommentCount = new();
-            if (id == null && search == null)
+            var values = await _blogService.GetBlogListByMainPage(id, page, search);
+
+            if (id != null)
             {
-                values = await _blogService.GetBlogListWithCategoryAsync();
-                values = await values.Where(x => x.BlogStatus && x.Category.CategoryStatus).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+                ViewBag.id = id;
+                ViewData["Title"] = values.FirstOrDefault().Blog.Category.CategoryName + " Blogları";
             }
-            if (id != null && search == null)
-            {
-                if (await _blogService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0 &&
-                    await _categoryService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.CategoryStatus) != 0)
-                {
-                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
-                    x.CategoryID == Convert.ToInt32(id));
-                    values = await values.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
-                    values.RemoveAll(x => x.CategoryID != Convert.ToInt32(id));
-                    ViewBag.id = id;
-                    ViewData["Title"] = values.FirstOrDefault().Category.CategoryName + " Blogları";
-                }
-                else
-                {
-                    values = await _blogService.GetBlogListWithCategoryAsync();
-                    values = await values.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
-                }
-            }
+
             if (search != null)
             {
                 if (id == null)
                 {
-                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()));
+                    ViewData["Title"] = "'" + search + "' aramanız dair sonuçlar.";
                     ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
                 }
                 else
                 {
-                    values = await _blogService.GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
-                    x.CategoryID == Convert.ToInt32(id));
-                    ViewBag.Message = values.FirstOrDefault().Category.CategoryName + " kategorisinde " +
-                        " '" + search + "' aramanız dair sonuçlar.";
-                }
-                ViewData["Title"] = search;
-                ViewBag.Sonuc = true;
-                if (values.Count == 0)
-                {
-                    values = null;
-                    values = await _blogService.GetBlogListWithCategoryAsync();
-                    ViewBag.Message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
-                    ViewBag.Sonuc = false;
+                    ViewData["Title"] = values.FirstOrDefault().Blog.Category.CategoryName + " kategorisinde " + " '" + search + "' aramanız dair sonuçlar.";
+                    ViewBag.Message = values.FirstOrDefault().Blog.Category.CategoryName + " kategorisinde " + " '" + search + "' aramanız dair sonuçlar.";
                 }
             }
-            var comments = await _commentService.GetListAsync();
-            int commentCount = 0;
-            foreach (var item in values)
-            {
-                BlogandCommentCount value = new()
-                {
-                    Blog = item
-                };
-                foreach (var comment in comments)
-                {
-                    if (comment.BlogID == item.BlogID)
-                        commentCount++;
-                }
-                value.ContentCount = commentCount;
-                blogandCommentCount.Add(value);
-                commentCount = 0;
-            }
-            return View(await blogandCommentCount.ToPagedListAsync(page, 6));
+
+            return View(await values.ToPagedListAsync(page, 6));
         }
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
