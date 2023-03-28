@@ -1,4 +1,5 @@
 ﻿using CoreDemo.Models;
+using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,7 +15,7 @@ namespace BusinessLayer.Abstract
     {
         Task<Blog> GetBlogByIDAsync(int id);
         Task<Blog> GetBlogByIdForUpdate(int id);
-        Task<List<BlogandCommentCount>> GetBlogListByMainPage(string id, int page = 1, string search = null);
+        Task<IDataResult<List<BlogandCommentCount>>> GetBlogListByMainPage(string id, int page = 1, string search = null);
         Task<List<Blog>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null);
         Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
         Task<List<Blog>> GetBlogListByWriterAsync(int id);

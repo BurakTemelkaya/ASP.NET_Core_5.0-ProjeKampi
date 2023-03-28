@@ -15,8 +15,16 @@
         }
         @if (ViewBag.Message != null)
         {
-            <br />
-            <h3 class="tittle text-success">@ViewBag.Message</h3>
+            @if (ViewBag.IsSuccess)
+            {
+                <br />
+                <h3 class="tittle text-success">@ViewBag.Message</h3>
+            }
+            else
+            {
+                <br />
+                <h3 class="tittle text-danger">@ViewBag.Message</h3>
+            }
         }
 
         <div class="inner-sec">

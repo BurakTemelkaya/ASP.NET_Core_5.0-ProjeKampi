@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreLayer.Utilities.FileUtilities;
 using CoreDemo.Models;
+using CoreLayer.Utilities.Results;
 
 namespace BusinessLayer.Concrete
 {
@@ -20,12 +21,14 @@ namespace BusinessLayer.Concrete
         private readonly IBlogDal _blogDal;
         private readonly IBusinessUserService _userService;
         private readonly ICategoryService _categoryService;
+        private readonly ICommentService _commentService;
 
-        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, ICategoryService categoryService)
+        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, ICategoryService categoryService, ICommentService commentService)
         {
             _blogDal = blogDal;
             _userService = userService;
             _categoryService = categoryService;
+            _commentService = commentService;
         }
 
         public async Task<List<Blog>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
@@ -241,27 +244,35 @@ namespace BusinessLayer.Concrete
             await _blogDal.UpdateAsync(value);
         }
 
-        public async Task<List<BlogandCommentCount>> GetBlogListByMainPage(string id, int page = 1, string search = null)
+        public async Task<IDataResult<List<BlogandCommentCount>>> GetBlogListByMainPage(string id, int page = 1, string search = null)
         {
             List<Blog> values = new();
+
             List<BlogandCommentCount> blogandCommentCount = new();
+
+            bool isSuccess = true;
+
+            var message = string.Empty;
+
             if (id == null && search == null)
             {
                 values = await GetBlogListWithCategoryAsync(x => x.BlogStatus && x.Category.CategoryStatus);
-                values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
             }
+
             if (id != null && search == null)
             {
+                var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
                 if (await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id)) != 0 && await _categoryService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.CategoryStatus) != 0)
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id));
-                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                    message = category + " kategorisindeki aramanıza dair sonuçlar";
                 }
                 else
                 {
                     values = await GetBlogListWithCategoryAsync();
-                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                    isSuccess = false;
+                    message = "Şu anda " + category.CategoryName + " kategorisinde blog bulunmamaktadır.";
                 }
             }
             if (search != null)
@@ -269,19 +280,25 @@ namespace BusinessLayer.Concrete
                 if (id == null)
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()));
+                    message = "'" + search + "' aramanıza dair sonuçlar.";
                 }
                 else
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
                     x.CategoryID == Convert.ToInt32(id));
+                    message = values.First().Category.CategoryName + "kategorisindeki " + search + " aramanıza dair sonuçlar.";
                 }
                 if (values.Count == 0)
                 {
+                    isSuccess = false;
                     values = await GetBlogListWithCategoryAsync();
-                    values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+                    message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                 }
             }
-            var comments = await GetListAsync();
+
+            values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
+
+            var comments = await _commentService.GetListAsync();
             int commentCount = 0;
             foreach (var item in values)
             {
@@ -300,8 +317,7 @@ namespace BusinessLayer.Concrete
                 blogandCommentCount.Add(value);
                 commentCount = 0;
             }
-
-            return blogandCommentCount;
+            return new DataResult<List<BlogandCommentCount>>(blogandCommentCount, isSuccess, message);
         }
     }
 }

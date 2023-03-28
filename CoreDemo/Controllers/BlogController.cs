@@ -42,27 +42,16 @@ namespace CoreDemo.Controllers
         {
             var values = await _blogService.GetBlogListByMainPage(id, page, search);
 
-            if (id != null)
-            {
-                ViewBag.id = id;
-                ViewData["Title"] = values.FirstOrDefault().Blog.Category.CategoryName + " Blogları";
-            }
+            ViewData["Title"] = "Ana Sayfa";
 
-            if (search != null)
+            if (id != null || search != null)
             {
-                if (id == null)
-                {
-                    ViewData["Title"] = "'" + search + "' aramanız dair sonuçlar.";
-                    ViewBag.Message = "'" + search + "' aramanız dair sonuçlar.";
-                }
-                else
-                {
-                    ViewData["Title"] = values.FirstOrDefault().Blog.Category.CategoryName + " kategorisinde " + " '" + search + "' aramanız dair sonuçlar.";
-                    ViewBag.Message = values.FirstOrDefault().Blog.Category.CategoryName + " kategorisinde " + " '" + search + "' aramanız dair sonuçlar.";
-                }
-            }
+                ViewData["Title"] = values.Message;
+                ViewBag.Message = values.Message;
+                ViewBag.IsSuccess = values.Success;
+            }           
 
-            return View(await values.ToPagedListAsync(page, 6));
+            return View(await values.Data.ToPagedListAsync(page, 6));
         }
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
