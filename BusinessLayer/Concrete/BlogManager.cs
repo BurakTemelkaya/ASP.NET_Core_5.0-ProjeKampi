@@ -266,7 +266,7 @@ namespace BusinessLayer.Concrete
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id));
-                    message = category + " kategorisindeki aramanıza dair sonuçlar";
+                    message = category.CategoryName + " kategorisindeki aramanıza dair sonuçlar";
                 }
                 else
                 {
@@ -286,7 +286,7 @@ namespace BusinessLayer.Concrete
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
                     x.CategoryID == Convert.ToInt32(id));
-                    message = values.First().Category.CategoryName + "kategorisindeki " + search + " aramanıza dair sonuçlar.";
+                    message = values.First().Category.CategoryName + " kategorisindeki " + search + " aramanıza dair sonuçlar.";
                 }
                 if (values.Count == 0)
                 {
