@@ -266,7 +266,7 @@ namespace BusinessLayer.Concrete
                 {
                     values = await GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id));
-                    message = category.CategoryName + " kategorisindeki aramanıza dair sonuçlar";
+                    message = category.CategoryName + " kategorisindeki bloglar.";
                 }
                 else
                 {

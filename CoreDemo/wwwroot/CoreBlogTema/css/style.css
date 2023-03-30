@@ -268,6 +268,12 @@ div.header-search {
     border-radius: 50px;
 }
 
+.header-search div {
+    background: #e7e9ea;
+    padding: 0.3em;
+    border-radius: 50px;
+}
+
 .header-search input[type="search"] {
     outline: none;
     border: none;
@@ -1353,6 +1359,10 @@ a.facebook {
     form.header-search {
         width: 34%;
     }
+
+    div.header-search {
+        width: 34%;
+    }
 }
 
 @media(max-width:1080px) {
@@ -1408,6 +1418,10 @@ a.facebook {
     .top-forms span {
         font-size: 0.85em;
     }
+
+    .top-divs span {
+        font-size: 0.85em;
+    }
 }
 
 @media(max-width:991px) {
@@ -1437,6 +1451,10 @@ a.facebook {
     }
 
     form.header-search {
+        width: 72%;
+    }
+
+    div.header-search {
         width: 72%;
     }
 
@@ -1548,6 +1566,10 @@ a.facebook {
     }
 
     form.header-search {
+        width: 100%;
+    }
+
+    div.header-search {
         width: 100%;
     }
 
