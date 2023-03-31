@@ -22,7 +22,7 @@ namespace CoreDemo.ViewComponents.Blog
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var blogs = await _blogService.GetLastBlogAsync(3);
-            var values = await blogs.Where(x => x.BlogStatus).ToListAsync();
+            var values = await blogs.Where(x => x.BlogStatus).OrderByDescending(x=> x.BlogID).ToListAsync();
             return View(values);
         }
     }
