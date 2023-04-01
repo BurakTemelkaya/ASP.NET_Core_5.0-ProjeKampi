@@ -24,8 +24,4 @@
     <ProjectReference Include="..\EntityLayer\EntityLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Aspects\AutoFac\Performance\" />
-  </ItemGroup>
-
 </Project>

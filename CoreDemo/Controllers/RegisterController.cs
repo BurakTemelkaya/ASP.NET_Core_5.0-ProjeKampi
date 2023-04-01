@@ -61,7 +61,7 @@ namespace CoreDemo.Controllers
                 return View(userSignUpDto);
             }
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
-            if (result == null)
+            if (result.Success)
             {
                 var user = await _userService.FindByUserNameAsync(userSignUpDto.UserName);
                 await _signInManager.SignInAsync(user.Data, true);

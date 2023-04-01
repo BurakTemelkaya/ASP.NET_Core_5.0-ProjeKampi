@@ -38,13 +38,13 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 ViewBag.v1 = value.NameSurname;
                 ViewBag.v2 = value.ImageUrl;
                 ViewBag.v3 = value.About;
-                ViewBag.ContactCount = await _contactService.GetCountAsync();
-                ViewBag.NotificationCount = await _notificationService.GetCountAsync();
+                ViewBag.ContactCount = _contactService.GetCountAsync().Result.Data;
+                ViewBag.NotificationCount = _notificationService.GetCountAsync().Result.Data;
                 ViewBag.v4 = value.Email;
                 ViewBag.v5 = value.City;
                 ViewBag.v6 = value.RegistrationTime;
-                ViewBag.BlogCount = await _blogService.GetCountAsync(x => x.WriterID == value.Id);
-                ViewBag.SendedMessageCount = await _messageService.GetCountAsync(x => x.SenderUserId == value.Id);
+                ViewBag.BlogCount = _blogService.GetCountAsync(x => x.WriterID == value.Id).Result.Data;
+                ViewBag.SendedMessageCount = _messageService.GetCountAsync(x => x.SenderUserId == value.Id).Result.Data;
                 var ratingValue = await _commentService.GetBlogListWithCommentAsync();
                 var ratings = ratingValue.Data.Select(x => x.BlogScore);
                 int rating = 0;

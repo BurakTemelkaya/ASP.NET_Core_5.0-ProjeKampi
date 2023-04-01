@@ -43,8 +43,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 CommentCount = commentCount.Data,
                 Temparature = tempFah.ToString()
             };
-            ViewBag.v2 = await _message2Service.GetCountAsync();
-            ViewBag.v3 = await _commentService.GetCountAsync();
+            ViewBag.v2 = _message2Service.GetCountAsync().Result.Data;
+            ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
             return View(widgetModel);
         }
         private XAttribute WeatherApi(string city = "istanbul")

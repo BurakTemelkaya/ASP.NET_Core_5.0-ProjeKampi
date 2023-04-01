@@ -43,14 +43,18 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var value = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            var result = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            var value = result.Data;
+
             if (value == null)
-                value = await _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id);
+                value = _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
+
             if (value == null)
                 return RedirectToAction("Inbox");
-            if (value.Data.MessageStatus)
+
+            if (value.MessageStatus)
                 await _messageService.MarkUsReadAsync(id, User.Identity.Name);
-            return View(value.Data);
+            return View(value);
         }
 
         public async Task<IActionResult> GetMessageList(int take = 3)

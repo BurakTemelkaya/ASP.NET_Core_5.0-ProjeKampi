@@ -39,8 +39,8 @@ namespace BusinessLayer.Concrete
 
             if (userSignUpDto.ImageFile != null)
             {
-                user.ImageUrl = await ImageFileManager.ImageAddAsync(userSignUpDto.ImageFile,
-                    ImageFileManager.StaticProfileImageLocation());
+                user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
+                    ImageFileManager.StaticProfileImageLocation(), ImageFileManager.GetProfileImageResolution());
             }
 
             else if (userSignUpDto.ImageUrl != null)
@@ -98,8 +98,8 @@ namespace BusinessLayer.Concrete
             }
             if (user.ProfileImageFile != null)
             {
-                value.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile,
-                    ImageFileManager.StaticProfileImageLocation());
+                value.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,
+                    ImageFileManager.StaticProfileImageLocation(), ImageFileManager.GetProfileImageResolution());
             }
             else if (user.ImageUrl != null && user.ImageUrl != "")
             {

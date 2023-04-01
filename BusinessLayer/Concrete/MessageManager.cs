@@ -158,14 +158,14 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<int>(result.Message);
             }
 
-            var data = await GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
+            var value = await GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
 
-            if (!data.Success)
+            if (!value.Success)
             {
-                return new ErrorDataResult<int>(data.Message);
+                return new ErrorDataResult<int>(value.Message);
             }
 
-            return new SuccessDataResult<int>();
+            return new SuccessDataResult<int>(value.Data);
         }
 
         public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)

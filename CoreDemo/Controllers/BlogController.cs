@@ -62,9 +62,9 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
-            ViewBag.CommentCount = await _commentService.GetCountAsync(x => x.BlogID == id);
+            ViewBag.CommentCount = _commentService.GetCountAsync(x => x.BlogID == id).Result.Data;
             var comments = await _commentService.TGetByFilterAsync(x => x.BlogID == id);
-            if (comments != null)
+            if (comments.Data != null)
             {
                 ViewBag.Star = comments.Data.BlogScore;
             }
@@ -82,14 +82,16 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> BlogAdd()
         {
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = categoryList.Data;
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = categoryList.Data;
             if (!value.Success)
             {
                 ModelState.AddModelError("blogImage", value.Message);

@@ -39,8 +39,12 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> GetInboxMessages(string search)
         {
             var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, search);
-            var jsonValues = JsonConvert.SerializeObject(values);
-            return Json(jsonValues);
+            if (values.Success)
+            {
+                var jsonValues = JsonConvert.SerializeObject(values.Data);
+                return Json(jsonValues);
+            }
+            return BadRequest(values.Message);
         }
 
         public async Task<IActionResult> SendBox(string search = null)
@@ -59,7 +63,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var result = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name);
                 values = result.Data;
             }
-            return View(values.OrderByDescending(x => x.MessageDate));
+            return View(values.OrderByDescending(x => x.MessageDate).ToList());
         }
 
         [HttpGet]
@@ -70,7 +74,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
                 if (value != null)
                 {
-                    var message = _mapper.Map<Message>(value);
+                    var message = _mapper.Map<Message>(value.Data);
                     return View(message);
                 }
             }
@@ -88,10 +92,10 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Read(int id)
         {
-            var value = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            var value = _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
 
             if (value == null)
-                value = await _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id);
+                value = _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
 
             if (value == null)
                 return RedirectToAction("Inbox");
@@ -101,8 +105,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            if (id != 0)
-                await _messageService.DeleteMessageAsync(id, User.Identity.Name);
+            await _messageService.DeleteMessageAsync(id, User.Identity.Name);
             return RedirectToAction("Inbox");
         }
 
@@ -116,7 +119,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return Ok();
             }
 
-            return BadRequest();
+            return BadRequest(result.Message);
         }
 
         [HttpPost]
@@ -129,7 +132,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return Ok();
             }
 
-            return BadRequest();
+            return BadRequest(result.Message);
         }
 
         [HttpPost]
@@ -142,21 +145,21 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return Ok();
             }
 
-            return BadRequest();
+            return BadRequest(result.Message);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUnreadMessagesCount()
         {
             var value = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
-            return Json(value);
+            return Json(value.Data);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetDraftMessagesCount()
         {
             var value = await _messageDraftService.GetCountByUserNameAsync(User.Identity.Name);
-            return Json(value);
+            return Json(value.Data);
         }
     }
 }

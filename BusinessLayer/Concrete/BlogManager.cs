@@ -106,12 +106,12 @@ namespace BusinessLayer.Concrete
 
             if (blogImage != null)
             {
-                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(),ImageFileManager.GetBlogImageResolution());
             }
 
             if (blogThumbnailImage != null)
             {
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(),ImageFileManager.GetBlogThumbnailResolution());
             }           
 
             var result = BusinessRules.Run(UserNotEmpty(user), BlogImageNotEmpty(blog.BlogImage), BlogThumbnailNotEmpty(blog.BlogThumbnailImage));
@@ -144,13 +144,13 @@ namespace BusinessLayer.Concrete
             if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogImageResolution());
             }
 
             if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogThumbnailResolution());
             }
 
             blog.BlogImage ??= oldValue.BlogImage;
@@ -181,13 +181,13 @@ namespace BusinessLayer.Concrete
             if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogImageResolution());
             }
 
             if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ImageFileManager.StaticProfileImageLocation());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogThumbnailResolution());
             }
 
             blog.BlogImage ??= oldValue.BlogImage;
