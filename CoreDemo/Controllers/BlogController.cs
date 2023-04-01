@@ -49,7 +49,7 @@ namespace CoreDemo.Controllers
                 ViewData["Title"] = values.Message;
                 ViewBag.Message = values.Message;
                 ViewBag.IsSuccess = values.Success;
-            }           
+            }
 
             return View(await values.Data.ToPagedListAsync(page, 6));
         }
@@ -58,7 +58,7 @@ namespace CoreDemo.Controllers
         {
             ViewBag.i = id;
             var value = await _blogService.GetBlogByIDAsync(id);
-            if (value == null || !value.BlogStatus)
+            if (value == null || !value.Data.BlogStatus)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
@@ -66,18 +66,18 @@ namespace CoreDemo.Controllers
             var comments = await _commentService.TGetByFilterAsync(x => x.BlogID == id);
             if (comments != null)
             {
-                ViewBag.Star = comments.BlogScore;
+                ViewBag.Star = comments.Data.BlogScore;
             }
-            var writer = await _businessUserService.GetByIDAsync(value.WriterID.ToString());
-            ViewBag.WriterId = writer.Id;
-            ViewBag.WriterName = writer.NameSurname;
-            ViewData["Title"] = value.BlogTitle;
-            return View(value);
+            var writer = await _businessUserService.GetByIDAsync(value.Data.WriterID.ToString());
+            ViewBag.WriterId = writer.Data.Id;
+            ViewBag.WriterName = writer.Data.NameSurname;
+            ViewData["Title"] = value.Data.BlogTitle;
+            return View(value.Data);
         }
         public async Task<IActionResult> BlogListByWriter(int page = 1)
         {
             var values = await _blogService.GetListWithCategoryByWriterBmAsync(User.Identity.Name);
-            return View(await values.ToPagedListAsync(page, 5));
+            return View(await values.Data.ToPagedListAsync(page, 5));
         }
         [HttpGet]
         public async Task<IActionResult> BlogAdd()
@@ -90,14 +90,9 @@ namespace CoreDemo.Controllers
         {
             var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-            if (value.BlogImage == null)
+            if (!value.Success)
             {
-                ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
-                return View(blog);
-            }
-            if (value.BlogThumbnailImage == null)
-            {
-                ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
+                ModelState.AddModelError("blogImage", value.Message);
                 return View(blog);
             }
             return RedirectToAction("BlogListByWriter", "Blog");
@@ -105,7 +100,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIDAsync(id);
-            await _blogService.DeleteBlogAsync(blogValue, User.Identity.Name);
+            await _blogService.DeleteBlogAsync(blogValue.Data, User.Identity.Name);
             return RedirectToAction("BlogListByWriter");
         }
         public async Task<IActionResult> ChangeStatusBlog(int id)
@@ -118,7 +113,7 @@ namespace CoreDemo.Controllers
         {
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
             ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
-            return View(blogValue);
+            return View(blogValue.Data);
         }
         [HttpPost]
         public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)

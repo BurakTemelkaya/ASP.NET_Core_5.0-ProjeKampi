@@ -1,4 +1,5 @@
-﻿using EntityLayer.Concrete;
+﻿using CoreLayer.Utilities.Results;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace BusinessLayer.Abstract
 {
     public interface ICategoryService : IGenericService<Category>
     {
-        Task<List<SelectListItem>> GetCategoryListAsync();
-        Task ChangedStatusAsync(int id);
+        Task<IDataResult<List<SelectListItem>>> GetCategoryListAsync();
+        Task<IResult> ChangedStatusAsync(int id);
     }
 }

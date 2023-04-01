@@ -72,7 +72,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var result = await _messageDraftService.DeleteMessageDraftsAsync(selectedItems, User.Identity.Name);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok();
             }

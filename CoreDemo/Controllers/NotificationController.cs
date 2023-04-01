@@ -27,7 +27,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> AllNotification()
         {
             var notification = await _notificationService.GetListAsync();
-            return View(notification);
+            return View(notification.Data);
         }
     }
 }

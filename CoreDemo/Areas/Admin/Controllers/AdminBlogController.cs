@@ -27,27 +27,26 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int page = 1, int id = 0)
         {
-            var blogs = await _blogService.GetBlogListWithCategoryAsync();
-            blogs = await blogs.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+            var blogs = new List<Blog>();
+
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
                 if (user != null)
                 {
-                    var value = await blogs.Where(x => x.WriterID == id).OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+                    var value = await _blogService.GetBlogListWithCategoryAsync(x => x.WriterID == id);
                     if (value != null)
-                        blogs = value;
-                    ViewBag.UserName = user.UserName;
+                        blogs = value.Data;
+                    ViewBag.UserName = user.Data.UserName;
                 }
             }
-            var values = await blogs.ToPagedListAsync(page, 4);
-            foreach (var item in values)
+            else
             {
-                if (item.BlogContent != null && item.BlogContent.Length > 150)
-                {
-                    item.BlogContent = item.BlogContent[..130] + "...";
-                }
+                var result = await _blogService.GetBlogListWithCategoryAsync();
+                blogs = result.Data;
             }
+            blogs = await blogs.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
+            var values = await blogs.ToPagedListAsync(page, 4);
             return View(values);
         }
 
@@ -61,18 +60,13 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
-            if (value.BlogImage == null)
+            var result = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            if (!result.Success)
             {
-                ModelState.AddModelError("blogImage", "Lütfen blog resminizin linkini giriniz veya yükleyin.");
-                return View(blog);
-            }
-            if (value.BlogThumbnailImage == null)
-            {
-                ModelState.AddModelError("blogThumbnailImage", "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
-                return View(blog);
-            }
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+                ModelState.AddModelError("", result.Message);
+                return View();
+            }           
             return RedirectToAction("Index");
         }
 
@@ -95,7 +89,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blog = await _blogService.GetFileNameContentBlogByIDAsync(id);
-            await _blogService.DeleteBlogByAdminAsync(blog);
+            await _blogService.DeleteBlogByAdminAsync(blog.Data);
             return RedirectToAction("Index");
         }
 

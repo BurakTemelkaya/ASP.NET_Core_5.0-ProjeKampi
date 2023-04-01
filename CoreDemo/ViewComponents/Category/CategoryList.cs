@@ -27,11 +27,11 @@ namespace CoreDemo.ViewComponents.Category
             var blogs = await _blogService.GetListAsync(x=> x.BlogStatus);
             var blogCategoryCount = new List<CategoryBlogandBlogCount>();
             int categoryCount = 0;
-            foreach (var value in values)
+            foreach (var value in values.Data)
             {
                 var categoryandBlogCount = new CategoryBlogandBlogCount();
                 categoryandBlogCount.Categorys = value;
-                foreach (var blog in blogs)
+                foreach (var blog in blogs.Data)
                 {
                     if (value.CategoryID == blog.CategoryID)
                     {

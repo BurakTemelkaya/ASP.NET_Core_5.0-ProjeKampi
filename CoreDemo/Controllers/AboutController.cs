@@ -22,7 +22,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index()
         {
             var values = await _aboutService.TGetByFilterAsync();
-            return View(values);
+            return View(values.Data);
         }
         public PartialViewResult SocialMediaAbout()
         {           

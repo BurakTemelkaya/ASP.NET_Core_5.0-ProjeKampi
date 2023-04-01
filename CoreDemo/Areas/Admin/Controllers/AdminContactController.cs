@@ -26,21 +26,21 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetContactList()
         {
-            var values = await _contactService.GetListAsync();
-            values = await values.OrderByDescending(x => x.ContactID).ToListAsync();
+            var result = await _contactService.GetListAsync();
+            var values = await result.Data.OrderByDescending(x => x.ContactID).ToListAsync();
             var jsonValues = JsonConvert.SerializeObject(values);
             return Ok(jsonValues);
         }
 
         public async Task<IActionResult> Read(int id)
         {
-            var value = await _contactService.TGetByIDAsync(id);
-            if (value != null)
+            var result = await _contactService.TGetByIDAsync(id);
+            if (result.Success)
             {
+                var value = result.Data;
                 if (!value.ContactStatus)
                 {
-                    value.ContactStatus = true;
-                    await _contactService.TUpdateAsync(value);
+                    await _contactService.MarkUsReadAsync(id);
                 }
                 return View(value);
             }
@@ -49,20 +49,20 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var value = await _contactService.TGetByIDAsync(id);
-            if (value != null)
+            var result = await _contactService.TGetByIDAsync(id);
+            if (result.Success)
             {
-                await _contactService.TDeleteAsync(value);
+                await _contactService.TDeleteAsync(result.Data);
             }
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DeleteByAjax(int id)
         {
-            var value = await _contactService.TGetByIDAsync(id);
-            if (value != null)
+            var result = await _contactService.TGetByIDAsync(id);
+            if (result.Success)
             {
-                await _contactService.TDeleteAsync(value);
+                await _contactService.TDeleteAsync(result.Data);
             }
             return Ok();
         }
@@ -73,7 +73,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var result = await _contactService.MarksUsReadAsync(selectedItems);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok();
             }
@@ -86,7 +86,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var result = await _contactService.MarksUsUnreadAsync(selectedItems);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok();
             }
@@ -106,7 +106,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var result = await _contactService.DeleteContactsAsync(selectedItems);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok();
             }

@@ -32,12 +32,14 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> SubscribeMail(NewsLetter newsLetter)
         {
-            if (await _newsLetterService.GetByMailAsync(newsLetter.Mail) == null && newsLetter.Mail != null)
+            var result = await _newsLetterService.TAddAsync(newsLetter);
+
+            if (result.Success)
             {
-                await _newsLetterService.TAddAsync(newsLetter);
                 return Ok();
-            }
-            return BadRequest("Böyle bir mail adresi bulunuyor.");
+            }           
+
+            return BadRequest(result.Message);
         }
     }
 }

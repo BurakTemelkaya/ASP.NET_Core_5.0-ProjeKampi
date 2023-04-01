@@ -64,7 +64,7 @@ namespace CoreDemo.Controllers
                 if (result.IsLockedOut)
                 {
                     var user = await _userService.FindByUserNameAsync(appUser.UserName);
-                    TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
+                    TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.Data.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
                 }
                 else
                 {

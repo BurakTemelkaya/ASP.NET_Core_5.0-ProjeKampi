@@ -64,10 +64,10 @@ namespace CoreDemo.Controllers
             if (result == null)
             {
                 var user = await _userService.FindByUserNameAsync(userSignUpDto.UserName);
-                await _signInManager.SignInAsync(user, true);
+                await _signInManager.SignInAsync(user.Data, true);
                 return RedirectToAction("Index", "Dashboard");
             }
-            foreach (var item in result)
+            foreach (var item in result.Data.Errors)
             {
                 ModelState.AddModelError("Username", item.Description);
             }

@@ -30,9 +30,10 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            ViewBag.ToplamBlogSayisi = await _blogService.GetCountAsync(x => x.BlogStatus == true);
-            ViewBag.YazarinBlogSayisi = await _blogService.GetCountAsync(x => x.WriterID == user.Id);
-            ViewBag.KategoriSayisi = await _categoryService.GetCountAsync(x => x.CategoryStatus == true);
+
+            ViewBag.ToplamBlogSayisi = _blogService.GetCountAsync(x => x.BlogStatus == true).Result.Data;
+            ViewBag.YazarinBlogSayisi = _blogService.GetCountAsync(x => x.WriterID == user.Data.Id).Result.Data;
+            ViewBag.KategoriSayisi = _categoryService.GetCountAsync(x => x.CategoryStatus == true).Result.Data;
             return View();
         }
     }

@@ -2,6 +2,7 @@
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.FileUtilities;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -22,98 +23,112 @@ namespace BusinessLayer.Concrete
             _contactDal = contactDal;
         }
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task ContactAddAsync(Contact contact)
+        public async Task<IResult> ContactAddAsync(Contact contact)
         {
             contact.ContactDate = DateTime.Now;
             contact.ContactStatus = false;
             await _contactDal.InsertAsync(contact);
+            return new SuccessResult();
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<Contact, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return await _contactDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _contactDal.GetCountAsync(filter));
         }
 
-        public async Task<List<Contact>> GetListAsync(Expression<Func<Contact, bool>> filter = null)
+        public async Task<IDataResult<List<Contact>>> GetListAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return await _contactDal.GetListAllAsync(filter);
+            return new SuccessDataResult<List<Contact>>(await _contactDal.GetListAllAsync(filter));
         }
 
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task TAddAsync(Contact t)
+        public async Task<IResult> TAddAsync(Contact t)
         {
             t.ContactStatus = false;
             await _contactDal.InsertAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task TDeleteAsync(Contact t)
+        public async Task<IResult> TDeleteAsync(Contact t)
         {
+            if (t == null)
+            {
+                return new ErrorResult("Silinecek iletişim mesajı boş olamaz");
+            }
+
             await _contactDal.DeleteAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<Contact> TGetByFilterAsync(Expression<Func<Contact, bool>> filter = null)
+        public async Task<IDataResult<Contact>> TGetByFilterAsync(Expression<Func<Contact, bool>> filter = null)
         {
-            return await _contactDal.GetByFilterAsync(filter);
+            return new SuccessDataResult<Contact>(await _contactDal.GetByFilterAsync(filter));
         }
 
-        public async Task<Contact> TGetByIDAsync(int id)
+        public async Task<IDataResult<Contact>> TGetByIDAsync(int id)
         {
-            return await _contactDal.GetByIDAsync(id);
+            return new SuccessDataResult<Contact>(await _contactDal.GetByIDAsync(id));
         }
 
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task TUpdateAsync(Contact t)
+        public async Task<IResult> TUpdateAsync(Contact t)
         {
             await _contactDal.UpdateAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<bool> MarkUsReadAsync(int contactId)
+        public async Task<IResult> MarkUsReadAsync(int contactId)
         {
             if (contactId != 0)
             {
                 var contact = await TGetByIDAsync(contactId);
 
-                if (!contact.ContactStatus)
+                if (!contact.Success)
                 {
-                    contact.ContactStatus = true;
+                    return new ErrorResult("İletişim mesajı bulunamadı.");
+                }
+
+                if (!contact.Data.ContactStatus)
+                {
+                    contact.Data.ContactStatus = true;
                 }
                 else
                 {
-                    return false;
+                    return new ErrorResult("İletişim mesajı zaten okunmuş.");
                 }
 
-                await _contactDal.UpdateAsync(contact);
-                return true;
+                await _contactDal.UpdateAsync(contact.Data);
+                return new SuccessResult();
             }
-            return false;
+            return new ErrorResult("İletişim mesajı boş.");
         }
 
-        public async Task<bool> MarkUsUnreadAsync(int contactId)
+        public async Task<IResult> MarkUsUnreadAsync(int contactId)
         {
             if (contactId != 0)
             {
                 var contact = await TGetByIDAsync(contactId);
 
-                if (contact.ContactStatus)
+                if (contact.Data.ContactStatus)
                 {
-                    contact.ContactStatus = false;
+                    contact.Data.ContactStatus = false;
                 }
                 else
                 {
-                    return false;
+                    return new ErrorResult("İletişim mesajı zaten okunmamış.");
                 }
 
-                await _contactDal.UpdateAsync(contact);
-                return true;
+                await _contactDal.UpdateAsync(contact.Data);
+                return new SuccessResult();
             }
-            return false;
+            return new ErrorResult("İletişim mesajı boş.");
         }
 
-        public async Task<bool> DeleteContactsAsync(List<string> ids)
+        public async Task<IResult> DeleteContactsAsync(List<string> ids)
         {
             if (ids == null)
             {
-                return false;
+                return new ErrorResult("İletişim mesajları boş.");
             }
 
             List<Contact> contacts = new();
@@ -121,72 +136,72 @@ namespace BusinessLayer.Concrete
             foreach (var id in ids)
             {
                 var message = await TGetByIDAsync(Convert.ToInt32(id));
-                contacts.Add(message);
+                contacts.Add(message.Data);
             }
             await _contactDal.DeleteRangeAsync(contacts);
-            return true;
+            return new SuccessResult();
         }
 
-        public async Task<bool> MarksUsReadAsync(List<string> Ids)
+        public async Task<IResult> MarksUsReadAsync(List<string> Ids)
         {
             List<Contact> contacts = new();
 
             foreach (var id in Ids)
             {
-                if (Convert.ToInt32(id) != 0)
+
+                try
                 {
-                    try
-                    {
-                        var contact = await TGetByIDAsync(Convert.ToInt32(id));
+                    var contact = await TGetByIDAsync(Convert.ToInt32(id));
 
-                        if (!contact.ContactStatus)
-                            contact.ContactStatus = true;
+                    if (!contact.Data.ContactStatus)
+                        contact.Data.ContactStatus = true;
 
-                        contacts.Add(contact);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    contacts.Add(contact.Data);
                 }
-                else
+                catch
                 {
-                    return false;
+                    continue;
                 }
             }
+
+            if (contacts.Count == 0)
+            {
+                return new ErrorResult("Hiçbir mesaj okundu olarak işaretlenemedi.");
+            }
+
             await _contactDal.UpdateRangeAsync(contacts);
-            return true;
+            return new SuccessResult();
         }
 
-        public async Task<bool> MarksUsUnreadAsync(List<string> Ids)
+        public async Task<IResult> MarksUsUnreadAsync(List<string> Ids)
         {
             List<Contact> contacts = new();
 
             foreach (var id in Ids)
             {
-                if (Convert.ToInt32(id) != 0)
+                try
                 {
-                    try
-                    {
-                        var contact = await TGetByIDAsync(Convert.ToInt32(id));
+                    var contact = await TGetByIDAsync(Convert.ToInt32(id));
 
-                        if (contact.ContactStatus)
-                            contact.ContactStatus = false;
+                    if (contact.Data.ContactStatus)
+                        contact.Data.ContactStatus = false;
 
-                        contacts.Add(contact);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    contacts.Add(contact.Data);
                 }
-                else
+                catch
                 {
-                    return false;
+                    continue;
                 }
+
             }
+
+            if (contacts.Count == 0)
+            {
+                return new ErrorResult("Hiçbir mesaj okunmadı olarak işaretlenemedi.");
+            }
+
             await _contactDal.UpdateRangeAsync(contacts);
-            return true;
+            return new SuccessResult();
         }
     }
 }

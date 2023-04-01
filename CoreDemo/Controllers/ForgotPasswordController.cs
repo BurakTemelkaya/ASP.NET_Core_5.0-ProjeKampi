@@ -86,15 +86,16 @@ namespace CoreDemo.Controllers
                 ViewBag.SiteKey = _captchaService.GetSiteKey();
                 return View();
             }
-            var isSuccess = await _businessUserService.ResetPassword(resetPasswordDto);
-            if (!isSuccess)
+            var result = await _businessUserService.ResetPassword(resetPasswordDto);
+            if (result.Success)
             {
                 ViewBag.SiteKey = _captchaService.GetSiteKey();
                 @TempData["ErrorMessage"] = "Mailinizin geçerlilik süresi doldu.";
                 return View(resetPasswordDto);
             }
             var user = await _businessUserService.FindByMailAsync(resetPasswordDto.Email);
-            await _signInManager.SignInAsync(user, true);
+
+            await _signInManager.SignInAsync(user.Data, true);
             return RedirectToAction("Index", "Dashboard");
         }
     }

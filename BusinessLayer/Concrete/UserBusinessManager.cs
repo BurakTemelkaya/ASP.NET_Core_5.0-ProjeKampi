@@ -3,21 +3,19 @@ using BusinessLayer.Abstract;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.MailUtilities;
 using CoreLayer.Utilities.MailUtilities.Models;
-using DataAccessLayer.Abstract;
-using EntityLayer;
+using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
@@ -34,50 +32,59 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(UserSignUpDtoValidator))]
-        public async Task<IEnumerable<IdentityError>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
+        public async Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
         {
             var user = Mapper.Map<AppUser>(userSignUpDto);
             user.RegistrationTime = DateTime.Now;
+
             if (userSignUpDto.ImageFile != null)
             {
                 user.ImageUrl = await ImageFileManager.ImageAddAsync(userSignUpDto.ImageFile,
                     ImageFileManager.StaticProfileImageLocation());
             }
+
             else if (userSignUpDto.ImageUrl != null)
             {
                 user.ImageUrl = userSignUpDto.ImageUrl;
             }
+
             var result = await _userManager.CreateAsync(user, password);
+
             if (result.Succeeded)
             {
                 await CastUserRole(user, RolesTexts.WriterRole());
-                return null;
-            }
-            else
-            {
-                return result.Errors;
+                return new SuccessDataResult<IdentityResult>(result);
             }
 
+            return new ErrorDataResult<IdentityResult>(result);
         }
-        public async Task CastUserRole(AppUser user, string role)
+        public async Task<IResult> CastUserRole(AppUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
+            return new SuccessResult();
         }
 
-        public async Task DeleteUserAsync(AppUser t)
+        public async Task<IResult> DeleteUserAsync(AppUser t)
         {
             await _userManager.DeleteAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<AppUser> GetByIDAsync(string id)
+        public async Task<IDataResult<AppUser>> GetByIDAsync(string id)
         {
-            return await _userManager.FindByIdAsync(id);
+            if (id != string.Empty)
+            {
+                return new SuccessDataResult<AppUser>(await _userManager.FindByIdAsync(id));
+            }
+            return new ErrorDataResult<AppUser>();
         }
 
         [ValidationAspect(typeof(UserDtoValidator))]
-        public async Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user)
+        public async Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user)
         {
-            var value = await GetByIDAsync(user.Id.ToString());
+            var rawValue = await GetByIDAsync(user.Id.ToString());
+            var value = rawValue.Data;
+
             value.NameSurname = user.NameSurname;
             value.Email = user.Email;
             value.UserName = user.UserName;
@@ -104,16 +111,18 @@ namespace BusinessLayer.Concrete
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
                 _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
                     MailTemplates.ChangedUserInformationMailTemplate(mailTemplate));
-                return null;
+                return new SuccessDataResult<IdentityResult>(result);
             }
             else
-                return result.Errors;
+                return new ErrorDataResult<IdentityResult>(result);
         }
 
         [ValidationAspect(typeof(UserDtoValidator))]
-        public async Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user)
+        public async Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user)
         {
-            var value = await GetByIDAsync(user.Id.ToString());
+            var rawValue = await GetByIDAsync(user.Id.ToString());
+            var value = rawValue.Data;
+
             value.NameSurname = user.NameSurname;
             value.Email = user.Email;
             value.UserName = user.UserName;
@@ -126,59 +135,73 @@ namespace BusinessLayer.Concrete
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
                 _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
                     MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate));
-                return null;
+                return new SuccessDataResult<IdentityResult>(result);
             }
             else
-                return result.Errors;
+                return new ErrorDataResult<IdentityResult>(result);
         }
 
-        public async Task<UserDto> FindByUserNameAsync(string userName)
+        public async Task<IDataResult<UserDto>> FindByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            var userDto = Mapper.Map<UserDto>(user);
-            return userDto;
+
+            if (user != null)
+            {
+                var userDto = Mapper.Map<UserDto>(user);
+                return new SuccessDataResult<UserDto>(userDto);
+            }
+
+            return new ErrorDataResult<UserDto>("Kullanıcı bulunamadı.");
         }
-        public async Task<UserDto> FindByUserNameForUpdateAsync(string userName)
+        public async Task<IDataResult<UserDto>> FindByUserNameForUpdateAsync(string userName)
         {
             var user = await FindByUserNameAsync(userName);
-            if (user.ImageUrl[..5] != "http" || user.ImageUrl[..5] != "https")
+
+            if (!user.Success)
             {
-                user.ImageUrl = null;
+                return new ErrorDataResult<UserDto>();
             }
-            return user;
+
+            var userData = user.Data;
+            if (userData.ImageUrl[..5] != "http" || userData.ImageUrl[..5] != "https")
+            {
+                userData.ImageUrl = null;
+            }
+            return new SuccessDataResult<UserDto>(userData);
         }
 
-        public async Task<UserDto> FindByMailAsync(string mail)
+        public async Task<IDataResult<UserDto>> FindByMailAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);
+
             var userDto = Mapper.Map<UserDto>(user);
-            return userDto;
+            return new SuccessDataResult<UserDto>(userDto);
         }
 
-        public async Task<List<string>> GetUserRoleListAsync(AppUser user)
+        public async Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user)
         {
             var value = await _userManager.GetRolesAsync(user);
-            return value.ToList();
+            return new SuccessDataResult<List<string>>(value.ToList());
         }
 
-        public async Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null)
+        public async Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
-                return await _userManager.Users.CountAsync();
+                return new SuccessDataResult<int>(await _userManager.Users.CountAsync());
             else
-                return await _userManager.Users.CountAsync(filter);
+                return new SuccessDataResult<int>(await _userManager.Users.CountAsync(filter));
         }
         /// <summary>
         /// Eğer verilirse filtreye göre verilmez bütün kullanıcı listesi Döner
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Kullanıcı listesi döner.</returns>
-        public async Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
+        public async Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
-                return await _userManager.Users.ToListAsync();
+                return new SuccessDataResult<List<AppUser>>(await _userManager.Users.ToListAsync());
             else
-                return await _userManager.Users.Where(filter).ToListAsync();
+                return new SuccessDataResult<List<AppUser>>(await _userManager.Users.Where(filter).ToListAsync());
         }
         /// <summary>
         /// Kullanıcıları belirli bir süre yasaklamayı sağlayan mekanizma.
@@ -189,30 +212,35 @@ namespace BusinessLayer.Concrete
         /// <param name="expiration"></param>
         /// <param name="banMessageContent"></param>
         /// <returns></returns>
-        public async Task<bool> BannedUser(string id, DateTime expiration, string banMessageContent)
+        public async Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
             var user = await GetByIDAsync(id);
-            if (user == null)
-                return false;
-            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(user, true);
+            var userData = user.Data;
+            if (userData == null)
+                return new ErrorResult();
+
+            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(userData, true);
             if (resultSetLockot.Succeeded)
             {
                 if (expiration > DateTime.Now)
                 {
-                    var isExistUserRole = await _userManager.IsInRoleAsync(user, RolesTexts.AdminRole());
+                    var isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
                     if (isExistUserRole)
-                        return false;
-                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(user, expiration);
+                        return new ErrorResult("Adminler banlanamaz.");
+
+                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(userData, expiration);
                     if (resultSetLockotEndDate.Succeeded)
                     {
                         if (banMessageContent == "" || banMessageContent == null)
                             banMessageContent = MailTemplates.BanMessageContent(expiration);
-                        _mailService.SendMail(user.Email, MailTemplates.BanMessageSubject(), banMessageContent);
-                        return true;
+                        _mailService.SendMail(userData.Email, MailTemplates.BanMessageSubject(), banMessageContent);
+                        return new SuccessResult();
                     }
+                    return new ErrorResult(resultSetLockot.Errors.First().Description);
                 }
+                return new ErrorResult("Girilen ban süresi şu anki tarihten ileride olamaz.");
             }
-            return false;
+            return new ErrorResult(resultSetLockot.Errors.First().Description);
         }
         /// <summary>
         /// Kullanıcının yasaklamasını açılmasını sağlayan mekanizma.
@@ -220,44 +248,54 @@ namespace BusinessLayer.Concrete
         /// </summary>
         /// <param name="id">Kullanıcının id değeri</param>
         /// <returns>İşlem başarılı ise true değil ise false döner.</returns>
-        public async Task<bool> BanOpenUser(string id)
+        public async Task<IResult> BanOpenUser(string id)
         {
             var user = await GetByIDAsync(id);
-            if (user == null)
-                return false;
-            var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now);
+
+            var userDto = Mapper.Map<UserDto>(user);
+
+            IResult businessRulesResult = BusinessRules.Run(UserNotEmpty(new SuccessDataResult<UserDto>(userDto)));
+
+            if (!businessRulesResult.Success)
+            {
+                return businessRulesResult;
+            }
+
+            var userData = user.Data;
+
+            var result = await _userManager.SetLockoutEndDateAsync(userData, DateTime.Now);
             if (result.Succeeded)
             {
-                _mailService.SendMail(user.Email, MailTemplates.BanOpenUserSubjectTemplate(),
+                _mailService.SendMail(userData.Email, MailTemplates.BanOpenUserSubjectTemplate(),
                     MailTemplates.BanOpenUserContentTemplate());
+                return new SuccessResult();
             }
-            return result.Succeeded;
+
+            return new ErrorResult(result.Errors.First().Description);
         }
-        public async Task<string> GetPasswordResetTokenAsync(string mail)
+        public async Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);
-            if (user == null)
-            {
-                return null;
-            }
             var result = await _userManager.GeneratePasswordResetTokenAsync(user);
             if (result != null)
             {
-                return result;
+                return new SuccessDataResult<string>(result);
             }
-            return null;
+            return new ErrorDataResult<string>("Bir hata oluştu.");
         }
-        public async Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto)
+        public async Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
-            if (user != null)
+
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
+            if (result != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
                 _mailService.SendMail(user.Email, MailTemplates.ResetPasswordInformationSubject(),
-                    MailTemplates.ResetPasswordInformationMessage());
-                return result.Succeeded;
+                MailTemplates.ResetPasswordInformationMessage());
+                return new SuccessDataResult<IdentityResult>(result);
             }
-            return false;
+
+            return new ErrorDataResult<IdentityResult>(result);
         }
     }
 }

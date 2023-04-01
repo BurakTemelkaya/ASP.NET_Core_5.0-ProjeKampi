@@ -1,4 +1,5 @@
-﻿using EntityLayer.Concrete;
+﻿using CoreLayer.Utilities.Results;
+using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ namespace BusinessLayer.Abstract
 {
     public interface IMessageDraftService
     {
-        Task<List<MessageDraft>> GetMessageDraftListAsync(Expression<Func<MessageDraft, bool>> filter = null);
-        Task<List<MessageDraft>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30);
-        Task<int> GetCountAsync(Expression<Func<MessageDraft, bool>> filter = null);
-        Task<int> GetCountByUserNameAsync(string userName);
-        Task<List<MessageDraft>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null);
-        Task AddAsync(MessageDraft t, string userName);
-        Task DeleteAsync(int id, string userName);
-        Task<bool> DeleteMessageDraftsAsync(List<string> ids, string userName);
-        Task<MessageDraft> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null);
-        Task<MessageDraft> GetByIDAsync(int id, string userName);
-        Task UpdateAsync(MessageDraft t, string userName);
+        Task<IDataResult<List<MessageDraft>>> GetMessageDraftListAsync(Expression<Func<MessageDraft, bool>> filter = null);
+        Task<IDataResult<List<MessageDraft>>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30);
+        Task<IDataResult<int>> GetCountAsync(Expression<Func<MessageDraft, bool>> filter = null);
+        Task<IDataResult<int>> GetCountByUserNameAsync(string userName);
+        Task<IDataResult<List<MessageDraft>>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null);
+        Task<IResult> AddAsync(MessageDraft t, string userName);
+        Task<IResult> DeleteAsync(int id, string userName);
+        Task<IResult> DeleteMessageDraftsAsync(List<string> ids, string userName);
+        Task<IDataResult<MessageDraft>> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null);
+        Task<IDataResult<MessageDraft>> GetByIDAsync(int id, string userName);
+        Task<IResult> UpdateAsync(MessageDraft t, string userName);
     }
 }

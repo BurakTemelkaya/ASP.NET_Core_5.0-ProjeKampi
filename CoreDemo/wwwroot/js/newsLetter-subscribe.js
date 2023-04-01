@@ -36,24 +36,15 @@ $("#btnSubscribe").click(function () {
                 })
             },
             error: function (func) {
-                if (func.responseText == "Böyle bir mail adresi bulunuyor.") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hata !',
-                        text: "Böyle bir mail adresi bulunuyor."
-                    })
-                }
-                else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hata !',
-                        text: "Bir hata oluştu lütfen daha sonra tekrar deneyiniz."
-                    })
-                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: func.responseText
+                })
             }
         });
     }
-    
+
 });
 $("#btnFooterSubscribe").click(function () {
     let mail = {
@@ -88,20 +79,11 @@ $("#btnFooterSubscribe").click(function () {
                 })
             },
             error: function (func) {
-                if (func.responseText == "Böyle bir mail adresi bulunuyor.") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hata !',
-                        text: "Böyle bir mail adresi bulunuyor."
-                    })
-                }
-                else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hata !',
-                        text: "Bir hata oluştu lütfen daha sonra tekrar deneyiniz."
-                    })
-                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata !',
+                    text: func.responseText
+                });
             }
         });
     }

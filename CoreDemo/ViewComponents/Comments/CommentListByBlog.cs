@@ -21,7 +21,7 @@ namespace CoreDemo.ViewComponents.Comments
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
             var values = await _commentService.GetListByIdAsync(id);
-            return View(values);
+            return View(values.Data);
         }
     }
 }

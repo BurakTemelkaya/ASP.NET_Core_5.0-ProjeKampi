@@ -25,7 +25,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var newsletter = await _newsLetterService.GetListAsync();
-            var value = await newsletter.ToPagedListAsync(page, 5);
+            var value = await newsletter.Data.ToPagedListAsync(page, 5);
             return View(value);
         }
 
@@ -47,10 +47,10 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendNewsletter(NewsLetterSendMailsModel model)
         {
-            bool isSend = await _newsLetterService.SendMailAsync(model, x => x.MailStatus);
-            if (!isSend)
+            var result = await _newsLetterService.SendMailAsync(model, x => x.MailStatus);
+            if (!result.Success)
             {
-                ModelState.AddModelError("Subject", "Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                ModelState.AddModelError("Subject", result.Message);
                 return View(model);
             }
             else
@@ -77,7 +77,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteNewsLetter(int id)
         {
             var value = await _newsLetterService.TGetByIDAsync(id);
-            await _newsLetterService.TDeleteAsync(value);
+            await _newsLetterService.TDeleteAsync(value.Data);
             return RedirectToAction("Index");
         }
     }
