@@ -544,3 +544,4 @@ $RECYCLE.BIN/
 /EntityLayer/obj/Debug/net5.0/refint/EntityLayer.dll
 /CoreLayer/obj/Debug/net5.0/refint/CoreLayer.dll
 /CoreLayer/obj/Debug/net5.0/ref/CoreLayer.dll
+/CoreDemo/wwwroot/MessageDraftContents
