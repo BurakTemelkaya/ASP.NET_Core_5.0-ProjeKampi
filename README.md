@@ -1,5 +1,5 @@
 # ASP.NET Core 5.0 ProjeKampi
-<h4>Projede ASP.NET Core 5.0 teknolojisi &amp; N Tier Architecture kullanıldı.</h4>
+<h4>Projede ASP.NET Core 5.0 teknolojisi &amp; N Tier Architecture &amp; OOP &amp; AOP teknikleri kullanıldı.</h4>
 
 <h2>Ödevler:</h2>
 
