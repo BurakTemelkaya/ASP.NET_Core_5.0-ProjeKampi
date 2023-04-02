@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Models;
+using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace BusinessLayer.Abstract
 {
     public interface INewsLetterService : IGenericService<NewsLetter>
     {
-        Task<NewsLetter> GetByMailAsync(string mail);
-        Task<bool> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
+        Task<IDataResult<NewsLetter>> GetByMailAsync(string mail);
+        Task<IResult> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
     }
 }

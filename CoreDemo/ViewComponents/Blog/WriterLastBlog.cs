@@ -1,12 +1,7 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Blog
 {
@@ -21,11 +16,8 @@ namespace CoreDemo.ViewComponents.Blog
 
         public async Task<IViewComponentResult> InvokeAsync(int writerId, int blogId)
         {
-            var blogs = await _blogService.GetBlogListByWriterAsync(writerId);
-            var values = await blogs.Where(x => x.BlogStatus).ToListAsync();
-            var currentBlog = values.FirstOrDefault(x => x.BlogID == blogId);
-            values.Remove(currentBlog);
-            return View(await values.TakeLast(4).ToListAsync());
+            var blogs = await _blogService.GetListAsync(x => x.BlogStatus && x.BlogID != blogId && x.WriterID != writerId);
+            return View(blogs.Data.TakeLast(4).ToList());
         }
     }
 }

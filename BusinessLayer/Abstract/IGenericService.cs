@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLayer.Utilities.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,12 +10,12 @@ namespace BusinessLayer.Abstract
 {
     public interface IGenericService<T>
     {
-        Task TAddAsync(T t);
-        Task TDeleteAsync(T t);
-        Task TUpdateAsync(T t);
-        Task<List<T>> GetListAsync(Expression<Func<T, bool>> filter = null);
-        Task<T> TGetByIDAsync(int id);
-        Task<T> TGetByFilterAsync(Expression<Func<T, bool>> filter = null);
-        Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null);
+        Task<IResult> TAddAsync(T t);
+        Task<IResult> TDeleteAsync(T t);
+        Task<IResult> TUpdateAsync(T t);
+        Task<IDataResult<List<T>>> GetListAsync(Expression<Func<T, bool>> filter = null);
+        Task<IDataResult<T>> TGetByIDAsync(int id);
+        Task<IDataResult<T>> TGetByFilterAsync(Expression<Func<T, bool>> filter = null);
+        Task<IDataResult<int>> GetCountAsync(Expression<Func<T, bool>> filter = null);
     }
 }

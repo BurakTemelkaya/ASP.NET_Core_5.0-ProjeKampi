@@ -1,4 +1,5 @@
-﻿using EntityLayer.Concrete;
+﻿using CoreLayer.Utilities.Results;
+using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace BusinessLayer.Abstract
 {
     public interface IContactService : IGenericService<Contact>
     {
-        Task ContactAddAsync(Contact contact);
-        Task<bool> DeleteContactsAsync(List<string> ids);
-        Task<bool> MarkUsReadAsync(int contactId);
-        Task<bool> MarksUsReadAsync(List<string> Ids);
-        Task<bool> MarkUsUnreadAsync(int contactId);
-        Task<bool> MarksUsUnreadAsync(List<string> Ids);
+        Task<IResult> ContactAddAsync(Contact contact);
+        Task<IResult> DeleteContactsAsync(List<string> ids);
+        Task<IResult> MarkUsReadAsync(int contactId);
+        Task<IResult> MarksUsReadAsync(List<string> Ids);
+        Task<IResult> MarkUsUnreadAsync(int contactId);
+        Task<IResult> MarksUsUnreadAsync(List<string> Ids);
     }
 }

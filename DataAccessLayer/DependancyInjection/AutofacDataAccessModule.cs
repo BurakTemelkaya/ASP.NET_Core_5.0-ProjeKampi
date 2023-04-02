@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.EntityFramework;
+using DataAccessLayer.Concrete.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

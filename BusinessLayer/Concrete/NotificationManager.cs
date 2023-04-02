@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -19,39 +20,42 @@ namespace BusinessLayer.Concrete
             _notificationDal = notificationDal;
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return await _notificationDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _notificationDal.GetCountAsync(filter));
         }
 
-        public async Task<List<Notification>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return await _notificationDal.GetListAllAsync(filter);
+            return new SuccessDataResult<List<Notification>>(await _notificationDal.GetListAllAsync(filter));
         }
 
-        public async Task TAddAsync(Notification t)
+        public async Task<IResult> TAddAsync(Notification t)
         {
             await _notificationDal.InsertAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task TDeleteAsync(Notification t)
+        public async Task<IResult> TDeleteAsync(Notification t)
         {
             await _notificationDal.DeleteAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<Notification> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<Notification>> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null)
         {
-            return await _notificationDal.GetByFilterAsync(filter);
+            return new SuccessDataResult<Notification>(await _notificationDal.GetByFilterAsync(filter));
         }
 
-        public async Task<Notification> TGetByIDAsync(int id)
+        public async Task<IDataResult<Notification>> TGetByIDAsync(int id)
         {
-            return await _notificationDal.GetByIDAsync(id);
+            return new SuccessDataResult<Notification>(await _notificationDal.GetByIDAsync(id));
         }
 
-        public async Task TUpdateAsync(Notification t)
+        public async Task<IResult> TUpdateAsync(Notification t)
         {
             await _notificationDal.UpdateAsync(t);
+            return new SuccessResult();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EntityLayer;
+﻿using CoreLayer.Utilities.Results;
+using EntityLayer;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Identity;
@@ -13,21 +14,21 @@ namespace BusinessLayer.Abstract
 {
     public interface IBusinessUserService
     {
-        Task<IEnumerable<IdentityError>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password);
-        Task DeleteUserAsync(AppUser t);
-        Task<AppUser> GetByIDAsync(string id);
-        Task<IEnumerable<IdentityError>> UpdateUserAsync(UserDto user);
-        Task<IEnumerable<IdentityError>> UpdateUserForAdminAsync(UserDto user);
-        Task<UserDto> FindByUserNameAsync(string userName);
-        Task<UserDto> FindByUserNameForUpdateAsync(string userName);
-        Task<UserDto> FindByMailAsync(string mail);
-        Task CastUserRole(AppUser user, string role);
-        Task<List<string>> GetUserRoleListAsync(AppUser user);
-        Task<int> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
-        Task<List<AppUser>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
-        Task<bool> BannedUser(string id, DateTime expiration, string banMessageContent);
-        Task<bool> BanOpenUser(string id);
-        Task<string> GetPasswordResetTokenAsync(string mail);
-        Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto);
+        Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password);
+        Task<IResult> DeleteUserAsync(AppUser t);
+        Task<IDataResult<AppUser>> GetByIDAsync(string id);
+        Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user);
+        Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user);
+        Task<IDataResult<UserDto>> FindByUserNameAsync(string userName);
+        Task<IDataResult<UserDto>> FindByUserNameForUpdateAsync(string userName);
+        Task<IDataResult<UserDto>> FindByMailAsync(string mail);
+        Task<IResult> CastUserRole(AppUser user, string role);
+        Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user);
+        Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
+        Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
+        Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent);
+        Task<IResult> BanOpenUser(string id);
+        Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail);
+        Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto);
     }
 }

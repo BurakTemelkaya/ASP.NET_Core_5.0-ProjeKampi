@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -59,7 +52,7 @@ namespace CoreDemo.Controllers
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             var writer = await _userManager.FindByUserNameForUpdateAsync(User.Identity.Name);
-            return View(writer);
+            return View(writer.Data);
         }
         [HttpPost]
         public async Task<IActionResult> WriterEditProfile(UserDto userDto)
@@ -68,7 +61,7 @@ namespace CoreDemo.Controllers
             var result = await _userManager.UpdateUserAsync(userDto);
             if (result != null)
             {
-                foreach (var item in result)
+                foreach (var item in result.Data.Errors)
                 {
                     ModelState.AddModelError("Email", item.Description);
                 }                
@@ -76,9 +69,11 @@ namespace CoreDemo.Controllers
                 return View(userDto);
             }
             var user = await _userManager.GetByIDAsync(userDto.Id.ToString());
+
             await _signInManager.SignOutAsync();
-            await _signInManager.SignInAsync(user, isPersistent: true);
-            if (user.PasswordHash == oldValue.PasswordHash && userDto.Password != null &&
+            await _signInManager.SignInAsync(user.Data, isPersistent: true);
+
+            if (user.Data.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
                 userDto.PasswordAgain != null && userDto.OldPassword != null)
             {
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +

@@ -16,8 +16,18 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            ViewBag.MessageCount = await _messageService.GetCountAsync(x => x.ReceiverUserId == user.Id);
-            ViewBag.UnreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUserId == user.Id && x.MessageStatus);
+
+            var messageCount = await _messageService.GetCountAsync(x => x.ReceiverUserId == user.Data.Id);
+            if (messageCount.Success)
+            {
+                ViewBag.MessageCount = messageCount.Data;
+            }
+
+            var unreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUserId == user.Data.Id && x.MessageStatus);
+            if (unreadMessageCount.Success)
+            {
+                ViewBag.UnreadMessageCount = unreadMessageCount.Data;
+            }
             return View();
         }
     }

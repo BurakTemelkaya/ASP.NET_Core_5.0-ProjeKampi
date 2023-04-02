@@ -7,7 +7,6 @@ using Core.Extensions;
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation;

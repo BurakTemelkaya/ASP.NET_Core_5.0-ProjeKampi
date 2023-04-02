@@ -28,16 +28,23 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         public async Task<IViewComponentResult> InvokeAsync()
         {
             decimal tempFah = Convert.ToDecimal(WeatherApi().Value);
-            tempFah = tempFah - Convert.ToDecimal(273.15);
+            tempFah -= Convert.ToDecimal(273.15);
+
+            var blogCount = await _blogService.GetCountAsync();
+
+            var messageCount = await _message2Service.GetCountAsync();
+
+            var commentCount = await _commentService.GetCountAsync();
+
             WidgetModel widgetModel = new WidgetModel
             {
-                BlogCount = await _blogService.GetCountAsync(),
-                MessageCount = await _message2Service.GetCountAsync(),
-                CommentCount = await _commentService.GetCountAsync(),
+                BlogCount = blogCount.Data,
+                MessageCount = messageCount.Data,
+                CommentCount = commentCount.Data,
                 Temparature = tempFah.ToString()
             };
-            ViewBag.v2 = await _message2Service.GetCountAsync();
-            ViewBag.v3 = await _commentService.GetCountAsync();
+            ViewBag.v2 = _message2Service.GetCountAsync().Result.Data;
+            ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
             return View(widgetModel);
         }
         private XAttribute WeatherApi(string city = "istanbul")

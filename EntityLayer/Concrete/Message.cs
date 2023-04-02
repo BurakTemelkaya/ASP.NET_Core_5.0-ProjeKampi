@@ -5,13 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.Entities;
 using EntityLayer.DTO;
 
 namespace EntityLayer.Concrete
 {
-    public class Message
+    public class Message : IEntity
     {
-        [Key]
         public int MessageID { get; set; }
         public string Subject { get; set; }
         public string Details { get; set; }

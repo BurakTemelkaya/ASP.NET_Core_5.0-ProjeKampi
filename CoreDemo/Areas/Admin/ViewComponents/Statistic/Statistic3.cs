@@ -28,14 +28,14 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            ViewBag.UserCount = await _userService.GetByUserCountAsync();
-            ViewBag.LikeCommentCount = await _commentService.GetCountAsync(x => x.BlogScore > 2);
-            ViewBag.NewsLetterCount = await _newsLetterService.GetCountAsync();
-            ViewBag.CategoryCount = await _categoryService.GetCountAsync();
-            string exchangeRate = "https://www.tcmb.gov.tr/kurlar/today.xml";
-            var xmlDoc = new XmlDocument();
+            ViewBag.UserCount = _userService.GetByUserCountAsync().Result.Data;
+            ViewBag.LikeCommentCount = _commentService.GetCountAsync(x => x.BlogScore > 2).Result.Data;
+            ViewBag.NewsLetterCount = _newsLetterService.GetCountAsync().Result.Data;
+            ViewBag.CategoryCount =  _categoryService.GetCountAsync().Result.Data;           
             try
             {
+                string exchangeRate = "https://www.tcmb.gov.tr/kurlar/today.xml";
+                var xmlDoc = new XmlDocument();
                 xmlDoc.Load(exchangeRate);
                 ViewBag.Euro = xmlDoc.SelectSingleNode("Tarih_Date/Currency [@Kod='EUR']/BanknoteSelling").InnerXml.ToString();
                 ViewBag.Dolar = xmlDoc.SelectSingleNode("Tarih_Date/Currency [@Kod='USD']/BanknoteSelling").InnerXml.ToString();
@@ -43,8 +43,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             catch
             {
 
-                ViewBag.Euro = 0;
-                ViewBag.Dolar = 0;
+                ViewBag.Euro = "Veri getirilemedi.";
+                ViewBag.Dolar = "Veri getirilemedi.";
             }
             return View();
         }

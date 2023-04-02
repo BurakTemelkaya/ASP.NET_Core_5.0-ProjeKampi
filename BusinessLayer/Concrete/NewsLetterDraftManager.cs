@@ -1,14 +1,13 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.ValidationRules;
-using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
@@ -21,61 +20,84 @@ namespace BusinessLayer.Concrete
             _newsLetterDraftDal = newsLetterDraftDal;
         }
 
-        public async Task<bool> DeleteById(int id)
+        public async Task<IResult> DeleteById(int id)
         {
+            IResult result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(id));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
             var value = await _newsLetterDraftDal.GetByIDAsync(id);
             if (value != null)
             {
                 await _newsLetterDraftDal.DeleteAsync(value);
-                return true;
+                return new SuccessResult();
             }
-            return false;
-            
+
+            return new ErrorResult("Taslak bulunamadı.");
+
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
         {
-            return await _newsLetterDraftDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _newsLetterDraftDal.GetCountAsync(filter));
         }
 
-        public async Task<List<NewsLetterDraft>> GetListAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
+        public async Task<IDataResult<List<NewsLetterDraft>>> GetListAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
         {
             var values = await _newsLetterDraftDal.GetListAllAsync(filter);
             foreach (var item in values)
                 item.Content = await TextFileManager.ReadTextFileAsync(item.Content, 30);
-            return values;
+            return new SuccessDataResult<List<NewsLetterDraft>>(values);
         }
 
-        
-        public async Task TAddAsync(NewsLetterDraft t)
+
+        public async Task<IResult> TAddAsync(NewsLetterDraft t)
         {
             t.TimeToAdd = DateTime.Now;
             t.Content = await TextFileManager.TextFileAddAsync(t.Content, TextFileManager.GetNewsLetterDraftContentFileLocation());
             await _newsLetterDraftDal.InsertAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task TDeleteAsync(NewsLetterDraft t)
+        public async Task<IResult> TDeleteAsync(NewsLetterDraft t)
         {
             DeleteFileManager.DeleteFile(t.Content);
             await _newsLetterDraftDal.DeleteAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<NewsLetterDraft> TGetByFilterAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
+        public async Task<IDataResult<NewsLetterDraft>> TGetByFilterAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
         {
             var value = await _newsLetterDraftDal.GetByFilterAsync(filter);
             value.Content = await TextFileManager.ReadTextFileAsync(value.Content);
-            return value;
+            return new SuccessDataResult<NewsLetterDraft>(value);
         }
 
-        public async Task<NewsLetterDraft> TGetByIDAsync(int id)
+        public async Task<IDataResult<NewsLetterDraft>> TGetByIDAsync(int id)
         {
             var value = await _newsLetterDraftDal.GetByIDAsync(id);
+
+            if (value == null)
+            {
+                return new ErrorDataResult<NewsLetterDraft>("Taslak bulunamadı.");
+            }
+
             value.Content = await TextFileManager.ReadTextFileAsync(value.Content);
-            return value;
+            return new SuccessDataResult<NewsLetterDraft>(value);
         }
 
-        public async Task TUpdateAsync(NewsLetterDraft t)
+        public async Task<IResult> TUpdateAsync(NewsLetterDraft t)
         {
+            IResult result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(t.NewsLetterDraftId));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
             if (await TextFileManager.ReadTextFileAsync(t.Content) != t.Content)
             {
                 DeleteFileManager.DeleteFile(t.Content);
@@ -84,12 +106,21 @@ namespace BusinessLayer.Concrete
             else
             {
                 var oldValue = await TGetByIDAsync(t.NewsLetterDraftId);
-                t.Content = oldValue.Content;
+                t.Content = oldValue.Data.Content;
             }
-            if (t.NewsLetterDraftId!=0)
+
+            await _newsLetterDraftDal.UpdateAsync(t);
+            return new SuccessResult();
+
+        }
+
+        private IResult NewsLetterDraftIdNotEqualZero(int newsLetterId)
+        {
+            if (newsLetterId == 0)
             {
-                await _newsLetterDraftDal.UpdateAsync(t);
-            }            
+                return new ErrorResult("Taslak boş olamaz");
+            }
+            return new SuccessResult();
         }
     }
 }

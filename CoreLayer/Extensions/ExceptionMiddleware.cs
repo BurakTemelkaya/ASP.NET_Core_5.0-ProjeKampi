@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -37,19 +38,19 @@ namespace Core.Extensions
 
             string message = "Internal Server Error";
             IEnumerable<ValidationFailure> errors;
+
             if (e.GetType() == typeof(ValidationException))
             {
                 message = e.Message;
-                errors = ((ValidationException) e).Errors;
-                httpContext.Response.StatusCode = 400;
+                errors = ((ValidationException)e).Errors;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                return httpContext.Response.WriteAsync(new ValidationErrorDetails
+                return httpContext.Response.WriteAsync(new ValidationErrorDetail
                 {
-                    StatusCode = 400,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
                     Message = message,
-                    Errors = errors
+                    ValidationErrors = errors
                 }.ToString());
-
             }
 
             return httpContext.Response.WriteAsync(new ErrorDetails

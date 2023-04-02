@@ -15,7 +15,7 @@ namespace CoreDemo.ViewComponents.Writer
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var writer = await _userService.FindByUserNameAsync(User.Identity.Name);
-            return View(writer);
+            return View(writer.Data);
         }
     }
 }

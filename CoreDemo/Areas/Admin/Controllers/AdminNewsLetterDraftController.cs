@@ -20,7 +20,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var newsLetterDrafts = await _newsLetterDraftServiceservice.GetListAsync();
-            var values = await newsLetterDrafts.ToPagedListAsync(page, 5);
+            var values = await newsLetterDrafts.Data.ToPagedListAsync(page, 5);
             return View(values);
         }
         [HttpGet]

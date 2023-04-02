@@ -1,13 +1,11 @@
-﻿using EntityLayer.Concrete;
-using System;
+﻿using CoreLayer.DataAccess;
+using EntityLayer.Concrete;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface ICommentDal : IGenericDal<Comment>
+    public interface ICommentDal : IEntityRepository<Comment>
     {
         Task<List<Comment>> GetListWithCommentByBlogAsync();
     }

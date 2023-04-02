@@ -65,9 +65,9 @@
                             </label>
                         </div>
                     </div>
-                    <div class="text-danger mb-3" asp-validation-summary="All"></div>
+                    <br />
                     <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
-                    <span asp-validation-for="@Model.IsAcceptTheContract" class="text-danger"></span>
+                    <div asp-validation-summary="All" class="text-danger my-2"></div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary block full-width m-b">Kayıt Ol</button>
                     </div>
