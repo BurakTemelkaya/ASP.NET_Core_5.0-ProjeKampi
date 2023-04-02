@@ -545,3 +545,8 @@ $RECYCLE.BIN/
 /CoreLayer/obj/Debug/net5.0/refint/CoreLayer.dll
 /CoreLayer/obj/Debug/net5.0/ref/CoreLayer.dll
 /CoreDemo/wwwroot/MessageDraftContents
+/EntityLayer/obj/Debug/net5.0/EntityLayer.csproj.CoreCompileInputs.cache
+/DataAccessLayer/obj/Debug/net5.0/ref/DataAccessLayer.dll
+/DataAccessLayer/obj/Debug/net5.0/refint/DataAccessLayer.dll
+/DataAccessLayer/obj/Debug/net5.0/DataAccessLayer.csproj.CoreCompileInputs.cache
+/CoreLayer/obj/Debug/net5.0/CoreLayer.csproj.CoreCompileInputs.cache
