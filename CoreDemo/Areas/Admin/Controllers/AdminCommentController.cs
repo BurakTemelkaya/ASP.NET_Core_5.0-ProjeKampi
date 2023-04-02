@@ -43,9 +43,9 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> EditComment(int id)
         {
             var value = await _commentService.TGetByIDAsync(id);
-            if (value != null)
+            if (value.Success)
             {
-                return View(value);
+                return View(value.Data);
             }
             return RedirectToAction("Index");
         }

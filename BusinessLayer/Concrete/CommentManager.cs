@@ -66,7 +66,7 @@ namespace BusinessLayer.Concrete
             var values = await _commentDal.GetByIDAsync(id);
             if (values != null)
             {
-                return new SuccessDataResult<Comment>();
+                return new SuccessDataResult<Comment>(values);
             }
             return new ErrorDataResult<Comment>("Yorum bulunamadı.");
         }

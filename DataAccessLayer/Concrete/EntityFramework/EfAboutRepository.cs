@@ -1,6 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,13 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.DataAccess.EntityFramework;
 
-namespace DataAccessLayer.EntityFramework
+namespace DataAccessLayer.Concrete.EntityFramework
 {
-    public class EfNewsLetterRepository : GenericRepository<NewsLetter>, INewsLetterDal
+    public class EfAboutRepository : EfEntityRepositoryBase<About>, IAboutDal
     {
-        public EfNewsLetterRepository(DbContextOptions<Context> context) : base(context)
+        public EfAboutRepository(Context context) : base(context)
         {
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Notification
+    public class Notification : IEntity
     {
-        [Key]
         public int NotificationID { get; set; }
         public string NotificationType { get; set; }
         public string NotificationTypeSymbol { get; set; }

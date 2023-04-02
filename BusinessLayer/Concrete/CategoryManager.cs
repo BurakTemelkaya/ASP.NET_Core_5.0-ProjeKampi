@@ -3,8 +3,6 @@ using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.EntityFramework;
-using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

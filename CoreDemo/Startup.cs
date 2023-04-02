@@ -144,7 +144,7 @@ namespace CoreDemo
             }
             app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 
-            app.ConfigureCustomExceptionMiddleware();
+            //app.ConfigureCustomExceptionMiddleware();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

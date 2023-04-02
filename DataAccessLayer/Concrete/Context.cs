@@ -45,5 +45,6 @@ namespace DataAccessLayer.Concrete
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<MessageDraft> MessagesDrafts { get; set; }
         public virtual DbSet<NewsLetterDraft> NewsLetterDrafts { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
     }
 }

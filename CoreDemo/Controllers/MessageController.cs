@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
-using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
-using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;

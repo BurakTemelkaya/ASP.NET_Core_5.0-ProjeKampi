@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CoreLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Abstract
+namespace CoreLayer.DataAccess
 {
-    public interface IGenericDal<T> where T : class
+    public interface IEntityRepository<T> where T : class, IEntity, new()
     {
         Task InsertAsync(T t);
         Task InsertRangeAsync(List<T> t);

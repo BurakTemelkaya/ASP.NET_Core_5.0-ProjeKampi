@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDemo", "CoreDemo.csproj", "{A2771BAD-E403-473F-9442-FF8AE2D7A2B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E886F8E6-DC67-40D3-8007-45E61C8B2285} = {E886F8E6-DC67-40D3-8007-45E61C8B2285}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityLayer", "..\EntityLayer\EntityLayer.csproj", "{77C10C35-5329-45DE-9410-EAC7594EB985}"
 EndProject

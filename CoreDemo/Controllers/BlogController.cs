@@ -1,20 +1,8 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
-using CoreDemo.Models;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using EntityLayer.DTO;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using X.PagedList;
 

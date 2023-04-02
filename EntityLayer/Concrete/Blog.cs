@@ -1,4 +1,5 @@
-﻿using EntityLayer.DTO;
+﻿using CoreLayer.Entities;
+using EntityLayer.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Blog
+    public class Blog : IEntity
     {
         [Key]
         public int BlogID { get; set; }

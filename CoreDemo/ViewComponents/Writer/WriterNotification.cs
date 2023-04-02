@@ -1,11 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
