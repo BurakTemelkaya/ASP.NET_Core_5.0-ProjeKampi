@@ -109,6 +109,7 @@ namespace BusinessLayer.Concrete
             if (user.Data.Id == value.UserId)
             {
                 await _messageDraftDal.DeleteAsync(value);
+                DeleteFileManager.DeleteFile(value.Details);
                 return new SuccessResult();
             }
 
@@ -117,14 +118,11 @@ namespace BusinessLayer.Concrete
 
         public async Task<IResult> DeleteMessageDraftsAsync(List<string> ids, string userName)
         {
-            if (ids == null)
-            {
-                return new ErrorResult("Mesajlar boş.");
-            }
+            IResult result = BusinessRules.Run(IdsNotNull(ids));
 
-            if (userName == null)
+            if (!result.Success)
             {
-                return new ErrorResult("Kullanıcı adı boş.");
+                return result;
             }
 
             List<MessageDraft> messageDrafts = new();
@@ -176,9 +174,11 @@ namespace BusinessLayer.Concrete
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
 
-            if (!user.Success)
+            IResult result = BusinessRules.Run(IdNotEqualZero(id), UserNotEmpty(user));
+
+            if (!result.Success)
             {
-                return new ErrorDataResult<MessageDraft>(user.Message);
+                return new ErrorDataResult<MessageDraft>(result.Message);
             }
 
             var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Data.Id, x => x.MessageDraftID == id);
@@ -194,9 +194,11 @@ namespace BusinessLayer.Concrete
         {
             var user = await _businessUserService.FindByUserNameAsync(userName);
 
-            if (!user.Success)
+            IResult result = BusinessRules.Run(IdNotEqualZero(t.MessageDraftID), UserNotEmpty(user));
+
+            if (!result.Success)
             {
-                return new ErrorResult(user.Message);
+                return result;
             }
 
             var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Data.Id, x => x.MessageDraftID == t.MessageDraftID);
@@ -205,10 +207,17 @@ namespace BusinessLayer.Concrete
             {
                 if (await TextFileManager.ReadTextFileAsync(value.Details) != t.Details)
                 {
+                    DeleteFileManager.DeleteFile(t.Details);
                     t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
+                }
+                else
+                {
+                    t.Details = value.Details;
                 }
                 t.UserId = user.Data.Id;
                 await _messageDraftDal.UpdateAsync(t);
+
+                
                 return new SuccessResult();
             }
 
@@ -220,6 +229,15 @@ namespace BusinessLayer.Concrete
             if (id == 0)
             {
                 return new ErrorResult("Mesaj taslağı bulunamadı");
+            }
+            return new SuccessResult();
+        }
+
+        IResult IdsNotNull(List<string> ids)
+        {
+            if (ids == null)
+            {
+                return new ErrorResult("Mesaj taslakları bulunamadı");
             }
             return new SuccessResult();
         }
