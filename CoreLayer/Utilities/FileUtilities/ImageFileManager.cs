@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreLayer.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,11 +14,11 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public static class ImageFileManager
     {
-        public static string ImageAdd(IFormFile file, string folderLocation, int[] resolution)
+        public static string ImageAdd(IFormFile file, string folderLocation, Size size)
         {
             try
             {
-                using (var image = ResizeImage(file, resolution))
+                using (var image = ResizeImage(file, size))
                 {
                     var extension = Path.GetExtension(file.FileName);
                     var newImageName = Guid.NewGuid() + extension;
@@ -32,48 +35,31 @@ namespace CoreLayer.Utilities.FileUtilities
             }
         }
 
-        public static Image ResizeImage(IFormFile image, int[] resolution)
+        public static Image ResizeImage(IFormFile image, Size size)
         {
-            Image resizedImage = Image.FromStream(image.OpenReadStream(), true, true);
-            var newImage = new Bitmap(resolution[0], resolution[1]);
-            using var graphics = Graphics.FromImage(newImage);
-            graphics.DrawImage(resizedImage, 0, 0, resolution[0], resolution[1]);
-            return resizedImage;
-        }
+            Image imgToResize = Image.FromStream(image.OpenReadStream(), true, true);
 
-        public static string StaticProfileImageLocation()
-        {
-            return "/WriterImageFiles/";
-        }
+            var destRect = new Rectangle(0, 0, size.Width, size.Height);
+            var destImage = new Bitmap(size.Width, size.Height);
 
-        public static string StaticAboutImageLocation()
-        {
-            return "/AboutImageFiles/";
-        }
+            destImage.SetResolution(imgToResize.HorizontalResolution, imgToResize.VerticalResolution);
 
-        public static string StaticBlogImageLocation()
-        {
-            return "/BlogImageFiles/";
-        }
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-        public static int[] GetBlogThumbnailResolution()
-        {
-            return new int[] { 640, 360 };
-        }
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(imgToResize, destRect, 0, 0, imgToResize.Width, imgToResize.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
 
-        public static int[] GetBlogImageResolution()
-        {
-            return new int[] { 800, 420 };
-        }
-
-        public static int[] GetProfileImageResolution()
-        {
-            return new int[] { 320, 320 };
-        }
-
-        public static int[] GetAboutImageResolution()
-        {
-            return new int[] { 900, 500 };
+            return destImage;
         }
 
     }

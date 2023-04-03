@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
@@ -40,7 +41,7 @@ namespace BusinessLayer.Concrete
             if (userSignUpDto.ImageFile != null)
             {
                 user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
-                    ImageFileManager.StaticProfileImageLocation(), ImageFileManager.GetProfileImageResolution());
+                    ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
 
             else if (userSignUpDto.ImageUrl != null)
@@ -99,7 +100,7 @@ namespace BusinessLayer.Concrete
             if (user.ProfileImageFile != null)
             {
                 value.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,
-                    ImageFileManager.StaticProfileImageLocation(), ImageFileManager.GetProfileImageResolution());
+                    ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (user.ImageUrl != null && user.ImageUrl != "")
             {

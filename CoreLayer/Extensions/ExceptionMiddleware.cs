@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 using CoreLayer.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace Core.Extensions
 {
     public class ExceptionMiddleware
     {
         private RequestDelegate _next;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment webHostEnvironment)
         {
             _next = next;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -36,7 +40,14 @@ namespace Core.Extensions
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+
             string message = "Internal Server Error";
+
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                message = e.Message;
+            }
+            
             IEnumerable<ValidationFailure> errors;
 
             if (e.GetType() == typeof(ValidationException))

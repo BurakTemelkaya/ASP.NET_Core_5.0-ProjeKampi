@@ -16,9 +16,9 @@ namespace CoreLayer.Utilities.FileUtilities
                 var mainPath = "wwwroot";
                 File.Delete(Path.Combine(Directory.GetCurrentDirectory(), mainPath + fileLocation));
             }
-            catch
+            catch(Exception e)
             {
-
+                Console.WriteLine(e.Message.ToString());
             }
         }
     }

@@ -18,6 +18,7 @@ namespace CoreLayer.DataAccess.EntityFramework
         public EfEntityRepositoryBase(DbContext context)
         {
             _context = context;
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public async Task DeleteAsync(TEntity t)
@@ -35,15 +36,14 @@ namespace CoreLayer.DataAccess.EntityFramework
         public async Task<TEntity> GetByIDAsync(int id)
         {
             var result =await _context.Set<TEntity>().FindAsync(id);
-            _context.Entry(result).State = EntityState.Detached;
             return result;
         }
 
         public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             return filter == null ?
-                await _context.Set<TEntity>().AsNoTracking().ToListAsync() :
-                await _context.Set<TEntity>().AsNoTracking().Where(filter).ToListAsync();
+                await _context.Set<TEntity>().ToListAsync() :
+                await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
 
         public async Task InsertAsync(TEntity t)
@@ -61,9 +61,9 @@ namespace CoreLayer.DataAccess.EntityFramework
         public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             if (filter == null)
-                return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync();
+                return await _context.Set<TEntity>().FirstOrDefaultAsync();
             else
-                return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter);
+                return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
         public async Task UpdateAsync(TEntity t)
@@ -81,9 +81,9 @@ namespace CoreLayer.DataAccess.EntityFramework
         public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             if (filter == null)
-                return await _context.Set<TEntity>().AsNoTracking().CountAsync();
+                return await _context.Set<TEntity>().CountAsync();
             else
-                return await _context.Set<TEntity>().AsNoTracking().Where(filter).CountAsync();
+                return await _context.Set<TEntity>().Where(filter).CountAsync();
         }
     }
 }

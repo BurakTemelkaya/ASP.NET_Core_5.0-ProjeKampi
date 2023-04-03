@@ -15,6 +15,7 @@ using CoreDemo.Models;
 using CoreLayer.Utilities.Results;
 using CoreLayer.Utilities.Business;
 using AutoMapper;
+using BusinessLayer.Constants;
 
 namespace BusinessLayer.Concrete
 {
@@ -106,12 +107,12 @@ namespace BusinessLayer.Concrete
 
             if (blogImage != null)
             {
-                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(),ImageFileManager.GetBlogImageResolution());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(),ImageResulotions.GetBlogImageResolution());
             }
 
             if (blogThumbnailImage != null)
             {
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(),ImageFileManager.GetBlogThumbnailResolution());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }           
 
             var result = BusinessRules.Run(UserNotEmpty(user), BlogImageNotEmpty(blog.BlogImage), BlogThumbnailNotEmpty(blog.BlogThumbnailImage));
@@ -121,7 +122,7 @@ namespace BusinessLayer.Concrete
                 return result;
             }
 
-            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation());
             blog.WriterID = user.Data.Id;
             blog.BlogCreateDate = DateTime.Now;
             await _blogDal.InsertAsync(blog);
@@ -141,16 +142,16 @@ namespace BusinessLayer.Concrete
             if (user == null || user.Data.Id != oldValue.WriterID)
                 return new ErrorDataResult<Blog>(blog);
 
-            if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
+            if (blogImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogImageResolution());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
+            if (blogThumbnailImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogThumbnailResolution());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
 
             blog.BlogImage ??= oldValue.BlogImage;
@@ -161,7 +162,7 @@ namespace BusinessLayer.Concrete
             if (blog.BlogContent != oldValue.BlogContent)
             {
                 DeleteFileManager.DeleteFile(oldBlogValue.Data.BlogContent);
-                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.Data.BlogContent;
@@ -178,16 +179,16 @@ namespace BusinessLayer.Concrete
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
 
-            if (blogImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
+            if (blogImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
-                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogImageResolution());
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blogThumbnailImage != null && ImageFileManager.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
+            if (blogThumbnailImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageFileManager.StaticBlogImageLocation(), ImageFileManager.GetBlogThumbnailResolution());
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
 
             blog.BlogImage ??= oldValue.BlogImage;
@@ -198,7 +199,7 @@ namespace BusinessLayer.Concrete
             if (blog.BlogContent != oldValue.BlogContent)
             {
                 DeleteFileManager.DeleteFile(oldBlogValue.Data.BlogContent);
-                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, TextFileManager.GetBlogContentFileLocation());
+                blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.Data.BlogContent;

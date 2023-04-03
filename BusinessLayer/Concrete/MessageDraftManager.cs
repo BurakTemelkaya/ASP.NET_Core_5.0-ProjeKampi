@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.Business;
@@ -88,7 +89,7 @@ namespace BusinessLayer.Concrete
             }
 
             t.UserId = user.Data.Id;
-            t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
+            t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation());
             await _messageDraftDal.InsertAsync(t);
             return new SuccessResult();
         }
@@ -208,7 +209,7 @@ namespace BusinessLayer.Concrete
                 if (await TextFileManager.ReadTextFileAsync(value.Details) != t.Details)
                 {
                     DeleteFileManager.DeleteFile(t.Details);
-                    t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageDraftContentFileLocation());
+                    t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation());
                 }
                 else
                 {
