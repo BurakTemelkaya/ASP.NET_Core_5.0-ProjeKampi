@@ -562,3 +562,6 @@ $RECYCLE.BIN/
 /EntityLayer/obj/Debug/net5.0/EntityLayer.csproj.FileListAbsolute.txt
 /EntityLayer/obj/Debug/net5.0/EntityLayer.csproj.AssemblyReference.cache
 /CoreDemo/wwwroot/MessageDraftContents
+/CoreLayer/obj/Release/net5.0/CoreLayer.csproj.CopyComplete
+/CoreLayer/obj/Release/net5.0/CoreLayer.csproj.FileListAbsolute.txt
+/CoreLayer/bin/Release/net5.0/CoreLayer.deps.json
