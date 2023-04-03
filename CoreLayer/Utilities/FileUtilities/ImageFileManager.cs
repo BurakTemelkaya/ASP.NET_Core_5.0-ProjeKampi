@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,11 @@ namespace CoreLayer.Utilities.FileUtilities
             {
                 using (var image = ResizeImage(file, size))
                 {
+                    if (image == null)
+                    {
+                        return null;
+                    }
+
                     var extension = Path.GetExtension(file.FileName);
                     var newImageName = Guid.NewGuid() + extension;
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
@@ -37,29 +43,69 @@ namespace CoreLayer.Utilities.FileUtilities
 
         public static Image ResizeImage(IFormFile image, Size size)
         {
-            Image imgToResize = Image.FromStream(image.OpenReadStream(), true, true);
-
-            var destRect = new Rectangle(0, 0, size.Width, size.Height);
-            var destImage = new Bitmap(size.Width, size.Height);
-
-            destImage.SetResolution(imgToResize.HorizontalResolution, imgToResize.VerticalResolution);
-
-            using (var graphics = Graphics.FromImage(destImage))
+            try
             {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                Image imgToResize = Image.FromStream(image.OpenReadStream(), true, true);
 
-                using (var wrapMode = new ImageAttributes())
+                var destRect = new Rectangle(0, 0, size.Width, size.Height);
+                var destImage = new Bitmap(size.Width, size.Height);
+
+                destImage.SetResolution(imgToResize.HorizontalResolution, imgToResize.VerticalResolution);
+
+                using (var graphics = Graphics.FromImage(destImage))
                 {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(imgToResize, destRect, 0, 0, imgToResize.Width, imgToResize.Height, GraphicsUnit.Pixel, wrapMode);
-                }
-            }
+                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            return destImage;
+                    using (var wrapMode = new ImageAttributes())
+                    {
+                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                        graphics.DrawImage(imgToResize, destRect, 0, 0, imgToResize.Width, imgToResize.Height, GraphicsUnit.Pixel, wrapMode);
+                    }
+                }
+
+                return destImage;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public static IFormFile DownloadImage(string imageUrl)
+        {
+            try
+            {
+                var request = WebRequest.Create(imageUrl);
+                using (var response = request.GetResponse())
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        using (Bitmap bitmap = new Bitmap(stream))
+                        {
+                            var resultStream = new MemoryStream();
+
+                            bitmap.Save(resultStream, ImageFormat.Png);
+                            return new FormFile(resultStream, 0, resultStream.Length, "test.png", "deneme.png")
+                            {
+                                Headers = new HeaderDictionary(),
+                                ContentType = "image/*"
+                            };
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
 
     }

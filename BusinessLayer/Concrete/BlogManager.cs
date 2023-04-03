@@ -65,16 +65,11 @@ namespace BusinessLayer.Concrete
             var value = await _blogDal.GetByIDAsync(id);
 
             if (value == null)
-                return new ErrorDataResult<Blog>();
+                return new ErrorDataResult<Blog>("Blog bulunamadı.");
 
-            if (value.BlogThumbnailImage[..4] != "http")
-            {
-                value.BlogThumbnailImage = null;
-            }
-            if (value.BlogImage[..4] != "http")
-            {
-                value.BlogImage = null;
-            }
+            value.BlogThumbnailImage = null;
+            value.BlogImage = null;
+
             value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return new SuccessDataResult<Blog>(value);
         }
@@ -88,7 +83,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<List<Blog>>();
             }
 
-            return new SuccessDataResult<List<Blog>>(value.TakeLast(count).OrderByDescending(x=> x.BlogID).ToList());
+            return new SuccessDataResult<List<Blog>>(value.TakeLast(count).OrderByDescending(x => x.BlogID).ToList());
         }
 
         public async Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id)
@@ -105,15 +100,33 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.FindByUserNameAsync(userName);
 
-            if (blogImage != null)
+            if (blog.BlogImage != null)
             {
-                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(),ImageResulotions.GetBlogImageResolution());
+                var image = ImageFileManager.DownloadImage(blog.BlogImage);
+                if (image == null)
+                {
+                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            }
+            else if (blogImage != null)
+            {
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blogThumbnailImage != null)
+            if (blog.BlogThumbnailImage != null)
+            {
+                var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
+                if (image == null)
+                {
+                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            }
+            else if (blogThumbnailImage != null)
             {
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
-            }           
+            }
 
             var result = BusinessRules.Run(UserNotEmpty(user), BlogImageNotEmpty(blog.BlogImage), BlogThumbnailNotEmpty(blog.BlogThumbnailImage));
 
@@ -130,7 +143,7 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task<IDataResult<Blog>> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        public async Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
             var oldValueRaw = await GetBlogByIDAsync(blog.BlogID);
@@ -142,36 +155,56 @@ namespace BusinessLayer.Concrete
             if (user == null || user.Data.Id != oldValue.WriterID)
                 return new ErrorDataResult<Blog>(blog);
 
-            if (blogImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
+
+            if (blog.BlogImage != null)
+            {
+                var image = ImageFileManager.DownloadImage(blog.BlogImage);
+                if (image == null)
+                {
+                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            }
+            else if (blogImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blogThumbnailImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
+
+            if (blog.BlogThumbnailImage != null)
             {
-                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+                var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
+                if (image == null)
+                {
+                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+                DeleteFileManager.DeleteFile(oldValue.BlogContent);
             }
-
-            blog.BlogImage ??= oldValue.BlogImage;
-
-            blog.BlogThumbnailImage ??= oldValue.BlogThumbnailImage;
+            else if (blogThumbnailImage != null)
+            {
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+                if (blog.BlogThumbnailImage == null)
+                {
+                    return new ErrorResult("Blog küçük resmi, yüklenen resim ile güncellenemedi.");
+                }
+                DeleteFileManager.DeleteFile(oldValue.BlogContent);
+            }
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
-                DeleteFileManager.DeleteFile(oldBlogValue.Data.BlogContent);
                 blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.Data.BlogContent;
             await _blogDal.UpdateAsync(blog);
-            return new SuccessDataResult<Blog>(blog);
+            return new SuccessResult();
         }
 
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task<IDataResult<Blog>> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        public async Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var OldValueRaw = await GetBlogByIDAsync(blog.BlogID);
             var oldValue = OldValueRaw.Data;
@@ -179,33 +212,49 @@ namespace BusinessLayer.Concrete
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
 
-            if (blogImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogImage != oldValue.BlogImage)
+
+            if (blog.BlogImage != null)
+            {
+                var image = ImageFileManager.DownloadImage(blog.BlogImage);
+                if (image == null)
+                {
+                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            }
+            else if (blogImage != null)
             {
                 DeleteFileManager.DeleteFile(oldValue.BlogImage);
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blogThumbnailImage != null && ImageLocations.StaticProfileImageLocation() + blog.BlogThumbnailImage != oldValue.BlogThumbnailImage)
+            if (blog.BlogThumbnailImage != null)
             {
+                var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
+                if (image == null)
+                {
+                    DeleteFileManager.DeleteFile(blog.BlogImage);
+                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                }
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
-
-            blog.BlogImage ??= oldValue.BlogImage;
-
-            blog.BlogThumbnailImage ??= oldValue.BlogThumbnailImage;
+            else if (blogThumbnailImage != null)
+            {
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+                DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
+            }
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
             {
-                DeleteFileManager.DeleteFile(oldBlogValue.Data.BlogContent);
                 blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation());
             }
             else
                 blog.BlogContent = oldBlogValue.Data.BlogContent;
             await _blogDal.UpdateAsync(blog);
 
-            return new SuccessDataResult<Blog>(blog);
+            return new SuccessResult();
         }
 
         public async Task<IResult> DeleteBlogAsync(Blog blog, string userName)
@@ -214,6 +263,7 @@ namespace BusinessLayer.Concrete
             if (user.Data.Id == blog.WriterID)
             {
                 await _blogDal.DeleteAsync(blog);
+                DeleteFileManager.DeleteFile(blog.BlogContent);
                 return new SuccessResult();
             }
             return new ErrorResult();
@@ -258,6 +308,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResult> DeleteBlogByAdminAsync(Blog blog)
         {
             await _blogDal.DeleteAsync(blog);
+            DeleteFileManager.DeleteFile(blog.BlogContent);
             return new SuccessResult();
         }
 

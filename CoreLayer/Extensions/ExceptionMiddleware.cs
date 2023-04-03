@@ -15,12 +15,10 @@ namespace Core.Extensions
     public class ExceptionMiddleware
     {
         private RequestDelegate _next;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment webHostEnvironment)
+        public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -40,13 +38,7 @@ namespace Core.Extensions
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-
             string message = "Internal Server Error";
-
-            if (_webHostEnvironment.IsDevelopment())
-            {
-                message = e.Message;
-            }
             
             IEnumerable<ValidationFailure> errors;
 

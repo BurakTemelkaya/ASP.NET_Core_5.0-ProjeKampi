@@ -21,14 +21,14 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
         Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count);
         Task<IResult> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
-        Task<IDataResult<Blog>> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
+        Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IResult> DeleteBlogAsync(Blog blog, string userName);
         Task<IResult> DeleteBlogByAdminAsync(Blog blog);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null);
         Task<IResult> ChangedBlogStatusAsync(int id, string userName);
         Task<IResult> ChangedBlogStatusByAdminAsync(int id);
-        Task<IDataResult<Blog>> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
+        Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
     }
 }

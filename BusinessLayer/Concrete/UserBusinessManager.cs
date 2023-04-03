@@ -38,15 +38,20 @@ namespace BusinessLayer.Concrete
             var user = Mapper.Map<AppUser>(userSignUpDto);
             user.RegistrationTime = DateTime.Now;
 
-            if (userSignUpDto.ImageFile != null)
+
+            if (userSignUpDto.ImageUrl != null)
+            {
+                var image = ImageFileManager.DownloadImage(userSignUpDto.ImageUrl);
+                if (image == null)
+                {
+                    return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
+                }
+                userSignUpDto.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+            }
+            else if (userSignUpDto.ImageFile != null)
             {
                 user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
                     ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
-            }
-
-            else if (userSignUpDto.ImageUrl != null)
-            {
-                user.ImageUrl = userSignUpDto.ImageUrl;
             }
 
             var result = await _userManager.CreateAsync(user, password);
@@ -97,18 +102,28 @@ namespace BusinessLayer.Concrete
                 if (checkPassword)
                     value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
             }
-            if (user.ProfileImageFile != null)
+
+            if (user.ImageUrl != null)
+            {
+                var image = ImageFileManager.DownloadImage(user.ImageUrl);
+                if (image == null)
+                {
+                    return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
+                }
+                user.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                DeleteFileManager.DeleteFile(value.ImageUrl);
+            }
+
+            else if (user.ProfileImageFile != null)
             {
                 value.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,
                     ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                DeleteFileManager.DeleteFile(value.ImageUrl);
             }
-            else if (user.ImageUrl != null && user.ImageUrl != "")
-            {
-                value.ImageUrl = user.ImageUrl;
-            }
+            
             var result = await _userManager.UpdateAsync(value);
             if (result.Succeeded)
-            {
+            {               
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
                 _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
                     MailTemplates.ChangedUserInformationMailTemplate(mailTemplate));

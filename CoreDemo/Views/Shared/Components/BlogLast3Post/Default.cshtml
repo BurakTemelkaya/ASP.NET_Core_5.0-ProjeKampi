@@ -16,7 +16,7 @@
                     <a href="/Blog/BlogReadAll/@item.BlogID">
                         @if (item.BlogTitle != null && item.BlogTitle.Length > 50)
                         {
-                            @item.BlogTitle.Substring(0, item.BlogTitle.Substring(0, 50).LastIndexOf(" "))
+                            @item.BlogTitle.Substring(0, 50)
                         }
                         else
                         {

@@ -62,7 +62,7 @@
                                 <p class="card-text mb-3">
                                     @if (item.Blog.BlogContent != null && item.Blog.BlogContent.Length > 130)
                                     {
-                                        @item.Blog.BlogContent.Substring(0, item.Blog.BlogContent.Substring(0, 130).LastIndexOf(" "))
+                                        @item.Blog.BlogContent.Substring(0, 130)
                                     }
                                     else
                                     {
