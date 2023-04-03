@@ -31,7 +31,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             var value = await _businessUserService.FindByUserNameForUpdateAsync(User.Identity.Name);
-            return View(value);
+            return View(value.Data);
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserDto userDto)
@@ -53,7 +53,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             await _signInManager.SignOutAsync();
             await _signInManager.SignInAsync(user.Data, isPersistent: true);
 
-            if (userDto.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
+            if (user.Data.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
                 userDto.PasswordAgain != null && userDto.OldPassword != null)
             {
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +

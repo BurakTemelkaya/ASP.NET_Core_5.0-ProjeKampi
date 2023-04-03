@@ -35,12 +35,14 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (id != 0)
             {
                 var value = await _newsLetterDraftService.TGetByIDAsync(id);
-                if (value != null)
+                if (value.Success)
                 {
-                    var newsLetter = _mapper.Map<NewsLetterSendMailsModel>(value);
+                    var newsLetter = _mapper.Map<NewsLetterSendMailsModel>(value.Data);
                     return View(newsLetter);
                 }
+                ModelState.AddModelError("", value.Message);
             }
+
             return View();
         }
 
@@ -64,7 +66,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> EditNewsletter(int id)
         {
             var value = await _newsLetterService.TGetByIDAsync(id);
-            return value == null ? RedirectToAction("Index") : View(value);
+            return value.Success ? View(value.Data) : RedirectToAction("Index");
         }
 
         [HttpPost]
