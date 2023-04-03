@@ -565,3 +565,5 @@ $RECYCLE.BIN/
 /CoreLayer/obj/Release/net5.0/CoreLayer.csproj.CopyComplete
 /CoreLayer/obj/Release/net5.0/CoreLayer.csproj.FileListAbsolute.txt
 /CoreLayer/bin/Release/net5.0/CoreLayer.deps.json
+/CoreDemo/wwwroot/BlogContents
+/CoreDemo/wwwroot/BlogImageFiles
