@@ -4,6 +4,7 @@ using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.MailUtilities;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
@@ -26,57 +27,67 @@ namespace BusinessLayer.Concrete
             _mailService = mailService;
         }
 
-        public async Task<NewsLetter> GetByMailAsync(string mail)
+        public async Task<IDataResult<NewsLetter>> GetByMailAsync(string mail)
         {
-            return await _newsLetterDal.GetByFilterAsync(x => x.Mail == mail);
+            return new SuccessDataResult<NewsLetter>(await _newsLetterDal.GetByFilterAsync(x => x.Mail == mail));
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            return await _newsLetterDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _newsLetterDal.GetCountAsync(filter));
         }
 
-        public async Task<List<NewsLetter>> GetListAsync(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IDataResult<List<NewsLetter>>> GetListAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            return await _newsLetterDal.GetListAllAsync(filter);
+            return new SuccessDataResult<List<NewsLetter>>(await _newsLetterDal.GetListAllAsync(filter));
         }
 
-        public async Task<bool> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IResult> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
         {
             var value = await _newsLetterDal.GetListAllAsync(filter);
             bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);
             if (isSend)
-                return true;
+                return new SuccessResult();
             else
-                return false;
+                return new ErrorResult("Mail gönderilemedi.");
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]
-        public async Task TAddAsync(NewsLetter t)
+        public async Task<IResult> TAddAsync(NewsLetter t)
         {
-            t.MailStatus = true;
-            await _newsLetterDal.InsertAsync(t);
+            var mail = await GetByMailAsync(t.Mail);
+
+            if (mail.Data == null)
+            {
+                t.MailStatus = true;
+                await _newsLetterDal.InsertAsync(t);
+                return new SuccessResult();
+            }
+
+            return new ErrorResult("Bültenimizde kaydınız bulunmaktadır.");
         }
 
-        public async Task TDeleteAsync(NewsLetter t)
+        public async Task<IResult> TDeleteAsync(NewsLetter t)
         {
             await _newsLetterDal.DeleteAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<NewsLetter> TGetByFilterAsync(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IDataResult<NewsLetter>> TGetByFilterAsync(Expression<Func<NewsLetter, bool>> filter = null)
         {
-            return await _newsLetterDal.GetByFilterAsync(filter);
+            return new SuccessDataResult<NewsLetter>(await _newsLetterDal.GetByFilterAsync(filter));
         }
 
-        public async Task<NewsLetter> TGetByIDAsync(int id)
+        public async Task<IDataResult<NewsLetter>> TGetByIDAsync(int id)
         {
-            return await _newsLetterDal.GetByIDAsync(id);
+            return new SuccessDataResult<NewsLetter>(await _newsLetterDal.GetByIDAsync(id));
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]
-        public async Task TUpdateAsync(NewsLetter t)
+        public async Task<IResult> TUpdateAsync(NewsLetter t)
         {
             await _newsLetterDal.UpdateAsync(t);
+            return new SuccessResult();
         }
     }
 }

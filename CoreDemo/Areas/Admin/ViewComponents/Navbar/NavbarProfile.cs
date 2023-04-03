@@ -18,13 +18,18 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            var roles = await _businessUserService.GetUserRoleListAsync(user);
-            string role = "";
-            foreach (var item in roles)
-                role += item + ",";
-            role = role[..^1];
-            ViewBag.Role = role;
-            return View(user);
+            var roles = await _businessUserService.GetUserRoleListAsync(user.Data);
+
+            if (roles.Success)
+            {
+                string role = "";
+                foreach (var item in roles.Data)
+                    role += item + ",";
+                role = role[..^1];
+                ViewBag.Role = role;                
+            }
+
+            return View(user.Data);
         }
     }
 }

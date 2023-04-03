@@ -35,7 +35,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var users = await _userService.GetUserListAsync();
-            var values = await users.ToPagedListAsync(page, 10);
+            var values = await users.Data.ToPagedListAsync(page, 10);
             return View(values);
         }
         [HttpGet]
@@ -58,29 +58,29 @@ namespace CoreDemo.Areas.Admin.Controllers
             {
                 return RedirectToAction("Index");
             }
-            bool result = await _userService.BannedUser(bannedUserModel.Id, bannedUserModel.BanExpirationTime, bannedUserModel.BanMessage);
-            if (!result)
+            var result = await _userService.BannedUser(bannedUserModel.Id, bannedUserModel.BanExpirationTime, bannedUserModel.BanMessage);
+            if (!result.Success)
             {
-                ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                ModelState.AddModelError("BanExpirationTime", result.Message);
                 return View(user);
             }
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> BannedUserDay(int date, string id)
         {
-            bool result = await _userService.BannedUser(id, DateTime.Now.AddDays(date), null);
-            if (!result)
+            var result = await _userService.BannedUser(id, DateTime.Now.AddDays(date), null);
+            if (!result.Success)
             {
-                ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                ModelState.AddModelError("BanExpirationTime", result.Message);
             }
             return RedirectToAction("BannedUser");
         }
         public async Task<IActionResult> OpenBanUser(string Id)
         {
-            bool result = await _userService.BanOpenUser(Id);
-            if (!result)
+            var result = await _userService.BanOpenUser(Id);
+            if (!result.Success)
             {
-                ModelState.AddModelError("BanExpirationTime", "İşlem yapılırken bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
+                ModelState.AddModelError("BanExpirationTime", result.Message);
             }
             return RedirectToAction("BannedUser");
         }
@@ -88,10 +88,10 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> EditUser(int id)
         {
             var value = await _userService.GetByIDAsync(id.ToString());
-            if (value != null)
+            if (value.Success)
             {
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
-                return View(value);
+                return View(value.Data);
             }
             return RedirectToAction("Index");
         }
@@ -100,7 +100,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var oldValue = await _userService.GetByIDAsync(userDto.Id.ToString());
             var result = await _userService.UpdateUserForAdminAsync(userDto);
-            if (result != null)
+            if (!result.Success)
             {
                 ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
                     " Lütfen daha sonra tekrar deneyiniz");
@@ -108,7 +108,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 return View(userDto);
             }
             var user = await _userService.GetByIDAsync(userDto.Id.ToString());
-            if (user.PasswordHash == oldValue.PasswordHash && userDto.Password != null &&
+            if (user.Data.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
                 userDto.PasswordAgain != null && userDto.OldPassword != null)
             {
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +

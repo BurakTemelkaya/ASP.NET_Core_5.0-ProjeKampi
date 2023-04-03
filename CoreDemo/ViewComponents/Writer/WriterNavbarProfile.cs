@@ -20,9 +20,9 @@ namespace CoreDemo.ViewComponents.Writer
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var writer = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
-            var roles = await _userManager.GetRolesAsync(writer);
+            var roles = await _userManager.GetRolesAsync(writer.Data);
             ViewBag.Role = roles.FirstOrDefault();
-            return View(writer);
+            return View(writer.Data);
         }
     }
 }

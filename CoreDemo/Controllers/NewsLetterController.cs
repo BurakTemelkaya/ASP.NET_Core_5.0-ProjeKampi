@@ -1,14 +1,7 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -32,12 +25,14 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> SubscribeMail(NewsLetter newsLetter)
         {
-            if (await _newsLetterService.GetByMailAsync(newsLetter.Mail) == null && newsLetter.Mail != null)
+            var result = await _newsLetterService.TAddAsync(newsLetter);
+
+            if (result.Success)
             {
-                await _newsLetterService.TAddAsync(newsLetter);
                 return Ok();
-            }
-            return BadRequest("Böyle bir mail adresi bulunuyor.");
+            }           
+
+            return BadRequest(result.Message);
         }
     }
 }

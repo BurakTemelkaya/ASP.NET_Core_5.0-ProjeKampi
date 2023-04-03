@@ -1,12 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Blog
 {
@@ -22,8 +16,7 @@ namespace CoreDemo.ViewComponents.Blog
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var blogs = await _blogService.GetLastBlogAsync(3);
-            var values = await blogs.Where(x => x.BlogStatus).OrderByDescending(x=> x.BlogID).ToListAsync();
-            return View(values);
+            return View(blogs.Data);
         }
     }
 }

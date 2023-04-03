@@ -61,13 +61,13 @@ namespace CoreDemo.Controllers
                 return View(userSignUpDto);
             }
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
-            if (result == null)
+            if (result.Success)
             {
                 var user = await _userService.FindByUserNameAsync(userSignUpDto.UserName);
-                await _signInManager.SignInAsync(user, true);
+                await _signInManager.SignInAsync(user.Data, true);
                 return RedirectToAction("Index", "Dashboard");
             }
-            foreach (var item in result)
+            foreach (var item in result.Data.Errors)
             {
                 ModelState.AddModelError("Username", item.Description);
             }

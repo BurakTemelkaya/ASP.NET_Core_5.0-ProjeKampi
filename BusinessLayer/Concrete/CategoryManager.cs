@@ -1,9 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.EntityFramework;
-using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -24,65 +23,70 @@ namespace BusinessLayer.Concrete
             _categoryDal = categoryDal;
         }
 
-        public async Task<Category> TGetByIDAsync(int id)
+        public async Task<IDataResult<Category>> TGetByIDAsync(int id)
         {
-            return await _categoryDal.GetByIDAsync(id);
+            return new SuccessDataResult<Category>(await _categoryDal.GetByIDAsync(id));
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
-        public async Task TAddAsync(Category t)
+        public async Task<IResult> TAddAsync(Category t)
         {
             t.CategoryStatus = true;
             await _categoryDal.InsertAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task TDeleteAsync(Category t)
+        public async Task<IResult> TDeleteAsync(Category t)
         {
             await _categoryDal.DeleteAsync(t);
+            return new SuccessResult();
         }
         [ValidationAspect(typeof(CategoryValidator))]
-        public async Task TUpdateAsync(Category t)
+        public async Task<IResult> TUpdateAsync(Category t)
         {
             await _categoryDal.UpdateAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<List<Category>> GetListAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<IDataResult<List<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null)
         {
-            return filter == null ?
-                await _categoryDal.GetListAllAsync() :
-                await _categoryDal.GetListAllAsync(filter);
+            return new SuccessDataResult<List<Category>>(await _categoryDal.GetListAllAsync(filter));
         }
 
-        public async Task<Category> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<IDataResult<Category>> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null)
         {
-            return filter == null ?
-                await _categoryDal.GetByFilterAsync() :
-                await _categoryDal.GetByFilterAsync(filter);
+            return new SuccessDataResult<Category>(await _categoryDal.GetByFilterAsync(filter));
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Category, bool>> filter = null)
         {
-            return await _categoryDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _categoryDal.GetCountAsync(filter));
         }
 
-        public async Task<List<SelectListItem>> GetCategoryListAsync()
+        public async Task<IDataResult<List<SelectListItem>>> GetCategoryListAsync()
         {
-            return (from x in await GetListAsync()
+            var categoryList = await GetListAsync();
+            return new SuccessDataResult<List<SelectListItem>>( (from x in categoryList.Data
                     select new SelectListItem
                     {
                         Text = x.CategoryName,
                         Value = x.CategoryID.ToString()
-                    }).ToList();
+                    }).ToList());
         }
 
-        public async Task ChangedStatusAsync(int id)
+        public async Task<IResult> ChangedStatusAsync(int id)
         {
             var value = await TGetByIDAsync(id);
-            if (value.CategoryStatus)
-                value.CategoryStatus = false;
+            if (value.Data.CategoryStatus)
+                value.Data.CategoryStatus = false;
             else
-                value.CategoryStatus = true;
-            await TUpdateAsync(value);
+                value.Data.CategoryStatus = true;
+            var result = await TUpdateAsync(value.Data);
+            if (result.Success)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("İşlem başarısız.");
         }
     }
 }

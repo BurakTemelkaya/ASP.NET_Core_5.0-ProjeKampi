@@ -16,10 +16,14 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var notifications = await _notificationService.GetListAsync(x=> x.NotificationStatus);
-            var values = await notifications.TakeLast(3).ToListAsync();
-            ViewBag.NotificationCount = notifications.Count;
-            return View(values);
+            var notifications = await _notificationService.GetListAsync(x => x.NotificationStatus);
+            if (notifications.Success)
+            {
+                var values = await notifications.Data.TakeLast(3).ToListAsync();
+                ViewBag.NotificationCount = notifications.Data.Count;
+                return View(values);
+            }
+            return View();
         }
     }
 }

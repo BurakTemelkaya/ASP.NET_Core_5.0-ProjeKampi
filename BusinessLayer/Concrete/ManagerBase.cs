@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CoreLayer.Utilities.Results;
+using EntityLayer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,14 @@ namespace BusinessLayer.Concrete
             Mapper = mapper;
         }
         protected IMapper Mapper { get; }
+
+        public IResult UserNotEmpty(IDataResult<UserDto> user)
+        {
+            if (!user.Success)
+            {
+                return new ErrorResult("Kullanıcı bulunamadı.");
+            }
+            return new SuccessResult();
+        }
     }
 }

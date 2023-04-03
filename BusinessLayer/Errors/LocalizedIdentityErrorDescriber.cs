@@ -14,7 +14,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(DuplicateEmail),
-                Description = string.Format("E-mail adresi sitemize kayıtlıdır.", email)
+                Description = string.Format("E-mail '{0}' adresi sitemize kayıtlıdır.", email)
             };
         }
 
@@ -23,7 +23,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(DuplicateUserName),
-                Description = string.Format("Kullanıcı adı sitemize kayıtlıdır.", userName)
+                Description = string.Format("'{0}' kullanıcı adı sitemizde kayıtlıdır.", userName)
             };
         }
 
@@ -32,7 +32,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(InvalidEmail),
-                Description = string.Format("E-posta adresi geçerli değildir.", email)
+                Description = string.Format("E-posta '{0}' adresi geçerli değildir.", email)
             };
         }
 
@@ -41,7 +41,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(DuplicateRoleName),
-                Description = string.Format("Aynı isme sahip zaten bir rol bulnuyor.", role)
+                Description = string.Format("'{0}' ismine sahip zaten bir rol bulunuyor.", role)
             };
         }
 
@@ -50,7 +50,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(InvalidRoleName),
-                Description = string.Format("Rol adı geçerli değildir.", role)
+                Description = string.Format("Rol adı '{0}' geçerli değildir.", role)
             };
         }
 
@@ -68,7 +68,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(InvalidUserName),
-                Description = string.Format("Kullanıcı adı geçerli değildir" , userName)
+                Description = string.Format("'{0}' kullanıcı adı geçerli değildir", userName)
             };
         }
 
@@ -95,7 +95,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresLower),
-                Description = "Parolanız en az bir büyük harf içermelidir."
+                Description = "Parolanız en az bir küçük harf içermelidir."
             };
         }
 
@@ -104,7 +104,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresNonAlphanumeric),
-                Description = "Şihre harf rakam olmayan karekterler içermelidir.(! + , - ?)"
+                Description = "Parolanız harf rakam olmayan karekterler içermelidir.(! + , - ?)"
             };
         }
 
@@ -113,7 +113,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUniqueChars),
-                Description = string.Format("Parolanız en az 1 özel karekter içermelidir", uniqueChars)
+                Description = string.Format("Parolanız en az 1 {0} özel karekter içermelidir", uniqueChars)
             };
         }
 
@@ -131,7 +131,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordTooShort),
-                Description = string.Format("Şifre en az karekter uzunluğunda olmalıdır.", length)
+                Description = string.Format("Parolanız en az {0} karekter uzunluğunda olmalıdır.", length)
             };
         }
 
@@ -140,7 +140,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(UserAlreadyInRole),
-                Description = string.Format("Kullanıcının zaten rolü vardır.", role)
+                Description = string.Format("Kullanıcının zaten {0} rolü vardır.", role)
             };
         }
 
@@ -149,7 +149,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(UserNotInRole),
-                Description = "Kullanıcının rolü yoktur."
+                Description = "Kullanıcının {0} rolü yoktur."
             };
         }
 
@@ -158,7 +158,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(UserLockoutNotEnabled),
-                Description = "Hesabınız kilitlenmiştir"
+                Description = "Hesabınız yasaklanmıştır"
             };
         }
     }

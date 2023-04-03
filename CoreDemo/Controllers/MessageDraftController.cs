@@ -16,7 +16,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index()
         {
             var values = await _messageDraftService.GetMessageDraftListByUserNameAsync(User.Identity.Name, null, 50);
-            return View(values);
+            return View(values.Data);
         }
         [HttpGet]
         public IActionResult AddMessageDraft()
@@ -33,7 +33,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> EditMessageDraft(int id)
         {
             var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
-            return View(value);
+            return View(value.Data);
         }
         [HttpPost]
         public async Task<IActionResult> EditMessageDraft(MessageDraft messageDraft)

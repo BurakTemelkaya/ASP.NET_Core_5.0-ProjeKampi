@@ -1,10 +1,11 @@
-﻿using EntityLayer.Concrete;
+﻿using CoreLayer.Entities;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
 namespace EntityLayer.DTO
 {
-    public class UserSignUpDto : AppUser
+    public class UserSignUpDto : AppUser, IDto
     {
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }

@@ -1,13 +1,8 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
 using CoreLayer.Utilities.CaptchaUtilities;
-using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -34,20 +29,22 @@ namespace CoreDemo.Controllers
         {
             string isValid = await _captchaService.RecaptchaControl(captcharesponse);
             if (isValid == null)
-            { 
-                comment.BlogID = blogId;
-                await _commentService.AddAsync(comment);
-                return Ok();
-            }
-            else
             {
-                return BadRequest("Recaptcha error.");
+                comment.BlogID = blogId;
+                var result = await _commentService.TAddAsync(comment);
+                if (result.Success)
+                {
+                    return Ok();
+                }
+                return BadRequest(result.Message);
             }
+            return BadRequest("Recaptcha error.");
+
         }
         public async Task<PartialViewResult> CommentListByBlog(int id)
         {
             var values = await _commentService.GetListByIdAsync(id);
-            return PartialView(values);
+            return PartialView(values.Data);
         }
     }
 }

@@ -1,9 +1,13 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,30 +19,34 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class MessageManager : IMessageService
+    public class MessageManager : ManagerBase, IMessageService
     {
         private readonly IMessageDal _messageDal;
         private readonly IBusinessUserService _userService;
 
-        public MessageManager(IMessageDal message2Dal, IBusinessUserService userService)
+        public MessageManager(IMessageDal message2Dal, IMapper mapper, IBusinessUserService userService) : base(mapper)
         {
             _messageDal = message2Dal;
             _userService = userService;
         }
 
-        public async Task<List<Message>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
+
+            if (user == null)
+            {
+                return new ErrorDataResult<List<Message>>(user.Message);
+            }
+
             var values = new List<Message>();
             if (search == null)
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Id);
-                values = values.OrderByDescending(x => x.MessageDate).ToList();
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, filter);
             }
             else
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
-                values = values.OrderByDescending(x => x.MessageDate).ToList();
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
             }
             foreach (var item in values)
             {
@@ -46,187 +54,268 @@ namespace BusinessLayer.Concrete
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
             }
 
-            return values;
+            return new SuccessDataResult<List<Message>>(values.OrderByDescending(x => x.MessageDate).ToList());
         }
 
-        public async Task<List<Message>> GetListAsync(Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<List<Message>>> GetListAsync(Expression<Func<Message, bool>> filter = null)
         {
             var values = await _messageDal.GetListAllAsync(filter);
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
-            return values;
+            return new SuccessDataResult<List<Message>>(values);
         }
 
         [ValidationAspect(typeof(MessageValidator))]
-        public async Task AddMessageAsync(Message message, string senderUserName, string receiverUserName)
+        public async Task<IResult> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
-            if (senderUserName == receiverUserName)
-                return;
             var senderUser = await _userService.FindByUserNameAsync(senderUserName);
-            if (senderUser == null)
-                return;
-            message.SenderUserId = senderUser.Id;
+
             var receiverUser = await _userService.FindByUserNameAsync(receiverUserName);
-            if (receiverUser == null)
-                return;
-            message.ReceiverUserId = receiverUser.Id;
+
+            IResult result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            message.SenderUserId = senderUser.Data.Id;
+
+            message.ReceiverUserId = receiverUser.Data.Id;
             message.Details = await TextFileManager.TextFileAddAsync(message.Details, TextFileManager.GetMessageContentFileLocation());
             message.MessageDate = DateTime.Now;
             await _messageDal.InsertAsync(message);
+            return new SuccessResult();
         }
 
-        public async Task DeleteMessageAsync(int id, string userName)
+        public async Task<IResult> DeleteMessageAsync(int id, string userName)
         {
             var message = await GetByIdAsync(id);
-            DeleteFileManager.DeleteFile(message.Details);
-            await _messageDal.DeleteAsync(message);
+
+            IResult result = BusinessRules.Run(MessageNotEmpty(message));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            DeleteFileManager.DeleteFile(message.Data.Details);
+            await _messageDal.DeleteAsync(message.Data);
+            return new SuccessResult();
         }
 
-        public async Task<Message> GetByFilterAsync(Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetByFilterAsync(Expression<Func<Message, bool>> filter = null)
         {
             var value = await _messageDal.GetByFilterAsync(filter);
             value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            return value;
+            return new SuccessDataResult<Message>(value);
         }
 
-        public async Task<Message> GetByIdAsync(int id)
+        public async Task<IDataResult<Message>> GetByIdAsync(int id)
         {
             var value = await _messageDal.GetByIDAsync(id);
             value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            return value;
+            return new SuccessDataResult<Message>(value);
         }
 
-        public async Task UpdateMessageAsync(Message t, string userName)
+        public async Task<IResult> UpdateMessageAsync(Message t, string userName)
         {
             var user = await _userService.FindByUserNameAsync(userName);
-            if (user != null)
-                return;
-            t.SenderUserId = user.Id;
+
+            var result = BusinessRules.Run(ReceiverUserNotEmpty(user));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            t.SenderUserId = user.Data.Id;
             DeleteFileManager.DeleteFile(t.Details);
             t.Details = await TextFileManager.TextFileAddAsync(t.Details, TextFileManager.GetMessageContentFileLocation());
+
+            if (t.Details == null)
+            {
+                return new ErrorResult("Mesaj güncellenemedi.");
+            }
+
             await _messageDal.UpdateAsync(t);
+            return new SuccessResult();
         }
 
-        public async Task<int> GetCountAsync(Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Message, bool>> filter = null)
         {
-            return await _messageDal.GetCountAsync(filter);
+            return new SuccessDataResult<int>(await _messageDal.GetCountAsync(filter));
         }
 
-        public async Task<int> GetUnreadMessagesCountByUserNameAsync(string userName)
+        public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
         {
             var receiverUser = await _userService.FindByUserNameAsync(userName);
-            return await GetCountAsync(x => x.ReceiverUserId == receiverUser.Id && !x.MessageStatus);
+
+            IResult result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
+
+            if (!result.Success)
+            {
+                return new ErrorDataResult<int>(result.Message);
+            }
+
+            var value = await GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
+
+            if (!value.Success)
+            {
+                return new ErrorDataResult<int>(value.Message);
+            }
+
+            return new SuccessDataResult<int>(value.Data);
         }
 
-        public async Task<List<Message>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
-            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Id, filter);
+            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter);
+
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
-            return values;
+            return new SuccessDataResult<List<Message>>(values);
         }
 
-        public async Task<bool> MarkChangedAsync(int messageId, string userName)
+        public async Task<IResult> MarkChangedAsync(int messageId, string userName)
         {
-            if (messageId != 0)
+            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
+
+            if (!result.Success)
             {
-                var message = await GetByFilterFileName(x => x.MessageID == messageId);
-                var activeUser = await _userService.FindByUserNameAsync(userName);
-
-                if (activeUser.UserName != userName)
-                    return false;
-
-
-                if (message.MessageStatus)
-                    message.MessageStatus = false;
-
-                else
-                    message.MessageStatus = true;
-
-                await _messageDal.UpdateAsync(message);
-                return true;
+                return result;
             }
-            return false;
+
+            var message = await GetByFilterFileName(x => x.MessageID == messageId);
+            var activeUser = await _userService.FindByUserNameAsync(userName);
+
+            if (activeUser.Data.UserName != userName)
+                return new ErrorResult();
+
+
+            if (message.Data.MessageStatus)
+                message.Data.MessageStatus = false;
+
+            else
+                message.Data.MessageStatus = true;
+
+            await _messageDal.UpdateAsync(message.Data);
+            return new SuccessResult();
         }
 
-        public async Task<Message> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
-            var value = await _messageDal.GetReceivedMessageAsync(user.Id, filter);
+
+            IResult result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
+
+            if (!result.Success)
+            {
+                return new ErrorDataResult<Message>(result.Message);
+            }
+
+            var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, filter);
             if (value != null)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
                 if (!value.MessageStatus)
                 {
-                    await MarkUsReadAsync(value.MessageID, user.UserName);
+                    await MarkUsReadAsync(value.MessageID, user.Data.UserName);
                 }
+
+                return new SuccessDataResult<Message>(value);
             }
 
-            return value;
+            return new ErrorDataResult<Message>("Mesaj bulunamadı");
         }
 
-        public async Task<Message> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
-            var value = await _messageDal.GetSendedMessageAsync(user.Id, filter);
+
+            IResult result = BusinessRules.Run(UserNotEmpty(user));
+
+            if (!result.Success)
+            {
+                return new ErrorDataResult<Message>(result.Message);
+            }
+
+            var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, filter);
             if (value != null)
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            return value;
+            return new SuccessDataResult<Message>(value);
         }
 
-        public async Task<Message> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
         {
-            return await _messageDal.GetByFilterAsync(filter);
+            return new SuccessDataResult<Message>(await _messageDal.GetByFilterAsync(filter));
         }
 
-        public async Task<bool> MarkUsReadAsync(int messageId, string userName)
+        public async Task<IResult> MarkUsReadAsync(int messageId, string userName)
         {
-            if (messageId != 0)
+            var message = await GetByFilterFileName(x => x.MessageID == messageId);
+            var activeUser = await _userService.FindByUserNameAsync(userName);
+
+            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+
+            if (!result.Success)
             {
-                var message = await GetByFilterFileName(x => x.MessageID == messageId);
-                var activeUser = await _userService.FindByUserNameAsync(userName);
-
-                if (activeUser.UserName != userName)
-                {
-                    return false;
-                }
-
-                if (!message.MessageStatus)
-                    message.MessageStatus = true;
-
-                await _messageDal.UpdateAsync(message);
-                return true;
+                return new ErrorResult(result.Message);
             }
-            return false;
-        }
 
-        public async Task<bool> MarkUsUnreadAsync(int messageId, string userName)
-        {
-            if (messageId != 0)
+            if (!message.Data.MessageStatus)
             {
-                var message = await GetByFilterFileName(x => x.MessageID == messageId);
-                var activeUser = await _userService.FindByUserNameAsync(userName);
+                message.Data.MessageStatus = true;
 
-                if (activeUser.UserName != userName)
-                {
-                    return false;
-                }
+                await _messageDal.UpdateAsync(message.Data);
 
-                if (message.MessageStatus)
-                    message.MessageStatus = false;
-
-                await _messageDal.UpdateAsync(message);
-                return true;
+                return new SuccessResult();
             }
-            return false;
+
+            else
+            {
+                return new ErrorResult("Mesaj zaten okunmuş.");
+            }
+
         }
 
-        public async Task<bool> DeleteMessagesAsync(List<string> ids, string userName)
+        public async Task<IResult> MarkUsUnreadAsync(int messageId, string userName)
         {
-            if (ids == null || userName == null)
+            var message = await GetByFilterFileName(x => x.MessageID == messageId);
+            var activeUser = await _userService.FindByUserNameAsync(userName);
+
+            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+
+            if (!result.Success)
             {
-                return false;
+                return new ErrorResult(result.Message);
+            }
+
+            if (message.Data.MessageStatus)
+            {
+                message.Data.MessageStatus = false;
+
+                await _messageDal.UpdateAsync(message.Data);
+
+                return new SuccessResult();
+            }
+
+            else
+            {
+                return new ErrorResult("Mesaj zaten okunmamış.");
+            }
+        }
+
+        public async Task<IResult> DeleteMessagesAsync(List<string> ids, string userName)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+
+            var result = BusinessRules.Run(MessageIdsNotEmpty(ids), UserNotEmpty(user));
+
+            if (!result.Success)
+            {
+                return result;
             }
 
             List<Message> messages = new();
@@ -234,86 +323,158 @@ namespace BusinessLayer.Concrete
             foreach (var id in ids)
             {
                 var message = await GetByIdAsync(Convert.ToInt32(id));
-                DeleteFileManager.DeleteFile(message.Details);
-                messages.Add(message);
+                if (message.Data.ReceiverUserId == user.Data.Id)
+                {
+                    DeleteFileManager.DeleteFile(message.Data.Details);
+                    messages.Add(message.Data);
+                }
             }
+
             await _messageDal.DeleteRangeAsync(messages);
-            return true;
+
+            return new SuccessResult();
         }
 
-        public async Task<bool> MarksUsReadAsync(List<string> messageIds, string userName)
+        public async Task<IResult> MarksUsReadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();
 
+            var activeUser = await _userService.FindByUserNameAsync(userName);
+
+            var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
             foreach (var id in messageIds)
             {
-                if (Convert.ToInt32(id) != 0)
+                try
                 {
-                    try
-                    {
-                        var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-                        var activeUser = await _userService.FindByUserNameAsync(userName);
+                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
 
-                        if (activeUser.UserName != userName)
+                    if (activeUser.Data.Id == message.Data.ReceiverUserId)
+                    {
+                        if (!message.Data.MessageStatus)
                         {
-                            return false;
+                            message.Data.MessageStatus = true;
+
+                            messages.Add(message.Data);
                         }
-
-                        if (!message.MessageStatus)
-                            message.MessageStatus = true;
-
-                        messages.Add(message);
                     }
-                    catch
-                    {
-                        return false;
-                    }
-                    
                 }
-                else
+                catch
                 {
-                    return false;
+                    continue;
                 }
             }
             await _messageDal.UpdateRangeAsync(messages);
-            return true;
+            return new SuccessResult();
         }
 
-        public async Task<bool> MarksUsUnreadAsync(List<string> messageIds, string userName)
+        public async Task<IResult> MarksUsUnreadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();
 
+            var activeUser = await _userService.FindByUserNameAsync(userName);
+
+            var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
             foreach (var id in messageIds)
             {
-                if (Convert.ToInt32(id) != 0)
+                try
                 {
-                    try
-                    {
-                        var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-                        var activeUser = await _userService.FindByUserNameAsync(userName);
+                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
 
-                        if (activeUser.UserName != userName)
+                    if (activeUser.Data.UserName == userName)
+                    {
+                        if (message.Data.MessageStatus)
                         {
-                            return false;
+                            message.Data.MessageStatus = false;
+
+                            messages.Add(message.Data);
                         }
-
-                        if (message.MessageStatus)
-                            message.MessageStatus = false;
-
-                        messages.Add(message);
-                    }
-                    catch
-                    {
-                        return false;
                     }
                 }
-                else
+                catch
                 {
-                    return false;
+                    continue;
                 }
             }
             await _messageDal.UpdateRangeAsync(messages);
-            return true;
+            return new SuccessResult();
+        }
+
+
+        //Business Rules
+
+        private IResult ReceiverUserNotEqualsSenderUser(string receiverUser, string senderUser)
+        {
+            if (receiverUser == senderUser)
+            {
+                return new ErrorResult("Alıcı ile gönderici aynı olamaz.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult ReceiverUserNotEmpty(IDataResult<UserDto> receiverUser)
+        {
+            if (!receiverUser.Success)
+            {
+                return new ErrorResult("Alıcı boş olamaz.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult SenderUserNotEmpty(IDataResult<UserDto> senderUser)
+        {
+            if (!senderUser.Success)
+            {
+                return new ErrorResult("Alıcı boş olamaz.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult MessageNotEmpty(IDataResult<Message> message)
+        {
+            if (!message.Success)
+            {
+                return new ErrorResult("Mesaj boş.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult MessageIdNotEqualZero(int id)
+        {
+            if (id == 0)
+            {
+                return new ErrorResult("Mesaj boş.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult MessageIdsNotEmpty(List<string> Ids)
+        {
+            if (Ids == null)
+            {
+                return new ErrorResult("Mesajlar boş.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult ReceiverUserEqualActiveUser(string receiverUserName, string activeUserName)
+        {
+            if (receiverUserName != activeUserName)
+            {
+                return new ErrorResult("Mesaj kullanıcıya ait değil.");
+            }
+            return new SuccessResult();
         }
     }
 }

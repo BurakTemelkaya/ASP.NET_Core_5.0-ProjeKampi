@@ -1,14 +1,7 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using X.PagedList;
-
 namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterMessageNotification : ViewComponent
@@ -24,10 +17,14 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
-            ViewBag.NewMessage = values.Where(x => !x.MessageStatus).Count();
+            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
+
+            var values = result.Data;
+
+            ViewBag.NewMessage = values.Where(x => !x.MessageStatus).Count();           
+
             if (values.Count > 3)
-                values = await values.TakeLast(3).ToListAsync();          
+                values = values.TakeLast(3).ToList();
             return View(values);
 
         }

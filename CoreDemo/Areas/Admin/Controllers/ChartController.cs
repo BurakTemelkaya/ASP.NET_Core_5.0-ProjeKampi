@@ -36,13 +36,13 @@ namespace CoreDemo.Areas.Admin.Controllers
 
             List<CategoryModel> list = new();
 
-            foreach (var item in categoryList)
+            foreach (var item in categoryList.Data)
             {
-                int categoryCount = await _blogService.GetCountAsync(x => x.CategoryID == item.CategoryID);
+                var categoryCount = await _blogService.GetCountAsync(x => x.CategoryID == item.CategoryID);
                 list.Add(new CategoryModel
                 {
                     categoryname = item.CategoryName,
-                    categorycount = categoryCount
+                    categorycount = categoryCount.Data
                 });
             }
 

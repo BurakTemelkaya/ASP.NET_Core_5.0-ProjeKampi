@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreLayer.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace CoreLayer.DependancyResolvers
 {
@@ -31,6 +32,8 @@ namespace CoreLayer.DependancyResolvers
             serviceCollection.AddSingleton<IMailService, OutlookMailManager>();
 
             serviceCollection.AddSingleton<ICaptchaService, RecaptchaManager>();
+
+            serviceCollection.AddSingleton<Stopwatch>();
         }
     }
 }

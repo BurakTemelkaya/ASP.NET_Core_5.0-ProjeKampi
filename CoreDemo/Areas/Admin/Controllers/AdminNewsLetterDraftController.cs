@@ -20,7 +20,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var newsLetterDrafts = await _newsLetterDraftServiceservice.GetListAsync();
-            var values = await newsLetterDrafts.ToPagedListAsync(page, 5);
+            var values = await newsLetterDrafts.Data.ToPagedListAsync(page, 5);
             return View(values);
         }
         [HttpGet]
@@ -37,11 +37,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id!=0)
+            var value = await _newsLetterDraftServiceservice.TGetByIDAsync(id);
+            if (value.Success)
             {
-                var value = await _newsLetterDraftServiceservice.TGetByIDAsync(id);
-                return View(value);
+                
+                return View(value.Data);
             }
+
+            ModelState.AddModelError("", value.Message);
             return RedirectToAction("Index");
         }
         [HttpPost]

@@ -28,9 +28,9 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(About about, IFormFile aboutImage1, IFormFile aboutImage2)
         {
             if (about.AboutImage1 == null && aboutImage1 != null)
-                about.AboutImage1 = await ImageFileManager.ImageAddAsync(aboutImage1, ImageFileManager.StaticAboutImageLocation());
+                about.AboutImage1 = ImageFileManager.ImageAdd(aboutImage1, ImageFileManager.StaticAboutImageLocation(),ImageFileManager.GetAboutImageResolution());
             if (about.AboutImage2 == null && aboutImage2 != null)
-                about.AboutImage2 = await ImageFileManager.ImageAddAsync(aboutImage2, ImageFileManager.StaticAboutImageLocation());
+                about.AboutImage2 = ImageFileManager.ImageAdd(aboutImage2, ImageFileManager.StaticAboutImageLocation(), ImageFileManager.GetAboutImageResolution());
             if (about.AboutImage1 == null || about.AboutImage2 == null)
             {
                 ModelState.AddModelError("AboutImage1", "Lütfen Hiçbir Resmi Boş Bırakmayınız");

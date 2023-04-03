@@ -27,7 +27,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> GetMessageDraftList()
         {
             var values = await _messageDraftService.GetListAsync();
-            var jsonValues = JsonConvert.SerializeObject(values);
+            var jsonValues = JsonConvert.SerializeObject(values.Data);
             return Json(jsonValues);
         }
 
@@ -40,30 +40,30 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id != 0)
+
+            var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
+            if (value.Success)
             {
-                var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
-                return View(value);
+                return View(value.Data);
             }
+
             return RedirectToAction("Index");
         }
         [HttpPost]
         public async Task<IActionResult> Edit(MessageDraft messageDraft)
         {
-            if (messageDraft.MessageDraftID == 0)
+            var result = await _messageDraftService.UpdateAsync(messageDraft, User.Identity.Name);
+            if (result.Success)
             {
-                ModelState.AddModelError("Subject", "Bir hata oluştu lütfen daha sonra tekrar deneyiniz");
-                return View(messageDraft);
+                return RedirectToAction("Index");
             }
-            await _messageDraftService.UpdateAsync(messageDraft, User.Identity.Name);
-            return RedirectToAction("Index");
+
+            ModelState.AddModelError("Subject", result.Message);
+            return View(messageDraft);
         }
         public async Task<IActionResult> Delete(int id)
         {
-            if (id != 0)
-            {
-                await _messageDraftService.DeleteAsync(id, User.Identity.Name);
-            }
+            await _messageDraftService.DeleteAsync(id, User.Identity.Name);
             return RedirectToAction("Index");
         }
 
@@ -72,12 +72,12 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var result = await _messageDraftService.DeleteMessageDraftsAsync(selectedItems, User.Identity.Name);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok();
             }
 
-            return BadRequest();
+            return BadRequest(result.Message);
         }
     }
 }

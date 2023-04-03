@@ -31,26 +31,29 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             var value = await _businessUserService.FindByUserNameForUpdateAsync(User.Identity.Name);
-            return View(value);
+            return View(value.Data);
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserDto userDto)
         {
             var oldValue = await _businessUserService.GetByIDAsync(userDto.Id.ToString());
             var result = await _businessUserService.UpdateUserAsync(userDto);
-            if (result != null)
+            if (!result.Success)
             {
-                foreach (var item in result)
+                foreach (var item in result.Data.Errors)
                 {
-                    ModelState.AddModelError("Email", item.Description);
+                    ModelState.AddModelError("", item.Description);
                 }
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
                 return View(userDto);
             }
+
             var user = await _businessUserService.GetByIDAsync(userDto.Id.ToString());
+
             await _signInManager.SignOutAsync();
-            await _signInManager.SignInAsync(user, isPersistent: true);
-            if (user.PasswordHash == oldValue.PasswordHash && userDto.Password != null &&
+            await _signInManager.SignInAsync(user.Data, isPersistent: true);
+
+            if (user.Data.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
                 userDto.PasswordAgain != null && userDto.OldPassword != null)
             {
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +

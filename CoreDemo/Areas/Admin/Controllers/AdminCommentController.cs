@@ -20,28 +20,32 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var comments = await _commentService.GetBlogListWithCommentAsync();
-            var values = await comments.ToPagedListAsync(page, 5);
+            var values = await comments.Data.ToPagedListAsync(page, 5);
             return View(values);
         }
         public async Task<IActionResult> DeleteComment(int id)
         {
             var value = await _commentService.TGetByIDAsync(id);
-            if (value != null)
+            if (value.Success)
             {
-                await _commentService.TDeleteAsync(value);
-                ViewBag.ReturnMessage = "Yorum Başarıyla Silindi";
+                var result = await _commentService.TDeleteAsync(value.Data);
+                if (result.Success)
+                {
+                    ViewBag.ReturnMessage = "Yorum Başarıyla Silindi";
+                    return RedirectToAction("Index");
+                }                
             }
-            else
-                ViewBag.ReturnMessage = "Yorumu Silerken Bir Hata Oluştu";
-            return RedirectToAction("Index");
+
+            ViewBag.ReturnMessage = value.Message;
+            return View(value);
         }
         [HttpGet]
         public async Task<IActionResult> EditComment(int id)
         {
             var value = await _commentService.TGetByIDAsync(id);
-            if (value != null)
+            if (value.Success)
             {
-                return View(value);
+                return View(value.Data);
             }
             return RedirectToAction("Index");
         }

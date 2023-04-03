@@ -1,15 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
-using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -30,9 +20,10 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userService.FindByUserNameAsync(User.Identity.Name);
-            ViewBag.ToplamBlogSayisi = await _blogService.GetCountAsync(x => x.BlogStatus == true);
-            ViewBag.YazarinBlogSayisi = await _blogService.GetCountAsync(x => x.WriterID == user.Id);
-            ViewBag.KategoriSayisi = await _categoryService.GetCountAsync(x => x.CategoryStatus == true);
+
+            ViewBag.ToplamBlogSayisi = _blogService.GetCountAsync(x => x.BlogStatus == true).Result.Data;
+            ViewBag.YazarinBlogSayisi = _blogService.GetCountAsync(x => x.WriterID == user.Data.Id).Result.Data;
+            ViewBag.KategoriSayisi = _categoryService.GetCountAsync(x => x.CategoryStatus == true).Result.Data;
             return View();
         }
     }
