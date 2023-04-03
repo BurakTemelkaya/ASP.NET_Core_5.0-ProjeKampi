@@ -37,11 +37,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id!=0)
+            var value = await _newsLetterDraftServiceservice.TGetByIDAsync(id);
+            if (value.Success)
             {
-                var value = await _newsLetterDraftServiceservice.TGetByIDAsync(id);
-                return View(value);
+                
+                return View(value.Data);
             }
+
+            ModelState.AddModelError("", value.Message);
             return RedirectToAction("Index");
         }
         [HttpPost]

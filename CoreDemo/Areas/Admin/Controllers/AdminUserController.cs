@@ -88,10 +88,10 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> EditUser(int id)
         {
             var value = await _userService.GetByIDAsync(id.ToString());
-            if (value != null)
+            if (value.Success)
             {
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
-                return View(value);
+                return View(value.Data);
             }
             return RedirectToAction("Index");
         }
@@ -100,7 +100,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         {
             var oldValue = await _userService.GetByIDAsync(userDto.Id.ToString());
             var result = await _userService.UpdateUserForAdminAsync(userDto);
-            if (result != null)
+            if (!result.Success)
             {
                 ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
                     " Lütfen daha sonra tekrar deneyiniz");
