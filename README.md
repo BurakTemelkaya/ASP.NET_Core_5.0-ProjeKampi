@@ -1,4 +1,7 @@
 # ASP.NET Core 5.0 ProjeKampi
+
+Sitenin linki: https://coreblogsite.azurewebsites.net/
+
 <h4>Projede ASP.NET Core 5.0 teknolojisi &amp; N Tier Architecture &amp; OOP &amp; AOP teknikleri kullanıldı.</h4>
 
 <h2>Ödevler:</h2>
@@ -53,5 +56,3 @@ Video 76: <del>Yazar'ın Bildirimler kısmında bütün bildirimler gözükmesin
 Video 79: <del>Notificationların ne kadar süre önce gönderildiği yazdırılacak.</del>
  
 Video 100: <del>Projeyi canlıya taşımak.</del> 
-
-Sitenin linki: https://coreblogsite.azurewebsites.net/
