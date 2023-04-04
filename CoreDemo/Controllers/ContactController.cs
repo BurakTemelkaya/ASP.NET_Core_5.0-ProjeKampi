@@ -32,7 +32,7 @@ namespace CoreDemo.Controllers
             if (!string.IsNullOrEmpty(validationMessage))
             {
                 ModelState.AddModelError("Recaptcha", validationMessage);
-                return View();
+                return View(contact);
             }
 
             await _contactService.ContactAddAsync(contact);

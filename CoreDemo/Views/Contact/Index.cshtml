@@ -1,107 +1,107 @@
-﻿
+﻿@model Contact
 @{
     ViewData["Title"] = "İletişim";
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 @section HeaderSection{
-        <link href="~/CoreBlogTema/css/contact.css" rel='stylesheet' type='text/css' />
+    <link href="~/CoreBlogTema/css/contact.css" rel='stylesheet' type='text/css' />
 }
 
 
-    <!--/main-->
-    <section class="main-content-w3layouts-agileits">
-        <h3 class="tittle">Bizimle İletişime Geçin</h3>
-        <p class="sub text-center">Düşünceleriniz bizim için değerli</p>
-        <div class="contact-map inner-sec">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48178.87254694685!2d29.238609669696917!3d40.999443479740194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cad1a690e688d1%3A0x51bd54f901bc3c9c!2sSancaktepe%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1663532927445!5m2!1str!2str"
-                    class="map" style="border:0" allowfullscreen=""></iframe>
-        </div>
-        <div class="ad-inf-sec bg-light">
-            <div class="container">
-                <div class="address row">
+<!--/main-->
+<section class="main-content-w3layouts-agileits">
+    <h3 class="tittle">Bizimle İletişime Geçin</h3>
+    <p class="sub text-center">Düşünceleriniz bizim için değerli</p>
+    <div class="contact-map inner-sec">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48178.87254694685!2d29.238609669696917!3d40.999443479740194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cad1a690e688d1%3A0x51bd54f901bc3c9c!2sSancaktepe%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1663532927445!5m2!1str!2str"
+                class="map" style="border:0" allowfullscreen=""></iframe>
+    </div>
+    <div class="ad-inf-sec bg-light">
+        <div class="container">
+            <div class="address row">
 
-                    <div class="col-lg-4 address-grid">
-                        <div class="row address-info">
-                            <div class="col-md-4 address-left text-center">
-                                <i class="far fa-map"></i>
-                            </div>
-                            <div class="col-md-8 address-right text-left">
-                                <h6>Adres</h6>
-                                <p>
-                                    Istanbul, Türkiye
+                <div class="col-lg-4 address-grid">
+                    <div class="row address-info">
+                        <div class="col-md-4 address-left text-center">
+                            <i class="far fa-map"></i>
+                        </div>
+                        <div class="col-md-8 address-right text-left">
+                            <h6>Adres</h6>
+                            <p>
+                                Istanbul, Türkiye
 
-                                </p>
-                            </div>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 address-grid">
+                    <div class="row address-info">
+                        <div class="col-md-4 address-left text-center">
+                            <i class="far fa-envelope"></i>
+                        </div>
+                        <div class="col-md-8 address-right text-left">
+                            <h6>Email</h6>
+                            <p>
+                                Email :
+                                <a href="mailto:temelkayaburak@gmail.com"> temelkayaburak@gmail.com</a>
+                            </p>
                         </div>
 
                     </div>
-                    <div class="col-lg-4 address-grid">
-                        <div class="row address-info">
-                            <div class="col-md-4 address-left text-center">
-                                <i class="far fa-envelope"></i>
-                            </div>
-                            <div class="col-md-8 address-right text-left">
-                                <h6>Email</h6>
-                                <p>
-                                    Email :
-                                    <a href="mailto:temelkayaburak@gmail.com"> temelkayaburak@gmail.com</a>
-                                </p>
-                            </div>
-
+                </div>
+                <div class="col-lg-4 address-grid">
+                    <div class="row address-info">
+                        <div class="col-md-4 address-left text-center">
+                            <i class="fas fa-mobile-alt"></i>
                         </div>
-                    </div>
-                    <div class="col-lg-4 address-grid">
-                        <div class="row address-info">
-                            <div class="col-md-4 address-left text-center">
-                                <i class="fas fa-mobile-alt"></i>
-                            </div>
-                            <div class="col-md-8 address-right text-left">
-                                <h6>Telefon</h6>
-                                <a href="tel:905465000000">+5465123456</a>
-                            </div>
-
+                        <div class="col-md-8 address-right text-left">
+                            <h6>Telefon</h6>
+                            <a href="tel:905465000000">+5465123456</a>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="contact_grid_right">
-                <form method="post">
-                    <div class="row contact_left_grid">
-                        <div class="col-md-6 con-left">
-                            <div class="form-group">
-                                <label for="validationCustom01 my-2">Adınız</label>
-                                <input class="form-control" type="text" name="ContactUserName" placeholder="Adınızı Yazınız" required="">
-                                @Html.ValidationMessage("ContactUserName", "", new { @class = "text-danger" })
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Email</label>
-                                <input class="form-control" type="email" name="ContactMail" placeholder="Email adresinizi yazınız" required>
-                                @Html.ValidationMessage("ContactMail", "", new { @class = "text-danger" })
-                            </div>
-                            <div class="form-group">
-                                <label for="validationCustom03 my-2">Mesajın Konusu</label>
-                                <input class="form-control" type="text" name="ContactSubject" placeholder="Mesajın Konusunu Yazınız" required>
-                                @Html.ValidationMessage("ContactSubject", "", new { @class = "text-danger" })
-                            </div>                        
+    </div>
+    <div class="container">
+        <div class="contact_grid_right">
+            <form method="post">
+                <div class="row contact_left_grid">
+                    <div class="col-md-6 con-left">
+                        <div class="form-group">
+                            <label for="validationCustom01 my-2">Adınız</label>
+                            <input class="form-control" type="text" asp-for="ContactUserName" name="ContactUserName" placeholder="Adınızı Yazınız" required="">
+                            @Html.ValidationMessageFor(x=> x.ContactUserName, "", new { @class = "text-danger" })
                         </div>
-                        <div class="col-md-6 con-right">
-                            <div class="form-group">
-                                <label for="textarea">Mesajınız</label>
-                                <textarea id="textarea" name="ContactMessage" placeholder="Mesajınızı Yazınız" required></textarea>
-                            @Html.ValidationMessage("ContactMessage", "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Email</label>
+                            <input class="form-control" type="email" asp-for="ContactMail" name="ContactMail" placeholder="Email adresinizi yazınız" required>
+                            @Html.ValidationMessageFor(x=> x.ContactMail, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label for="validationCustom03 my-2">Mesajın Konusu</label>
+                            <input class="form-control" type="text" asp-for="ContactSubject" name="ContactSubject" placeholder="Mesajın Konusunu Yazınız" required>
+                            @Html.ValidationMessageFor(x=> x.ContactSubject, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 con-right">
+                        <div class="form-group">
+                            <label for="textarea">Mesajınız</label>
+                            <textarea id="textarea" name="ContactMessage" asp-for="ContactMessage" placeholder=" Mesajınızı Yazınız" required></textarea>
+                            @Html.ValidationMessageFor(x=> x.ContactMessage, "", new { @class = "text-danger" })
                             <div class="row form-group justify-content-center">
                                 <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
                             </div>
                             @Html.ValidationMessage("Recaptcha", "", new { @class = "text-danger" })
-                            </div>
-                            <input class="form-control" type="submit" value="Gönder">
-
                         </div>
+                        <input class="form-control" type="submit" value="Gönder">
+
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-    </section>
+    </div>
+</section>
 

@@ -137,9 +137,9 @@ namespace CoreDemo
                 app.UseDeveloperExceptionPage();
             }
             else
-            {
-                app.ConfigureCustomExceptionMiddleware();
+            {                
                 app.UseExceptionHandler("/Home/Error");
+                app.ConfigureCustomExceptionMiddleware();
                 app.UseHsts();
             }
             app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
