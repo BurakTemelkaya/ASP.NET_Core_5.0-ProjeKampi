@@ -155,8 +155,11 @@ namespace BusinessLayer.Concrete
             if (user == null || user.Data.Id != oldValue.WriterID)
                 return new ErrorDataResult<Blog>(blog);
 
-
-            if (blog.BlogImage != null)
+            if (blog.BlogImage == null && blogImage == null)
+            {
+                blog.BlogImage = oldValue.BlogImage;
+            }
+            else if (blog.BlogImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
                 if (image == null)
@@ -172,7 +175,11 @@ namespace BusinessLayer.Concrete
             }
 
 
-            if (blog.BlogThumbnailImage != null)
+            if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
+            {
+                blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
+            }
+            else if (blog.BlogThumbnailImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
@@ -191,6 +198,8 @@ namespace BusinessLayer.Concrete
                 }
                 DeleteFileManager.DeleteFile(oldValue.BlogContent);
             }
+
+
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
@@ -212,8 +221,11 @@ namespace BusinessLayer.Concrete
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
 
-
-            if (blog.BlogImage != null)
+            if (blog.BlogImage == null && blogImage == null)
+            {
+                blog.BlogImage = oldValue.BlogImage;
+            }
+            else if (blog.BlogImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
                 if (image == null)
@@ -228,7 +240,11 @@ namespace BusinessLayer.Concrete
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if (blog.BlogThumbnailImage != null)
+            if(blog.BlogThumbnailImage == null && blogThumbnailImage == null)
+            {
+                blog.BlogThumbnailImage = oldValue.BlogImage;
+            }
+            else if (blog.BlogThumbnailImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
@@ -244,6 +260,7 @@ namespace BusinessLayer.Concrete
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
             }
+            
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
