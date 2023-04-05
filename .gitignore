@@ -567,3 +567,4 @@ $RECYCLE.BIN/
 /CoreLayer/bin/Release/net5.0/CoreLayer.deps.json
 /CoreDemo/wwwroot/BlogContents
 /CoreDemo/wwwroot/BlogImageFiles
+/BusinessLayer/obj/Debug/net5.0/BusinessLayer.csproj.CoreCompileInputs.cache
