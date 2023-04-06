@@ -14,8 +14,7 @@ namespace BusinessLayer.Abstract
     public interface IBlogService
     {
         Task<IDataResult<Blog>> GetBlogByIDAsync(int id);
-        Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
-        Task<IDataResult<List<BlogandCommentCount>>> GetBlogListByMainPage(string id, int page = 1, string search = null);
+        Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);       
         Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
@@ -30,5 +29,6 @@ namespace BusinessLayer.Abstract
         Task<IResult> ChangedBlogStatusByAdminAsync(int id);
         Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
+        Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null);
     }
 }

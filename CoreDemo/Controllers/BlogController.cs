@@ -28,7 +28,7 @@ namespace CoreDemo.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string id, int page = 1, string search = null)
         {
-            var values = await _blogService.GetBlogListByMainPage(id, page, search);
+            var values = await _blogService.GetBlogListByMainPage(id, page, 6, search);
 
             ViewData["Title"] = "Ana Sayfa";
 
