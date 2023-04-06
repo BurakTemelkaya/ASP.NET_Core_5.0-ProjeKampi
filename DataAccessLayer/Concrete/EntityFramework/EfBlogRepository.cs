@@ -29,10 +29,36 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<Blog>> GetListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
+
+            if (take > 0 && page > 0)
+            {
+                var values = new List<Blog>();
+                int skip = 0;
+                if (page > 1)
+                {
+                    skip = take * (page - 1);
+                    values.AddRange(AddNullObject<Blog>.GetNullValuesForBefore(page, take));
+                }
+
+                var result = filter == null ?
+                    await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).SkipLast(skip).TakeLast(take).ToListAsync() :
+                    await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).Where(filter).SkipLast(skip).TakeLast(take).ToListAsync();
+
+                values.AddRange(result);
+
+                var count = filter == null ?
+                    await GetCountAsync() : await GetCountAsync(filter);
+
+                values.AddRange(AddNullObject<Blog>.GetNullValuesForAfter(page, take, count));
+
+                return values;
+            }
+
             return filter == null ?
             await Context.Blogs.Include(x => x.Category).ToListAsync() :
             await Context.Blogs.Include(x => x.Category).Where(filter).ToListAsync();
         }
+
         public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null)
         {
             return filter == null ?
