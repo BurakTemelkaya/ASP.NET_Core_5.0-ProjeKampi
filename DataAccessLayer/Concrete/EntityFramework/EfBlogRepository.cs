@@ -51,6 +51,12 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
             int count = await GetCountAsync(filter);
 
+            if (skip >= count)
+            {
+                skip = 0;
+                page = 1;
+            }
+
             return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryandCommentAsync(filter, take, skip), take, page, count);
         }
 
@@ -70,6 +76,12 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
 
             int count = await GetCountAsync(x => x.WriterID == id);
+
+            if (skip >= count)
+            {
+                skip = 0;
+                page = 1;
+            }
 
             return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryByWriterAsync(id, filter, take, skip), take, page, count);
         }

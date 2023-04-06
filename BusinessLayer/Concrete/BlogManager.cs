@@ -377,6 +377,7 @@ namespace BusinessLayer.Concrete
                     }
                 }
             }
+
             if (search != null)
             {
                 if (id == null)
@@ -401,9 +402,9 @@ namespace BusinessLayer.Concrete
             {
                 if (item != null)
                 {
-                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent,50);
+                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
                 }
-                
+
             }
 
             return new DataResult<List<Blog>>(values, isSuccess, message);

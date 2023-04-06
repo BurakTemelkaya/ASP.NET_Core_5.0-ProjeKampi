@@ -46,7 +46,7 @@ namespace CoreLayer.DataAccess.EntityFramework
             {
                 if (skip == 0)
                 {
-                    var count =  await GetCountAsync(filter);
+                    var count = await GetCountAsync(filter);
                     skip = count - take;
                     if (skip < 0)
                     {

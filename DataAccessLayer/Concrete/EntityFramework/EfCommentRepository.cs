@@ -47,6 +47,12 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
             int count = await GetCountAsync();
 
+            if (skip >= count)
+            {
+                skip = 0;
+                page = 1;
+            }
+
             return AddNullObject<Comment>.GetListByPaging(await GetListWithCommentByBlogAsync(take, skip), take, page, count);
         }
     }
