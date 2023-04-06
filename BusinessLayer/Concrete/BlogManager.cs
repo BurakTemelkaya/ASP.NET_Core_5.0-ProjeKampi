@@ -369,12 +369,12 @@ namespace BusinessLayer.Concrete
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id), take, page);
                     message = category.Data.CategoryName + " kategorisindeki bloglar.";
-                    if (values==null)
+                    if (values == null)
                     {
                         values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
                         isSuccess = false;
                         message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
-                    }                    
+                    }
                 }
             }
             if (search != null)
@@ -395,6 +395,15 @@ namespace BusinessLayer.Concrete
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
                     message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                 }
+            }
+
+            foreach (var item in values)
+            {
+                if (item != null)
+                {
+                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent,50);
+                }
+                
             }
 
             return new DataResult<List<Blog>>(values, isSuccess, message);
