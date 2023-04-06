@@ -1,4 +1,5 @@
 ﻿using CoreLayer.Entities;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -35,15 +36,49 @@ namespace CoreLayer.DataAccess.EntityFramework
 
         public async Task<TEntity> GetByIDAsync(int id)
         {
-            var result =await _context.Set<TEntity>().FindAsync(id);
+            var result = await _context.Set<TEntity>().FindAsync(id);
             return result;
         }
 
-        public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null)
+        public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0)
         {
+            if (take > 0)
+            {
+                if (skip == 0)
+                {
+                    var count = filter == null ?
+                    await GetCountAsync() : await GetCountAsync(filter);
+                    skip = count - take;
+                }
+                return filter == null ?
+                await _context.Set<TEntity>().Skip(skip).Take(take).ToListAsync() :
+                await _context.Set<TEntity>().Where(filter).Skip(skip).Take(take).ToListAsync();
+            }
+
             return filter == null ?
                 await _context.Set<TEntity>().ToListAsync() :
                 await _context.Set<TEntity>().Where(filter).ToListAsync();
+        }
+
+        public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1)
+        {
+            var values = new List<TEntity>();
+
+            var count = filter == null ?
+                await GetCountAsync() : await GetCountAsync(filter);
+
+            int skip = count - take;
+            if (page > 1)
+            {
+                skip = count - (take * (page - 1));
+                values.AddRange(AddNullObject<TEntity>.GetNullValuesForBefore(page, take));
+            }
+
+            var result = await GetListAllAsync(filter, take, skip);
+            values.AddRange(result);
+
+            values.AddRange(AddNullObject<TEntity>.GetNullValuesForAfter(page, take, count));
+            return values;
         }
 
         public async Task InsertAsync(TEntity t)

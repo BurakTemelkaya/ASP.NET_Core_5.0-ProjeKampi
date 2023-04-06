@@ -15,6 +15,8 @@ using CoreDemo.Models;
 using CoreLayer.Utilities.Results;
 using CoreLayer.Utilities.Business;
 using AutoMapper;
+using CoreLayer.Aspects.AutoFac.Performance;
+using EntityLayer.DTO;
 using BusinessLayer.Constants;
 
 namespace BusinessLayer.Concrete
@@ -24,19 +26,17 @@ namespace BusinessLayer.Concrete
         private readonly IBlogDal _blogDal;
         private readonly IBusinessUserService _userService;
         private readonly ICategoryService _categoryService;
-        private readonly ICommentService _commentService;
 
-        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, IMapper mapper, ICategoryService categoryService, ICommentService commentService) : base(mapper)
+        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, IMapper mapper, ICategoryService categoryService) : base(mapper)
         {
             _blogDal = blogDal;
             _userService = userService;
             _categoryService = categoryService;
-            _commentService = commentService;
         }
 
         public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryAsync(filter);
+            var values = await _blogDal.GetListWithCategoryandCommentAsync(filter);
 
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
@@ -76,14 +76,14 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count)
         {
-            var value = await _blogDal.GetListAllAsync();
+            var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count);
 
             if (value == null)
             {
                 return new ErrorDataResult<List<Blog>>();
             }
 
-            return new SuccessDataResult<List<Blog>>(value.TakeLast(count).OrderByDescending(x => x.BlogID).ToList());
+            return new SuccessDataResult<List<Blog>>(value.OrderByDescending(x => x.BlogID).ToList());
         }
 
         public async Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id)
@@ -240,7 +240,7 @@ namespace BusinessLayer.Concrete
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
-            if(blog.BlogThumbnailImage == null && blogThumbnailImage == null)
+            if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
             {
                 blog.BlogThumbnailImage = oldValue.BlogImage;
             }
@@ -260,7 +260,7 @@ namespace BusinessLayer.Concrete
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
             }
-            
+
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
             if (blog.BlogContent != oldValue.BlogContent)
@@ -342,11 +342,9 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<List<BlogandCommentCount>>> GetBlogListByMainPage(string id, int page = 1, string search = null)
+        public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
         {
             List<Blog> values = new();
-
-            List<BlogandCommentCount> blogandCommentCount = new();
 
             bool isSuccess = true;
 
@@ -354,26 +352,22 @@ namespace BusinessLayer.Concrete
 
             if (id == null && search == null)
             {
-                var value = await GetBlogListWithCategoryAsync(x => x.BlogStatus && x.Category.CategoryStatus);
-                values = value.Data;
+                values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
             }
 
             if (id != null && search == null)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
                 var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id));
-                var blogList = await _categoryService.GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.CategoryStatus);
-                if (categoryCount.Data != 0 && blogList.Data != 0)
+                if (categoryCount.Data != 0 && values.Count != 0)
                 {
-                    var value = await GetBlogListWithCategoryAsync(x => x.Category.CategoryStatus &&
-                    x.CategoryID == Convert.ToInt32(id));
-                    values = value.Data;
+                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.Category.CategoryStatus &&
+                    x.CategoryID == Convert.ToInt32(id), take, page);
                     message = category.Data.CategoryName + " kategorisindeki bloglar.";
                 }
                 else
                 {
-                    var value = await GetBlogListWithCategoryAsync();
-                    values = value.Data;
+                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
                     isSuccess = false;
                     message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
                 }
@@ -382,48 +376,23 @@ namespace BusinessLayer.Concrete
             {
                 if (id == null)
                 {
-                    var value = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()));
-                    values = value.Data;
+                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
                     message = "'" + search + "' aramanıza dair sonuçlar.";
                 }
                 else
                 {
-                    var value = await GetBlogListWithCategoryAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) &&
-                    x.CategoryID == Convert.ToInt32(id));
-                    values = value.Data;
+                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogTitle.ToLower().Contains(search.ToLower()) && x.CategoryID == Convert.ToInt32(id), take, page);
                     message = values.First().Category.CategoryName + " kategorisindeki " + search + " aramanıza dair sonuçlar.";
                 }
                 if (values.Count == 0)
                 {
                     isSuccess = false;
-                    var value = await GetBlogListWithCategoryAsync();
-                    values = value.Data;
+                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
                     message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                 }
             }
 
-            values = values.OrderByDescending(x => x.BlogCreateDate).ToList();
-
-            var comments = await _commentService.GetListAsync();
-            int commentCount = 0;
-            foreach (var item in values)
-            {
-                BlogandCommentCount value = new()
-                {
-                    Blog = item
-                };
-                foreach (var comment in comments.Data)
-                {
-                    if (comment.BlogID == item.BlogID)
-                    {
-                        commentCount++;
-                    }
-                }
-                value.ContentCount = commentCount;
-                blogandCommentCount.Add(value);
-                commentCount = 0;
-            }
-            return new DataResult<List<BlogandCommentCount>>(blogandCommentCount, isSuccess, message);
+            return new DataResult<List<Blog>>(values, isSuccess, message);
         }
 
         IResult BlogImageNotEmpty(string blogImage)
