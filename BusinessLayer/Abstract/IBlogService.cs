@@ -14,8 +14,8 @@ namespace BusinessLayer.Abstract
     public interface IBlogService
     {
         Task<IDataResult<Blog>> GetBlogByIDAsync(int id);
-        Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);       
-        Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
+        Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
         Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count);
@@ -24,7 +24,7 @@ namespace BusinessLayer.Abstract
         Task<IResult> DeleteBlogAsync(Blog blog, string userName);
         Task<IResult> DeleteBlogByAdminAsync(Blog blog);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Blog, bool>> filter = null);
-        Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0);
         Task<IResult> ChangedBlogStatusAsync(int id, string userName);
         Task<IResult> ChangedBlogStatusByAdminAsync(int id);
         Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);

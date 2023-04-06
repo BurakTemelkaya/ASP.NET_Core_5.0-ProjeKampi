@@ -46,9 +46,12 @@ namespace CoreLayer.DataAccess.EntityFramework
             {
                 if (skip == 0)
                 {
-                    var count = filter == null ?
-                    await GetCountAsync() : await GetCountAsync(filter);
+                    var count =  await GetCountAsync(filter);
                     skip = count - take;
+                    if (skip < 0)
+                    {
+                        skip = 0;
+                    }
                 }
                 return filter == null ?
                 await _context.Set<TEntity>().Skip(skip).Take(take).ToListAsync() :

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,21 @@ namespace CoreLayer.DataAccess
             {
                 values.Add(null);
             }
+
+            return values;
+        }
+
+        public static List<TEntity> GetListByPaging(List<TEntity> entities, int take, int page, int count)
+        {
+            var values = new List<TEntity>();
+            if (page > 1)
+            {
+                values.AddRange(GetNullValuesForBefore(page, take));
+            }
+
+            values.AddRange(entities);
+
+            values.AddRange(GetNullValuesForAfter(page, take, count));
 
             return values;
         }

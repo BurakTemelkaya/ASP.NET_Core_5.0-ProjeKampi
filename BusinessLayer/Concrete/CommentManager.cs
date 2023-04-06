@@ -91,5 +91,10 @@ namespace BusinessLayer.Concrete
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogAsync());
         }
+
+        public async Task<IDataResult<List<Comment>>> GetBlogListWithCommentByPagingAsync(int take = 0, int page = 0)
+        {
+            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(take, page));
+        }
     }
 }

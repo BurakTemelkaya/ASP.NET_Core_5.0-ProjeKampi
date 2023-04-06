@@ -2,6 +2,12 @@
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
     float BlogScore = 0;
+    string search = "";
+    if (ViewBag.Search!=null)
+    {
+        search = ViewBag.Search;
+    }
+   
 }
 <section class="main-content-w3layouts-agileits">
     <div class="container">
@@ -94,7 +100,7 @@
                 <!--//left-->
             </div>
         </div>
-        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page , search } ),
         new PagedListRenderOptions
         {
         LinkToFirstPageFormat="<<İlk",
@@ -107,6 +113,7 @@
         ActiveLiElementClass="active",
         })
         <br />
+
         @await Component.InvokeAsync("CategoryList")
     </div>
 

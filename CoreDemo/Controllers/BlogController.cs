@@ -37,6 +37,7 @@ namespace CoreDemo.Controllers
                 ViewData["Title"] = values.Message;
                 ViewBag.Message = values.Message;
                 ViewBag.IsSuccess = values.Success;
+                ViewBag.Search = search;
             }
 
             return View(await values.Data.ToPagedListAsync(page, 6));
@@ -64,7 +65,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> BlogListByWriter(int page = 1)
         {
-            var values = await _blogService.GetListWithCategoryByWriterBmAsync(User.Identity.Name);
+            var values = await _blogService.GetListWithCategoryByWriterBmAsync(User.Identity.Name, 5, page);
             return View(await values.Data.ToPagedListAsync(page, 5));
         }
         [HttpGet]

@@ -43,12 +43,17 @@ namespace BusinessLayer.Concrete
 
             return new SuccessDataResult<List<Blog>>(values);
         }
-        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
-            var values = await _blogDal.GetListWithCategoryByWriterAsync(user.Data.Id, filter);
+            var values = await _blogDal.GetListWithCategoryByWriterandPagingAsync(user.Data.Id, filter, take, page);
             foreach (var item in values)
-                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            {
+                if (item != null)
+                {
+                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+                }
+            }
             return new SuccessDataResult<List<Blog>>(values);
         }
         public async Task<IDataResult<Blog>> GetBlogByIDAsync(int id)
@@ -291,12 +296,12 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(await _blogDal.GetCountAsync(filter));
         }
 
-        public async Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0)
         {
-            var values = await _blogDal.GetListAllAsync();
+            var values = await _blogDal.GetListAllAsync(filter, take);
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
-            return new SuccessDataResult<List<Blog>>(values);
+            return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
         }
 
         public async Task<IResult> ChangedBlogStatusAsync(int id, string userName)
@@ -352,42 +357,42 @@ namespace BusinessLayer.Concrete
 
             if (id == null && search == null)
             {
-                values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
+                values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
             }
 
             if (id != null && search == null)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
                 var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id));
-                if (categoryCount.Data != 0 && values.Count != 0)
+                if (categoryCount.Data != 0)
                 {
-                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.Category.CategoryStatus &&
+                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id), take, page);
                     message = category.Data.CategoryName + " kategorisindeki bloglar.";
-                }
-                else
-                {
-                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
-                    isSuccess = false;
-                    message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
+                    if (values==null)
+                    {
+                        values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
+                        isSuccess = false;
+                        message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
+                    }                    
                 }
             }
             if (search != null)
             {
                 if (id == null)
                 {
-                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
+                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
                     message = "'" + search + "' aramanıza dair sonuçlar.";
                 }
                 else
                 {
-                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogTitle.ToLower().Contains(search.ToLower()) && x.CategoryID == Convert.ToInt32(id), take, page);
+                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) && x.CategoryID == Convert.ToInt32(id), take, page);
                     message = values.First().Category.CategoryName + " kategorisindeki " + search + " aramanıza dair sonuçlar.";
                 }
                 if (values.Count == 0)
                 {
                     isSuccess = false;
-                    values = await _blogDal.GetListWithCategoryandCommentByPaging(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
+                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
                     message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
                 }
             }

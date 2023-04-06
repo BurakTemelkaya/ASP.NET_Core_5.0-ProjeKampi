@@ -19,7 +19,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int page = 1)
         {
-            var comments = await _commentService.GetBlogListWithCommentAsync();
+            var comments = await _commentService.GetBlogListWithCommentByPagingAsync(5,page);
             var values = await comments.Data.ToPagedListAsync(page, 5);
             return View(values);
         }
@@ -33,7 +33,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 {
                     ViewBag.ReturnMessage = "Yorum Başarıyla Silindi";
                     return RedirectToAction("Index");
-                }                
+                }
             }
 
             ViewBag.ReturnMessage = value.Message;

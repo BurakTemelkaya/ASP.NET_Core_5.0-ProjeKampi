@@ -41,32 +41,37 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).Where(filter).ToListAsync();
         }
 
-        public async Task<List<Blog>> GetListWithCategoryandCommentByPaging(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
+        public async Task<List<Blog>> GetListWithCategoryandCommentByPagingAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
         {
-            var values = new List<Blog>();
             int skip = 0;
             if (page > 1)
             {
                 skip = take * (page - 1);
-                values.AddRange(AddNullObject<Blog>.GetNullValuesForBefore(page, take));
             }
 
-            values.AddRange(await GetListWithCategoryandCommentAsync(filter, take, skip));
+            int count = await GetCountAsync(filter);
 
-            var count = filter == null ?
-                await GetCountAsync() : await GetCountAsync(filter);
-
-            values.AddRange(AddNullObject<Blog>.GetNullValuesForAfter(page, take, count));
-
-            return values;
+            return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryandCommentAsync(filter, take, skip), take, page, count);
         }
 
-        public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null)
+        public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
         {
             return filter == null ?
-                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).ToListAsync() :
-                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).Where(filter).ToListAsync();
+                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).OrderByDescending(x => x.BlogID).Skip(skip).Take(take).ToListAsync() :
+                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).OrderByDescending(x => x.BlogID).Where(filter).Skip(skip).Take(take).ToListAsync();
+        }
 
+        public async Task<List<Blog>> GetListWithCategoryByWriterandPagingAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
+        {
+            int skip = 0;
+            if (page > 1)
+            {
+                skip = take * (page - 1);
+            }
+
+            int count = await GetCountAsync(x => x.WriterID == id);
+
+            return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryByWriterAsync(id, filter, take, skip), take, page, count);
         }
     }
 }

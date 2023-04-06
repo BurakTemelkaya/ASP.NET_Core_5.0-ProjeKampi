@@ -16,7 +16,7 @@ namespace CoreDemo.ViewComponents.Blog
 
         public async Task<IViewComponentResult> InvokeAsync(int writerId, int blogId)
         {
-            var blogs = await _blogService.GetListAsync(x => x.BlogStatus && x.BlogID != blogId && x.WriterID != writerId);
+            var blogs = await _blogService.GetListAsync(x => x.BlogStatus && x.BlogID != blogId && x.WriterID == writerId, 4);
             return View(blogs.Data.TakeLast(4).ToList());
         }
     }
