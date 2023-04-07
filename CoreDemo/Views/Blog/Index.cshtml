@@ -61,19 +61,19 @@
                                             <i class="far fa-calendar-alt"></i> @(((DateTime)item.BlogCreateDate).ToString("dd.MM.yyyy"))
                                         </a>
                                     </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <i class="far fa-star"></i>@BlogScore
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <i class="far fa-comment"></i> @item.Comments.Count
+                                    <li>
+                                        <a href="/Blog/BlogReadAll/@item.BlogID">
+                                            <i class="fa fa-star"></i>@BlogScore
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/Blog/BlogReadAll/@item.BlogID">
-                                            <i class="fas fa-eye"></i> @item.Category.CategoryName
+                                            <i class="fa fa-comment"></i> @item.Comments.Count
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/Blog/Index?id=@item.CategoryID">
+                                            <i class="fa fa-bars"></i> @item.Category.CategoryName
                                         </a>
                                     </li>
 
