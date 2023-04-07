@@ -3,11 +3,11 @@
     Layout = "~/Views/Shared/UserLayout.cshtml";
     float BlogScore = 0;
     string search = "";
-    if (ViewBag.Search!=null)
+    if (ViewBag.Search != null)
     {
         search = ViewBag.Search;
     }
-   
+
 }
 <section class="main-content-w3layouts-agileits">
     <div class="container">
@@ -39,16 +39,14 @@
                 <div class="row">
                     @foreach (var item in Model)
                     {
+                        if (item.Comments.Count > 0)
                         {
-                            if (item.Comments.Count > 0)
+                            int blogScoreSum = 0;
+                            foreach (var score in item.Comments)
                             {
-                                int blogScoreSum = 0;
-                                foreach (var score in item.Comments)
-                                {
-                                    blogScoreSum += score.BlogScore;
-                                }
-                                BlogScore = blogScoreSum / item.Comments.Count;
+                                blogScoreSum += score.BlogScore;
                             }
+                            BlogScore = blogScoreSum / item.Comments.Count;
                         }
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@item.BlogID">
@@ -95,7 +93,11 @@
                                 </p>
                             </div>
                         </div>
+                        @if(BlogScore>0){
+                            BlogScore = 0;
+                        }
                     }
+
                 </div>
                 <!--//left-->
             </div>
