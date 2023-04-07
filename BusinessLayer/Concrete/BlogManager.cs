@@ -43,6 +43,22 @@ namespace BusinessLayer.Concrete
 
             return new SuccessDataResult<List<Blog>>(values);
         }
+
+        public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null)
+        {
+            var values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(filter, take, page);
+
+            foreach (var item in values)
+            {
+                if (item != null)
+                {
+                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+                }
+            }           
+
+            return new SuccessDataResult<List<Blog>>(values);
+        }
+
         public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);

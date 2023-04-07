@@ -34,7 +34,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
                 if (user != null)
                 {
-                    var value = await _blogService.GetBlogListWithCategoryAsync(x => x.WriterID == id);
+                    var value = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page, x => x.WriterID == id);
                     if (value != null)
                         blogs = value.Data;
                     ViewBag.UserName = user.Data.UserName;
@@ -42,18 +42,17 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             else
             {
-                var result = await _blogService.GetBlogListWithCategoryAsync();
+                var result = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page);
                 blogs = result.Data;
             }
-            blogs = await blogs.OrderByDescending(x => x.BlogCreateDate).ToListAsync();
             var values = await blogs.ToPagedListAsync(page, 4);
             return View(values);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BlogAdd()
+        public IActionResult BlogAdd()
         {
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = _categoryService.GetCategoryListAsync().Result.Data;
             return View();
         }
 
@@ -63,26 +62,31 @@ namespace CoreDemo.Areas.Admin.Controllers
             var result = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             if (!result.Success)
             {
-                ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+                ViewBag.CategoryList = _categoryService.GetCategoryListAsync().Result.Data;
                 ModelState.AddModelError("", result.Message);
                 return View();
-            }           
+            }
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> BlogUpdate(int id)
         {
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategoryListAsync();
+            ViewBag.CategoryList = categoryList.Data;
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
-            return View(blogValue);
+            return View(blogValue.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> BlogUpdate(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
-            ViewBag.CategoryList = await _categoryService.GetCategoryListAsync();
+            var result = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
+            if (!result.Success)
+            {
+                ModelState.AddModelError("", result.Message);
+            }
+            ViewBag.CategoryList = _categoryService.GetCategoryListAsync().Result.Data;
             return RedirectToAction("Index");
         }
 
