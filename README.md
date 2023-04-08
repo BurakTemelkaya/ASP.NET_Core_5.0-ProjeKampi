@@ -62,8 +62,11 @@ Video 100: <del>Projeyi canlıya taşımak.</del>
 <h3>Yapılanlar</h3>
 
 Kullanıcı banlama sistemi.
+
 Kullanıcılar arası mesajların içerik kısmına text editör eklemek.
+
 Admin panelinde adminlerin, kullanıcıların adlarını mail adreslerini vs. değiştirebilme
+
 Mesaj ve haber bülteni mesajları için taslak sistemi.
 Admin bildirimleri eklenicek.
 Mesajlar aranan kelimeye göre getirilecek.
