@@ -7,7 +7,7 @@
     {
         search = ViewBag.Search;
     }
-
+    string blogTitle = "";
 }
 <section class="main-content-w3layouts-agileits">
     <div class="container">
@@ -39,6 +39,12 @@
                 <div class="row">
                     @foreach (var item in Model)
                     {
+                        blogTitle = item.BlogTitle;
+                        @if (blogTitle.Length > 50)
+                        {
+                            blogTitle = blogTitle.Substring(0, 50) + "...";
+                        }
+
                         if (item.Comments.Count > 0)
                         {
                             int blogScoreSum = 0;
@@ -76,14 +82,17 @@
                                     </li>
 
                                 </ul>
+                                
+
                                 <h5 class="card-title">
-                                    <a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogTitle</a>
+                                    <a href="/Blog/BlogReadAll/@item.BlogID">@blogTitle</a>
                                 </h5>
+                                
 
                                 <p class="card-text mb-3">
-                                    @if (item.BlogContent != null && item.BlogContent.Length > 130)
+                                    @if (item.BlogContent != null && item.BlogContent.Length > 100)
                                     {
-                                        @item.BlogContent.Substring(0, 130)
+                                        @item.BlogContent.Substring(0, 100)
                                     }
                                     else
                                     {
