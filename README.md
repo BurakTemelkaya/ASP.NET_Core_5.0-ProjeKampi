@@ -56,3 +56,30 @@ Video 76: <del>Yazar'ın Bildirimler kısmında bütün bildirimler gözükmesin
 Video 79: <del>Notificationların ne kadar süre önce gönderildiği yazdırılacak.</del>
  
 Video 100: <del>Projeyi canlıya taşımak.</del> 
+
+<h2>Kendi Yaptıklarım ve Eklemek İstediklerim:</h2>
+
+<h3>Yapılanlar</h3>
+
+Kullanıcı banlama sistemi.
+Kullanıcılar arası mesajların içerik kısmına text editör eklemek.
+Admin panelinde adminlerin, kullanıcıların adlarını mail adreslerini vs. değiştirebilme
+Mesaj ve haber bülteni mesajları için taslak sistemi.
+Admin bildirimleri eklenicek.
+Mesajlar aranan kelimeye göre getirilecek.
+Mesaj taslakları ajax ile getirilip işlem yapılacak.
+Yazar panelindeki gelen kutusu ajax ile yapılacak.
+Kullanıcı resmi güncelleme sorununu çöz.
+Yazar mesaj kısmındaki tasarımı iyileştir.
+Taslak düzenlemedeki hatayı düzelt.
+Yazar panelindeki üst paneldeki mesajlar bazen okunmadı sembolü  gözükmüyor.
+Resimlerinin boyutu ayarlama kodu hatalı düzelt.
+Resimleri siteden indir ve boyutunu düzeltip sisteme kaydet.
+Ana sayfada bir şey aradıktan sonra pageleme aramaya göre çalışmıyor.
+Bloglara pageleme yapılacak. Last 3 blog last blogs gibi yerler. Mesajlar içinde aynısı yapılacak.
+Admin panelinde sayfanın 2 kez yüklenmesine sebep olan hatayı düzelt.
+
+<h3>Yapılacaklar</h3>
+
+About düzenleme kısmı ekle.
+Kayıt olurken ve eposta adresini güncellerken onay epostası ile onaylama ekle.
