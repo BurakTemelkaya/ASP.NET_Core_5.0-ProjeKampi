@@ -15,6 +15,6 @@ namespace BusinessLayer.Abstract
 
         Task<IDataResult<List<Comment>>> GetBlogListWithCommentAsync();
 
-        Task<IDataResult<List<Comment>>> GetBlogListWithCommentByPagingAsync(int take = 0, int page = 0);
+        Task<IDataResult<List<Comment>>> GetCommentListWithBlogByPagingAsync(int take = 0, int page = 0);
     }
 }
