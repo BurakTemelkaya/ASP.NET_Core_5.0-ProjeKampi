@@ -17,27 +17,25 @@ namespace DataAccessLayer.DependancyInjection
         public static void IocDataAccessInstall(this IServiceCollection services)
         {
 
-            services.AddTransient<ICategoryDal, EfCategoryRepository>();
+            services.AddSingleton<ICategoryDal, EfCategoryRepository>();
 
-            services.AddTransient<IAboutDal, EfAboutRepository>();
+            services.AddSingleton<IAboutDal, EfAboutRepository>();
 
-            services.AddTransient<ICategoryDal, EfCategoryRepository>();
+            services.AddScoped<IBlogDal, EfBlogRepository>();
 
-            services.AddTransient<IBlogDal, EfBlogRepository>();
+            services.AddScoped<ICommentDal, EfCommentRepository>();
 
-            services.AddTransient<ICommentDal, EfCommentRepository>();
+            services.AddScoped<IContactDal, EfContactRepository>();
 
-            services.AddTransient<IContactDal, EfContactRepository>();
+            services.AddScoped<IMessageDal, EfMessageRepository>();
 
-            services.AddTransient<IMessageDal, EfMessageRepository>();
+            services.AddScoped<INewsLetterDal, EfNewsLetterRepository>();
 
-            services.AddTransient<INewsLetterDal, EfNewsLetterRepository>();
+            services.AddScoped<INotificationDal, EfNotificationRepository>();
 
-            services.AddTransient<INotificationDal, EfNotificationRepository>();
+            services.AddScoped<IMessageDraftDal, EfMessageDraftRepository>();
 
-            services.AddTransient<IMessageDraftDal, EfMessageDraftRepository>();
-
-            services.AddTransient<INewsLetterDraftDal, EfNewsLetterDraftRepository>();
+            services.AddScoped<INewsLetterDraftDal, EfNewsLetterDraftRepository>();
         }
     }
 }

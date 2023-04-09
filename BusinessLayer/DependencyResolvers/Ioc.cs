@@ -29,27 +29,27 @@ namespace BusinessLayer.DependencyResolvers
 
             services.AddSingleton<IAboutService, AboutManager>();
 
-            services.AddTransient<IBlogService, BlogManager>();
+            services.AddScoped<IBlogService, BlogManager>();
 
-            services.AddTransient<IBusinessUserService, UserBusinessManager>();
+            services.AddScoped<IBusinessUserService, UserBusinessManager>();
 
-            services.AddTransient<ICategoryService, CategoryManager>();
+            services.AddSingleton<ICategoryService, CategoryManager>();
 
-            services.AddTransient<ICommentService, CommentManager>();
+            services.AddScoped<ICommentService, CommentManager>();
 
-            services.AddTransient<IContactService, ContactManager>();
+            services.AddScoped<IContactService, ContactManager>();
 
-            services.AddTransient<IMessageService, MessageManager>();
+            services.AddScoped<IMessageService, MessageManager>();
 
-            services.AddTransient<INewsLetterService, NewsLetterManager>();
+            services.AddScoped<INewsLetterService, NewsLetterManager>();
 
-            services.AddTransient<INewsLetterDraftService, NewsLetterDraftManager>();
+            services.AddScoped<INewsLetterDraftService, NewsLetterDraftManager>();
 
-            services.AddTransient<INotificationService, NotificationManager>();
+            services.AddScoped<INotificationService, NotificationManager>();
 
-            services.AddTransient<IContactService, ContactManager>();
+            services.AddScoped<IContactService, ContactManager>();
 
-            services.AddTransient<IMessageDraftService, MessageDraftManager>();
+            services.AddScoped<IMessageDraftService, MessageDraftManager>();
 
 
             //validators ioc
