@@ -83,6 +83,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id)
         {
+
             var value = await _blogDal.GetByIDAsync(id);
 
             if (value == null)
@@ -263,7 +264,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
             {
-                blog.BlogThumbnailImage = oldValue.BlogImage;
+                blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
             }
             else if (blog.BlogThumbnailImage != null)
             {

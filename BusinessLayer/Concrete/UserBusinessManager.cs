@@ -53,6 +53,10 @@ namespace BusinessLayer.Concrete
                 user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
                     ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
+            else
+            {
+                return new ErrorDataResult<IdentityResult>("Lütfen profil resmi yükleyin yada resim linki giriniz.");
+            }
 
             var result = await _userManager.CreateAsync(user, password);
 
@@ -88,19 +92,24 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user)
         {
-            var rawValue = await GetByIDAsync(user.Id.ToString());
-            var value = rawValue.Data;
+            var value = await GetByIDAsync(user.Id.ToString());
 
-            value.NameSurname = user.NameSurname;
-            value.Email = user.Email;
-            value.UserName = user.UserName;
-            value.About = user.About;
-            value.City = user.City;
+            if (!value.Success)
+            {
+                return new ErrorDataResult<IdentityResult>("Kullanıcı bulunamadı");
+            }
+
+            value.Data.UserName = user.UserName;
+            value.Data.NameSurname = user.NameSurname;
+            value.Data.Email = user.Email;
+            value.Data.About= user.About;
+            value.Data.City = user.City;
+
             if (user.Password != null && user.Password == user.PasswordAgain)
             {
-                bool checkPassword = await _userManager.CheckPasswordAsync(value, user.OldPassword);
+                bool checkPassword = await _userManager.CheckPasswordAsync(user, user.OldPassword);
                 if (checkPassword)
-                    value.PasswordHash = _userManager.PasswordHasher.HashPassword(value, user.Password);
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, user.Password);
             }
 
             if (user.ImageUrl != null)
@@ -110,21 +119,26 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
-                user.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
-                DeleteFileManager.DeleteFile(value.ImageUrl);
+                DeleteFileManager.DeleteFile(value.Data.ImageUrl);
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());               
             }
 
             else if (user.ProfileImageFile != null)
             {
-                value.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,
-                    ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
-                DeleteFileManager.DeleteFile(value.ImageUrl);
+                DeleteFileManager.DeleteFile(value.Data.ImageUrl);
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+            }
+
+            else
+            {
+                user.ImageUrl = value.Data.ImageUrl;
             }
             
-            var result = await _userManager.UpdateAsync(value);
+
+            var result = await _userManager.UpdateAsync(value.Data);
             if (result.Succeeded)
-            {               
-                var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
+            {
+                var mailTemplate = Mapper.Map<ChangedUserInformationModel>(user);
                 _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
                     MailTemplates.ChangedUserInformationMailTemplate(mailTemplate));
                 return new SuccessDataResult<IdentityResult>(result);

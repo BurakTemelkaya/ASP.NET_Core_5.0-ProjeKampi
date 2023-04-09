@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Extensions;
 using FluentValidation;
 using FluentValidation.Results;

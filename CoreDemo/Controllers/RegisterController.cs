@@ -48,17 +48,11 @@ namespace CoreDemo.Controllers
             if (!string.IsNullOrEmpty(captchaMessage))
             {
                 ModelState.AddModelError("Captcha", captchaMessage);
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
-                return View();
             }
             if (!userSignUpDto.IsAcceptTheContract)
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
-                return View(userSignUpDto);
             }
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
             if (result.Success)
@@ -67,10 +61,19 @@ namespace CoreDemo.Controllers
                 await _signInManager.SignInAsync(user.Data, true);
                 return RedirectToAction("Index", "Dashboard");
             }
-            foreach (var item in result.Data.Errors)
+            else if (result.Data != null)
             {
-                ModelState.AddModelError("Username", item.Description);
+                foreach (var item in result.Data.Errors)
+                {
+                    ModelState.AddModelError("Username", item.Description);
+                }
             }
+            else
+            {
+                ModelState.AddModelError("",
+                    result.Message);
+            }
+
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             ViewBag.Cities = await _writerCity.GetCityListAsync();
             return View(userSignUpDto);

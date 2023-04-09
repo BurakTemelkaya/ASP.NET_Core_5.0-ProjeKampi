@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLayer.CrossCuttingConcerns.Logging
 {
-    public class LogDetailWithException
+    public class LogDetailWithException : LogDetail
     {
         public string ExceptionMessage { get; set; }
     }

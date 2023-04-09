@@ -40,10 +40,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             var result = await _businessUserService.UpdateUserAsync(userDto);
             if (!result.Success)
             {
-                foreach (var item in result.Data.Errors)
+                if (result.Data != null)
                 {
-                    ModelState.AddModelError("", item.Description);
+                    foreach (var item in result.Data.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description);
+                    }
                 }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
                 return View(userDto);
             }
