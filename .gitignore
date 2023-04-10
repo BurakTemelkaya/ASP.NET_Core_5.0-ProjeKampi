@@ -569,3 +569,5 @@ $RECYCLE.BIN/
 /CoreDemo/wwwroot/BlogImageFiles
 /BusinessLayer/obj/Debug/net5.0/BusinessLayer.csproj.CoreCompileInputs.cache
 /CoreDemo/log4net.config
+/CoreDemo/obj/Debug/net5.0/CoreDemo.TagHelpers.output.cache
+/CoreDemo/obj/Debug/net5.0/CoreDemo.RazorCoreGenerate.cache
