@@ -61,39 +61,41 @@ Video 100: <del>Projeyi canlıya taşımak.</del>
 
 <h3>Yapılanlar</h3>
 
-Kullanıcı banlama sistemi.
+Kullanıcı yasaklama sistemi.
 
 Kullanıcılar arası mesajların içerik kısmına text editör eklemek.
 
-Admin panelinde adminlerin, kullanıcıların adlarını mail adreslerini vs. değiştirebilme
+Admin panelinde adminlerin, kullanıcıların adlarını mail adreslerini vs. değiştirebilmek.
 
 Mesaj ve haber bülteni mesajları için taslak sistemi.
 
-Admin bildirimleri eklenicek.
+Admin bildirimleri eklenmesi.
 
-Mesajlar aranan kelimeye göre getirilecek.
+Mesajlar aranan kelimeye göre getirilmesi.
 
-Mesaj taslakları ajax ile getirilip işlem yapılacak.
+Mesaj taslakları ajax ile getirilip işlem yapılması.
 
-Yazar panelindeki gelen kutusu ajax ile yapılacak.
+Yazar panelindeki gelen kutusu ajax ile yapılması.
 
-Kullanıcı resmi güncelleme sorununu çöz.
+Kullanıcı resmi güncelleme sorununu çözme.
 
-Yazar mesaj kısmındaki tasarımı iyileştir.
+Yazar mesaj kısmındaki tasarımı iyileştirme.
 
-Taslak düzenlemedeki hatayı düzelt.
+Taslak düzenlemedeki hatayı düzeltme.
 
-Yazar panelindeki üst paneldeki mesajlar bazen okunmadı sembolü  gözükmüyor.
+Yazar panelindeki üst paneldeki mesajlar bazen okunmadı sembolü gözükmeme sorununu çözme.
 
 Resimlerinin boyutu ayarlama kodu hatalı düzelt.
 
-Resimleri siteden indir ve boyutunu düzeltip sisteme kaydet.
+Resimleri siteden indir ve boyutunu düzeltip sisteme kaydetme.
 
-Ana sayfada bir şey aradıktan sonra pageleme aramaya göre çalışmıyor.
+Ana sayfada bir şey aradıktan sonra pageleme aramaya göre çalışması.
 
-Bloglara pageleme yapılacak. Last 3 blog last blogs gibi yerler. Mesajlar içinde aynısı yapılacak.
+Bloglara pageleme yapılacak. Last 3 blog last blogs gibi yerler. Mesajlar içinde aynısı yapılması.
 
-Admin panelinde sayfanın 2 kez yüklenmesine sebep olan hatayı düzelt.
+Admin panelinde sayfanın 2 kez yüklenmesine sebep olan hatayı düzeltilme.
+
+Sistem hata verdiğinde loglama ve istediğim bir metodun üstüne log attirubute ekliyerek loglama yapma.
 
 <h3>Yapmak İstediklerim</h3>
 
