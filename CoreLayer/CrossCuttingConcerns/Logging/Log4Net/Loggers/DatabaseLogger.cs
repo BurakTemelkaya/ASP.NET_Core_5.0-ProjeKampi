@@ -10,7 +10,7 @@ namespace CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers
     {
         public DatabaseLogger() : base("DatabaseLogger")
         {
-            
+
         }
     }
 }

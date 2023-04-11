@@ -35,12 +35,15 @@ namespace CoreLayer.Aspects.AutoFac.Logging
             var logParameters = new List<LogParameter>();
             for (int i = 0; i < invocation.Arguments.Length; i++)
             {
-                logParameters.Add(new LogParameter
+                if (invocation.Arguments[i] != null)
                 {
-                    Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
-                    Value = invocation.Arguments[i],
-                    Type = invocation.Arguments[i].GetType().Name
-                });
+                    logParameters.Add(new LogParameter
+                    {
+                        Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
+                        Value = invocation.Arguments[i],
+                        Type = invocation.Arguments[i].GetType().Name
+                    });
+                }
             }
 
             var logDetail = new LogDetail

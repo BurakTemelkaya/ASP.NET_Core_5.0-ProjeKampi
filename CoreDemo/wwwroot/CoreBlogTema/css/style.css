@@ -808,11 +808,11 @@ ul.blog-icons i {
     font-size: 1.2em;
     color: #333333;
     font-weight: 700;
-    margin-bottom: 1em;
+    margin-bottom: 5px;
 }
 
 .tech-btm {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 }
 
     .tech-btm input[type="email"] {

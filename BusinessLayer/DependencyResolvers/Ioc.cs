@@ -50,29 +50,6 @@ namespace BusinessLayer.DependencyResolvers
             services.AddScoped<IContactService, ContactManager>();
 
             services.AddScoped<IMessageDraftService, MessageDraftManager>();
-
-
-            //validators ioc
-
-            //services.AddSingleton<IValidator<Blog>, BlogValidator>();
-
-            //services.AddSingleton<IValidator<Category>, CategoryValidator>();
-
-            //services.AddSingleton<IValidator<Comment>, CommentValidator>();
-
-            //services.AddSingleton<IValidator<Contact>, ContactValidator>();
-
-            //services.AddSingleton<IValidator<UserDto>, UserValidator>();
-
-            //services.AddSingleton<IValidator<NewsLetter>, NewsLetterValidator>();
-
-            //services.AddSingleton<IValidator<NewsLetterSendMailsModel>, NewsLetterSendMailsModelValidator>();
-
-            //services.AddSingleton<IValidator<UserSignUpDto>, UserSignUpDtoValidator>();
-
-            //services.AddSingleton<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
-
-            //services.AddSingleton<IValidator<Message>, MessageValidator>();
         }
     }
 }

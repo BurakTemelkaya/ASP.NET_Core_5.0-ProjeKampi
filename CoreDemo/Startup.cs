@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
+
 namespace CoreDemo
 {
     public class Startup
@@ -40,7 +41,7 @@ namespace CoreDemo
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
             services.AddHttpContextAccessor();
 
             services.AddDbContext<Context>(options =>
@@ -135,6 +136,7 @@ namespace CoreDemo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                log4net.Util.LogLog.InternalDebugging = true;
             }
             else
             {                
@@ -142,6 +144,8 @@ namespace CoreDemo
                 app.ConfigureCustomExceptionMiddleware();
                 app.UseHsts();
             }
+
+            //app.ConfigureCustomExceptionMiddleware();
 
             app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 

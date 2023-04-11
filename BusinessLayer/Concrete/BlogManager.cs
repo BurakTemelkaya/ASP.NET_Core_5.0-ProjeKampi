@@ -18,6 +18,9 @@ using AutoMapper;
 using CoreLayer.Aspects.AutoFac.Performance;
 using EntityLayer.DTO;
 using BusinessLayer.Constants;
+using CoreLayer.Aspects.AutoFac.Logging;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using CoreLayer.Aspects.AutoFac.Exception;
 
 namespace BusinessLayer.Concrete
 {
@@ -54,7 +57,7 @@ namespace BusinessLayer.Concrete
                 {
                     item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
                 }
-            }           
+            }
 
             return new SuccessDataResult<List<Blog>>(values);
         }
@@ -96,6 +99,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(value);
         }
 
+        [LogAspect(typeof(DatabaseLogger))]
         public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count)
         {
             var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count);
@@ -364,8 +368,10 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [LogAspect(typeof(DatabaseLogger))]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
-        {
+        {   
             List<Blog> values = new();
 
             bool isSuccess = true;
