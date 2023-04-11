@@ -5,6 +5,7 @@ using BusinessLayer.Extension;
 using Core.Extensions;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Utilities.IoC;
 using DataAccessLayer.Concrete;
@@ -125,6 +126,8 @@ namespace CoreDemo
 
             services.IocBusinessInstall();
 
+            services.AddSingleton<LoggerServiceBase>();
+
             services.AddDependencyResolvers(new ICoreModule[] {
                new CoreModule()
             });
@@ -144,8 +147,6 @@ namespace CoreDemo
                 app.ConfigureCustomExceptionMiddleware();
                 app.UseHsts();
             }
-
-            //app.ConfigureCustomExceptionMiddleware();
 
             app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 

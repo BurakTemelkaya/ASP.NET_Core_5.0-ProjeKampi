@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Extensions;
+using CoreLayer.Utilities.Messages;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +19,17 @@ namespace Core.Extensions
     {
         private RequestDelegate _next;
 
+        private LoggerServiceBase _databaseLoggerServiceBase;
+
+        private LoggerServiceBase _fileLoggerServiceBase;
+
         public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
+
+            _databaseLoggerServiceBase = (LoggerServiceBase)Activator.CreateInstance(typeof(DatabaseLogger));
+
+            _fileLoggerServiceBase = (LoggerServiceBase)Activator.CreateInstance(typeof(FileLogger));
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -30,8 +39,8 @@ namespace Core.Extensions
                 await _next(httpContext);
             }
             catch (Exception e)
-            {
-                await HandleExceptionAsync(httpContext, e);
+            { 
+                await HandleExceptionAsync(httpContext, e);              
             }
         }
 
@@ -41,7 +50,7 @@ namespace Core.Extensions
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             string message = "Internal Server Error";
-            
+
             IEnumerable<ValidationFailure> errors;
 
             if (e.GetType() == typeof(ValidationException))
@@ -50,13 +59,22 @@ namespace Core.Extensions
                 errors = ((ValidationException)e).Errors;
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                return httpContext.Response.WriteAsync(new ValidationErrorDetail
+                var exceptionModel = new ValidationErrorDetail
                 {
                     StatusCode = (int)HttpStatusCode.BadRequest,
                     Message = message,
                     ValidationErrors = errors
-                }.ToString());
+                };
+
+                _databaseLoggerServiceBase.Error(exceptionModel);
+
+                _fileLoggerServiceBase.Error(exceptionModel);
+
+                return httpContext.Response.WriteAsync(exceptionModel.ToString());
             }
+
+            _databaseLoggerServiceBase.Error(e);
+            _fileLoggerServiceBase.Error(e);
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {

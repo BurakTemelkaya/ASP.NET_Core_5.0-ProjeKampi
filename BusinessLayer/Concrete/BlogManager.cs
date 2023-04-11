@@ -99,7 +99,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(value);
         }
 
-        [LogAspect(typeof(DatabaseLogger))]
+
         public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count)
         {
             var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count);
@@ -368,8 +368,6 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        [LogAspect(typeof(FileLogger))]
-        [LogAspect(typeof(DatabaseLogger))]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
         {   
             List<Blog> values = new();
