@@ -17,9 +17,8 @@ namespace CoreDemo.ViewComponents.Blog
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var blogs = await _blogService.GetBlogListWithCategoryAsync();
-            var values = await blogs.Data.TakeLast(10).ToListAsync();
-            return View(values);
+            var blogs = await _blogService.GetBlogListWithCategoryAsync(10);
+            return View(blogs.Data);
         }
     }
 }

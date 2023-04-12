@@ -16,7 +16,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Blog>> GetBlogByIDAsync(int id);
         Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
         Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null);
-        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0,Expression<Func<Blog, bool>> filter = null);
 
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);

@@ -30,7 +30,17 @@ namespace CoreLayer.Utilities.FileUtilities
                     var newImageName = Guid.NewGuid() + extension;
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
 
-                    image.Save(location);
+                    var myImageCodecInfo = GetTypeInfo("image/" + extension[1..]);
+
+                    var myEncoder = System.Drawing.Imaging.Encoder.Quality;
+
+                    var myEncoderParameters = new EncoderParameters(1);
+
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 1L);
+
+                    myEncoderParameters.Param[0] = myEncoderParameter;
+
+                    image.Save(location, myImageCodecInfo, myEncoderParameters);
 
                     return folderLocation + newImageName;
                 }
@@ -106,6 +116,19 @@ namespace CoreLayer.Utilities.FileUtilities
                 Console.WriteLine(e.Message);
                 return null;
             }
+        }
+
+        private static ImageCodecInfo GetTypeInfo(String mimeType)
+        {
+            int j;
+            ImageCodecInfo[] encoders;
+            encoders = ImageCodecInfo.GetImageEncoders();
+            for (j = 0; j < encoders.Length; ++j)
+            {
+                if (encoders[j].MimeType == mimeType)
+                    return encoders[j];
+            }
+            return null;
         }
 
     }

@@ -37,9 +37,9 @@ namespace BusinessLayer.Concrete
             _categoryService = categoryService;
         }
 
-        public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryandCommentAsync(filter);
+            var values = await _blogDal.GetListWithCategoryandCommentAsync(filter, take);
 
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
@@ -369,7 +369,7 @@ namespace BusinessLayer.Concrete
         }
 
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
-        {   
+        {
             List<Blog> values = new();
 
             bool isSuccess = true;

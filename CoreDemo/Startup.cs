@@ -47,7 +47,7 @@ namespace CoreDemo
 
             services.AddDbContext<Context>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SQLServer"))
-            , ServiceLifetime.Transient);
+            , ServiceLifetime.Scoped);
 
             CultureInfo[] supportedCultures = new[]
             {
@@ -126,8 +126,6 @@ namespace CoreDemo
 
             services.IocBusinessInstall();
 
-            services.AddSingleton<LoggerServiceBase>();
-
             services.AddDependencyResolvers(new ICoreModule[] {
                new CoreModule()
             });
@@ -139,7 +137,7 @@ namespace CoreDemo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                log4net.Util.LogLog.InternalDebugging = true;
+                //log4net.Util.LogLog.InternalDebugging = true;
             }
             else
             {                
@@ -147,6 +145,8 @@ namespace CoreDemo
                 app.ConfigureCustomExceptionMiddleware();
                 app.UseHsts();
             }
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 

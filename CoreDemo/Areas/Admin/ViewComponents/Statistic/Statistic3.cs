@@ -43,8 +43,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             catch
             {
 
-                ViewBag.Euro = "Veri getirilemedi.";
-                ViewBag.Dolar = "Veri getirilemedi.";
+                ViewBag.Euro = "0";
+                ViewBag.Dolar = "0";
             }
             return View();
         }
