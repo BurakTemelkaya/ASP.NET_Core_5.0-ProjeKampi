@@ -36,7 +36,7 @@ namespace CoreLayer.Utilities.FileUtilities
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 1L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 85L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
@@ -99,8 +99,8 @@ namespace CoreLayer.Utilities.FileUtilities
                         {
                             var resultStream = new MemoryStream();
 
-                            bitmap.Save(resultStream, ImageFormat.Png);
-                            return new FormFile(resultStream, 0, resultStream.Length, "test.png", "deneme.png")
+                            bitmap.Save(resultStream, ImageFormat.Jpeg);
+                            return new FormFile(resultStream, 0, resultStream.Length, "test.jpeg", "deneme.jpeg")
                             {
                                 Headers = new HeaderDictionary(),
                                 ContentType = "image/*"
