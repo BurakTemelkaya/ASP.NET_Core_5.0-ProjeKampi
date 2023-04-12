@@ -140,6 +140,11 @@ namespace BusinessLayer.Concrete
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
+            if (blog.BlogImage == null)
+            {
+                return new ErrorResult("Blog resmi yüklenemedi.");
+            }
+
             if (blog.BlogThumbnailImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
@@ -152,6 +157,11 @@ namespace BusinessLayer.Concrete
             else if (blogThumbnailImage != null)
             {
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            }
+
+            if (blog.BlogThumbnailImage == null)
+            {
+                return new ErrorResult("Blog küçük resmi yüklenemedi.");
             }
 
             var result = BusinessRules.Run(UserNotEmpty(user), BlogImageNotEmpty(blog.BlogImage), BlogThumbnailNotEmpty(blog.BlogThumbnailImage));
@@ -200,6 +210,11 @@ namespace BusinessLayer.Concrete
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
+            if (blog.BlogImage == null)
+            {
+                return new ErrorResult("Blog resmi, yüklenemedi.");
+            }
+
 
             if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
             {
@@ -225,6 +240,10 @@ namespace BusinessLayer.Concrete
                 DeleteFileManager.DeleteFile(oldValue.BlogContent);
             }
 
+            if (blog.BlogThumbnailImage == null)
+            {
+                return new ErrorResult("Blog küçük resmi, yüklenemedi.");
+            }
 
 
             var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
@@ -266,6 +285,11 @@ namespace BusinessLayer.Concrete
                 blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
+            if (blog.BlogImage == null)
+            {
+                return new ErrorResult("Blog resmi, yüklenemedi");
+            }
+
             if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
             {
                 blog.BlogThumbnailImage = oldValue.BlogThumbnailImage;
@@ -275,7 +299,6 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
                 {
-                    DeleteFileManager.DeleteFile(blog.BlogImage);
                     return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
                 }
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
@@ -285,6 +308,11 @@ namespace BusinessLayer.Concrete
             {
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
+            }
+
+            if (blog.BlogThumbnailImage == null)
+            {
+                return new ErrorResult("Blog resmi, yüklenemedi");
             }
 
 

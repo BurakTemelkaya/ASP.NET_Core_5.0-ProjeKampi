@@ -111,9 +111,14 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> EditBlog(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
-            var categoryList = await _categoryService.GetCategoryListAsync();
-            ViewBag.CategoryList = categoryList.Data;
+            var result = await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
+            if (!result.Success)
+            {
+                var categoryList = await _categoryService.GetCategoryListAsync();
+                ViewBag.CategoryList = categoryList.Data;
+                ModelState.AddModelError("", result.Message);
+                return View(blog);
+            }
             return RedirectToAction("BlogListByWriter");
         }
     }

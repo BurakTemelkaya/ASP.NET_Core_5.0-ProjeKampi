@@ -84,9 +84,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             var result = await _blogService.BlogAdminUpdateAsync(blog, blogImage, blogThumbnailImage);
             if (!result.Success)
             {
+                ViewBag.CategoryList = _categoryService.GetCategoryListAsync().Result.Data;
                 ModelState.AddModelError("", result.Message);
-            }
-            ViewBag.CategoryList = _categoryService.GetCategoryListAsync().Result.Data;
+                return View(blog);
+            }          
             return RedirectToAction("Index");
         }
 

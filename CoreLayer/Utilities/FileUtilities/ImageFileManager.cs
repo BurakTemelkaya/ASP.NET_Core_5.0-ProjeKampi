@@ -30,13 +30,13 @@ namespace CoreLayer.Utilities.FileUtilities
                     var newImageName = Guid.NewGuid() + extension;
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
 
-                    var myImageCodecInfo = GetTypeInfo("image/" + extension[1..]);
+                    var myImageCodecInfo = GetTypeInfo("image/jpeg");
 
                     var myEncoder = System.Drawing.Imaging.Encoder.Quality;
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 85L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 90L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
