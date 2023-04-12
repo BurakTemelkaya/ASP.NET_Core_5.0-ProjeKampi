@@ -27,13 +27,13 @@ namespace BusinessLayer.DependencyResolvers
         {
             //services ioc
 
-            services.AddSingleton<IAboutService, AboutManager>();
+            services.AddScoped<IAboutService, AboutManager>();
 
             services.AddScoped<IBlogService, BlogManager>();
 
             services.AddScoped<IBusinessUserService, UserBusinessManager>();
 
-            services.AddSingleton<ICategoryService, CategoryManager>();
+            services.AddScoped<ICategoryService, CategoryManager>();
 
             services.AddScoped<ICommentService, CommentManager>();
 

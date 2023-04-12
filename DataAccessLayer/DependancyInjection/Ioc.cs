@@ -17,9 +17,9 @@ namespace DataAccessLayer.DependancyInjection
         public static void IocDataAccessInstall(this IServiceCollection services)
         {
 
-            services.AddSingleton<ICategoryDal, EfCategoryRepository>();
+            services.AddScoped<ICategoryDal, EfCategoryRepository>();
 
-            services.AddSingleton<IAboutDal, EfAboutRepository>();
+            services.AddScoped<IAboutDal, EfAboutRepository>();
 
             services.AddScoped<IBlogDal, EfBlogRepository>();
 
