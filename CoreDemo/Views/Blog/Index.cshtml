@@ -47,12 +47,7 @@
 
                         if (item.Comments.Count(x => x.CommentStatus) > 0)
                         {
-                            int blogScoreSum = 0;
-                            foreach (var score in item.Comments.Where(x=> x.CommentStatus))
-                            {
-                                blogScoreSum += score.BlogScore;
-                            }
-                            BlogScore = blogScoreSum / @item.Comments.Count(x => x.CommentStatus);
+                            BlogScore = Math.Round(item.Comments.Average(x => x.BlogScore),1);
                         }
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@item.BlogID">
