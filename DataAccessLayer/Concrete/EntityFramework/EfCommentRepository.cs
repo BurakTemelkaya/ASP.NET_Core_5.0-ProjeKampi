@@ -28,16 +28,20 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<Comment>> GetListWithCommentByBlogAsync(int take = 0, int skip = 0)
+        public async Task<List<Comment>> GetListWithCommentByBlogAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int skip = 0)
         {
             if (take > 0)
             {
-                return await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Skip(skip).Take(take).ToListAsync();
+                return filter == null ?
+                    await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Skip(skip).Take(take).ToListAsync() :
+                    await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Where(filter).Skip(skip).Take(take).ToListAsync();
             }
-            return await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).ToListAsync();
+            return filter == null ?
+                await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).ToListAsync() :
+                await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Where(filter).ToListAsync();
         }
 
-        public async Task<List<Comment>> GetListWithCommentByBlogandPagingAsync(int take = 0, int page = 1)
+        public async Task<List<Comment>> GetListWithCommentByBlogandPagingAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int page = 1)
         {
             int skip = 0;
             if (page > 1)
@@ -45,7 +49,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 skip = take * (page - 1);
             }
 
-            int count = await GetCountAsync();
+            int count = await GetCountAsync(filter);
 
             if (skip >= count)
             {
@@ -53,7 +57,14 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 page = 1;
             }
 
-            return AddNullObject<Comment>.GetListByPaging(await GetListWithCommentByBlogAsync(take, skip), take, page, count);
+            return AddNullObject<Comment>.GetListByPaging(await GetListWithCommentByBlogAsync(filter, take, skip), take, page, count);
+        }
+
+        public async Task<Comment> GetCommentByBlog(Expression<Func<Comment, bool>> filter = null)
+        {
+            return filter == null ?
+                await Context.Comments.Include(x => x.Blog).FirstAsync() :
+                await Context.Comments.Include(x => x.Blog).FirstAsync(filter);
         }
     }
 }

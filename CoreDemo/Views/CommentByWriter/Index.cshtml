@@ -1,34 +1,42 @@
-﻿@model IPagedList<Blog>
+﻿@model IPagedList<Comment>
 @{
-    ViewData["Title"] = "Bloglarım";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
+    string comment = "";
 }
-<h1>Blogların</h1>
-<br />
+
+<h1>Yorumlarım</h1>
+
 <table class="table table-bordered table-hover table-responsive">
     <thead>
         <tr>
             <th scope="col" class="col-1">ID</th>
-            <th scope="col" class="col-2">Blog Başlığı</th>   
-            <th scope="col" class="col-3">Blog İçeriği</th>
-            <th scope="col" class="col-1">Kategori</th>
+            <th scope="col" class="col-1">Blog Başlığı</th>
+            <th scope="col" class="col-2">Yorum Başlığı</th>
+            <th scope="col" class="col-3">Yorum İçeriği</th>
+            <th scope="col" class="col-3">Yorum Yazan</th>
             <th scope="col" class="col-1">Durum</th>
             <th scope="col" class="col-1">Oluşturma Tarihi</th>
             <th scope="col" class="col-1">Sil</th>
-            <th scope="col" class="col-1">Düzenle</th>
             <th scope="col" class="col-1">Durumunu Değiştir</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            comment = item.CommentContent;
+            if (comment.Length > 50)
+            {
+                comment = comment.Substring(0, 50) + "...";
+            }
             <tr>
-                <th scope="row">@item.BlogID</th>
-                <td>@item.BlogTitle</td>
-                <td>@item.BlogContent ...</td>
-                <td>@item.Category.CategoryName</td>
+                <td>@item.Blog.BlogTitle</td>
+                <th scope="row">@item.CommentID</th>
+                <td>@item.CommentTitle</td>
+                <td>@comment</td>
+                <td>@item.CommentUserName</td>
                 <td>
-                    @if (item.BlogStatus)
+                    @if (item.CommentStatus)
                     {
                         <span class="badge badge-success">Aktif</span>
                     }
@@ -37,30 +45,27 @@
                         <span class="badge badge-secondary">Pasif</span>
                     }
                 </td>
-                <td>@item.BlogCreateDate.ToString("dd.MM.yyyy")</td>
-                <td><a href="/Blog/DeleteBlog/@item.BlogID" class="btn btn-danger Sil"><i class="far fa-trash-alt">&nbsp;Sil</i></a></td>
-                <td><a href="/Blog/EditBlog/@item.BlogID" class="btn btn-warning">Düzenle</a></td>
+                <td>@item.CommentDate.ToString("dd.MM.yyyy")</td>
+                <td><a href="/CommentByWriter/DeleteComment/@item.CommentID" class="btn btn-danger Sil"><i class="far fa-trash-alt">&nbsp;Sil</i></a></td>
                 <td>
 
-                    @if (item.BlogStatus)
+                    @if (item.CommentStatus)
                     {
-                        <a href="/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-secondary DurumPasif">Pasif Yap</a>
+                        <a href="/CommentByWriter/ChangeStatusComment/@item.CommentID" class="btn btn-gradient-secondary DurumPasif">Pasif Yap</a>
                     }
                     else
                     {
-                        <a href="/Blog/ChangeStatusBlog/@item.BlogID" class="btn btn-gradient-success DurumAktif">Aktif Yap</a>
+                        <a href="/CommentByWriter/ChangeStatusComment/@item.CommentID" class="btn btn-gradient-success DurumAktif">Aktif Yap</a>
                     }
 
                 </td>
             </tr>
         }
     </tbody>
-
 </table>
-
 <br />
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("BlogListByWriter", new { page }),
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
         new PagedListRenderOptions
         {
         LinkToFirstPageFormat="<<İlk",
@@ -74,15 +79,13 @@
         })
 <br />
 
-<a href="/Blog/BlogAdd" class="btn btn-primary">Yeni Blog Oluştur</a>
-
 <script>
     $('.Sil').click(function (e) {
         e.preventDefault();
         var linkURL = $(this).attr("href");
         Swal.fire({
             title: 'UYARI!',
-            text: "Blog yazısını silmek istediğinize emin misiniz?",
+            text: "Yorumu silmek istediğinize emin misiniz?",
             icon: 'warning',
             showCancelButton: true,
             showCancelButton: true,
@@ -95,7 +98,7 @@
                 window.location.href = linkURL;
                 Swal.fire(
                     'Başarılı!',
-                    'Seçilen Blog Silindi .',
+                    'Seçilen Yorum Silindi .',
                     'success'
                 )
             }
@@ -107,7 +110,7 @@
         var linkURL = $(this).attr("href");
         Swal.fire({
             title: 'UYARI!',
-            text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            text: 'Yorumu Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
             icon: 'warning',
             showCancelButton: true,
             showCancelButton: true,
@@ -131,7 +134,7 @@
         var linkURL = $(this).attr("href");
         Swal.fire({
             title: 'UYARI!',
-            text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+            text: 'Yorumu Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
             icon: 'warning',
             showCancelButton: true,
             showCancelButton: true,
@@ -151,3 +154,4 @@
         })
     });
 </script>
+

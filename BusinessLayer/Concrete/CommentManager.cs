@@ -16,9 +16,11 @@ namespace BusinessLayer.Concrete
     public class CommentManager : ICommentService
     {
         private readonly ICommentDal _commentDal;
-        public CommentManager(ICommentDal commentDal)
+        private readonly IBusinessUserService _userService;
+        public CommentManager(ICommentDal commentDal, IBusinessUserService userService)
         {
             _commentDal = commentDal;
+            _userService = userService;
         }
 
         [ValidationAspect(typeof(CommentValidator))]
@@ -35,9 +37,9 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(await _commentDal.GetCountAsync(filter));
         }
 
-        public async Task<IDataResult<List<Comment>>> GetListByIdAsync(int id)
+        public async Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id)
         {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id));
+            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id && x.CommentStatus));
         }
 
         public async Task<IDataResult<List<Comment>>> GetListAsync(Expression<Func<Comment, bool>> filter = null)
@@ -94,7 +96,118 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<List<Comment>>> GetCommentListWithBlogByPagingAsync(int take = 0, int page = 0)
         {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(take, page));
+            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(null, take, page));
+        }
+
+        public async Task<IDataResult<List<Comment>>> GetCommentListByWriterandPaging(string userName, int take, int page)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var data = await _commentDal.GetListWithCommentByBlogandPagingAsync(x => x.Blog.WriterID == user.Data.Id, take, page);
+            if (data != null)
+            {
+                return new SuccessDataResult<List<Comment>>(data);
+            }
+            return new ErrorDataResult<List<Comment>>("Kullanıcıya ait yorumlar bulunamadı.");
+        }
+
+        public async Task<IResult> DeleteCommentByWriter(string userName, int id)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment.Blog.WriterID == user.Data.Id)
+            {
+                var result = await TDeleteAsync(comment);
+                if (result.Success)
+                {
+                    return new SuccessResult("Yorum silindi");
+                }
+                return new ErrorResult("Yorum silinemedi.");
+            }
+            return new ErrorResult("Yorum bu yazara ait değil");
+        }
+
+        public async Task<IResult> DisabledCommentByWriter(string userName, int id)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment.Blog.WriterID == user.Data.Id)
+            {
+                if (!comment.CommentStatus)
+                {
+                    return new SuccessResult("Yorum zaten pasif.");
+                }
+                comment.CommentStatus = false;
+                var result = await TUpdateAsync(comment);
+                if (result.Success)
+                {
+                    return new SuccessResult("Yorum pasifleştirildi.");
+                }
+                return new ErrorResult("Yorum pasifleştirilemedi.");
+            }
+            return new ErrorResult("Yorum bu yazara ait değil");
+        }
+
+        public async Task<IResult> EnabledCommentByWriter(string userName, int id)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment.Blog.WriterID == user.Data.Id)
+            {
+                if (comment.CommentStatus)
+                {
+                    return new SuccessResult("Yorum zaten aktif.");
+                }
+                comment.CommentStatus = true;
+                var result = await TUpdateAsync(comment);
+                if (result.Success)
+                {
+                    return new SuccessResult("Yorum aktifleştirildi.");
+                }
+                return new ErrorResult("Yorum aktifleştirilemedi.");
+            }
+            return new ErrorResult("Yorum bu yazara ait değil");
+        }
+
+        public async Task<IResult> ChangeStatusCommentByWriter(string userName, int id)
+        {
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment == null)
+            {
+                return new ErrorResult("Yorum bulunamadı");
+            }
+            if (comment.CommentStatus)
+            {
+                var result = await DisabledCommentByWriter(userName, id);
+                if (!result.Success)
+                {
+                    return new ErrorResult(result.Message);
+                }
+            }
+            else
+            {
+                var result = await EnabledCommentByWriter(userName, id);
+                if (!result.Success)
+                {
+                    return new ErrorResult(result.Message);
+                }
+            }
+            return new SuccessResult();
+        }
+
+        public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
+        {
+            var user = await _userService.FindByUserNameAsync(userName);
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment != null)
+            {
+                if (comment.Blog.WriterID == user.Data.Id)
+                {
+                    return new SuccessDataResult<Comment>(comment);
+                }
+                return new ErrorDataResult<Comment>("Yorum kullanıcıya ait değil.");
+            }
+
+            return new ErrorDataResult<Comment>("Yorum bulunamadı.");
         }
     }
 }

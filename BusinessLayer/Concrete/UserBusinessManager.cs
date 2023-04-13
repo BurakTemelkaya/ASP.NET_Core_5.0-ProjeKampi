@@ -3,7 +3,9 @@ using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Logging;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.MailUtilities;
@@ -102,7 +104,7 @@ namespace BusinessLayer.Concrete
             value.Data.UserName = user.UserName;
             value.Data.NameSurname = user.NameSurname;
             value.Data.Email = user.Email;
-            value.Data.About= user.About;
+            value.Data.About = user.About;
             value.Data.City = user.City;
 
             if (user.Password != null && user.Password == user.PasswordAgain)
@@ -120,20 +122,20 @@ namespace BusinessLayer.Concrete
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());               
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
 
             else if (user.ProfileImageFile != null)
             {
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile,ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
 
             else
             {
                 user.ImageUrl = value.Data.ImageUrl;
             }
-            
+
 
             var result = await _userManager.UpdateAsync(value.Data);
             if (result.Succeeded)
@@ -233,6 +235,7 @@ namespace BusinessLayer.Concrete
             else
                 return new SuccessDataResult<List<AppUser>>(await _userManager.Users.Where(filter).ToListAsync());
         }
+
         /// <summary>
         /// Kullanıcıları belirli bir süre yasaklamayı sağlayan mekanizma.
         /// Adminlerin birbirini banlayamaması için kontrol mekanizması var.
@@ -242,6 +245,7 @@ namespace BusinessLayer.Concrete
         /// <param name="expiration"></param>
         /// <param name="banMessageContent"></param>
         /// <returns></returns>
+        [LogAspect(typeof(DatabaseLogger))]
         public async Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
             var user = await GetByIDAsync(id);

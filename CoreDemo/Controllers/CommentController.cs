@@ -43,7 +43,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<PartialViewResult> CommentListByBlog(int id)
         {
-            var values = await _commentService.GetListByIdAsync(id);
+            var values = await _commentService.GetListByBlogIdAsync(id);
             return PartialView(values.Data);
         }
     }
