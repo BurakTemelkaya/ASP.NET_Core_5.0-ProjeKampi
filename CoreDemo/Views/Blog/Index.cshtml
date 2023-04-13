@@ -45,14 +45,14 @@
                             blogTitle = blogTitle.Substring(0, 50) + "...";
                         }
 
-                        if (item.Comments.Count > 0)
+                        if (item.Comments.Count(x => x.CommentStatus) > 0)
                         {
                             int blogScoreSum = 0;
                             foreach (var score in item.Comments)
                             {
                                 blogScoreSum += score.BlogScore;
                             }
-                            BlogScore = blogScoreSum / item.Comments.Count;
+                            BlogScore = blogScoreSum / @item.Comments.Count(x => x.CommentStatus);
                         }
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@item.BlogID">
@@ -72,7 +72,7 @@
                                     </li>
                                     <li>
                                         <a href="/Blog/BlogReadAll/@item.BlogID">
-                                            <i class="fa fa-comment"></i> @item.Comments.Count
+                                            <i class="fa fa-comment"></i> @item.Comments.Count(x => x.CommentStatus)
                                         </a>
                                     </li>
                                     <li>
@@ -82,12 +82,12 @@
                                     </li>
 
                                 </ul>
-                                
+
 
                                 <h5 class="card-title">
                                     <a href="/Blog/BlogReadAll/@item.BlogID">@blogTitle</a>
                                 </h5>
-                                
+
 
                                 <p class="card-text mb-3">
                                     @if (item.BlogContent != null && item.BlogContent.Length > 100)
@@ -102,7 +102,8 @@
                                 </p>
                             </div>
                         </div>
-                        @if(BlogScore>0){
+                        @if (BlogScore > 0)
+                        {
                             BlogScore = 0;
                         }
                     }

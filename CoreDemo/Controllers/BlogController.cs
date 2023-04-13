@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -52,11 +53,16 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
-            ViewBag.CommentCount = _commentService.GetCountAsync(x => x.BlogID == id).Result.Data;
-            var comments = await _commentService.TGetByFilterAsync(x => x.BlogID == id);
+
+            var comments = await _commentService.GetListAsync(x => x.BlogID == id && x.CommentStatus);
+            ViewBag.CommentCount = comments.Data.Count;
             if (comments.Data != null)
             {
-                ViewBag.Star = comments.Data.BlogScore;
+                if (comments.Data.Count > 0)
+                {
+                    double star = comments.Data.Average(x => x.BlogScore);
+                    ViewBag.Star = star;
+                }               
             }
             var writer = await _businessUserService.GetByIDAsync(value.Data.WriterID.ToString());
             ViewBag.WriterId = writer.Data.Id;
