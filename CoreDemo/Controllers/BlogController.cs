@@ -61,7 +61,7 @@ namespace CoreDemo.Controllers
                 if (comments.Data.Count > 0)
                 {
                     double star = comments.Data.Average(x => x.BlogScore);
-                    ViewBag.Star = star;
+                    ViewBag.Star = Math.Round(star,1);
                 }               
             }
             var writer = await _businessUserService.GetByIDAsync(value.Data.WriterID.ToString());
