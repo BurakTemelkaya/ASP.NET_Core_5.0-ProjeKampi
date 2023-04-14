@@ -99,6 +99,8 @@ Sistem hata verdiğinde loglama ve istediğim bir metodun üstüne log attirubut
 
 Yazarların kendi bloglarına yapılan yorumları silme, pasifleştirme, aktifleştirme işlemi yapabilmesi.
 
+Cacheleme mekanizması eklendi.
+
 <h3>Yapmak İstediklerim</h3>
 
 About düzenleme kısmı ekle.
