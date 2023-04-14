@@ -1,17 +1,27 @@
-﻿using CoreLayer.Utilities.Results;
+﻿using CoreDemo.Models;
+using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface ICategoryService : IGenericService<Category>
+    public interface ICategoryService
     {
-        Task<IDataResult<List<SelectListItem>>> GetCategoryListAsync();
+        Task<IResult> TAddAsync(Category t);
+        Task<IResult> TDeleteAsync(Category t);
+        Task<IResult> TUpdateAsync(Category t);
+        Task<IDataResult<List<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null);
+        Task<IDataResult<Category>> TGetByIDAsync(int id);
+        Task<IDataResult<Category>> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null);
+        Task<IDataResult<int>> GetCountAsync(Expression<Func<Category, bool>> filter = null);
+        Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync();
         Task<IResult> ChangedStatusAsync(int id);
+        Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCount();
     }
 }

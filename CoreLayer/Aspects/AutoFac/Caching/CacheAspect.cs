@@ -16,7 +16,7 @@ namespace CoreLayer.Aspects.AutoFac.Caching
         private readonly int _duration;
         private readonly ICacheManager _cacheManager;
 
-        public CacheAspect(int duration = 1440)
+        public CacheAspect(int duration = 3600)
         {
             _duration = duration;
             _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();

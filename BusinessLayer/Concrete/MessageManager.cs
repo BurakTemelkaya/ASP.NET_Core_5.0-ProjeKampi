@@ -2,6 +2,7 @@
 using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
 using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
@@ -31,6 +32,7 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -58,14 +60,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Message>>(values.OrderByDescending(x => x.MessageDate).ToList());
         }
 
-        public async Task<IDataResult<List<Message>>> GetListAsync(Expression<Func<Message, bool>> filter = null)
-        {
-            var values = await _messageDal.GetListAllAsync(filter);
-            foreach (var item in values)
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
-            return new SuccessDataResult<List<Message>>(values);
-        }
-
+        [CacheRemoveAspect("IMessageService.Get")]
         [ValidationAspect(typeof(MessageValidator))]
         public async Task<IResult> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
@@ -89,6 +84,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> DeleteMessageAsync(int id, string userName)
         {
             var message = await GetByIdAsync(id);
@@ -105,6 +101,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Message>> GetByFilterAsync(Expression<Func<Message, bool>> filter = null)
         {
             var value = await _messageDal.GetByFilterAsync(filter);
@@ -112,6 +109,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Message>(value);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Message>> GetByIdAsync(int id)
         {
             var value = await _messageDal.GetByIDAsync(id);
@@ -119,6 +117,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Message>(value);
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> UpdateMessageAsync(Message t, string userName)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -143,11 +142,13 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Message, bool>> filter = null)
         {
             return new SuccessDataResult<int>(await _messageDal.GetCountAsync(filter));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
         {
             var receiverUser = await _userService.FindByUserNameAsync(userName);
@@ -169,6 +170,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(value.Data);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -179,6 +181,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Message>>(values);
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> MarkChangedAsync(int messageId, string userName)
         {
             IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
@@ -205,6 +208,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -231,6 +235,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<Message>("Mesaj bulunamadı");
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -248,11 +253,13 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Message>(value);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Message>> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
         {
             return new SuccessDataResult<Message>(await _messageDal.GetByFilterAsync(filter));
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> MarkUsReadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
@@ -281,6 +288,7 @@ namespace BusinessLayer.Concrete
 
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> MarkUsUnreadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
@@ -308,6 +316,7 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> DeleteMessagesAsync(List<string> ids, string userName)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -336,6 +345,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> MarksUsReadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();
@@ -374,6 +384,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> MarksUsUnreadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();

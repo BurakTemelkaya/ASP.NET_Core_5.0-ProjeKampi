@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace EntityLayer.Concrete
         public string CategoryName { get; set; }
         public string CategoryDescription { get; set; }
         public bool CategoryStatus { get; set; }
-        public List<Blog> Blogs { get; set; }
+        public virtual ICollection<Blog> Blogs { get; set; }
     }
 }

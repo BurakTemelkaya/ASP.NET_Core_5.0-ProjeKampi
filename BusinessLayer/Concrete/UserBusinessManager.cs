@@ -3,6 +3,7 @@ using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Logging;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
@@ -34,6 +35,7 @@ namespace BusinessLayer.Concrete
             _mailService = mailService;
         }
 
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         [ValidationAspect(typeof(UserSignUpDtoValidator))]
         public async Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
         {
@@ -70,18 +72,22 @@ namespace BusinessLayer.Concrete
 
             return new ErrorDataResult<IdentityResult>(result);
         }
+
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IResult> CastUserRole(AppUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IResult> DeleteUserAsync(AppUser t)
         {
             await _userManager.DeleteAsync(t);
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<AppUser>> GetByIDAsync(string id)
         {
             if (id != string.Empty)
@@ -91,6 +97,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<AppUser>();
         }
 
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user)
         {
@@ -149,6 +156,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<IdentityResult>(result);
         }
 
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user)
         {
@@ -173,6 +181,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<IdentityResult>(result);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<UserDto>> FindByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -185,6 +194,8 @@ namespace BusinessLayer.Concrete
 
             return new ErrorDataResult<UserDto>("Kullanıcı bulunamadı.");
         }
+
+        [CacheAspect]
         public async Task<IDataResult<UserDto>> FindByUserNameForUpdateAsync(string userName)
         {
             var user = await FindByUserNameAsync(userName);
@@ -202,6 +213,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<UserDto>(userData);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<UserDto>> FindByMailAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);
@@ -210,12 +222,14 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<UserDto>(userDto);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user)
         {
             var value = await _userManager.GetRolesAsync(user);
             return new SuccessDataResult<List<string>>(value.ToList());
         }
 
+        [CacheAspect]
         public async Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
@@ -228,6 +242,8 @@ namespace BusinessLayer.Concrete
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Kullanıcı listesi döner.</returns>
+        
+        [CacheAspect]
         public async Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
@@ -245,6 +261,7 @@ namespace BusinessLayer.Concrete
         /// <param name="expiration"></param>
         /// <param name="banMessageContent"></param>
         /// <returns></returns>
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         [LogAspect(typeof(DatabaseLogger))]
         public async Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
@@ -282,6 +299,7 @@ namespace BusinessLayer.Concrete
         /// </summary>
         /// <param name="id">Kullanıcının id değeri</param>
         /// <returns>İşlem başarılı ise true değil ise false döner.</returns>
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IResult> BanOpenUser(string id)
         {
             var user = await GetByIDAsync(id);
@@ -317,6 +335,8 @@ namespace BusinessLayer.Concrete
             }
             return new ErrorDataResult<string>("Bir hata oluştu.");
         }
+
+        [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);

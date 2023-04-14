@@ -78,7 +78,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> BlogAdd()
         {
-            var categoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategorySelectedListItemAsync();
             ViewBag.CategoryList = categoryList.Data;
             return View();
         }
@@ -86,7 +86,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> BlogAdd(Blog blog, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var value = await _blogService.BlogAddAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
-            var categoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategorySelectedListItemAsync();
             ViewBag.CategoryList = categoryList.Data;
             if (!value.Success)
             {
@@ -110,7 +110,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> EditBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
-            var categoryList = await _categoryService.GetCategoryListAsync();
+            var categoryList = await _categoryService.GetCategorySelectedListItemAsync();
             ViewBag.CategoryList = categoryList.Data;
             return View(blogValue.Data);
         }
@@ -120,7 +120,7 @@ namespace CoreDemo.Controllers
             var result = await _blogService.BlogUpdateAsync(blog, User.Identity.Name, blogImage, blogThumbnailImage);
             if (!result.Success)
             {
-                var categoryList = await _categoryService.GetCategoryListAsync();
+                var categoryList = await _categoryService.GetCategorySelectedListItemAsync();
                 ViewBag.CategoryList = categoryList.Data;
                 ModelState.AddModelError("", result.Message);
                 return View(blog);

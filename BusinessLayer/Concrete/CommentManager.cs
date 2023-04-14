@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
+using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
@@ -23,6 +24,7 @@ namespace BusinessLayer.Concrete
             _userService = userService;
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         [ValidationAspect(typeof(CommentValidator))]
         public async Task<IResult> TAddAsync(Comment comment)
         {
@@ -32,21 +34,25 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Comment, bool>> filter = null)
         {
             return new SuccessDataResult<int>(await _commentDal.GetCountAsync(filter));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id)
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id && x.CommentStatus));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetListAsync(Expression<Func<Comment, bool>> filter = null)
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(filter));
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> TDeleteAsync(Comment t)
         {
             if (t == null)
@@ -58,11 +64,13 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Comment>> TGetByFilterAsync(Expression<Func<Comment, bool>> filter = null)
         {
             return new SuccessDataResult<Comment>(await _commentDal.GetByFilterAsync(filter));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Comment>> TGetByIDAsync(int id)
         {
             var values = await _commentDal.GetByIDAsync(id);
@@ -72,6 +80,8 @@ namespace BusinessLayer.Concrete
             }
             return new ErrorDataResult<Comment>("Yorum bulunamadı.");
         }
+
+        [CacheRemoveAspect("ICommentService.Get")]
         [ValidationAspect(typeof(CommentValidator))]
         public async Task<IResult> TUpdateAsync(Comment t)
         {
@@ -89,16 +99,19 @@ namespace BusinessLayer.Concrete
 
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetBlogListWithCommentAsync()
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogAsync());
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetCommentListWithBlogByPagingAsync(int take = 0, int page = 0)
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(null, take, page));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetCommentListByWriterandPaging(string userName, int take, int page)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -110,6 +123,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<List<Comment>>("Kullanıcıya ait yorumlar bulunamadı.");
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> DeleteCommentByWriter(string userName, int id)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -126,6 +140,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult("Yorum bu yazara ait değil");
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> DisabledCommentByWriter(string userName, int id)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -147,6 +162,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult("Yorum bu yazara ait değil");
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> EnabledCommentByWriter(string userName, int id)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -168,6 +184,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult("Yorum bu yazara ait değil");
         }
 
+        [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> ChangeStatusCommentByWriter(string userName, int id)
         {
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
@@ -194,6 +211,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
         {
             var user = await _userService.FindByUserNameAsync(userName);

@@ -22,6 +22,7 @@ namespace BusinessLayer.Concrete
         {
             _contactDal = contactDal;
         }
+
         [ValidationAspect(typeof(ContactValidator))]
         public async Task<IResult> ContactAddAsync(Contact contact)
         {

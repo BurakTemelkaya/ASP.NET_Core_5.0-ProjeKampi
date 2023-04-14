@@ -16,13 +16,12 @@ namespace CoreDemo.ViewComponents.About
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var blogs = await _aboutService.GetListAsync();
-            var value = blogs.Data.First();
-            if (value.AboutDetails1.Length > 475)
+            var value = await _aboutService.GetFirst();
+            if (value.Data.AboutDetails1.Length > 475)
             {
-                value.AboutDetails1 = value.AboutDetails1.Substring(0, 475) + "...";
+                value.Data.AboutDetails1 = value.Data.AboutDetails1[..475] + "...";
             }
-            return View(value);
+            return View(value.Data);
         }
     }
 }

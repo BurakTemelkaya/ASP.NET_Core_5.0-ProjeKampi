@@ -21,6 +21,7 @@ using BusinessLayer.Constants;
 using CoreLayer.Aspects.AutoFac.Logging;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Aspects.AutoFac.Exception;
+using CoreLayer.Aspects.AutoFac.Caching;
 
 namespace BusinessLayer.Concrete
 {
@@ -37,6 +38,7 @@ namespace BusinessLayer.Concrete
             _categoryService = categoryService;
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null)
         {
             var values = await _blogDal.GetListWithCategoryandCommentAsync(filter, take);
@@ -47,6 +49,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
             var values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(filter, take, page);
@@ -62,6 +65,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -75,6 +79,8 @@ namespace BusinessLayer.Concrete
             }
             return new SuccessDataResult<List<Blog>>(values);
         }
+
+        [CacheAspect]
         public async Task<IDataResult<Blog>> GetBlogByIDAsync(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
@@ -84,6 +90,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(value);
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id)
         {
 
@@ -99,7 +106,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(value);
         }
 
-
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count)
         {
             var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count);
@@ -112,6 +119,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(value.OrderByDescending(x => x.BlogID).ToList());
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id)
         {
             if (id == 0)
@@ -121,6 +129,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(await _blogDal.GetListAllAsync(x => x.WriterID == id));
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResult> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -178,6 +187,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
@@ -257,6 +267,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
@@ -328,6 +339,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> DeleteBlogAsync(Blog blog, string userName)
         {
             var user = await _userService.FindByUserNameAsync(userName);
@@ -340,11 +352,13 @@ namespace BusinessLayer.Concrete
             return new ErrorResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
         {
             return new SuccessDataResult<int>(await _blogDal.GetCountAsync(filter));
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0)
         {
             var values = await _blogDal.GetListAllAsync(filter, take);
@@ -353,6 +367,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> ChangedBlogStatusAsync(int id, string userName)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
@@ -376,6 +391,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(await _blogDal.GetByIDAsync(id));
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> DeleteBlogByAdminAsync(Blog blog)
         {
             await _blogDal.DeleteAsync(blog);
@@ -383,6 +399,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> ChangedBlogStatusByAdminAsync(int id)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
@@ -396,6 +413,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
         {
             List<Blog> values = new();

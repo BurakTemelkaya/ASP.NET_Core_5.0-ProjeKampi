@@ -15,18 +15,10 @@ namespace CoreDemo.ViewComponents.Writer
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _notificationService.GetListAsync(x => x.NotificationStatus == true
-            && x.NotificationStatus == true);
+            var result = await _notificationService.GetListByTakeAsync(3, x => x.NotificationStatus == true);
 
             if (result.Success)
             {
-                var values = result.Data;
-
-                if (values.Count > 3)
-                {
-                    values = await values.Take(3).ToListAsync();
-                }
-
                 return View(result.Data);
             }
 

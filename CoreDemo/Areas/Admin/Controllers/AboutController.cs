@@ -21,7 +21,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var value = await _aboutService.TGetByFilterAsync();
+            var value = await _aboutService.GetFirst();
             return View(value);
         }
         [HttpPost]
