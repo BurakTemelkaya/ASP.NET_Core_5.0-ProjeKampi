@@ -97,6 +97,8 @@ Admin panelinde sayfanın 2 kez yüklenmesine sebep olan hatayı düzeltilme.
 
 Sistem hata verdiğinde loglama ve istediğim bir metodun üstüne log attirubute ekliyerek loglama yapma.
 
+Yazarların kendi bloglarına yapılan yorumları silme, pasifleştirme, aktifleştirme işlemi yapabilmesi.
+
 <h3>Yapmak İstediklerim</h3>
 
 About düzenleme kısmı ekle.
