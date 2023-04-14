@@ -6,6 +6,7 @@ using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace CoreDemo.Controllers
             string id = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Name).Value;
             ViewBag.id = id;
             ViewBag.mail = mail;
-            ViewBag.Name = await _userManager.FindByMailAsync(mail);
+            ViewBag.Name = await _userManager.GetByMailAsync(mail);
             return View();
         }
         [AllowAnonymous]
@@ -51,7 +52,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> WriterEditProfile()
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
-            var writer = await _userManager.FindByUserNameForUpdateAsync(User.Identity.Name);
+            var writer = await _userManager.GetByUserNameForUpdateAsync(User.Identity.Name);
             return View(writer.Data);
         }
         [HttpPost]
@@ -59,12 +60,12 @@ namespace CoreDemo.Controllers
         {
             var oldValue = await _userManager.GetByIDAsync(userDto.Id.ToString());
             var result = await _userManager.UpdateUserAsync(userDto);
-            if (result != null)
+            if (result.Data.Errors.Count() > 0)
             {
                 foreach (var item in result.Data.Errors)
                 {
                     ModelState.AddModelError("Email", item.Description);
-                }                
+                }
                 ViewBag.Cities = await _writerCity.GetCityListAsync();
                 return View(userDto);
             }

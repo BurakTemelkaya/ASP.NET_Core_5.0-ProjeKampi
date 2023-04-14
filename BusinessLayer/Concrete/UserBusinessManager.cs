@@ -116,9 +116,9 @@ namespace BusinessLayer.Concrete
 
             if (user.Password != null && user.Password == user.PasswordAgain)
             {
-                bool checkPassword = await _userManager.CheckPasswordAsync(user, user.OldPassword);
+                bool checkPassword = await _userManager.CheckPasswordAsync(value.Data, user.OldPassword);
                 if (checkPassword)
-                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, user.Password);
+                    value.Data.PasswordHash = _userManager.PasswordHasher.HashPassword(value.Data, user.Password);
             }
 
             if (user.ImageUrl != null)
@@ -182,7 +182,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<UserDto>> FindByUserNameAsync(string userName)
+        public async Task<IDataResult<UserDto>> GetByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
 
@@ -196,9 +196,9 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<UserDto>> FindByUserNameForUpdateAsync(string userName)
+        public async Task<IDataResult<UserDto>> GetByUserNameForUpdateAsync(string userName)
         {
-            var user = await FindByUserNameAsync(userName);
+            var user = await GetByUserNameAsync(userName);
 
             if (!user.Success)
             {
@@ -214,7 +214,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<UserDto>> FindByMailAsync(string mail)
+        public async Task<IDataResult<UserDto>> GetByMailAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);
 

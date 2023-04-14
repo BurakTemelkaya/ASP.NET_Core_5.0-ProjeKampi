@@ -30,7 +30,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Cities = await _writerCity.GetCityListAsync();
-            var value = await _businessUserService.FindByUserNameForUpdateAsync(User.Identity.Name);
+            var value = await _businessUserService.GetByUserNameForUpdateAsync(User.Identity.Name);
             return View(value.Data);
         }
         [HttpPost]

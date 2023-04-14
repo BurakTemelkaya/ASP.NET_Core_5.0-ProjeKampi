@@ -26,7 +26,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _userService.FindByUserNameAsync(User.Identity.Name);
+            var result = await _userService.GetByUserNameAsync(User.Identity.Name);
             if (result.Success)
             {
                 var value = result.Data;

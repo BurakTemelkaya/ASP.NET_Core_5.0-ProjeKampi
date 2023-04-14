@@ -114,7 +114,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetCommentListByWriterandPaging(string userName, int take, int page)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var data = await _commentDal.GetListWithCommentByBlogandPagingAsync(x => x.Blog.WriterID == user.Data.Id, take, page);
             if (data != null)
             {
@@ -126,7 +126,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> DeleteCommentByWriter(string userName, int id)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment.Blog.WriterID == user.Data.Id)
             {
@@ -143,7 +143,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> DisabledCommentByWriter(string userName, int id)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment.Blog.WriterID == user.Data.Id)
             {
@@ -165,7 +165,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("ICommentService.Get")]
         public async Task<IResult> EnabledCommentByWriter(string userName, int id)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment.Blog.WriterID == user.Data.Id)
             {
@@ -214,7 +214,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment != null)
             {

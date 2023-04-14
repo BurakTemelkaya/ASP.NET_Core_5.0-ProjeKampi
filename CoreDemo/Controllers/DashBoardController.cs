@@ -19,7 +19,7 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userService.FindByUserNameAsync(User.Identity.Name);
+            var user = await _userService.GetByUserNameAsync(User.Identity.Name);
 
             ViewBag.ToplamBlogSayisi = _blogService.GetCountAsync(x => x.BlogStatus == true).Result.Data;
             ViewBag.YazarinBlogSayisi = _blogService.GetCountAsync(x => x.WriterID == user.Data.Id).Result.Data;

@@ -35,7 +35,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<int>> GetCountByUserNameAsync(string userName)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
             var count = await GetCountAsync(x => x.UserId == user.Data.Id);
             return new SuccessDataResult<int>(count.Data);
         }
@@ -64,7 +64,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<List<MessageDraft>>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             if (!user.Success)
             {
@@ -81,7 +81,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IResult> AddAsync(MessageDraft t, string userName)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             if (!user.Success)
             {
@@ -97,7 +97,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResult> DeleteAsync(int id, string userName)
         {
 
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(UserNotEmpty(user), IdNotEqualZero(id));
 
@@ -154,7 +154,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<MessageDraft>> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             if (!user.Success)
             {
@@ -173,7 +173,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<MessageDraft>> GetByIDAsync(int id, string userName)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(IdNotEqualZero(id), UserNotEmpty(user));
 
@@ -193,7 +193,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IResult> UpdateAsync(MessageDraft t, string userName)
         {
-            var user = await _businessUserService.FindByUserNameAsync(userName);
+            var user = await _businessUserService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(IdNotEqualZero(t.MessageDraftID), UserNotEmpty(user));
 

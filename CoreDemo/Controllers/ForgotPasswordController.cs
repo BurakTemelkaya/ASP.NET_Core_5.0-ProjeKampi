@@ -93,7 +93,7 @@ namespace CoreDemo.Controllers
                 @TempData["ErrorMessage"] = "Mailinizin geçerlilik süresi doldu.";
                 return View(resetPasswordDto);
             }
-            var user = await _businessUserService.FindByMailAsync(resetPasswordDto.Email);
+            var user = await _businessUserService.GetByMailAsync(resetPasswordDto.Email);
 
             await _signInManager.SignInAsync(user.Data, true);
             return RedirectToAction("Index", "Dashboard");

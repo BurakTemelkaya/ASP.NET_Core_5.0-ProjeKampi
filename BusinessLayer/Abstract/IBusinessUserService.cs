@@ -19,9 +19,9 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<AppUser>> GetByIDAsync(string id);
         Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user);
         Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user);
-        Task<IDataResult<UserDto>> FindByUserNameAsync(string userName);
-        Task<IDataResult<UserDto>> FindByUserNameForUpdateAsync(string userName);
-        Task<IDataResult<UserDto>> FindByMailAsync(string mail);
+        Task<IDataResult<UserDto>> GetByUserNameAsync(string userName);
+        Task<IDataResult<UserDto>> GetByUserNameForUpdateAsync(string userName);
+        Task<IDataResult<UserDto>> GetByMailAsync(string mail);
         Task<IResult> CastUserRole(AppUser user, string role);
         Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user);
         Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);

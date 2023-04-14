@@ -57,7 +57,7 @@ namespace CoreDemo.Controllers
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
             if (result.Success)
             {
-                var user = await _userService.FindByUserNameAsync(userSignUpDto.UserName);
+                var user = await _userService.GetByUserNameAsync(userSignUpDto.UserName);
                 await _signInManager.SignInAsync(user.Data, true);
                 return RedirectToAction("Index", "Dashboard");
             }

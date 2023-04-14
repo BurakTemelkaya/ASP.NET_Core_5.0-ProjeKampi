@@ -15,7 +15,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _businessUserService.FindByUserNameAsync(User.Identity.Name);
+            var user = await _businessUserService.GetByUserNameAsync(User.Identity.Name);
 
             var messageCount = await _messageService.GetCountAsync(x => x.ReceiverUserId == user.Data.Id);
             if (messageCount.Success)

@@ -68,7 +68,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var values = await _blogDal.GetListWithCategoryByWriterandPagingAsync(user.Data.Id, filter, take, page);
             foreach (var item in values)
             {
@@ -133,7 +133,7 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResult> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             if (blog.BlogImage != null)
             {
@@ -191,7 +191,7 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var oldValueRaw = await GetBlogByIDAsync(blog.BlogID);
             var oldValue = oldValueRaw.Data;
 
@@ -342,7 +342,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> DeleteBlogAsync(Blog blog, string userName)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             if (user.Data.Id == blog.WriterID)
             {
                 await _blogDal.DeleteAsync(blog);
@@ -371,7 +371,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResult> ChangedBlogStatusAsync(int id, string userName)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             if (user.Data.Id == blog.Data.WriterID)
             {
                 var value = await _blogDal.GetByIDAsync(blog.Data.BlogID);

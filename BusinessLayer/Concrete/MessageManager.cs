@@ -35,7 +35,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             if (user == null)
             {
@@ -64,9 +64,9 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(MessageValidator))]
         public async Task<IResult> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
-            var senderUser = await _userService.FindByUserNameAsync(senderUserName);
+            var senderUser = await _userService.GetByUserNameAsync(senderUserName);
 
-            var receiverUser = await _userService.FindByUserNameAsync(receiverUserName);
+            var receiverUser = await _userService.GetByUserNameAsync(receiverUserName);
 
             IResult result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
 
@@ -120,7 +120,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> UpdateMessageAsync(Message t, string userName)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             var result = BusinessRules.Run(ReceiverUserNotEmpty(user));
 
@@ -151,7 +151,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
         {
-            var receiverUser = await _userService.FindByUserNameAsync(userName);
+            var receiverUser = await _userService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
 
@@ -173,7 +173,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
             var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter);
 
             foreach (var item in values)
@@ -192,7 +192,7 @@ namespace BusinessLayer.Concrete
             }
 
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.FindByUserNameAsync(userName);
+            var activeUser = await _userService.GetByUserNameAsync(userName);
 
             if (activeUser.Data.UserName != userName)
                 return new ErrorResult();
@@ -211,7 +211,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
 
@@ -238,7 +238,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(UserNotEmpty(user));
 
@@ -263,7 +263,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResult> MarkUsReadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.FindByUserNameAsync(userName);
+            var activeUser = await _userService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
 
@@ -292,7 +292,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResult> MarkUsUnreadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.FindByUserNameAsync(userName);
+            var activeUser = await _userService.GetByUserNameAsync(userName);
 
             IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
 
@@ -319,7 +319,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IMessageService.Get")]
         public async Task<IResult> DeleteMessagesAsync(List<string> ids, string userName)
         {
-            var user = await _userService.FindByUserNameAsync(userName);
+            var user = await _userService.GetByUserNameAsync(userName);
 
             var result = BusinessRules.Run(MessageIdsNotEmpty(ids), UserNotEmpty(user));
 
@@ -350,7 +350,7 @@ namespace BusinessLayer.Concrete
         {
             List<Message> messages = new();
 
-            var activeUser = await _userService.FindByUserNameAsync(userName);
+            var activeUser = await _userService.GetByUserNameAsync(userName);
 
             var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
 
@@ -389,7 +389,7 @@ namespace BusinessLayer.Concrete
         {
             List<Message> messages = new();
 
-            var activeUser = await _userService.FindByUserNameAsync(userName);
+            var activeUser = await _userService.GetByUserNameAsync(userName);
 
             var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
 
