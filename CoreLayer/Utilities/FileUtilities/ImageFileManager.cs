@@ -32,11 +32,11 @@ namespace CoreLayer.Utilities.FileUtilities
 
                     var myImageCodecInfo = GetTypeInfo("image/jpeg");
 
-                    var myEncoder = System.Drawing.Imaging.Encoder.Quality;
+                    var myEncoder = System.Drawing.Imaging.Encoder.Compression;
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 90L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 80L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 

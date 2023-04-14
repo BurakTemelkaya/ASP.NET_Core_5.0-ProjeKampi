@@ -16,7 +16,7 @@ namespace CoreDemo.ViewComponents.Category
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _categoryService.GetCategoryandBlogCount();
+            var result = await _categoryService.GetCategoryandBlogCountAsync();
             return View(result.Data);
         }
     }

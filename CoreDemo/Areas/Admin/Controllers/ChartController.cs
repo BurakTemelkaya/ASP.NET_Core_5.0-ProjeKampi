@@ -16,13 +16,10 @@ namespace CoreDemo.Areas.Admin.Controllers
     {
 
         private readonly ICategoryService _categoryService;
-        private readonly IBlogService _blogService;
 
-        public ChartController(ICategoryService categoryService, IBlogService blogService)
+        public ChartController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _blogService = blogService;
-
         }
 
         public IActionResult Index()
@@ -32,17 +29,17 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> CategoryChart()
         {
-            var categoryList = await _categoryService.GetListAsync();
+            var categoryList = await _categoryService.GetCategoryandBlogCountAsync();
 
             List<CategoryModel> list = new();
 
             foreach (var item in categoryList.Data)
             {
-                var categoryCount = await _blogService.GetCountAsync(x => x.CategoryID == item.CategoryID);
+                var categoryCount = categoryList.Data.Count;
                 list.Add(new CategoryModel
                 {
-                    categoryname = item.CategoryName,
-                    categorycount = categoryCount.Data
+                    categoryname = item.Category.CategoryName,
+                    categorycount = item.CategoryBlogCount
                 });
             }
 

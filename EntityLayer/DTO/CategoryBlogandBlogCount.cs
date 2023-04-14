@@ -2,12 +2,11 @@
 using EntityLayer.Concrete;
 using System.Collections.Generic;
 
-namespace CoreDemo.Models
+namespace EntityLayer.DTO
 {
     public class CategoryBlogandBlogCountDto : IDto
     {
-        public Blog Blog { get; set; }
         public Category Category { get; set; }
-        public int CategoryCount { get; set; }
+        public int CategoryBlogCount { get; set; }
     }
 }

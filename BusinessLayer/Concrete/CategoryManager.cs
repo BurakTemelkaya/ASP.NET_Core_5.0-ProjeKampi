@@ -6,6 +6,7 @@ using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCount()
+        public async Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCountAsync()
         {
             var values = await _categoryDal.GetListWithCategoryByBlog(x => x.CategoryStatus);
             var blogCategoryCount = new List<CategoryBlogandBlogCountDto>();
@@ -110,7 +111,7 @@ namespace BusinessLayer.Concrete
             {
                 var categoryandBlogCount = new CategoryBlogandBlogCountDto();
                 categoryandBlogCount.Category = value;
-                categoryandBlogCount.CategoryCount = value.Blogs.Count(x=> x.BlogStatus);
+                categoryandBlogCount.CategoryBlogCount = value.Blogs.Count(x=> x.BlogStatus);
                 blogCategoryCount.Add(categoryandBlogCount);
             }
             return new SuccessDataResult<List<CategoryBlogandBlogCountDto>>(blogCategoryCount);

@@ -3,6 +3,7 @@ using CoreDemo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.ViewComponents.Category
@@ -10,34 +11,25 @@ namespace CoreDemo.ViewComponents.Category
     public class CategoryListDashboard : ViewComponent
     {
         private readonly ICategoryService _categoryService;
-        private readonly IBlogService _blogService;
-        public CategoryListDashboard(ICategoryService categoryService, IBlogService blogService)
+        public CategoryListDashboard(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _blogService = blogService;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categorys = await _categoryService.GetListAsync();
-            var blogs = await _blogService.GetListAsync();
+            var categories = await _categoryService.GetCategoryandBlogCountAsync();
             var categoryandBlogCounts = new List<CategoryandBlogPercent>();
-            int blogCount = 0;
-            foreach (var category in categorys.Data)
+            int totalCount = categories.Data.Sum(x => x.CategoryBlogCount);
+            foreach (var category in categories.Data)
             {
-                var categoryandBlogCount = new CategoryandBlogPercent();
-                categoryandBlogCount.Category = category;
-                foreach (var blog in blogs.Data)
+                var categoryandBlogCount = new CategoryandBlogPercent
                 {
-                    if (category.CategoryID == blog.CategoryID)
-                    {
-                        blogCount++;
-                    }
-                }
-                categoryandBlogCount.BlogPercent = Math.Round(decimal.Divide(blogCount, blogs.Data.Count) * 100).ToString();
-                blogCount = 0;
+                    Category = category.Category,
+                    BlogPercent = Math.Round(decimal.Divide(category.CategoryBlogCount, totalCount) * 100).ToString()
+                };
                 categoryandBlogCounts.Add(categoryandBlogCount);
             }
-            ViewBag.TotalBlogCount = blogs.Data.Count;
+            ViewBag.TotalBlogCount = totalCount;
             return View(categoryandBlogCounts);
         }
     }

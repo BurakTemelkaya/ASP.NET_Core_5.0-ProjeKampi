@@ -1,6 +1,6 @@
-﻿using CoreDemo.Models;
-using CoreLayer.Utilities.Results;
+﻿using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,6 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Category, bool>> filter = null);
         Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync();
         Task<IResult> ChangedStatusAsync(int id);
-        Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCount();
+        Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCountAsync();
     }
 }
