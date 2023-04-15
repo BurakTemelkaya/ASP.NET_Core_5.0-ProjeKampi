@@ -49,7 +49,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values);
         }
 
-        
+
         public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null)
         {
             var values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(filter, take, page);
@@ -80,7 +80,6 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values);
         }
 
-        [CacheAspect]
         public async Task<IDataResult<Blog>> GetBlogByIDAsync(int id)
         {
             var value = await _blogDal.GetByIDAsync(id);
@@ -475,6 +474,18 @@ namespace BusinessLayer.Concrete
             }
 
             return new DataResult<List<Blog>>(values, isSuccess, message);
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
+        {
+            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id);
+            if (result != null)
+            {
+                result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
+                return new SuccessDataResult<Blog>(result);
+            }
+            return new ErrorDataResult<Blog>("Blog bulunamadı.");
         }
 
         IResult BlogImageNotEmpty(string blogImage)

@@ -85,5 +85,10 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
             return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryByWriterAsync(id, filter, take, skip), take, page, count);
         }
+
+        public async Task<Blog> GetBlogByIdWithCommentandWriterAsync(int id)
+        {
+            return await Context.Blogs.Include(x => x.Comments).Include(u => u.Writer).Where(x => x.BlogID == id).FirstAsync();
+        }
     }
 }

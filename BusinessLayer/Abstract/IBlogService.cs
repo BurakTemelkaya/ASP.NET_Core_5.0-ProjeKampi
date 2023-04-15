@@ -16,7 +16,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Blog>> GetBlogByIDAsync(int id);
         Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
         Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null);
-        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0,Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null);
 
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
@@ -32,5 +32,7 @@ namespace BusinessLayer.Abstract
         Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
         Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null);
+
+        Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id);
     }
 }

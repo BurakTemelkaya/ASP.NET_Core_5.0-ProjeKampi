@@ -15,15 +15,13 @@ namespace CoreDemo.Controllers
     {
         private readonly IBlogService _blogService;
         private readonly IBusinessUserService _businessUserService;
-        private readonly ICommentService _commentService;
         private readonly ICategoryService _categoryService;
 
         public BlogController(IBlogService blogService,
-            IBusinessUserService businessUserService, ICommentService commentService, ICategoryService categoryService)
+            IBusinessUserService businessUserService, ICategoryService categoryService)
         {
             _blogService = blogService;
             _businessUserService = businessUserService;
-            _commentService = commentService;
             _categoryService = categoryService;
         }
 
@@ -48,25 +46,22 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
-            var value = await _blogService.GetBlogByIDAsync(id);
+            var value = await _blogService.GetBlogByIdWithCommentAsync(id);
             if (value == null || !value.Data.BlogStatus)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
-
-            var comments = await _commentService.GetListAsync(x => x.BlogID == id && x.CommentStatus);
-            ViewBag.CommentCount = comments.Data.Count;
-            if (comments.Data != null)
+            ViewBag.CommentCount = value.Data.Comments.Count;
+            if (value.Data.Comments != null)
             {
-                if (comments.Data.Count > 0)
+                if (value.Data.Comments.Count > 0)
                 {
-                    double star = comments.Data.Average(x => x.BlogScore);
+                    double star = value.Data.Comments.Average(x => x.BlogScore);
                     ViewBag.Star = Math.Round(star,1);
                 }               
             }
-            var writer = await _businessUserService.GetByIDAsync(value.Data.WriterID.ToString());
-            ViewBag.WriterId = writer.Data.Id;
-            ViewBag.WriterName = writer.Data.NameSurname;
+            ViewBag.WriterId = value.Data.Writer.Id;
+            ViewBag.WriterName = value.Data.Writer.NameSurname;
             ViewData["Title"] = value.Data.BlogTitle;
             return View(value.Data);
         }

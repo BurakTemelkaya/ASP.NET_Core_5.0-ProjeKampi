@@ -19,5 +19,7 @@ namespace DataAccessLayer.Abstract
 
         Task<List<Blog>> GetListWithCategoryByWriterandPagingAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1);
 
+        Task<Blog> GetBlogByIdWithCommentandWriterAsync(int id);
+
     }
 }
