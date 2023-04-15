@@ -25,19 +25,22 @@ namespace CoreDemo.Areas.Admin.Controllers
             _businessUserService = businessUserService;
         }
 
-        public async Task<IActionResult> Index(int page = 1, int id = 0)
+        public async Task<IActionResult> Index(int id = 0, int page = 1)
         {
             var blogs = new List<Blog>();
 
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
-                if (user != null)
+                var value = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page, x => x.WriterID == id);
+                if (value.Data.Count > 0)
                 {
-                    var value = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page, x => x.WriterID == id);
-                    if (value != null)
-                        blogs = value.Data;
-                    ViewBag.UserName = user.Data.UserName;
+                    blogs = value.Data;
+                    ViewBag.UserName = user.Data.UserName+ " kullanıcısına ait bloglar.";
+                }
+                else
+                {
+                    ViewBag.UserName = user.Data.UserName + " kullanıcısına ait blog bulunamadı.";
                 }
             }
             else
@@ -87,7 +90,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ViewBag.CategoryList = _categoryService.GetCategorySelectedListItemAsync().Result.Data;
                 ModelState.AddModelError("", result.Message);
                 return View(blog);
-            }          
+            }
             return RedirectToAction("Index");
         }
 
