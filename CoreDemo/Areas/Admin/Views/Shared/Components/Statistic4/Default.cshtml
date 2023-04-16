@@ -2,12 +2,12 @@
     <div class="col-lg-4">
         <div class="widget-head-color-box navy-bg p-lg text-center">
             <div class="m-b-md">
-                <h2 class="font-bold no-margins">
+                <h2 class="font-bold">
                     @ViewBag.v1
                 </h2>
                 <small></small>
             </div>
-            <img src="@ViewBag.v2" class="rounded-circle circle-border m-b-md" width="150" alt="profile">
+            <img src="@ViewBag.v2" class="rounded-circle circle-border m-b-md" width="180" alt="profile">
         </div>
         <div class="widget-text-box">
             <h4 class="media-heading">@ViewBag.v1</h4>
@@ -17,7 +17,7 @@
     <div class="col-lg-2">
         <div class="widget navy-bg p-lg text-center">
             <div class="m-b-md">
-                <i class="fa fa-comment fa-4x"></i>      
+                <i class="fa fa-comment fa-4x"></i>
                 <br />
                 <h3 class="font-bold m-xs">
                     Kontak
@@ -28,7 +28,7 @@
         </div>
         <div class="widget navy-bg p-lg text-center">
             <div class="m-b-md">
-                <i class="fa fa-star fa-4x"></i>               
+                <i class="fa fa-star fa-4x"></i>
                 <h3 class="font-bold no-margins">
                     Ortalama Rayting
                 </h3>
@@ -64,7 +64,7 @@
         </div>
         <div class="widget red-bg p-lg text-center">
             <div class="m-b-md">
-                <i class="fa fa-bell fa-4x"></i>                
+                <i class="fa fa-bell fa-4x"></i>
                 <h3 class="font-bold m-xs">
                     Bildirim Sayısı
                 </h3>
@@ -76,18 +76,20 @@
         <div class="widget yellow-bg p-lg text-center">
             <div class="m-b-md">
                 <i class="fa fa-warning fa-4x"></i>
-                <h1 class="m-xs">@ViewBag.BlogCount</h1>
-                <h3 class="font-bold no-margins">
-                    Blog Sayınız
+                <h3 class="font-bold m-xs">
+                    Blog
                 </h3>
+                <small class="m-xs">Sayısı</small>
+                <h1 class="m-xs">@ViewBag.BlogCount</h1>
             </div>
         </div>
         <div class="widget yellow-bg p-lg text-center">
             <div class="m-b-md">
-                <i class="fa fa-warning fa-4x"></i>
-                <h3 class="font-bold m-xs">
-                    Gönderdiğiniz Mesaj Sayısı
+                <i class="fa fa-comments fa-4x"></i>
+                <h3 class="font-bold m-xs no-margins">
+                    Gönderilen Mesaj
                 </h3>
+                <small class="m-xs">Sayısı</small>
                 <h1 class="m-xs">
                     @ViewBag.SendedMessageCount
                 </h1>

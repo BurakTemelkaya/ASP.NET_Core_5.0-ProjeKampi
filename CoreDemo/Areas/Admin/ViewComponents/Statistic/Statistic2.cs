@@ -21,14 +21,12 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic2
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var lastBlog = await _blogService.GetListAsync();
+            var lastBlog = await _blogService.GetLastBlogAsync(1);
 
             var blogCount = await _blogService.GetCountAsync(x => x.BlogStatus);
 
-
-            ViewBag.v1 = lastBlog.Data.Select(y => y.BlogTitle).TakeLast(1).FirstOrDefault();
+            ViewBag.v1 = lastBlog.Data.First().BlogTitle;
             ViewBag.v2 = blogCount.Data;
-
 
             return View();
         }
