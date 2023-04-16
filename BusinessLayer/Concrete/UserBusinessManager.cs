@@ -80,6 +80,8 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IResult> DeleteUserAsync(AppUser t)
         {
@@ -97,6 +99,8 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<AppUser>();
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user)
@@ -156,6 +160,8 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<IdentityResult>(result);
         }
 
+        [CacheRemoveAspect("IMessageService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user)
@@ -242,7 +248,7 @@ namespace BusinessLayer.Concrete
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Kullanıcı listesi döner.</returns>
-        
+
         [CacheAspect]
         public async Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
         {
@@ -261,6 +267,8 @@ namespace BusinessLayer.Concrete
         /// <param name="expiration"></param>
         /// <param name="banMessageContent"></param>
         /// <returns></returns>
+        [CacheRemoveAspect("IMessageService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         [LogAspect(typeof(DatabaseLogger))]
         public async Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent)
@@ -299,6 +307,8 @@ namespace BusinessLayer.Concrete
         /// </summary>
         /// <param name="id">Kullanıcının id değeri</param>
         /// <returns>İşlem başarılı ise true değil ise false döner.</returns>
+        [CacheRemoveAspect("IMessageService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         public async Task<IResult> BanOpenUser(string id)
         {
@@ -325,6 +335,7 @@ namespace BusinessLayer.Concrete
 
             return new ErrorResult(result.Errors.First().Description);
         }
+
         public async Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);

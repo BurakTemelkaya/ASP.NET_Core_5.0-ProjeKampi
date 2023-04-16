@@ -32,6 +32,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Category>(await _categoryDal.GetByIDAsync(id));
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(CategoryValidator))]
         public async Task<IResult> TAddAsync(Category t)
@@ -41,6 +42,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> TDeleteAsync(Category t)
         {
@@ -48,6 +50,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(CategoryValidator))]
         public async Task<IResult> TUpdateAsync(Category t)
@@ -86,6 +89,7 @@ namespace BusinessLayer.Concrete
                                                                 }).ToList());
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> ChangedStatusAsync(int id)
         {

@@ -89,13 +89,12 @@ namespace CoreDemo
                 .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
 
-            });
+            }).AddRazorRuntimeCompilation();
 
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
             opt.TokenLifespan = TimeSpan.FromMinutes(30)
             );
 
-            services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(x =>
