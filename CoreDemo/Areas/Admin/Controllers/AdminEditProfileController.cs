@@ -35,8 +35,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserDto userDto)
-        {
-            var oldValue = await _businessUserService.GetByIDAsync(userDto.Id.ToString());
+        {            
             var result = await _businessUserService.UpdateUserAsync(userDto);
             if (!result.Success)
             {
@@ -60,6 +59,8 @@ namespace CoreDemo.Areas.Admin.Controllers
 
             await _signInManager.SignOutAsync();
             await _signInManager.SignInAsync(user.Data, isPersistent: true);
+
+            var oldValue = await _businessUserService.GetByIDAsync(userDto.Id.ToString());
 
             if (user.Data.PasswordHash == oldValue.Data.PasswordHash && userDto.Password != null &&
                 userDto.PasswordAgain != null && userDto.OldPassword != null)

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="Id">
     <div class="col-lg-10 col-md-12">
         <h1>Kullanıcı Bilgilerini Düzenle</h1>
@@ -37,13 +37,12 @@
         <h3>Hakkında</h3>
         <input type="text" asp-for="About" placeholder="Blog Adı" class="form-control">
     </div>
-    <div class="col-lg-10 col-md12">
+    <div class="col-lg-10 col-md-12">
         <label>Yazar Görsel</label>
-        <input type="file" asp-for="ProfileImageFile" class="form-control-file">
+        <input type="file" asp-for="ProfileImageFile" name="ProfileImageFile" class="form-control-file" placeholder="Profil Resim Linki">
         <br />
         <label>Yada Link Yapıştır</label>
         <input type="text" asp-for="ImageUrl" placeholder="Görsel Linki" class="form-control">
-        @Html.ValidationMessageFor(x => x.ImageUrl, "", new { @class = "text-danger" })
     </div>
     <div class="col-lg-10 col-md-12">
         <h3>Şehir</h3>
