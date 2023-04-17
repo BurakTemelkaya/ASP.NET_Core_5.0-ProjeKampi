@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace BusinessLayer.Abstract
     public interface IAboutService
     {
 
-        Task<IResult> TUpdateAsync(About t);
+        Task<IResult> UpdateAsync(About t, IFormFile aboutImage1, IFormFile aboutImage2);
 
-        Task<IDataResult<About>> GetAbout();
+        Task<IDataResult<About>> GetAboutAsync();
 
-        Task<IDataResult<About>> GetAboutByFooter();
+        Task<IDataResult<About>> GetAboutByFooterAsync();
+
+        Task<IDataResult<About>> GetAboutByUpdateAsync();
     }
 }

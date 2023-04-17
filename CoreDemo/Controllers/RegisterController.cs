@@ -47,17 +47,6 @@ namespace CoreDemo.Controllers
             string captchaMessage = await _captchaService.RecaptchaControl();
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             ViewBag.Cities = await _writerCity.GetCityListAsync();
-            if (!ModelState.IsValid)
-            {
-                foreach (var item in ModelState.Values)
-                {
-                    if (item.Errors.Count > 0)
-                    {
-                        ModelState.AddModelError("ImageUrl", item.Errors.First().ErrorMessage);
-                    }
-                }
-                return View(userSignUpDto);
-            }
 
             if (!string.IsNullOrEmpty(captchaMessage))
             {

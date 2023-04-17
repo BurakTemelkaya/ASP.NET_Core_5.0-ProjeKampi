@@ -56,6 +56,10 @@ namespace BusinessLayer.Concrete
             {
                 user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
                     ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                if (user.ImageUrl == null)
+                {
+                    return new ErrorDataResult<IdentityResult>("Profil resminiz yüklenemedi.");
+                }
             }
             else
             {

@@ -16,7 +16,7 @@ namespace CoreDemo.ViewComponents.About
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var value = await _aboutService.GetAboutByFooter();
+            var value = await _aboutService.GetAboutByFooterAsync();
             return View(value.Data);
         }
     }

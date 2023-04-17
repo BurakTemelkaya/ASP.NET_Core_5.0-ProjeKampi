@@ -19,6 +19,8 @@ namespace BusinessLayer.DependencyResolvers
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<AboutValidator>().As<IValidator<About>>().SingleInstance();
+
             builder.RegisterType<BlogValidator>().As<IValidator<Blog>>().SingleInstance();
 
             builder.RegisterType<CategoryValidator>().As<IValidator<Category>>().SingleInstance();

@@ -21,23 +21,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var value = await _aboutService.GetAbout();
-            return View(value);
+            var value = await _aboutService.GetAboutByUpdateAsync();
+            return View(value.Data);
         }
         [HttpPost]
         public async Task<IActionResult> Index(About about, IFormFile aboutImage1, IFormFile aboutImage2)
-        {
-            if (about.AboutImage1 == null && aboutImage1 != null)
-                about.AboutImage1 = ImageFileManager.ImageAdd(aboutImage1, ImageLocations.StaticAboutImageLocation(),ImageResulotions.GetAboutImageResolution());
-            if (about.AboutImage2 == null && aboutImage2 != null)
-                about.AboutImage2 = ImageFileManager.ImageAdd(aboutImage2, ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
-            if (about.AboutImage1 == null || about.AboutImage2 == null)
-            {
-                ModelState.AddModelError("AboutImage1", "Lütfen Hiçbir Resmi Boş Bırakmayınız");
-                return View(about);
-            }
-            await _aboutService.TUpdateAsync(about);
-            return View();
+        {            
+            await _aboutService.UpdateAsync(about,aboutImage1,aboutImage2);
+            return View(about);
         }
     }
 }

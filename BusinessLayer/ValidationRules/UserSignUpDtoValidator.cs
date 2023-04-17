@@ -20,7 +20,6 @@ namespace BusinessLayer.ValidationRules
             RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("Parola tekrarı boş geçilemez");
             RuleFor(x => x.City).NotEmpty();
             RuleFor(x => x.About).NotEmpty().WithMessage("Hakkında kısmı boş geçilemez");
-            RuleFor(x => x.ImageFile).NotEmpty().When(x => x.ImageUrl == string.Empty).WithMessage("Lütfen resim yükleyiniz veya resim linki veriniz.");
         }
     }
 }
