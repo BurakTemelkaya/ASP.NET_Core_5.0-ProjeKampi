@@ -21,7 +21,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var value = await _aboutService.GetFirst();
+            var value = await _aboutService.GetAbout();
             return View(value);
         }
         [HttpPost]

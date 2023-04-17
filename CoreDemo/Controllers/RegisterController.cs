@@ -45,14 +45,30 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(UserSignUpDto userSignUpDto)
         {
             string captchaMessage = await _captchaService.RecaptchaControl();
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
+            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState.Values)
+                {
+                    if (item.Errors.Count > 0)
+                    {
+                        ModelState.AddModelError("ImageUrl", item.Errors.First().ErrorMessage);
+                    }
+                }
+                return View(userSignUpDto);
+            }
+
             if (!string.IsNullOrEmpty(captchaMessage))
             {
                 ModelState.AddModelError("Captcha", captchaMessage);
+                return View(userSignUpDto);
             }
             if (!userSignUpDto.IsAcceptTheContract)
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
+                return View(userSignUpDto);
             }
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
             if (result.Success)
@@ -70,12 +86,8 @@ namespace CoreDemo.Controllers
             }
             else
             {
-                ModelState.AddModelError("",
-                    result.Message);
+                ModelState.AddModelError("", result.Message);
             }
-
-            ViewBag.SiteKey = _captchaService.GetSiteKey();
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
             return View(userSignUpDto);
         }
     }

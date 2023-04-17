@@ -13,6 +13,8 @@ namespace BusinessLayer.Abstract
 
         Task<IResult> TUpdateAsync(About t);
 
-        Task<IDataResult<About>> GetFirst();
+        Task<IDataResult<About>> GetAbout();
+
+        Task<IDataResult<About>> GetAboutByFooter();
     }
 }

@@ -21,7 +21,7 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var values = await _aboutService.GetFirst();
+            var values = await _aboutService.GetAbout();
             return View(values.Data);
         }
         public PartialViewResult SocialMediaAbout()

@@ -24,9 +24,22 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<About>> GetFirst()
+        public async Task<IDataResult<About>> GetAbout()
         {
             return new SuccessDataResult<About>(await _aboutDal.GetByFilterAsync());
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<About>> GetAboutByFooter()
+        {
+            var value = await _aboutDal.GetByFilterAsync();
+
+            if (value.AboutDetails1.Length > 475)
+            {
+                value.AboutDetails1 = value.AboutDetails1[..475] + "...";
+            }
+
+            return new SuccessDataResult<About>(value);
         }
 
         [CacheRemoveAspect("IAboutService.Get")]

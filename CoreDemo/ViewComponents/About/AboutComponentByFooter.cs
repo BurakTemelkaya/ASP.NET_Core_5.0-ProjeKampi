@@ -16,11 +16,7 @@ namespace CoreDemo.ViewComponents.About
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var value = await _aboutService.GetFirst();
-            if (value.Data.AboutDetails1.Length > 475)
-            {
-                value.Data.AboutDetails1 = value.Data.AboutDetails1[..475] + "...";
-            }
+            var value = await _aboutService.GetAboutByFooter();
             return View(value.Data);
         }
     }
