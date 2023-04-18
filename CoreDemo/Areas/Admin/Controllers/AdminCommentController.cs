@@ -39,6 +39,13 @@ namespace CoreDemo.Areas.Admin.Controllers
             ViewBag.ReturnMessage = value.Message;
             return View(value);
         }
+
+        public async Task<IActionResult> StatusChangedComment(int id)
+        {
+            await _commentService.ChangeStatusCommentByAdmin(id);
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public async Task<IActionResult> EditComment(int id)
         {

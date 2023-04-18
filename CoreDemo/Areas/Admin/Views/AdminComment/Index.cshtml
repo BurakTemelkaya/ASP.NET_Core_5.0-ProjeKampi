@@ -1,6 +1,8 @@
 ﻿@model IPagedList<Comment>
 @{
     string puanRengi = "";
+    string durum = "";
+    string durumRengi = "";
 }
 @{
     ViewData["Title"] = "Yorumlar";
@@ -44,21 +46,34 @@
                             <th>Tarih</th>
                             <th>Sil</th>
                             <th>Düzenle</th>
+                            <th>Durumu Değiştir</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             {
-                                if (item.BlogScore <= 3)
-                                { puanRengi = "text-danger"; }
-                                else if (item.BlogScore >= 4 && item.BlogScore <= 6)
+                                if (item.CommentStatus)
                                 {
-                                    puanRengi = "text-warning";
+                                    durumRengi = "btn-outline-secondary";
+                                    durum = "Pasifleştir";
                                 }
                                 else
                                 {
+                                    durum = "btn-outline-primary";
+                                    durum = "Aktifleştir";
+                                }
+                                if (item.BlogScore < 3)
+                                {
+                                    puanRengi = "text-danger";
+                                }
+                                else if (item.BlogScore >= 4 && item.BlogScore <= 6)
+                                {
                                     puanRengi = "text-success";
+                                }
+                                else
+                                {
+                                    puanRengi = "text-warning";
                                 }
                             }
                             <tr>
@@ -67,7 +82,7 @@
                                 <td class="col-2">@item.Blog.BlogTitle</td>
                                 <td class="col-3">
                                     @{
-                                        if(item.CommentContent.Length>50)
+                                        if (item.CommentContent.Length > 50)
                                         {
                                             @item.CommentContent.Substring(0,50)
                                         }
@@ -75,12 +90,13 @@
                                         {
                                             @item.CommentContent
                                         }
-                                        }
-                                        </td>
-                                        <td class="text-navy col-1"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
+                                    }
+                                </td>
+                                <td class="text-navy col-1"> <i class="fa fa-level-up @puanRengi"></i> @item.BlogScore % </td>
                                 <td class="col-1">@item.CommentDate.ToString("dd.MM.yyyy")</td>
                                 <td class="col-1"><a href="/Admin/AdminComment/DeleteComment/@item.CommentID" class="btn btn-outline-danger Sil">Sil</a></td>
                                 <td class="col-1"><a href="/Admin/AdminComment/EditComment/@item.CommentID" class="btn btn-outline-success">Düzenle</a></td>
+                                <td class="col-1"><a href="/Admin/AdminComment/StatusChangedComment/@item.CommentID" class="btn @durumRengi Durum">@durum</a></td>
                             </tr>
                         }
                     </tbody>
@@ -123,7 +139,32 @@ new PagedListRenderOptions
                     window.location.href = linkURL;
                     Swal.fire(
                         'Başarılı!',
-                        'Seçilen Mesaj Silindi .',
+                        'Seçilen Yorum Silindi .',
+                        'success'
+                    )
+                }
+            })
+        });
+
+        $('.Durum').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: "Yorumun durumunu değiştirmek istediğinize emin misiniz ?",
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        'Seçilen Yorumun Durumu Değiştirildi.',
                         'success'
                     )
                 }

@@ -217,6 +217,27 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
+        [CacheRemoveAspect("ICommentService.Get")]
+        public async Task<IResult> ChangeStatusCommentByAdmin(int id)
+        {
+            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+            if (comment == null)
+            {
+                return new ErrorResult("Yorum bulunamadı");
+            }
+            if (comment.CommentStatus)
+            {
+                comment.CommentStatus = false;                
+            }
+            else
+            {
+                comment.CommentStatus = true;
+            }
+            await _commentDal.UpdateAsync(comment);
+            return new SuccessResult();
+        }
+
         [CacheAspect]
         public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
         {
