@@ -358,6 +358,17 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
+        public async Task<IDataResult<int>> GetBlogCountByWriterAsync(string userName)
+        {
+            var user = await _userService.GetByUserNameAsync(userName);
+            if (!user.Success)
+            {
+                return new ErrorDataResult<int>("Kullanıcı bulunamadı.");
+            }
+            return new SuccessDataResult<int>(await _blogDal.GetCountAsync(x => x.WriterID == user.Data.Id));
+        }
+
+        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0)
         {
             var values = await _blogDal.GetListAllAsync(filter, take);

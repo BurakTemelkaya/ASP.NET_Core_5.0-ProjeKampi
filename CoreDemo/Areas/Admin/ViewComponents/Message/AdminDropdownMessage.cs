@@ -18,16 +18,15 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
+            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null, null, 3);
             if (result.Success)
             {
                 var values = result.Data;
-                if (values.Count > 3)
-                    values = await values.TakeLast(3).ToListAsync();
-                ViewBag.UnreadMessageCount = await _messageService.GetCountAsync(x => x.ReceiverUser.UserName == User.Identity.Name && !x.MessageStatus);
+                ViewBag.UnreadMessageCount = _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name).Result.Data;
+                return View(values);
             }
-            
-            return View(result.Data);
+
+            return View();
         }
     }
 }

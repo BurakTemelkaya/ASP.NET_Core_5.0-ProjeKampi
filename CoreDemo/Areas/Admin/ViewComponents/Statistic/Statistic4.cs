@@ -39,7 +39,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 ViewBag.v4 = value.Email;
                 ViewBag.v5 = value.City;
                 ViewBag.v6 = value.RegistrationTime;
-                ViewBag.BlogCount = _blogService.GetCountAsync(x => x.WriterID == value.Id).Result.Data;
+                ViewBag.BlogCount = _blogService.GetBlogCountByWriterAsync(User.Identity.Name).Result.Data;
                 ViewBag.SendedMessageCount = _messageService.GetCountAsync(x => x.SenderUserId == value.Id).Result.Data;
                 var ratingValue = await _commentService.GetBlogListWithCommentAsync();
                 var ratings = ratingValue.Data.Select(x => x.BlogScore);

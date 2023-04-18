@@ -18,9 +18,10 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Message>> GetByIdAsync(int id);
         Task<IDataResult<Message>> GetByFilterAsync(Expression<Func<Message, bool>> filter = null);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Message, bool>> filter = null);
+        Task<IDataResult<int>> GetSendMessageCountAsync(string userName);
         Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName);
-        Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search=null, Expression<Func<Message, bool>> filter = null);
-        Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null);
+        Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0);
+        Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0);
         Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null);
         Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null);
         Task<IResult> MarkChangedAsync(int messageId, string userName);

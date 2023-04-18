@@ -26,8 +26,15 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
         {
+
+            if (take > 0)
+            {
+                return filter == null ?
+                await Context.Messages.Include(x => x.SenderUser).Include(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
+                await Context.Messages.Include(x => x.SenderUser).Include(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
+            }
             return filter == null ?
                 await Context.Messages.Include(x => x.SenderUser)
             .Where(x => x.ReceiverUser.Id == id).ToListAsync() :
@@ -51,8 +58,15 @@ namespace DataAccessLayer.Concrete.EntityFramework
             .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync(filter);
         }
 
-        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null)
+        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
         {
+            if (take > 0)
+            {
+                return filter == null ?
+                await Context.Messages.Include(x => x.ReceiverUser).Include(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
+                await Context.Messages.Include(x => x.ReceiverUser).Include(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
+            }
+
             return filter == null ?
                await Context.Messages.Include(x => x.ReceiverUser)
             .Where(x => x.SenderUser.Id == id).ToListAsync() :

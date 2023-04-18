@@ -26,6 +26,7 @@ namespace BusinessLayer.Abstract
         Task<IResult> DeleteBlogAsync(Blog blog, string userName);
         Task<IResult> DeleteBlogByAdminAsync(Blog blog);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<int>> GetBlogCountByWriterAsync(string userName);
         Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0);
         Task<IResult> ChangedBlogStatusAsync(int id, string userName);
         Task<IResult> ChangedBlogStatusByAdminAsync(int id);

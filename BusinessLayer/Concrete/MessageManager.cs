@@ -33,7 +33,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -45,11 +45,11 @@ namespace BusinessLayer.Concrete
             var values = new List<Message>();
             if (search == null)
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, filter);
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, filter, take, skip);
             }
             else
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()));
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()), take, skip);
             }
             foreach (var item in values)
             {
@@ -149,6 +149,13 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
+        public async Task<IDataResult<int>> GetSendMessageCountAsync(string userName)
+        {
+            var sender = await _userService.GetByUserNameAsync(userName);
+            return new SuccessDataResult<int>(await _messageDal.GetCountAsync(x => x.SenderUserId == sender.Data.Id));
+        }
+
+        [CacheAspect]
         public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
         {
             var receiverUser = await _userService.GetByUserNameAsync(userName);
@@ -171,10 +178,10 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
         {
             var user = await _userService.GetByUserNameAsync(userName);
-            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter);
+            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter, take, skip);
 
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
