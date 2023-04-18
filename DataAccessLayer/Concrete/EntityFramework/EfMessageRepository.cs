@@ -32,8 +32,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
             if (take > 0)
             {
                 return filter == null ?
-                await Context.Messages.Include(x => x.SenderUser).Include(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Messages.Include(x => x.SenderUser).Include(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
+                await Context.Messages.Include(x => x.SenderUser).Where(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
+                await Context.Messages.Include(x => x.SenderUser).Where(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
             }
             return filter == null ?
                 await Context.Messages.Include(x => x.SenderUser)
@@ -63,8 +63,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
             if (take > 0)
             {
                 return filter == null ?
-                await Context.Messages.Include(x => x.ReceiverUser).Include(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Messages.Include(x => x.ReceiverUser).Include(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
+                await Context.Messages.Include(x => x.ReceiverUser).Where(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
+                await Context.Messages.Include(x => x.ReceiverUser).Where(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
             }
 
             return filter == null ?

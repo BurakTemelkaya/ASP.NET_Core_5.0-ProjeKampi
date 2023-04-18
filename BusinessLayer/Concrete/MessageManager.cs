@@ -37,7 +37,7 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
-            if (user == null)
+            if (!user.Success)
             {
                 return new ErrorDataResult<List<Message>>(user.Message);
             }
