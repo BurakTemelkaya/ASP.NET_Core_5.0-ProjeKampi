@@ -40,7 +40,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 ViewBag.v5 = value.City;
                 ViewBag.v6 = value.RegistrationTime;
                 ViewBag.BlogCount = _blogService.GetBlogCountByWriterAsync(User.Identity.Name).Result.Data;
-                ViewBag.SendedMessageCount = _messageService.GetCountAsync(x => x.SenderUserId == value.Id).Result.Data;
+                ViewBag.SendedMessageCount = _messageService.GetSendMessageCountAsync(User.Identity.Name).Result.Data;
                 var ratingValue = await _commentService.GetBlogListWithCommentAsync();
                 var ratings = ratingValue.Data.Select(x => x.BlogScore);
                 int rating = 0;
@@ -49,7 +49,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 rating /= ratings.Count();
                 ViewBag.Rating = rating;
             }
-            
+
             return View();
         }
     }
