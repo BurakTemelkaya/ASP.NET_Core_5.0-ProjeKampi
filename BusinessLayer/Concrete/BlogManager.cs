@@ -377,6 +377,24 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
         }
 
+        [CacheAspect]
+        public async Task<IDataResult<List<Blog>>> GetListByReadAllLastBlogsByWriterAsync(int blogId, int writerID, int take = 0)
+        {
+            var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID == writerID, take);
+            foreach (var item in values)
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<List<Blog>>> GetListByReadAllLastBlogsAsync(int blogId, int writerID, int take = 0)
+        {
+            var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID != writerID, take);
+            foreach (var item in values)
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
+        }
+
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResult> ChangedBlogStatusAsync(int id, string userName)
         {

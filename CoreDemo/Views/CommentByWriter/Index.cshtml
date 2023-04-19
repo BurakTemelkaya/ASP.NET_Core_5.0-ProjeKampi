@@ -30,7 +30,7 @@
                 comment = comment.Substring(0, 50) + "...";
             }
             <tr>
-                <td>@item.Blog.BlogTitle</td>
+                <td><a href="/Blog/BlogReadAll/@item.BlogID" target="_blank">@item.Blog.BlogTitle</a></td>
                 <th scope="row">@item.BlogScore</th>
                 <td>@item.CommentTitle</td>
                 <td>@comment</td>
