@@ -28,7 +28,8 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, Expression<Func<Log, bool>> filter = null)
         {
-            return new SuccessDataResult<List<Log>>(await _logDal.GetListAllByPagingAsync(filter, take, page));
+            var data = await _logDal.GetListAllByPagingAsync(filter, take, page);
+            return new SuccessDataResult<List<Log>>(data);
         }
     }
 }

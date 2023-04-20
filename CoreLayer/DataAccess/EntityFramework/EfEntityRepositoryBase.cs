@@ -63,7 +63,7 @@ namespace CoreLayer.DataAccess.EntityFramework
                 await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
 
-        public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1)
+        public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true)
         {
             var values = new List<TEntity>();
 
@@ -83,6 +83,11 @@ namespace CoreLayer.DataAccess.EntityFramework
             }
 
             var result = await GetListAllAsync(filter, take, skip);
+            if (sortInReverse)
+            {
+                result.Reverse();
+            }
+
             values.AddRange(result);
 
             values.AddRange(AddNullObject<TEntity>.GetNullValuesForAfter(page, take, count));
