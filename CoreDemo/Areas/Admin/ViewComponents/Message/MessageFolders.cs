@@ -15,9 +15,10 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var messageCount = await _messageService.GetCountAsync(x => !x.MessageStatus && x.ReceiverUser.UserName == User.Identity.Name);
+            var messageCountResult = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
+            var messageCount = messageCountResult.Data;
             ViewBag.ReceivedUnreadMessage = messageCount.ToString();
-            var messageDraftCount = await _messageDraftService.GetCountAsync();
+            var messageDraftCount = _messageDraftService.GetCountAsync().Result.Data;
             ViewBag.MessageDraftCount = messageDraftCount.ToString();
             return View();
         }

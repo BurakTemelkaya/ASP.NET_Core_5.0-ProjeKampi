@@ -17,15 +17,11 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name);
+            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null, x => !x.MessageStatus, 3);
 
-            var values = result.Data;
+            ViewBag.NewMessage = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
 
-            ViewBag.NewMessage = values.Where(x => !x.MessageStatus).Count();           
-
-            if (values.Count > 3)
-                values = values.TakeLast(3).ToList();
-            return View(values);
+            return View(result.Data);
 
         }
     }

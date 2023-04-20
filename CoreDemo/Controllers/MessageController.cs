@@ -36,6 +36,7 @@ namespace CoreDemo.Controllers
             var values = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name);
             return View(values.Data);
         }
+
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
@@ -48,8 +49,7 @@ namespace CoreDemo.Controllers
             if (value == null)
                 return RedirectToAction("Inbox");
 
-            if (value.MessageStatus)
-                await _messageService.MarkUsReadAsync(id, User.Identity.Name);
+            await _messageService.MarkUsReadAsync(id, User.Identity.Name);
             return View(value);
         }
 

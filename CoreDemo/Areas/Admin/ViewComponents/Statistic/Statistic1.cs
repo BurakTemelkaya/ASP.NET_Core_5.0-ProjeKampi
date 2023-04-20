@@ -13,14 +13,14 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
     public class Statistic1 : ViewComponent
     {
         private readonly IBlogService _blogService;
-        private readonly IMessageService _message2Service;
+        private readonly IMessageService _messageService;
         private readonly ICommentService _commentService;
         private readonly IConfiguration _configuration;
 
         public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService,IConfiguration configuration)
         {
             _blogService = blogService;
-            _message2Service = message2Service;
+            _messageService = message2Service;
             _commentService = commentService;
             _configuration = configuration;
         }
@@ -32,7 +32,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
             var blogCount = await _blogService.GetCountAsync();
 
-            var messageCount = await _message2Service.GetCountAsync();
+            var messageCount = await _messageService.GetCountAsync();
 
             var commentCount = await _commentService.GetCountAsync();
 
@@ -43,7 +43,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 CommentCount = commentCount.Data,
                 Temparature = tempFah.ToString()
             };
-            ViewBag.v2 = _message2Service.GetCountAsync().Result.Data;
+            ViewBag.v2 = _messageService.GetCountAsync().Result.Data;
             ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
             return View(widgetModel);
         }

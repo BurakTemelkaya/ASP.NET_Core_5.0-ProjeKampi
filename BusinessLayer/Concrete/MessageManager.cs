@@ -215,7 +215,6 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        [CacheAspect]
         public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.GetByUserNameAsync(userName);
@@ -242,7 +241,6 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<Message>("Mesaj bulunamadı");
         }
 
-        [CacheAspect]
         public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
         {
             var user = await _userService.GetByUserNameAsync(userName);
@@ -260,7 +258,6 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Message>(value);
         }
 
-        [CacheAspect]
         public async Task<IDataResult<Message>> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
         {
             return new SuccessDataResult<Message>(await _messageDal.GetByFilterAsync(filter));
