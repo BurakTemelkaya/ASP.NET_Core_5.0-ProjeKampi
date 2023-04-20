@@ -17,9 +17,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         {
             var messageCountResult = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
             var messageCount = messageCountResult.Data;
-            ViewBag.ReceivedUnreadMessage = messageCount.ToString();
-            var messageDraftCount = _messageDraftService.GetCountAsync().Result.Data;
-            ViewBag.MessageDraftCount = messageDraftCount.ToString();
+            ViewBag.ReceivedUnreadMessage = messageCount;
+            var messageDraftCount = await _messageDraftService.GetCountAsync();
+            ViewBag.MessageDraftCount = messageDraftCount.Data.ToString();
             return View();
         }
     }

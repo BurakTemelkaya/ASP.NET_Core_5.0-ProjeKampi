@@ -17,9 +17,9 @@ namespace CoreDemo.ViewComponents.Writer
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null, x => !x.MessageStatus, 3);
+            var result = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
 
-            ViewBag.NewMessage = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
+            ViewBag.NewMessage = result.Data;
 
             return View(result.Data);
 
