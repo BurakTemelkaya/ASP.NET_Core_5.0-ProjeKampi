@@ -50,6 +50,8 @@ namespace BusinessLayer.DependencyResolvers
             services.AddScoped<IContactService, ContactManager>();
 
             services.AddScoped<IMessageDraftService, MessageDraftManager>();
+
+            services.AddScoped<ILogService, LogManager>();
         }
     }
 }

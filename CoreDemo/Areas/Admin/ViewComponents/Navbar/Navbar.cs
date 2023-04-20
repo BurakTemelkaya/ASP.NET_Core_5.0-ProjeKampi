@@ -6,20 +6,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
 {
     public class Navbar : ViewComponent
     {
-        readonly IBusinessUserService _businessUserService;
-        readonly IMessageService _messageService;
-        public Navbar(IMessageService messageService, IBusinessUserService businessUserService)
+        public IViewComponentResult Invoke()
         {
-            _messageService = messageService;
-            _businessUserService = businessUserService;
-        }
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var unreadMessageCount = await _messageService.GetUnreadMessagesCountByUserNameAsync(User.Identity.Name);
-            if (unreadMessageCount.Success)
-            {
-                ViewBag.UnreadMessageCount = unreadMessageCount.Data;
-            }
             return View();
         }
     }

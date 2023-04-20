@@ -67,10 +67,15 @@ namespace CoreLayer.DataAccess.EntityFramework
         {
             var values = new List<TEntity>();
 
-            var count = filter == null ?
-                await GetCountAsync() : await GetCountAsync(filter);
+            var count = await GetCountAsync(filter);
 
             int skip = count - take;
+
+            if (skip < 0)
+            {
+                skip = 0;
+            }
+
             if (page > 1)
             {
                 skip = count - (take * (page - 1));
@@ -81,6 +86,7 @@ namespace CoreLayer.DataAccess.EntityFramework
             values.AddRange(result);
 
             values.AddRange(AddNullObject<TEntity>.GetNullValuesForAfter(page, take, count));
+
             return values;
         }
 

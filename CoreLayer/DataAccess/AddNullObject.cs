@@ -22,6 +22,10 @@ namespace CoreLayer.DataAccess
 
         public static List<TEntity> GetNullValuesForAfter(int page, int take, int count)
         {
+            if (page == 0)
+            {
+                page = 1;
+            }
             var values = new List<TEntity>();
             for (int i = 0; i < count - take * page; i++)
             {
