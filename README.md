@@ -101,8 +101,8 @@ Yazarların kendi bloglarına yapılan yorumları silme, pasifleştirme, aktifle
 
 Cacheleme mekanizması eklendi.
 
-<h3>Yapmak İstediklerim</h3>
-
 About düzenleme kısmı ekle.
+
+<h3>Yapmak İstediklerim</h3>
 
 Kayıt olurken ve eposta adresini güncellerken onay epostası ile onaylama ekle.

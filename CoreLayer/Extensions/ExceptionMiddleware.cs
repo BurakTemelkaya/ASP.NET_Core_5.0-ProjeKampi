@@ -44,7 +44,7 @@ namespace Core.Extensions
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext, Exception e)
+        private Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -53,10 +53,10 @@ namespace Core.Extensions
 
             IEnumerable<ValidationFailure> errors;
 
-            if (e.GetType() == typeof(ValidationException))
+            if (exception.GetType() == typeof(ValidationException))
             {
-                message = e.Message;
-                errors = ((ValidationException)e).Errors;
+                message = exception.Message;
+                errors = ((ValidationException)exception).Errors;
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                 var exceptionModel = new ValidationErrorDetail
@@ -73,8 +73,8 @@ namespace Core.Extensions
                 return httpContext.Response.WriteAsync(exceptionModel.ToString());
             }
 
-            _databaseLoggerServiceBase.Error(e);
-            _fileLoggerServiceBase.Error(e);
+            _databaseLoggerServiceBase.Error(message);
+            _fileLoggerServiceBase.Error(message);
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
