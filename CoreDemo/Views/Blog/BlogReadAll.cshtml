@@ -4,7 +4,8 @@
 }
 @section HeaderSection{
     <link href="~/css/blog-comment-star.css" rel="stylesheet" />
-    <link href="~/css/recaptcha.css" rel="stylesheet" />   
+    <link href="~/css/recaptcha.css" rel="stylesheet" />
+    <link href="~/comment-star/dist/style.css" rel="stylesheet" />
 }
 <!--//banner-->
 <section class="banner-bottom">
@@ -67,7 +68,7 @@
 
                     @await Component.InvokeAsync("CategoryList")
 
-                    
+
                 </div>
 
                 <div class="right-blog-info text-left" style="position: sticky; top: 0;">
@@ -90,7 +91,7 @@
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="~/js/blog-comment-add.js"></script>
     <script>
-        blogId=@Model.BlogID;
+        blogId = @Model.BlogID;
     </script>
 }
 
