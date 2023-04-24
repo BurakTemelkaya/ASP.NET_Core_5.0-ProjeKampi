@@ -26,6 +26,10 @@ a:hover {
     text-decoration: none;
 }
 
+p {
+    color: #aeb9b0;
+}
+
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #2f3848 inset !important;
     -webkit-text-fill-color: #fffff4 !important;

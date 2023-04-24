@@ -1,6 +1,10 @@
 ﻿@inject IHttpContextAccessor httpContextaccessor;
 @{
-    var thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
+    var thema = "";
+    if (httpContextaccessor.HttpContext.Request.Cookies["thema"] != null)
+    {
+        thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
+    }
     bool check = thema == "dark";
 }
 
