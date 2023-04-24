@@ -130,7 +130,7 @@ ul.list-group.single {
         background-color: #565d61;
     }
 h5.mt-0 {
-    color: #343a40;
+    color: #c3beb6;
     font-size: 1em;
     margin-bottom: 15px;
     letter-spacing: 1px;
@@ -239,7 +239,7 @@ h5.mt-0 {
 }
 
 .media-body p {
-    color: #777;
+    color: #b2aca2;
     font-size: 0.875em;
     line-height: 1.9em;
     margin-bottom: 3em;
@@ -247,7 +247,7 @@ h5.mt-0 {
 
 .comment h3,
 .comment-top h4 {
-    color: #555;
+    color: #b2aca2;
     font-size: 1.4em;
     text-align: left;
     padding: 0 0 0.5em;

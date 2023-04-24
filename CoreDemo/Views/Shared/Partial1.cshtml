@@ -1,4 +1,10 @@
-﻿<div class="header_top" id="home">
+﻿@inject IHttpContextAccessor httpContextaccessor;
+@{
+    var thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
+    bool check = thema == "dark";
+}
+
+<div class="header_top" id="home">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler navbar-toggler-right mx-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +36,14 @@
                         <a class="nav-link" href="/Admin/Widget/Index">Admin Paneli</a>
                     </li>
                 }
+                <li class="nav-item">
+                    <input type="checkbox" class="thema-toggle-checkbox" id="thema-toggle" onclick="SetThema()" checked="@check">
+                    <label for="thema-toggle" class="thema-toggle-checkbox-label">
+                        <i class="fas fa-moon w-10"></i>
+                        <i class="fas fa-sun"></i>
+                        <span class="ball"></span>
+                    </label>
+                </li>
                 
             </ul>
             <div class="form-inline my-2 my-lg-0 header-search">

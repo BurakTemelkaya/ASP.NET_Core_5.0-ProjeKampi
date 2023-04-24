@@ -2,9 +2,18 @@
 @{
     ViewData["Title"] = "İletişim";
     Layout = "~/Views/Shared/UserLayout.cshtml";
+    @inject IHttpContextAccessor httpContextaccessor;
+    var thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
 }
 @section HeaderSection{
-    <link href="~/CoreBlogTema/css/contact.css" rel='stylesheet' type='text/css' />
+    @if (thema == "dark")
+    {
+        <link href="~/CoreBlogTema/css/contact-dark.css" rel='stylesheet' type='text/css' />
+    }
+    else
+    {
+        <link href="~/CoreBlogTema/css/contact-light.css" rel='stylesheet' type='text/css' />
+    }
 }
 
 

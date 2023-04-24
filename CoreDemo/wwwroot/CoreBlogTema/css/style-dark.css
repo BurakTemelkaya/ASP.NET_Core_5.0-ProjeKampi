@@ -26,11 +26,48 @@ a:hover {
     text-decoration: none;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #2f3848 inset !important;
+    -webkit-text-fill-color: #fffff4 !important;
+}
+
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px #2f3848 inset !important;
+        -webkit-text-fill-color: #fffff4 !important;
+    }
+
+input:-internal-autofill-selected {
+    background-color: #2f3848 !important;
+    background-image: none !important;
+    color: rgb(0, 0, 0) !important;
+}
+
+.register-contract-text {
+    color: #fffff4;
+}
+
+.form-control {
+    border: 1px solid #3c4144;
+    background-color: #181a1b;
+    color: #fffff4;
+}
+
+    .form-control:focus {
+        background-color: #181a1b;
+        color: #fffff4;
+    }
+
+.form-check-label {
+    color: #d1cdc7;
+}
+
 input[type="button"],
 input[type="submit"],
 input[type="text"],
 input[type="email"],
-input[type="search"] {
+input[type="search"]
+input[type="password"]
+input[type="dropdown"]{
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
     -moz-transition: 0.5s all;
@@ -38,7 +75,18 @@ input[type="search"] {
     -ms-transition: 0.5s all;
     font-family: 'Poppins', sans-serif;
     color: #beb8b3 !important;
-    background-color: #3b3b3b;
+    background-color: #181a1b !important;
+}
+
+textarea {
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    font-family: 'Poppins', sans-serif;
+    color: #beb8b3 !important;
+    background-color: #181a1b !important;
 }
 
 h1,
@@ -50,6 +98,7 @@ h6 {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 1px;
+    color: #d1cdc7;
 }
 
 p {
@@ -739,7 +788,7 @@ button.btn.btn-primary.play {
     -o-transition: all 1s;
     -webkit-transition: all 1s;
     transition: all 1s;
-    background: #ebecec;
+    background: #838e92;
     padding: .4em;
 }
 
@@ -805,7 +854,7 @@ ul.blog-icons i {
 /*--//left--*/
 /*--/right--*/
 .tech-btm img {
-    background: #ebecec;
+    background: #202123;
     padding: .4em;
 }
 
@@ -1301,6 +1350,11 @@ footer {
 .list-group-item {
     background-color: #181a1b;
 }
+
+.ratings {
+    background-color: #1d1f20;
+}
+
 /*-- //subscribe --*/
 /*--//footer--*/
 /*--/copyright--*/
@@ -1353,54 +1407,11 @@ a.facebook {
     background: url(../images/top_up.png) no-repeat 0px 0px;
 }
 
-/*--// copyright-- */
-
-.rating-wrapper {
-    align-self: center;
-    box-shadow: 4px 4px 25px rgb(198 206 237 / 50%), -4px -4px 35px rgb(255 255 255 / 50%), inset 0px 0px 4px rgb(255 255 255 / 10%), inset 4px 4px 15px rgb(198 206 237 / 10%);
-    border-radius: 1.5rem;
-    direction: rtl !important;
-    padding: 1.1rem 1.5rem;
-    margin-left: auto;
+.media-comment {
+    background-color: #1d1f20;
 }
-
-    .rating-wrapper label {
-        color: #E1E6F6;
-        cursor: pointer;
-        display: inline-flex;
-        font-size: 2rem;
-        transition: color 0.5s;
-    }
-
-    .rating-wrapper svg {
-        -webkit-text-fill-color: transparent;
-        -webkit-filter: drop-shadow 4px 1px 6px #c6ceed;
-        filter: drop-shadow(5px 1px 3px #c6ceed);
-    }
-
-    .rating-wrapper input {
-        height: 100%;
-        width: 100%;
-    }
-
-    .rating-wrapper input {
-        display: none;
-    }
-
-        .rating-wrapper label:hover,
-        .rating-wrapper label:hover ~ label,
-        .rating-wrapper input:checked ~ label {
-            color: #34AC9E;
-        }
-
-            .rating-wrapper label:hover,
-            .rating-wrapper label:hover ~ label,
-            .rating-wrapper input:checked ~ label {
-                color: #34AC9E;
-            }
-
+/*--// copyright-- */
 /*--responsive--*/
-
 @media(max-width:1440px) {
     .bottom-slider, .main-content-w3layouts-agileits, footer, .banner-bottom {
         padding: 4em 0;
