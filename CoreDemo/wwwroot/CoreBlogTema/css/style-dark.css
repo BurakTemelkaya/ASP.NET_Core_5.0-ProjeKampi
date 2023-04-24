@@ -27,7 +27,7 @@ a:hover {
 }
 
 p {
-    color: #aeb9b0;
+    color: #aeb9b0 !important;
 }
 
 input:-webkit-autofill {
@@ -89,7 +89,7 @@ textarea {
     -o-transition: 0.5s all;
     -ms-transition: 0.5s all;
     font-family: 'Poppins', sans-serif;
-    color: #beb8b3 !important;
+    color: #beb9b0 !important;
     background-color: #181a1b !important;
 }
 
@@ -98,17 +98,18 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+span{
     margin: 0;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 1px;
-    color: #d1cdc7;
+    color: #beb9b0 !important;
 }
 
 p {
     margin: 0;
     font-size: 0.9em;
-    color: #8a8180;
+    color: #beb9b0 !important;
     line-height: 2em;
     letter-spacing: 1px;
     font-weight: 300;
@@ -1353,6 +1354,7 @@ footer {
 
 .list-group-item {
     background-color: #181a1b;
+    border-color: rgba(140, 130, 115, 0.13);
 }
 
 .ratings {
