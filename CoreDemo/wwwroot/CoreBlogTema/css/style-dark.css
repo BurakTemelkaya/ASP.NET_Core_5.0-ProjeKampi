@@ -99,7 +99,7 @@ h3,
 h4,
 h5,
 h6,
-span{
+arcticle span{
     margin: 0;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 1px;
@@ -887,7 +887,7 @@ ul.blog-icons i {
     }
 
     .tech-btm input[type="submit"] {
-        background: #01cd74;
+        background: #01cd74 !important;
         padding: .7em 1em;
         color: #fff !important;
         font-size: 15px;

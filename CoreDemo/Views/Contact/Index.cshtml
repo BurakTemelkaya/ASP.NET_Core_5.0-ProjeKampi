@@ -103,7 +103,9 @@
                         <div class="form-group">
                             <label for="textarea">Mesajınız</label>
                             <textarea id="textarea" name="ContactMessage" asp-for="ContactMessage" placeholder=" Mesajınızı Yazınız" required></textarea>
-                            @Html.ValidationMessageFor(x=> x.ContactMessage, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(x=> x.ContactMessage, "", new { @class = "text-danger" }),                                                      
+                        </div>
+                        <div class="form-group">
                             <div class="row form-group justify-content-center">
                                 <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
                             </div>

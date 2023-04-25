@@ -103,6 +103,8 @@ Cacheleme mekanizması eklendi.
 
 About düzenleme kısmı ekle.
 
+Karanlık tema eklendi.
+
 <h3>Yapmak İstediklerim</h3>
 
 Kayıt olurken ve eposta adresini güncellerken onay epostası ile onaylama ekle.
