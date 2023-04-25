@@ -73,8 +73,8 @@ namespace Core.Extensions
                 return httpContext.Response.WriteAsync(exceptionModel.ToString());
             }
 
-            _databaseLoggerServiceBase.Error(message);
-            _fileLoggerServiceBase.Error(message);
+            _databaseLoggerServiceBase.Error(exception);
+            _fileLoggerServiceBase.Error(exception);
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {

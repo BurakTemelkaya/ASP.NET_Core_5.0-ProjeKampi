@@ -64,9 +64,9 @@ p.sub {
     cursor: pointer;
 }
 
-.contact_grid_right input[type="submit"]:hover {
-    background-color: #01cd74;
-}
+    .contact_grid_right input[type="submit"]:hover {
+        background-color: #212121 !important;
+    }
 
 .contact-left h4 {
     color: #444;

@@ -51,7 +51,7 @@ p.sub {
     padding: 20px 0;
     font-size: 14px;
     color: #fff;
-    background: #0e0f10;
+    background: #01cd74;
     border: none;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -65,7 +65,7 @@ p.sub {
 }
 
 .contact_grid_right input[type="submit"]:hover {
-    background-color: #01cd74;
+    background-color: #009051;
 }
 
 .contact-left h4 {

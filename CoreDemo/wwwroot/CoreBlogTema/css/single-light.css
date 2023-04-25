@@ -146,6 +146,10 @@ h5.mt-0 {
     margin-bottom: 1em;
 }
 
+.card {
+    background-color: #f7f7f7;
+}
+
 .card-body {
     padding: 12px;
 }
