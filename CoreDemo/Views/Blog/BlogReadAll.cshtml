@@ -1,8 +1,19 @@
 ﻿@model Blog
+@inject IHttpContextAccessor httpContextaccessor;
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
+    var thema = "";
+    if (httpContextaccessor.HttpContext.Request.Cookies["thema"] != null)
+    {
+        thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
+    }
 }
 @section HeaderSection{
+    <meta property="og:title" content="@Model.BlogTitle" />
+    @if (thema == "dark")
+    {
+        <link href="~/coreblogtema/css/blog-read-all-dark.css" rel="stylesheet" />
+    }
     <link href="~/css/blog-comment-star.css" rel="stylesheet" />
     <link href="~/css/recaptcha.css" rel="stylesheet" />
     <link href="~/comment-star/dist/style.css" rel="stylesheet" />
