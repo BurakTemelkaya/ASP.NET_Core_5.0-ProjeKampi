@@ -8,7 +8,12 @@
         search = ViewBag.Search;
     }
     string blogTitle = "";
+
 }
+@section HeaderSection{
+    <meta property="og:title" content="Core Blog - Güncel Teknoloji Blogları" />
+}
+
 <section class="main-content-w3layouts-agileits">
     <div class="container">
         @if (ViewBag.id == null)
@@ -47,7 +52,7 @@
 
                         if (item.Comments.Count(x => x.CommentStatus) > 0)
                         {
-                            BlogScore = Math.Round(item.Comments.Average(x => x.BlogScore),1);
+                            BlogScore = Math.Round(item.Comments.Average(x => x.BlogScore), 1);
                         }
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@item.BlogID">
