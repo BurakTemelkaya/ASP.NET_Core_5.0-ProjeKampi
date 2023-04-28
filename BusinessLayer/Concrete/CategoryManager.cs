@@ -103,7 +103,7 @@ namespace BusinessLayer.Concrete
             {
                 return new SuccessResult();
             }
-            return new ErrorResult("İşlem başarısız.");
+            return new ErrorResult(result.Message);
         }
 
         [CacheAspect]

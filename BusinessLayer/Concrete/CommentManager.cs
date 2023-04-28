@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Validation;
@@ -59,7 +60,7 @@ namespace BusinessLayer.Concrete
         {
             if (t == null)
             {
-                return new ErrorResult("Yorum boş olamaz");
+                return new ErrorResult(Messages.CommentNotEmpty);
             }
 
             await _commentDal.DeleteAsync(t);
@@ -80,7 +81,7 @@ namespace BusinessLayer.Concrete
             {
                 return new SuccessDataResult<Comment>(values);
             }
-            return new ErrorDataResult<Comment>("Yorum bulunamadı.");
+            return new ErrorDataResult<Comment>(Messages.CommentNotFound);
         }
 
         [CacheRemoveAspect("ICommentService.Get")]
@@ -97,7 +98,7 @@ namespace BusinessLayer.Concrete
                 await _commentDal.UpdateAsync(t);
                 return new SuccessResult();
             }
-            return new ErrorResult("Güncellenecek değer bulunamadı.");
+            return new ErrorResult(Messages.CommentNotFound);
 
         }
 
@@ -122,7 +123,7 @@ namespace BusinessLayer.Concrete
             {
                 return new SuccessDataResult<List<Comment>>(data);
             }
-            return new ErrorDataResult<List<Comment>>("Kullanıcıya ait yorumlar bulunamadı.");
+            return new ErrorDataResult<List<Comment>>(Messages.CommentNotFound);
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
@@ -136,11 +137,11 @@ namespace BusinessLayer.Concrete
                 var result = await TDeleteAsync(comment);
                 if (result.Success)
                 {
-                    return new SuccessResult("Yorum silindi");
+                    return new SuccessResult(Messages.CommentDeleted);
                 }
-                return new ErrorResult("Yorum silinemedi.");
+                return new ErrorResult(Messages.CommentNotDeleted);
             }
-            return new ErrorResult("Yorum bu yazara ait değil");
+            return new ErrorResult(Messages.CommentIsNotAuthors);
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
@@ -153,17 +154,17 @@ namespace BusinessLayer.Concrete
             {
                 if (!comment.CommentStatus)
                 {
-                    return new SuccessResult("Yorum zaten pasif.");
+                    return new SuccessResult(Messages.CommentAlreadyPassive);
                 }
                 comment.CommentStatus = false;
                 var result = await TUpdateAsync(comment);
                 if (result.Success)
                 {
-                    return new SuccessResult("Yorum pasifleştirildi.");
+                    return new SuccessResult(Messages.CommentHasBeenPassive);
                 }
-                return new ErrorResult("Yorum pasifleştirilemedi.");
+                return new ErrorResult(result.Message);
             }
-            return new ErrorResult("Yorum bu yazara ait değil");
+            return new ErrorResult(Messages.CommentIsNotAuthors);
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
@@ -176,17 +177,17 @@ namespace BusinessLayer.Concrete
             {
                 if (comment.CommentStatus)
                 {
-                    return new SuccessResult("Yorum zaten aktif.");
+                    return new SuccessResult(Messages.CommentAlreadyActive);
                 }
                 comment.CommentStatus = true;
                 var result = await TUpdateAsync(comment);
                 if (result.Success)
                 {
-                    return new SuccessResult("Yorum aktifleştirildi.");
+                    return new SuccessResult(Messages.CommentHasBeenActive);
                 }
-                return new ErrorResult("Yorum aktifleştirilemedi.");
+                return new ErrorResult(result.Message);
             }
-            return new ErrorResult("Yorum bu yazara ait değil");
+            return new ErrorResult(Messages.CommentIsNotAuthors);
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
@@ -196,7 +197,7 @@ namespace BusinessLayer.Concrete
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment == null)
             {
-                return new ErrorResult("Yorum bulunamadı");
+                return new ErrorResult(Messages.CommentNotFound);
             }
             if (comment.CommentStatus)
             {
@@ -224,7 +225,7 @@ namespace BusinessLayer.Concrete
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment == null)
             {
-                return new ErrorResult("Yorum bulunamadı");
+                return new ErrorResult(Messages.CommentNotFound);
             }
             if (comment.CommentStatus)
             {
@@ -249,10 +250,10 @@ namespace BusinessLayer.Concrete
                 {
                     return new SuccessDataResult<Comment>(comment);
                 }
-                return new ErrorDataResult<Comment>("Yorum kullanıcıya ait değil.");
+                return new ErrorDataResult<Comment>(Messages.CommentIsNotAuthors);
             }
 
-            return new ErrorDataResult<Comment>("Yorum bulunamadı.");
+            return new ErrorDataResult<Comment>(Messages.CommentNotFound);
         }
     }
 }

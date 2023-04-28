@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
 using CoreLayer.Utilities.FileUtilities;
@@ -54,7 +55,7 @@ namespace BusinessLayer.Concrete
         {
             if (t == null)
             {
-                return new ErrorResult("Silinecek iletişim mesajı boş olamaz");
+                return new ErrorResult(Messages.ContactNotEmpty);
             }
 
             await _contactDal.DeleteAsync(t);
@@ -86,7 +87,7 @@ namespace BusinessLayer.Concrete
 
                 if (!contact.Success)
                 {
-                    return new ErrorResult("İletişim mesajı bulunamadı.");
+                    return new ErrorResult(Messages.ContactNotFound);
                 }
 
                 if (!contact.Data.ContactStatus)
@@ -95,13 +96,13 @@ namespace BusinessLayer.Concrete
                 }
                 else
                 {
-                    return new ErrorResult("İletişim mesajı zaten okunmuş.");
+                    return new ErrorResult(Messages.ContactAlreadyRead);
                 }
 
                 await _contactDal.UpdateAsync(contact.Data);
                 return new SuccessResult();
             }
-            return new ErrorResult("İletişim mesajı boş.");
+            return new ErrorResult(Messages.ContactIsEmpty);
         }
 
         public async Task<IResult> MarkUsUnreadAsync(int contactId)
@@ -116,20 +117,20 @@ namespace BusinessLayer.Concrete
                 }
                 else
                 {
-                    return new ErrorResult("İletişim mesajı zaten okunmamış.");
+                    return new ErrorResult(Messages.ContactAlreadyUnread);
                 }
 
                 await _contactDal.UpdateAsync(contact.Data);
                 return new SuccessResult();
             }
-            return new ErrorResult("İletişim mesajı boş.");
+            return new ErrorResult(Messages.ContactIsEmpty);
         }
 
         public async Task<IResult> DeleteContactsAsync(List<string> ids)
         {
             if (ids == null)
             {
-                return new ErrorResult("İletişim mesajları boş.");
+                return new ErrorResult(Messages.ContactsIsEmpty);
             }
 
             List<Contact> contacts = new();
@@ -167,7 +168,7 @@ namespace BusinessLayer.Concrete
 
             if (contacts.Count == 0)
             {
-                return new ErrorResult("Hiçbir mesaj okundu olarak işaretlenemedi.");
+                return new ErrorResult(Messages.ContactMessagesNotRead);
             }
 
             await _contactDal.UpdateRangeAsync(contacts);
@@ -198,7 +199,7 @@ namespace BusinessLayer.Concrete
 
             if (contacts.Count == 0)
             {
-                return new ErrorResult("Hiçbir mesaj okunmadı olarak işaretlenemedi.");
+                return new ErrorResult(Messages.ContactMessagesNotUnread);
             }
 
             await _contactDal.UpdateRangeAsync(contacts);

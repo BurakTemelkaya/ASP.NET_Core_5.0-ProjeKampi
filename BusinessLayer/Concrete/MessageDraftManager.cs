@@ -54,7 +54,7 @@ namespace BusinessLayer.Concrete
 
             if (values.Count == 0)
             {
-                return new ErrorDataResult<List<MessageDraft>>("Veri bulunamadı.");
+                return new ErrorDataResult<List<MessageDraft>>(Messages.MessageDraftNotFound);
             }
 
             foreach (var item in values)
@@ -145,7 +145,7 @@ namespace BusinessLayer.Concrete
 
             if (messageDrafts.Count == 0)
             {
-                return new ErrorResult("Hiçbir mesaj silinemedi.");
+                return new ErrorResult(Messages.MessageDraftsNotDeleting);
             }
 
             await _messageDraftDal.DeleteRangeAsync(messageDrafts);
@@ -168,7 +168,7 @@ namespace BusinessLayer.Concrete
                 return new SuccessDataResult<MessageDraft>(value);
             }
 
-            return new ErrorDataResult<MessageDraft>("Mesaj kullanıcıya ait değil.");
+            return new ErrorDataResult<MessageDraft>(Messages.MessageDraftIsNotAuthors);
         }
 
         public async Task<IDataResult<MessageDraft>> GetByIDAsync(int id, string userName)
@@ -222,14 +222,14 @@ namespace BusinessLayer.Concrete
                 return new SuccessResult();
             }
 
-            return new ErrorResult("Mesaj kullanıcıya ait değil.");
+            return new ErrorResult(Messages.MessageDraftIsNotAuthors);
         }
 
         IResult IdNotEqualZero(int id)
         {
             if (id == 0)
             {
-                return new ErrorResult("Mesaj taslağı bulunamadı");
+                return new ErrorResult(Messages.MessageDraftNotFound);
             }
             return new SuccessResult();
         }
@@ -238,7 +238,7 @@ namespace BusinessLayer.Concrete
         {
             if (ids == null)
             {
-                return new ErrorResult("Mesaj taslakları bulunamadı");
+                return new ErrorResult(Messages.MessageDraftsNotFound);
             }
             return new SuccessResult();
         }

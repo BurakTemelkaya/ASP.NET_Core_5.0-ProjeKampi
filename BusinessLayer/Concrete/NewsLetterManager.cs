@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Configuration;
 using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Validation;
@@ -49,7 +50,7 @@ namespace BusinessLayer.Concrete
             if (isSend)
                 return new SuccessResult();
             else
-                return new ErrorResult("Mail gönderilemedi.");
+                return new ErrorResult(Messages.NewsLetterNotSending);
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]
@@ -64,7 +65,7 @@ namespace BusinessLayer.Concrete
                 return new SuccessResult();
             }
 
-            return new ErrorResult("Bültenimizde kaydınız bulunmaktadır.");
+            return new ErrorResult(Messages.NewsLetterAlreadyRegistered);
         }
 
         public async Task<IResult> TDeleteAsync(NewsLetter t)

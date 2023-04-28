@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLayer.Constants;
 using CoreLayer.Utilities.Results;
 using EntityLayer.DTO;
 using System;
@@ -21,7 +22,7 @@ namespace BusinessLayer.Concrete
         {
             if (!user.Success)
             {
-                return new ErrorResult("Kullanıcı bulunamadı.");
+                return new ErrorResult(Messages.UserNotFound);
             }
             return new SuccessResult();
         }

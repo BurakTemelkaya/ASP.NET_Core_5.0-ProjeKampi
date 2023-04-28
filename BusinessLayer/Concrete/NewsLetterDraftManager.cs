@@ -37,7 +37,7 @@ namespace BusinessLayer.Concrete
                 return new SuccessResult();
             }
 
-            return new ErrorResult("Taslak bulunamadı.");
+            return new ErrorResult(Messages.NewsLetterDraftNotFound);
 
         }
 
@@ -83,7 +83,7 @@ namespace BusinessLayer.Concrete
 
             if (value == null)
             {
-                return new ErrorDataResult<NewsLetterDraft>("Taslak bulunamadı.");
+                return new ErrorDataResult<NewsLetterDraft>(Messages.NewsLetterDraftNotFound);
             }
 
             value.Content = await TextFileManager.ReadTextFileAsync(value.Content);
@@ -119,7 +119,7 @@ namespace BusinessLayer.Concrete
         {
             if (newsLetterId == 0)
             {
-                return new ErrorResult("Taslak boş olamaz");
+                return new ErrorResult(Messages.NewsLetterDraftNotEmpty);
             }
             return new SuccessResult();
         }

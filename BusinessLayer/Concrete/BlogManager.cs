@@ -84,7 +84,7 @@ namespace BusinessLayer.Concrete
         {
             var value = await _blogDal.GetByIDAsync(id);
             if (value == null)
-                return new ErrorDataResult<Blog>();
+                return new ErrorDataResult<Blog>(Messages.BlogNotFound);
             value.BlogContent = await TextFileManager.ReadTextFileAsync(value.BlogContent);
             return new SuccessDataResult<Blog>(value);
         }
@@ -96,7 +96,7 @@ namespace BusinessLayer.Concrete
             var value = await _blogDal.GetByIDAsync(id);
 
             if (value == null)
-                return new ErrorDataResult<Blog>("Blog bulunamadı.");
+                return new ErrorDataResult<Blog>(Messages.BlogNotFound);
 
             value.BlogThumbnailImage = null;
             value.BlogImage = null;
@@ -112,7 +112,7 @@ namespace BusinessLayer.Concrete
 
             if (value == null)
             {
-                return new ErrorDataResult<List<Blog>>();
+                return new ErrorDataResult<List<Blog>>(Messages.BlogNotFound);
             }
 
             return new SuccessDataResult<List<Blog>>(value.OrderByDescending(x => x.BlogID).ToList());
@@ -123,7 +123,7 @@ namespace BusinessLayer.Concrete
         {
             if (id == 0)
             {
-                return new ErrorDataResult<List<Blog>>();
+                return new ErrorDataResult<List<Blog>>(Messages.BlogNotFound);
             }
             return new SuccessDataResult<List<Blog>>(await _blogDal.GetListAllAsync(x => x.WriterID == id));
         }
@@ -139,7 +139,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogImageNotGetting);
                 }
                 blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
@@ -150,7 +150,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogImage == null)
             {
-                return new ErrorResult("Blog resmi yüklenemedi.");
+                return new ErrorResult(Messages.BlogImageNotUploading);
             }
 
             if (blog.BlogThumbnailImage != null)
@@ -158,7 +158,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogThumbnailNotGetting);
                 }
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
@@ -169,7 +169,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogThumbnailImage == null)
             {
-                return new ErrorResult("Blog küçük resmi yüklenemedi.");
+                return new ErrorResult(Messages.BlogThumbnailNotUploading);
             }
 
             var result = BusinessRules.Run(UserNotEmpty(user), BlogImageNotEmpty(blog.BlogImage), BlogThumbnailNotEmpty(blog.BlogThumbnailImage));
@@ -209,7 +209,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogImageNotGetting);
                 }
                 blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
@@ -221,7 +221,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogImage == null)
             {
-                return new ErrorResult("Blog resmi, yüklenemedi.");
+                return new ErrorResult(Messages.BlogImageNotUploading);
             }
 
 
@@ -234,7 +234,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogThumbnailNotGetting);
                 }
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogContent);
@@ -244,14 +244,14 @@ namespace BusinessLayer.Concrete
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 if (blog.BlogThumbnailImage == null)
                 {
-                    return new ErrorResult("Blog küçük resmi, yüklenen resim ile güncellenemedi.");
+                    return new ErrorResult(Messages.BlogThumbnailNotGetting);
                 }
                 DeleteFileManager.DeleteFile(oldValue.BlogContent);
             }
 
             if (blog.BlogThumbnailImage == null)
             {
-                return new ErrorResult("Blog küçük resmi, yüklenemedi.");
+                return new ErrorResult(Messages.BlogThumbnailNotUploading);
             }
 
 
@@ -285,7 +285,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogImageNotGetting);
                 }
                 blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
@@ -297,7 +297,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogImage == null)
             {
-                return new ErrorResult("Blog resmi, yüklenemedi");
+                return new ErrorResult(Messages.BlogImageNotUploading);
             }
 
             if (blog.BlogThumbnailImage == null && blogThumbnailImage == null)
@@ -309,7 +309,7 @@ namespace BusinessLayer.Concrete
                 var image = ImageFileManager.DownloadImage(blog.BlogThumbnailImage);
                 if (image == null)
                 {
-                    return new ErrorResult("Blog küçük resmi, girdiğiniz linkten getirilemedi.");
+                    return new ErrorResult(Messages.BlogThumbnailNotGetting);
                 }
                 blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
                 DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
@@ -322,7 +322,7 @@ namespace BusinessLayer.Concrete
 
             if (blog.BlogThumbnailImage == null)
             {
-                return new ErrorResult("Blog resmi, yüklenemedi");
+                return new ErrorResult(Messages.BlogThumbnailNotUploading);
             }
 
 
@@ -363,7 +363,7 @@ namespace BusinessLayer.Concrete
             var user = await _userService.GetByUserNameAsync(userName);
             if (!user.Success)
             {
-                return new ErrorDataResult<int>("Kullanıcı bulunamadı.");
+                return new ErrorDataResult<int>(Messages.UserNotFound);
             }
             return new SuccessDataResult<int>(await _blogDal.GetCountAsync(x => x.WriterID == user.Data.Id));
         }
@@ -411,7 +411,7 @@ namespace BusinessLayer.Concrete
                 await _blogDal.UpdateAsync(value);
                 return new SuccessResult();
             }
-            return new ErrorResult("Kullanıcı bulunamadı.");
+            return new ErrorResult(Messages.UserNotFound);
         }
 
         public async Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id)
@@ -514,14 +514,14 @@ namespace BusinessLayer.Concrete
                 result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
                 return new SuccessDataResult<Blog>(result);
             }
-            return new ErrorDataResult<Blog>("Blog bulunamadı.");
+            return new ErrorDataResult<Blog>(Messages.BlogNotFound);
         }
 
         IResult BlogImageNotEmpty(string blogImage)
         {
             if (blogImage == string.Empty)
             {
-                return new ErrorResult("Lütfen blog resminizin linkini giriniz veya yükleyin.");
+                return new ErrorResult(Messages.BlogImageNotEmpty);
             }
             return new SuccessResult();
         }
@@ -530,7 +530,7 @@ namespace BusinessLayer.Concrete
         {
             if (blogThumnailImage == string.Empty)
             {
-                return new ErrorResult("Lütfen blog küçük resminizin linkini giriniz veya yükleyin.");
+                return new ErrorResult(Messages.BlogThumbnailNotEmpty);
             }
             return new SuccessResult();
         }

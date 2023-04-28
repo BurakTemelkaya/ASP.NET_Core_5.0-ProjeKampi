@@ -72,7 +72,7 @@ namespace BusinessLayer.Concrete
                 about.AboutImage1 = ImageFileManager.ImageAdd(aboutImage1, ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (about.AboutImage1 == null)
                 {
-                    return new ErrorResult("1. Hakkında resmi yüklenemedi");
+                    return new ErrorResult(Messages.About1ImageNotUploaded);
                 }
                 DeleteFileManager.DeleteFile(oldValue.Data.AboutImage1);
             }
@@ -81,11 +81,10 @@ namespace BusinessLayer.Concrete
                 about.AboutImage1 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage1), ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (about.AboutImage1 == null)
                 {
-                    return new ErrorResult("1. Hakkında resmi yüklenemedi");
+                    return new ErrorResult(Messages.About1ImageNotUploaded);
                 }
                 DeleteFileManager.DeleteFile(oldValue.Data.AboutImage1);
             }
-
 
             if (about.AboutImage2 == null && aboutImage2 == null)
             {
@@ -96,7 +95,7 @@ namespace BusinessLayer.Concrete
                 about.AboutImage2 = ImageFileManager.ImageAdd(aboutImage2, ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (aboutImage2 == null)
                 {
-                    return new ErrorResult("2. Hakkında resmi yüklenemedi");
+                    return new ErrorResult(Messages.About2ImageNotUploaded);
                 }
                 DeleteFileManager.DeleteFile(oldValue.Data.AboutImage2);
             }
@@ -105,12 +104,14 @@ namespace BusinessLayer.Concrete
                 about.AboutImage2 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage2), ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (aboutImage1 == null)
                 {
-                    return new ErrorResult("2. Hakkında resmi yüklenemedi");
+                    return new ErrorResult(Messages.About2ImageNotUploaded);
                 }
                 DeleteFileManager.DeleteFile(oldValue.Data.AboutImage2);
             }
+
             await _aboutDal.UpdateAsync(about);
-            return new SuccessResult();
+
+            return new SuccessResult(Messages.AboutUpdated);
         }
     }
 }

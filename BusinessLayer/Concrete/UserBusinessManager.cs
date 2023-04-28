@@ -58,12 +58,12 @@ namespace BusinessLayer.Concrete
                     ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
                 if (user.ImageUrl == null)
                 {
-                    return new ErrorDataResult<IdentityResult>("Profil resminiz yüklenemedi.");
+                    return new ErrorDataResult<IdentityResult>(Messages.UserProfileImageNotUploadError);
                 }
             }
             else
             {
-                return new ErrorDataResult<IdentityResult>("Lütfen profil resmi yükleyin yada resim linki giriniz.");
+                return new ErrorDataResult<IdentityResult>(Messages.UserProfileImageNotUploading);
             }
 
             var result = await _userManager.CreateAsync(user, password);
@@ -113,7 +113,7 @@ namespace BusinessLayer.Concrete
 
             if (!value.Success)
             {
-                return new ErrorDataResult<IdentityResult>("Kullanıcı bulunamadı");
+                return new ErrorDataResult<IdentityResult>(Messages.UserNotFound);
             }
 
             value.Data.UserName = user.UserName;
@@ -202,7 +202,7 @@ namespace BusinessLayer.Concrete
                 return new SuccessDataResult<UserDto>(userDto);
             }
 
-            return new ErrorDataResult<UserDto>("Kullanıcı bulunamadı.");
+            return new ErrorDataResult<UserDto>(Messages.UserNotFound);
         }
 
         [CacheAspect]
@@ -289,7 +289,7 @@ namespace BusinessLayer.Concrete
                 {
                     var isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
                     if (isExistUserRole)
-                        return new ErrorResult("Adminler banlanamaz.");
+                        return new ErrorResult(Messages.AdminNotBanned);
 
                     var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(userData, expiration);
                     if (resultSetLockotEndDate.Succeeded)
@@ -301,7 +301,7 @@ namespace BusinessLayer.Concrete
                     }
                     return new ErrorResult(resultSetLockot.Errors.First().Description);
                 }
-                return new ErrorResult("Girilen ban süresi şu anki tarihten ileride olamaz.");
+                return new ErrorResult(Messages.BannedLaterThanTheCurrentDate);
             }
             return new ErrorResult(resultSetLockot.Errors.First().Description);
         }
@@ -348,7 +348,7 @@ namespace BusinessLayer.Concrete
             {
                 return new SuccessDataResult<string>(result);
             }
-            return new ErrorDataResult<string>("Bir hata oluştu.");
+            return new ErrorDataResult<string>(result);
         }
 
         [CacheRemoveAspect("IBusinessUserService.Get")]

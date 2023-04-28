@@ -135,7 +135,7 @@ namespace BusinessLayer.Concrete
 
             if (t.Details == null)
             {
-                return new ErrorResult("Mesaj güncellenemedi.");
+                return new ErrorResult(Messages.MessageNotUpdating);
             }
 
             await _messageDal.UpdateAsync(t);
@@ -238,7 +238,7 @@ namespace BusinessLayer.Concrete
                 return new SuccessDataResult<Message>(value);
             }
 
-            return new ErrorDataResult<Message>("Mesaj bulunamadı");
+            return new ErrorDataResult<Message>(Messages.MessageNotFound);
         }
 
         public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
@@ -287,7 +287,7 @@ namespace BusinessLayer.Concrete
 
             else
             {
-                return new ErrorResult("Mesaj zaten okunmuş.");
+                return new ErrorResult(Messages.MessageAlreadyRead);
             }
 
         }
@@ -316,7 +316,7 @@ namespace BusinessLayer.Concrete
 
             else
             {
-                return new ErrorResult("Mesaj zaten okunmamış.");
+                return new ErrorResult(Messages.MessageAlreadyUnread);
             }
         }
 
@@ -434,7 +434,7 @@ namespace BusinessLayer.Concrete
         {
             if (receiverUser == senderUser)
             {
-                return new ErrorResult("Alıcı ile gönderici aynı olamaz.");
+                return new ErrorResult(Messages.MessageReceiverNotEqualsSender);
             }
             return new SuccessResult();
         }
@@ -443,7 +443,7 @@ namespace BusinessLayer.Concrete
         {
             if (!receiverUser.Success)
             {
-                return new ErrorResult("Alıcı boş olamaz.");
+                return new ErrorResult(Messages.MessageReceiverNotEmpty);
             }
             return new SuccessResult();
         }
@@ -452,16 +452,16 @@ namespace BusinessLayer.Concrete
         {
             if (!senderUser.Success)
             {
-                return new ErrorResult("Alıcı boş olamaz.");
+                return new ErrorResult(Messages.MessageSenderNotEmpty);
             }
             return new SuccessResult();
         }
 
         private IResult MessageNotEmpty(IDataResult<Message> message)
         {
-            if (!message.Success)
+            if (message.Data == null)
             {
-                return new ErrorResult("Mesaj boş.");
+                return new ErrorResult(Messages.MessageNotEmpty);
             }
             return new SuccessResult();
         }
@@ -470,7 +470,7 @@ namespace BusinessLayer.Concrete
         {
             if (id == 0)
             {
-                return new ErrorResult("Mesaj boş.");
+                return new ErrorResult(Messages.MessageNotEmpty);
             }
             return new SuccessResult();
         }
@@ -479,7 +479,7 @@ namespace BusinessLayer.Concrete
         {
             if (Ids == null)
             {
-                return new ErrorResult("Mesajlar boş.");
+                return new ErrorResult(Messages.MessagesNotEmpty);
             }
             return new SuccessResult();
         }
@@ -488,7 +488,7 @@ namespace BusinessLayer.Concrete
         {
             if (receiverUserName != activeUserName)
             {
-                return new ErrorResult("Mesaj kullanıcıya ait değil.");
+                return new ErrorResult(Messages.MessageDoesNotBelongToTheUser);
             }
             return new SuccessResult();
         }
