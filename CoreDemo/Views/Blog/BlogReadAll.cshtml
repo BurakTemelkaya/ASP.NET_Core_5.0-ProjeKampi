@@ -10,7 +10,7 @@
 }
 @section HeaderSection{
     <meta property="og:title" content="@Model.BlogTitle" />
-    <meta name="googlebot" content="noindex">
+    <link href="~/coreblogtema/css/blog-read-all.css" rel="stylesheet" />
     @if (thema == "dark")
     {
         <link href="~/coreblogtema/css/blog-read-all-dark.css" rel="stylesheet" />
@@ -37,27 +37,31 @@
                                     <a href="#">
                                         <i class="far fa-calendar-alt"></i> @(((DateTime)Model.BlogCreateDate).ToString("dd.MM.yyyy"))
                                     </a>
+
                                 </li>
                                 <li class="mx-2">
                                     <a href="#">
                                         <i class="far fa-star"></i> @ViewBag.Star
                                     </a>
+
                                 </li>
                                 <li>
                                     <a href="#comment">
                                         <i class="far fa-comment"></i> @ViewBag.CommentCount
                                     </a>
                                 </li>
-
                             </ul>
                         </div>
                     </div>
-                    <h3>
-                        <a href="#">@Model.BlogTitle.ToString() </a>
-                    </h3>
+                    <h1>
+                        @Model.BlogTitle
+                        
+                    </h1>
+                    <br />
                     <article>
                         @Html.Raw(Model.BlogContent)
                     </article>
+                    <br />
                     <p>
                         Yazar Adı : <b>@ViewBag.WriterName</b>
                     </p>

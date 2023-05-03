@@ -819,12 +819,6 @@ button.btn.btn-primary.play {
     display: inline-block;
 }
 
-.blog-grid-top h3, .two-blog2 h3, h5.card-title {
-    font-size: 1.2em;
-    margin: 1.2em 0 1em 0;
-    font-weight: 700;
-}
-
 .card-text {
     color: #65777e;
 }
