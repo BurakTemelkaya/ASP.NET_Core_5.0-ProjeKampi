@@ -213,12 +213,14 @@ ul.social_list1 li a {
     background-color: #f0f3f1 !important;
 }
 
-a.navbar-brand {
+h1.navbar-brand {
     font-size: 2em;
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
-    color: #3d3e48;
+    color: #3d3e48 !important;
     text-transform: uppercase;
+    letter-spacing: normal;
+    cursor: pointer;
 }
 
 .logo i {

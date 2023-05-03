@@ -12,29 +12,33 @@
 }
 @section HeaderSection{
     <meta property="og:title" content="Core Blog - Güncel Teknoloji Blogları" />
+    <meta property="og:url" content="https://coreblogsite.azurewebsites.net/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Core Blog" />
+    <meta property="og:image" content="https://coreblogsite.azurewebsites.net/writer/assets/images/favicon.ico" />
 }
 
 <section class="main-content-w3layouts-agileits">
     <div class="container">
         @if (ViewBag.id == null)
         {
-            <h3 class="tittle">Bloglar</h3>
+            <h2 class="tittle">Bloglar</h2>
         }
         else
         {
-            <h3 class="tittle">@Model[0].Category.CategoryName Blogları</h3>
+            <h2 class="tittle">@Model[0].Category.CategoryName Blogları</h2>
         }
         @if (ViewBag.Message != null)
         {
             @if (ViewBag.IsSuccess)
             {
                 <br />
-                <h3 class="tittle text-success">@ViewBag.Message</h3>
+                <h2 class="tittle text-success">@ViewBag.Message</h2>
             }
             else
             {
                 <br />
-                <h3 class="tittle text-danger">@ViewBag.Message</h3>
+                <h2 class="tittle text-danger">@ViewBag.Message</h2>
             }
         }
 

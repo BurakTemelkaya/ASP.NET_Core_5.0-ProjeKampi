@@ -286,12 +286,14 @@ ul.social_list1 li a {
     background-color: #202224 !important;
 }
 
-a.navbar-brand {
+h1.navbar-brand {
     font-size: 2em;
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
-    color: #beb8b0;
+    color: #beb8b0 !important;
     text-transform: uppercase;
+    letter-spacing: normal;
+    cursor: pointer;
 }
 
 .logo i {
@@ -562,15 +564,15 @@ a.btn.btn-primary.read-m {
 
 /*--/content --*/
 
-h3.tittle {
+h2.tittle {
     text-align: center;
     font-size: 2.5em;
     color: #f0f3f1;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
-    font-weight: 600;
+    font-weight: 600;    
 }
 
-    h3.tittle.cen {
+    h2.tittle.cen {
         color: #fff;
     }
 

@@ -10,11 +10,19 @@
 }
 @section HeaderSection{
     <meta property="og:title" content="@Model.BlogTitle" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://coreblogsite.azurewebsites.net/Blog/BlogReadAll/@Model.BlogID" />
+    <meta property="og:image" content="https://coreblogsite.azurewebsites.net/@Model.BlogThumbnailImage" />
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="article:published_time" content="@Model.BlogCreateDate" />
+    <meta name="author" content="@ViewBag.WriterName">
+    <meta property="og:image:width" content="640">
+    <meta property="og:image:height" content="360">
     <link href="~/coreblogtema/css/blog-read-all.css" rel="stylesheet" />
-    @if (thema == "dark")
-    {
+            @if (thema == "dark")
+            {
         <link href="~/coreblogtema/css/blog-read-all-dark.css" rel="stylesheet" />
-    }
+            }
     <link href="~/css/blog-comment-star.css" rel="stylesheet" />
     <link href="~/css/recaptcha.css" rel="stylesheet" />
     <link href="~/comment-star/dist/style.css" rel="stylesheet" />
@@ -55,7 +63,7 @@
                     </div>
                     <h1>
                         @Model.BlogTitle
-                        
+
                     </h1>
                     <br />
                     <article>
