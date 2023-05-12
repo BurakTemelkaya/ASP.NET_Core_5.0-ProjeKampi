@@ -11,6 +11,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
 namespace Core.Extensions
@@ -22,6 +23,8 @@ namespace Core.Extensions
         private LoggerServiceBase _databaseLoggerServiceBase;
 
         private LoggerServiceBase _fileLoggerServiceBase;
+
+        private Exception _lastException;
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -38,26 +41,28 @@ namespace Core.Extensions
             {
                 await _next(httpContext);
             }
-            catch (Exception e)
-            { 
-                await HandleExceptionAsync(httpContext, e);              
+            catch (Exception exception)
+            {
+                HandleException(exception);
+                await _next(httpContext);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+        private void HandleException(Exception exception)
         {
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            if (exception == _lastException)
+            {
+                return;
+            }
 
-            string message = "Internal Server Error";
-
+            _lastException = exception;
+            
             IEnumerable<ValidationFailure> errors;
 
             if (exception.GetType() == typeof(ValidationException))
             {
-                message = exception.Message;
+                string message = exception.Message;
                 errors = ((ValidationException)exception).Errors;
-                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                 var exceptionModel = new ValidationErrorDetail
                 {
@@ -69,18 +74,12 @@ namespace Core.Extensions
                 _databaseLoggerServiceBase.Error(exceptionModel);
 
                 _fileLoggerServiceBase.Error(exceptionModel);
-
-                return httpContext.Response.WriteAsync(exceptionModel.ToString());
             }
-
-            _databaseLoggerServiceBase.Error(exception);
-            _fileLoggerServiceBase.Error(exception);
-
-            return httpContext.Response.WriteAsync(new ErrorDetails
+            else
             {
-                StatusCode = httpContext.Response.StatusCode,
-                Message = message
-            }.ToString());
+                _databaseLoggerServiceBase.Error(exception);
+                _fileLoggerServiceBase.Error(exception);
+            }
         }
     }
 }

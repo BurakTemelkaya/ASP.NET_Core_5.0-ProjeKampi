@@ -508,7 +508,8 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id);
+            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id, x => x.BlogStatus && x.Category.CategoryStatus);
+            result.Comments = result.Comments.Where(x => x.CommentStatus).ToList();
             if (result != null)
             {
                 result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
