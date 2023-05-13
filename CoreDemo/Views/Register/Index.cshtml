@@ -81,14 +81,17 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
+@section ScriptSection{
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
         });
-    });
-</script>
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+}
 
 
 

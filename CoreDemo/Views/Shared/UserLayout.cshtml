@@ -14,7 +14,7 @@
 <head>
     <title>@ViewData["Title"] - Core Blog</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <meta name="rating" content="general" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="description" content="Sitemizde güncel teknolojiler ile ilgili bloglar bulabilirsiniz." />
@@ -33,21 +33,21 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <link href="~/CoreBlogTema/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="~/coreblogtema/css/bootstrap.min.css" rel="stylesheet" />
     @if (thema == "dark")
     {
-        <link href="~/coreblogtema/css/single-dark.css" rel="stylesheet" />
-        <link href="~/coreblogtema/css/style-dark.css" rel="stylesheet" />
-        <link href="~/writer/assets/css/SweetAlert2-dark.css" rel="stylesheet" />
+        <link href="~/coreblogtema/css/single-dark.min.css" rel="stylesheet" />
+        <link href="~/coreblogtema/css/style-dark.min.css" rel="stylesheet" />
+        <link href="~/writer/assets/css/SweetAlert2-dark.min.css" rel="stylesheet" />
     }
     else
     {
-        <link href="~/coreblogtema/css/single-light.css" rel="stylesheet" />
-        <link href="~/coreblogtema/css/style-light.css" rel="stylesheet" />
-        <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
+        <link href="~/coreblogtema/css/single-light.min.css" rel="stylesheet" />
+        <link href="~/coreblogtema/css/style-light.min.css" rel="stylesheet" />
+        <link href="~/writer/assets/css/SweetAlert2.min.css" rel="stylesheet" />
     }
     <link rel="shortcut icon" href="~/writer/assets/images/favicon.ico" />
-    <link href="~/CoreBlogTema/css/fontawesome-all.css" rel="stylesheet">
+    <link href="~/CoreBlogTema/css/fontawesome-all.min.css" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800" rel="stylesheet">
     <link href="~/coreblogtema/css/thema-toggle.css" rel="stylesheet" />
 
@@ -72,24 +72,24 @@
                     <ul class="social_list1 mt-3">
 
                         <li>
-                            <a href="https://www.facebook.com/profile.php?id=100011652821384" target="_blank" class="facebook1 mx-2">
+                            <a href="https://www.facebook.com/profile.php?id=100011652821384" target="_blank" class="facebook1 mx-2" name="facebook-link">
                                 <i class="fab fa-facebook-f"></i>
 
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.linkedin.com/in/buraktemelkaya/" target="_blank" class="twitter2 mx-2">
+                            <a href="https://www.linkedin.com/in/buraktemelkaya/" target="_blank" class="twitter2 mx-2" name="twitter-link">
                                 <i class="fab fa-linkedin"></i>
 
                             </a>
                         </li>
                         <li>
-                            <a href="https://github.com/BurakTemelkaya" target="_blank" class="github mx-2">
+                            <a href="https://github.com/BurakTemelkaya" target="_blank" class="github mx-2" name="github-link">
                                 <i class="fab fa-github"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.youtube.com/channel/UC250K8wIDdyJPI9o2L2hy8w" target="_blank" class="pin mx-2">
+                            <a href="https://www.youtube.com/channel/UC250K8wIDdyJPI9o2L2hy8w" target="_blank" class="pin mx-2" name="youtube-link">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         </li>
@@ -130,8 +130,7 @@
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
     </a>
-    <script src="~/admin/js/bootstrap.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="~/admin/js/bootstrap.min.js"></script>    
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/newsletter-subscribe.js"></script>
