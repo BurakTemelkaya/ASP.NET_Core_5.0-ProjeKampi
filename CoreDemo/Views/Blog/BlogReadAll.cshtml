@@ -20,10 +20,10 @@
     <meta property="og:image:width" content="640">
     <meta property="og:image:height" content="360">
     <link href="~/coreblogtema/css/blog-read-all.css" rel="stylesheet" />
-    @if (thema == "dark")
-      {
+                    @if (thema == "dark")
+                    {
         <link href="~/coreblogtema/css/blog-read-all-dark.css" rel="stylesheet" />
-      }
+                    }
     <link href="~/css/blog-comment-star.css" rel="stylesheet" />
     <link href="~/css/recaptcha.css" rel="stylesheet" />
     <link href="~/comment-star/dist/style.css" rel="stylesheet" />
@@ -67,9 +67,12 @@
 
                     </h1>
                     <br />
+
                     <article>
                         @Html.Raw(Model.BlogContent)
                     </article>
+
+
                     <br />
                     <p>
                         Yazar Adı : <b>@ViewBag.WriterName</b>
