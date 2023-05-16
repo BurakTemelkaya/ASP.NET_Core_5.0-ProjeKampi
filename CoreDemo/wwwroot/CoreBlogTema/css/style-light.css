@@ -54,6 +54,12 @@ p {
     font-weight: 300;
 }
 
+h2.tittle {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
 ul {
     margin: 0;
     padding: 0;
