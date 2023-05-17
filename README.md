@@ -2,7 +2,11 @@
 
 Sitenin linki: https://coreblogsite.azurewebsites.net/
 
-<h4>Projede ASP.NET Core 5.0 teknolojisi &amp; N Tier Architecture &amp; OOP &amp; AOP teknikleri kullanıldı.</h4>
+# Sertifika
+
+![BURAK TEMELKAYA](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/b592f0be-757b-4232-b687-742e7fab4107)
+
+# <h4>Projede ASP.NET Core 5.0 teknolojisi &amp; N Tier Architecture &amp; OOP &amp; AOP teknikleri kullanıldı.</h4>
 
 <h2>Ödevler:</h2>
 
