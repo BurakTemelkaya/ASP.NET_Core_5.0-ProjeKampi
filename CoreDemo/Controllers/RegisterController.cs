@@ -2,6 +2,7 @@
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
 using CoreLayer.Utilities.FileUtilities;
+using CoreLayer.Utilities.MailUtilities;
 using DocumentFormat.OpenXml.Vml;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,14 +23,16 @@ namespace CoreDemo.Controllers
         private readonly WriterCity _writerCity;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ICaptchaService _captchaService;
+        private readonly IMailService _mailService;
 
         public RegisterController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager,
-            ICaptchaService captchaService)
+            ICaptchaService captchaService, IMailService mailService)
         {
             _userService = userService;
             _writerCity = writerCity;
             _signInManager = signInManager;
             _captchaService = captchaService;
+            _mailService = mailService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -62,9 +66,16 @@ namespace CoreDemo.Controllers
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
             if (result.Success)
             {
-                var user = await _userService.GetByUserNameAsync(userSignUpDto.UserName);
-                await _signInManager.SignInAsync(user.Data, true);
-                return RedirectToAction("Index", "Dashboard");
+                var tokenResult = await _userService.CreateMailTokenAsync(userSignUpDto.Email);
+
+                string token = tokenResult.Data;
+
+                var confirmationLink = Url.Action("Index", "ConfirmMail", new { userSignUpDto.Email, token }, Request.Scheme);
+
+                _mailService.SendMail(userSignUpDto.Email, MailTemplates.ConfirmEmailSubject(), MailTemplates.ConfirmEmailMessage(confirmationLink));
+
+                ViewBag.SuccessMessage = "Kayıt işlemine devam etmek için lütfen mail adresinize gelen doğrulama bağlantısına tıklayınız, teşekkürler";
+                return View();
             }
             else if (result.Data != null)
             {

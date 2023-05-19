@@ -42,7 +42,7 @@ namespace CoreDemo
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        { 
+        {
             services.AddHttpContextAccessor();
 
             services.AddDbContext<Context>(options =>
@@ -74,6 +74,7 @@ namespace CoreDemo
                 x.Password.RequireDigit = true;
                 x.Password.RequireLowercase = true;
                 x.Password.RequireNonAlphanumeric = true;
+                x.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<Context>()
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
@@ -139,7 +140,7 @@ namespace CoreDemo
                 //log4net.Util.LogLog.InternalDebugging = true;
             }
             else
-            {                
+            {
                 app.UseExceptionHandler("/Home/Error");
                 app.ConfigureCustomExceptionMiddleware();
                 app.UseHsts();

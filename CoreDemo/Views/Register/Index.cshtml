@@ -64,7 +64,7 @@
                         <div class="checkbox i-checks">
                             <label>
                                 <input type="checkbox" asp-for="IsAcceptTheContract"><i class="register-contract-text">Kullanım şartlarını okudum kabul ediyorum.</i>
-                                
+
                             </label>
                         </div>
                     </div>
@@ -82,6 +82,18 @@
     </div>
 </div>
 @section ScriptSection{
+
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <script>
+            Swal.fire(
+                'Başarılı!',
+                '@ViewBag.SuccessMessage',
+                'success'
+            )
+        </script>
+    }
+        
     <script>
         $(document).ready(function () {
             $('.i-checks').iCheck({

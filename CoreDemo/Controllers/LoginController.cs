@@ -51,6 +51,11 @@ namespace CoreDemo.Controllers
                     return Redirect(returnUrl);
                 return RedirectToAction("Index", "Dashboard");
             }
+            else if (result.IsNotAllowed)
+            {
+                TempData["ErrorMessage"] = "Giriş yapabilmek için mail adresinize gelen linke tıklayarak doğrulamanızı yapınız.";
+                return View("Error");
+            }
             else
             {
                 if (result.IsLockedOut)

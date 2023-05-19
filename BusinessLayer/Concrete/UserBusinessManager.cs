@@ -366,5 +366,22 @@ namespace BusinessLayer.Concrete
 
             return new ErrorDataResult<IdentityResult>(result);
         }
+
+        public async Task<IDataResult<string>> CreateMailTokenAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return new SuccessDataResult<string>(await _userManager.GenerateEmailConfirmationTokenAsync(user),"Başarılı");
+        }
+
+        public async Task<IResult> ConfirmMailAsync(string email, string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult(result.Errors.First().Description);
+        }
     }
 }

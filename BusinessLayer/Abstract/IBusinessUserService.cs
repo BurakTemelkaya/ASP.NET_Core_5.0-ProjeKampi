@@ -30,5 +30,7 @@ namespace BusinessLayer.Abstract
         Task<IResult> BanOpenUser(string id);
         Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail);
         Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto);
+        Task<IDataResult<string>> CreateMailTokenAsync(string email);
+        Task<IResult> ConfirmMailAsync(string email,string token);
     }
 }

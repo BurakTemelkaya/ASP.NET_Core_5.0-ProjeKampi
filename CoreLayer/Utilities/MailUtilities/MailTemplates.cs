@@ -60,5 +60,15 @@ namespace CoreLayer.Utilities.MailUtilities
         {
             return "<h2><b>Hesabınızın parolası değiştirildi.</b>Eğer bu işlemi siz yaptıysanız maili görmezden gelebilirsiniz Eğer siz yapmadıysanız hemen bizimle iletişime geçin.</h2>";
         }
+
+        public static string ConfirmEmailSubject()
+        {
+            return "Core Blog Mail Doğrulaması";
+        }
+
+        public static string ConfirmEmailMessage(string link)
+        {
+            return "<a href=" + link + "> <h2><b>E-Posta doğrulaması yapmak için tıklayın.</h2></b> <a/> Eğer link çalışmıyorsa buradan linke ulaşabilirsin: " + link;
+        }
     }
 }
