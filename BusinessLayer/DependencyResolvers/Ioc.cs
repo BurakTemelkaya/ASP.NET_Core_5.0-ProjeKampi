@@ -52,6 +52,8 @@ namespace BusinessLayer.DependencyResolvers
             services.AddScoped<IMessageDraftService, MessageDraftManager>();
 
             services.AddScoped<ILogService, LogManager>();
+
+            services.AddSingleton<ICurrencyService, CurrencyManager>();
         }
     }
 }

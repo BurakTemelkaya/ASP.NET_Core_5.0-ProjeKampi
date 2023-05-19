@@ -22,25 +22,29 @@
     <div class="container">
         @if (ViewBag.id == null)
         {
-            <h2 class="tittle">Bloglar</h2>
+            if (ViewBag.Message == null)
+            {
+                <h2 class="tittle">Bloglar</h2>
+            }
+            else
+            {
+                if (ViewBag.IsSuccess)
+                {
+                    <br />
+                    <h2 class="tittle text-success">@ViewBag.Message</h2>
+                }
+                else
+                {
+                    <br />
+                    <h2 class="tittle text-danger">@ViewBag.Message</h2>
+                }
+            }
         }
         else
         {
             <h2 class="tittle">@Model[0].Category.CategoryName Blogları</h2>
         }
-        @if (ViewBag.Message != null)
-        {
-            @if (ViewBag.IsSuccess)
-            {
-                <br />
-                <h2 class="tittle text-success">@ViewBag.Message</h2>
-            }
-            else
-            {
-                <br />
-                <h2 class="tittle text-danger">@ViewBag.Message</h2>
-            }
-        }
+
 
         <div class="inner-sec">
             <!--left-->

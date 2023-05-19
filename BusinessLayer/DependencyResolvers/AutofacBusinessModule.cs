@@ -16,28 +16,6 @@ namespace BusinessLayer.DependencyResolvers
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterType<AboutManager>().As<IAboutService>().SingleInstance();
-
-            //builder.RegisterType<BlogManager>().As<IBlogService>().SingleInstance();
-
-            //builder.RegisterType<UserBusinessManager>().As<IBusinessUserService>().SingleInstance();
-
-            //builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
-
-            //builder.RegisterType<CommentManager>().As<ICommentService>().SingleInstance();
-
-            //builder.RegisterType<ContactManager>().As<IContactService>().SingleInstance();
-
-            //builder.RegisterType<MessageDraftManager>().As<IMessageDraftService>().InstancePerDependency();
-
-            //builder.RegisterType<MessageManager>().As<IMessageService>().InstancePerDependency();
-
-            //builder.RegisterType<NewsLetterDraftManager>().As<INewsLetterDraftService>().SingleInstance();
-
-            //builder.RegisterType<NewsLetterManager>().As<INewsLetterService>().SingleInstance();
-
-            //builder.RegisterType<NotificationManager>().As<INotificationService>().SingleInstance();
-
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
