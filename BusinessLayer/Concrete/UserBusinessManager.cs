@@ -42,7 +42,6 @@ namespace BusinessLayer.Concrete
             var user = Mapper.Map<AppUser>(userSignUpDto);
             user.RegistrationTime = DateTime.Now;
 
-
             if (userSignUpDto.ImageUrl != null)
             {
                 var image = ImageFileManager.DownloadImage(userSignUpDto.ImageUrl);
@@ -50,7 +49,7 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
-                userSignUpDto.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                user.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (userSignUpDto.ImageFile != null)
             {
@@ -212,7 +211,7 @@ namespace BusinessLayer.Concrete
 
             if (!user.Success)
             {
-                return new ErrorDataResult<UserDto>();
+                return new ErrorDataResult<UserDto>(user.Message);
             }
 
             var userData = user.Data;
@@ -227,6 +226,11 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<UserDto>> GetByMailAsync(string mail)
         {
             var user = await _userManager.FindByEmailAsync(mail);
+
+            if (user == null)
+            {
+                return new ErrorDataResult<UserDto>(Messages.UserNotFound);
+            }
 
             var userDto = Mapper.Map<UserDto>(user);
             return new SuccessDataResult<UserDto>(userDto);
@@ -370,12 +374,18 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<string>> CreateMailTokenAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return new SuccessDataResult<string>(await _userManager.GenerateEmailConfirmationTokenAsync(user),"Başarılı");
+            return new SuccessDataResult<string>(await _userManager.GenerateEmailConfirmationTokenAsync(user), "Başarılı");
         }
 
         public async Task<IResult> ConfirmMailAsync(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {

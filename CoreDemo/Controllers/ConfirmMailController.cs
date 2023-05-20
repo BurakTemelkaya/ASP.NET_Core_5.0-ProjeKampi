@@ -14,7 +14,7 @@ namespace CoreDemo.Controllers
         private readonly IBusinessUserService _businessUserService;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public ConfirmMailController(IBusinessUserService businessUserService,SignInManager<AppUser> signInManager)
+        public ConfirmMailController(IBusinessUserService businessUserService, SignInManager<AppUser> signInManager)
         {
             _businessUserService = businessUserService;
             _signInManager = signInManager;
@@ -22,6 +22,12 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Index(string email, string token)
         {
+            EmailErrorsModel model = new();
+            if (email == null || token == null)
+            {
+                model.IdentityError = "Link geçersizdir.";
+                return View(model);
+            }
             var result = await _businessUserService.ConfirmMailAsync(email, token);
             if (result.Success)
             {
@@ -32,7 +38,7 @@ namespace CoreDemo.Controllers
                     return RedirectToAction("Index", "Dashboard");
                 }
             }
-            var model = new EmailErrorsModel { IdentityError = result.Message };
+            model.IdentityError = result.Message;
             return View(model);
         }
     }

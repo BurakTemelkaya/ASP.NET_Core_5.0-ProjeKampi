@@ -3,9 +3,11 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
+<div class="container my-5 mb-5">
+    <h1>Mail Doğrulama Sayfası</h1>
+    <br />
+    <h2 class="text-danger font-bold">@Model.IdentityError</h2>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+</div>
 
-<h1>Mail Doğrulama Sayfası</h1>
-<br />
-<h2>@Model.IdentityError</h2>
-<br /><br /><br /><br /><br />
 

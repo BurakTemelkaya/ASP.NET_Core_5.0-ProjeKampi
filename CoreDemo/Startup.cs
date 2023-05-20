@@ -141,8 +141,8 @@ namespace CoreDemo
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.ConfigureCustomExceptionMiddleware();
+                app.UseExceptionHandler("/Home/Error");                
                 app.UseHsts();
             }
 
