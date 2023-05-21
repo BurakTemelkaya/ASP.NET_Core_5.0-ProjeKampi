@@ -19,7 +19,7 @@
         <link href="~/CoreBlogTema/css/contact-light.css" rel='stylesheet' type='text/css' />
     }
     <meta property="og:title" content="Core Blog - İletişim" />
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="index,follow" />
 }
 
 
@@ -43,8 +43,7 @@
                         <div class="col-md-8 address-right text-left">
                             <h6>Adres</h6>
                             <p>
-                                Istanbul, Türkiye
-
+                                İstanbul, Türkiye
                             </p>
                         </div>
                     </div>
@@ -105,7 +104,7 @@
                         <div class="form-group">
                             <label for="textarea">Mesajınız</label>
                             <textarea id="textarea" name="ContactMessage" asp-for="ContactMessage" placeholder=" Mesajınızı Yazınız" required></textarea>
-                            @Html.ValidationMessageFor(x=> x.ContactMessage, "", new { @class = "text-danger" }),                                                      
+                            @Html.ValidationMessageFor(x=> x.ContactMessage, "", new { @class = "text-danger" }),
                         </div>
                         <div class="form-group">
                             <div class="row form-group justify-content-center">
@@ -125,4 +124,3 @@
 @section ScriptSection{
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }
-

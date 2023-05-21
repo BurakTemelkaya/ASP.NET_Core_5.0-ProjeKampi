@@ -1,21 +1,16 @@
-﻿using CoreLayer.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities
 {
     public static class ImageFileManager
     {
-        public static string ImageAdd(IFormFile file, string folderLocation, Size size)
+        public static string ImageAdd(IFormFile file, string folderLocation, Size size, string fileName = null)
         {
             try
             {
@@ -27,16 +22,16 @@ namespace CoreLayer.Utilities.FileUtilities
                     }
 
                     var extension = Path.GetExtension(file.FileName);
-                    var newImageName = Guid.NewGuid() + extension;
+                    var newImageName = fileName == null ? Guid.NewGuid() + extension : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
 
                     var myImageCodecInfo = GetTypeInfo("image/jpeg");
 
-                    var myEncoder = System.Drawing.Imaging.Encoder.Compression;
+                    var myEncoder = Encoder.Compression;
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 80L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 81L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
@@ -100,7 +95,7 @@ namespace CoreLayer.Utilities.FileUtilities
                             var resultStream = new MemoryStream();
 
                             bitmap.Save(resultStream, ImageFormat.Jpeg);
-                            return new FormFile(resultStream, 0, resultStream.Length, "test.jpeg", "deneme.jpeg")
+                            return new FormFile(resultStream, 0, resultStream.Length, "test.jpeg", "deneme.jpeg")//buradaki isim önemli değil zaten değişecek. Sadece sondaki uzantı önemli
                             {
                                 Headers = new HeaderDictionary(),
                                 ContentType = "image/*"
