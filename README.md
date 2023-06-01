@@ -108,3 +108,18 @@ About düzenleme kısmı eklendi.
 Karanlık tema eklendi.
 
 Kayıt olurken onay epostası ile onaylama yapılıyor.
+
+#<h1>Resimler<h1/>
+ 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/26df79ae-5d6c-4e1d-a11d-4471a8c7be25)
+ 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/bd854520-c89d-41e6-bde1-4cbd5f9b866e)
+ 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/0b730dd9-1a47-4d07-9f53-e3b59b288b24)
+ 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/f2b1e8c9-f3b0-4501-98ec-37eaa258e26e)
+
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/1dce8f82-7e1b-45ad-878c-168d2927e3d5)
+
+
+
