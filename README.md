@@ -121,5 +121,7 @@ Kayıt olurken onay epostası ile onaylama yapılıyor.
 
 ![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/1dce8f82-7e1b-45ad-878c-168d2927e3d5)
 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/99fd6a6a-023c-43bc-8a51-7f81ec74637f)
 
+![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/27d72539-6259-4286-ab24-3dbeca4251cc)
 
