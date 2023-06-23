@@ -575,3 +575,4 @@ $RECYCLE.BIN/
 /CoreDemo/obj/Debug/net5.0/CoreDemo.RazorAssemblyInfo.cs
 /CoreDemo/obj/CoreDemo.csproj.nuget.g.targets
 /CoreDemo/wwwroot/WriterImageFiles
+/DataAccessLayer/bin/Debug/net5.0/DataAccessLayer.runtimeconfig.dev.json
