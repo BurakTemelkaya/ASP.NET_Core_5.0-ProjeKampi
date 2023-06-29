@@ -17,7 +17,7 @@ namespace CoreLayer.DataAccess
         Task UpdateAsync(T t);
         Task UpdateRangeAsync(List<T> t);
         Task<List<T>> GetListAllAsync(Expression<Func<T, bool>> filter = null, int take = 0, int skip = 0, bool sortInReverse = true);
-        Task<List<T>> GetListAllByPagingAsync(Expression<Func<T, bool>> filter = null, int take = 0, int page = 1);
+        Task<List<T>> GetListAllByPagingAsync(Expression<Func<T, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true);
         Task<T> GetByIDAsync(int id);
         Task<T> GetByFilterAsync(Expression<Func<T, bool>> filter = null);
         Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null);
