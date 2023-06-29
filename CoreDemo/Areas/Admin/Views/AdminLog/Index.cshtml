@@ -14,8 +14,8 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th>Kategori Adı</th>
-            <th>Pasif Yap</th>
+            <th>Önem Derecesi</th>
+            <th>Ayrıntı</th>
         </tr>
     </thead>
     <tbody>
@@ -25,20 +25,18 @@
             {
                 status = "bg-info";
             }
-            else if (item.Audit == "DANGER")
+            else if (item.Audit == "ERROR")
             {
                 status = "bg-danger";
             }
             <tr>
                 <th scope="row">@item.Id</th>
-                <td><a href="/Admin/Category/ChangedStatus/@item.Id" class="btn @status">@item.Audit</a></td>
+                <td class="@status">@item.Audit</td>
                 <td><article>@Html.Raw(item.Details.Replace("\n","<br/>"))</article> </td>
             </tr>
         }
     </tbody>
 </table>
-<a href="/Admin/Category/AddCategory" class="btn btn-primary">Yeni Kategori</a>
-<br />
 <br />
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
 new X.PagedList.Web.Common.PagedListRenderOptions

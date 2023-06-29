@@ -1,4 +1,5 @@
 ﻿using CoreLayer.Entities;
+using CoreLayer.Utilities.Results;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -40,11 +41,11 @@ namespace CoreLayer.DataAccess.EntityFramework
             return result;
         }
 
-        public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0, bool sortInReverse = true)
         {
             if (take > 0)
             {
-                if (skip == 0)
+                if (sortInReverse)
                 {
                     var count = await GetCountAsync(filter);
                     skip = count - take;
@@ -53,17 +54,26 @@ namespace CoreLayer.DataAccess.EntityFramework
                         skip = 0;
                     }
                 }
-                return filter == null ?
+                var filteredResult = filter == null ?
                 await _context.Set<TEntity>().Skip(skip).Take(take).ToListAsync() :
                 await _context.Set<TEntity>().Where(filter).Skip(skip).Take(take).ToListAsync();
+
+                return filteredResult;
             }
 
-            return filter == null ?
+            var result = filter == null ?
                 await _context.Set<TEntity>().ToListAsync() :
                 await _context.Set<TEntity>().Where(filter).ToListAsync();
+
+            if (sortInReverse)
+            {
+                result.Reverse();
+            }
+
+            return result;
         }
 
-        public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true)
+        public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1)
         {
             var values = new List<TEntity>();
 
@@ -78,15 +88,11 @@ namespace CoreLayer.DataAccess.EntityFramework
 
             if (page > 1)
             {
-                skip = count - (take * (page - 1));
+                skip = count - (take * page);
                 values.AddRange(AddNullObject<TEntity>.GetNullValuesForBefore(page, take));
             }
 
-            var result = await GetListAllAsync(filter, take, skip);
-            if (sortInReverse)
-            {
-                result.Reverse();
-            }
+            var result = await GetListAllAsync(filter, take, skip, false);
 
             values.AddRange(result);
 
