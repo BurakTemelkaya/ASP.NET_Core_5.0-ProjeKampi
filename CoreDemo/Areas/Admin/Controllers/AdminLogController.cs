@@ -8,21 +8,21 @@ namespace CoreDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class LogController : Controller
+    public class AdminLogController : Controller
     {
         private readonly ILogService _logService;
 
-        public LogController(ILogService logService)
+        public AdminLogController(ILogService logService)
         {
             _logService = logService;
         }
 
         public async Task<IActionResult> Index(int page = 1)
         {
-            var result = await _logService.GetLogListAsync(20, page);
+            var result = await _logService.GetLogListAsync(5, page);
             if (result.Success)
             {
-                return View(await result.Data.ToPagedListAsync(page, 20));
+                return View(await result.Data.ToPagedListAsync(page, 5));
             }
             return View();
         }

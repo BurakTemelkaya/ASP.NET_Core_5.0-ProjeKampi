@@ -1,9 +1,9 @@
-﻿@model IPagedList<Category>
+﻿@model IPagedList<Log>
+
 @{
-    ViewData["Title"] = "Kategoriler";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
     string status = "";
-    string statusBtn = "";
 }
 
 <h1>Kategori Listesi</h1>
@@ -16,29 +16,23 @@
             <th scope="col">#</th>
             <th>Kategori Adı</th>
             <th>Pasif Yap</th>
-            <th>Düzenle</th>
-            <th>Sil</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            @if (item.CategoryStatus)
+            @if (item.Audit == "INFO")
             {
-                status = "Pasif Yap";
-                statusBtn = "btn-secondary DurumPasif";
+                status = "bg-info";
             }
-            else
+            else if (item.Audit == "DANGER")
             {
-                status = "Aktif Yap";
-                statusBtn = "btn-primary DurumAktif";
+                status = "bg-danger";
             }
             <tr>
-                <th scope="row">@item.CategoryID</th>
-                <td>@item.CategoryName</td>
-                <td> class="btn btn-success">Düzenle</td>
-                <td> class="btn @statusBtn">@status</td>
-                <td> id="DeleteBtn" class="btn btn-danger Sil">Sil</td>
+                <th scope="row">@item.Id</th>
+                <td><a href="/Admin/Category/ChangedStatus/@item.Id" class="btn @status">@item.Audit</a></td>
+                <td><article>@Html.Raw(item.Details.Replace("\n","<br/>"))</article> </td>
             </tr>
         }
     </tbody>
@@ -62,5 +56,4 @@ new X.PagedList.Web.Common.PagedListRenderOptions
 @section ScriptSection{
     <script src="~/js/admin-category.js"></script>
 }
-
 
