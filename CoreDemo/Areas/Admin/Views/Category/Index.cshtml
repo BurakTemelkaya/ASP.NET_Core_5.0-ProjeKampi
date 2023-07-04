@@ -36,8 +36,8 @@
             <tr>
                 <th scope="row">@item.CategoryID</th>
                 <td>@item.CategoryName</td>
-                <td class="btn btn-success">>Düzenle</td>
-                <td class="btn @statusBtn">>@status</td>
+                <td class="btn btn-success"><a href="/Admin/Category/EditCategory/@item.CategoryID">Düzenle</a> </td>
+                <td class="btn @statusBtn">@status</td>
                 <td id="DeleteBtn" class="btn btn-danger Sil">Sil</td>
             </tr>
         }

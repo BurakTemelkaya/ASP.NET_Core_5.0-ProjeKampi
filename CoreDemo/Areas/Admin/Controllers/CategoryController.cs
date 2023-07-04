@@ -52,7 +52,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var value = await _categoryService.TGetByIDAsync(id);
             if (value == null)
                 return RedirectToAction("Index");
-            return View(value);
+            return View(value.Data);
         }
         [HttpPost]
         public async Task<IActionResult> EditCategory(Category category)
