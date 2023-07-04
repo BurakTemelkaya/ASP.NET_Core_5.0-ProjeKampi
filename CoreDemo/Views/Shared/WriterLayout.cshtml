@@ -17,18 +17,20 @@
     <title>@ViewData["Title"] - Core Blog Yazar Paneli</title>
     <link rel="stylesheet" href="~/writer/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/writer/assets/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" href="~/writer/assets/css/style.css">
     <link rel="shortcut icon" href="~/writer/assets/images/favicon.ico" />
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     @if (thema == "dark")
     {
+        @*<link rel="stylesheet" href="~/writer/assets/css/style-dark.css">*@
         <link href="~/writer/assets/css/SweetAlert2-dark.min.css" rel="stylesheet" />
     }
     else
     {
-        <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
-        
+@*     <link rel="stylesheet" href="~/writer/assets/css/style.css"> *@
+       <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
     }
+
+    <link rel="stylesheet" href="~/writer/assets/css/style.css">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
