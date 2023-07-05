@@ -10,7 +10,7 @@
 
 <br />
 
-<table class="table table-bordered">
+<table class="table table-bordered table-responsive col-md-12">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -34,11 +34,11 @@
                 statusBtn = "btn-primary DurumAktif";
             }
             <tr>
-                <th scope="row">@item.CategoryID</th>
-                <td>@item.CategoryName</td>
-                <td class="btn btn-success"><a href="/Admin/Category/EditCategory/@item.CategoryID">Düzenle</a> </td>
-                <td class="btn @statusBtn">@status</td>
-                <td id="DeleteBtn" class="btn btn-danger Sil">Sil</td>
+                <td class="col-1">@item.CategoryID</td>
+                <td class="col-5">@item.CategoryName</td>
+                <td class="col-2"><a href="/Admin/Category/EditCategory/@item.CategoryID" class="btn btn-success text-white">Düzenle</a> </td>
+                <td class="col-2"><a href="/Admin/Category/ChangedStatus/@item.CategoryID" class="btn @statusBtn">@status</a> </td>
+                <td class="col-2"> <a href="/Admin/Category/CategoryDelete/@item.CategoryID" id="DeleteBtn" class="btn btn-danger Sil">Sil</a> </td>
             </tr>
         }
     </tbody>

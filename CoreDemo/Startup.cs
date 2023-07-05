@@ -136,17 +136,16 @@ namespace CoreDemo
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.ConfigureCustomExceptionMiddleware();
                 //log4net.Util.LogLog.InternalDebugging = true;
+                app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.ConfigureCustomExceptionMiddleware();
-                app.UseExceptionHandler("/Home/Error");                
                 app.UseHsts();
+                app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
             }
-
-            app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

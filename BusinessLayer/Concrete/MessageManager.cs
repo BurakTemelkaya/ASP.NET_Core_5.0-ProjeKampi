@@ -64,9 +64,26 @@ namespace BusinessLayer.Concrete
         [ValidationAspect(typeof(MessageValidator))]
         public async Task<IResult> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
+            if (senderUserName == string.Empty || senderUserName == null)
+            {
+                return new ErrorResult(Messages.MessageSenderNotEmpty);
+            }
+            if (receiverUserName == string.Empty || receiverUserName == null)
+            {
+                return new ErrorResult(Messages.MessageReceiverNotEmpty);
+            }
+
             var senderUser = await _userService.GetByUserNameAsync(senderUserName);
+            if (!senderUser.Success)
+            {
+                return new ErrorResult(Messages.MessageSenderNotFound);
+            }
 
             var receiverUser = await _userService.GetByUserNameAsync(receiverUserName);
+            if (!receiverUser.Success)
+            {
+                return new ErrorResult(Messages.MessageReceiverNotFound);
+            }
 
             IResult result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
 

@@ -27,7 +27,7 @@ $('.DurumAktif').click(function (e) {
     var linkURL = $(this).attr("href");
     Swal.fire({
         title: 'UYARI!',
-        text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+        text: 'Kategoriyi Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
         icon: 'warning',
         showCancelButton: true,
         showCancelButton: true,
@@ -51,7 +51,7 @@ $('.DurumPasif').click(function (e) {
     var linkURL = $(this).attr("href");
     Swal.fire({
         title: 'UYARI!',
-        text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+        text: 'Kategoriyi Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
         icon: 'warning',
         showCancelButton: true,
         showCancelButton: true,

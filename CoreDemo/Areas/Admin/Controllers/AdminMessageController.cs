@@ -87,8 +87,14 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message, string receiver)
         {
-            await _messageService.AddMessageAsync(message, User.Identity.Name, receiver);
-            return RedirectToAction("SendBox");
+            var result = await _messageService.AddMessageAsync(message, User.Identity.Name, receiver);
+            if (result.Success)
+            {
+                return RedirectToAction("SendBox");
+            }
+
+            ModelState.AddModelError("", result.Message);
+            return View(message);
         }
         public async Task<IActionResult> Read(int id)
         {

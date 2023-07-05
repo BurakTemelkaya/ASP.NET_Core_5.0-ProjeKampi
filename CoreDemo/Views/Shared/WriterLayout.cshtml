@@ -21,17 +21,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     @if (thema == "dark")
     {
-        @*<link rel="stylesheet" href="~/writer/assets/css/style-dark.css">*@
+        <link rel="stylesheet" href="~/writer/assets/css/style-dark.css">
         <link href="~/writer/assets/css/SweetAlert2-dark.min.css" rel="stylesheet" />
     }
     else
     {
-@*     <link rel="stylesheet" href="~/writer/assets/css/style.css"> *@
-       <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/writer/assets/css/style.css">
+        <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
     }
 
-    <link rel="stylesheet" href="~/writer/assets/css/style.css">
-    
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     @RenderSection("HeaderSection",false)
@@ -111,7 +109,7 @@
     <script src="~/writer/assets/js/misc.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>   
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/writer-message-notification.js"></script>
     <script src="~/writer/assets/js/SweetAlert2.js"></script>
