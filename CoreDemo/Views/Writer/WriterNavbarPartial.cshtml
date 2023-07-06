@@ -33,10 +33,10 @@
                 <i class="mdi mdi-message menu-icon"></i>
             </a>
             <div class="collapse" id="message">
-                <ul class="nav flex-column sub-menu">                   
+                <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="/Message/Inbox">Gelen Kutusu</a></li>
                     <li class="nav-item"> <a class="nav-link" href="/Message/SendBox">Giden Kutusu</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="/MessageDraft">Taslaklar</a></li>                   
+                    <li class="nav-item"> <a class="nav-link" href="/MessageDraft">Taslaklar</a></li>
                 </ul>
             </div>
         </li>
@@ -68,6 +68,14 @@
             </a>
         </li>
         <li class="nav-item">
+            <input type="checkbox" class="thema-toggle-checkbox" id="thema-toggle" onclick="SetThema()">
+            <label for="thema-toggle" class="thema-toggle-checkbox-label">
+                <i class="fas fa-moon w-10"></i>
+                <i class="fas fa-sun"></i>
+                <span class="ball"></span>
+            </label>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="/Login/Logout">
                 <span class="menu-title">Çıkış Yap</span>
                 <i class="mdi mdi-logout menu-icon"></i>
@@ -75,3 +83,11 @@
         </li>
     </ul>
 </nav>
+
+
+<script src="~/js/cookie.js"></script>
+<script>
+    if (getCookie('thema') == 'dark') {
+        document.getElementById("thema-toggle").checked = true;
+    }
+</script>

@@ -7,6 +7,7 @@
     {
         thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
     }
+    bool check = thema == "dark";
 }
 
 <!DOCTYPE html>
@@ -20,8 +21,8 @@
     <meta name="description" content="Sitemizde güncel teknolojiler ile ilgili bloglar bulabilirsiniz." />
     <meta name="Copyright" content="© Copyright 2021 - 2023 Core Blog. Tüm Hakları Saklıdır." />
     <meta property="og:locale" content="tr_TR" />
-    <meta property="og:site_name" content="Core Blog" />   
-    <meta property="og:type" content="website" />   
+    <meta property="og:site_name" content="Core Blog" />
+    <meta property="og:type" content="website" />
     <meta name="language" content="Turkish" />
     <meta property="keywords" content="Core Blog, Core 5.0 Blog, Teknoloji Blogları, Yazılım Blogları,Tiyatro Blogları,Fİlm & Dizi Blogları, Oyun Blogları, Spor Blogları,Seyehat Blogları, Donanım Blogları" />
     <script>
@@ -130,7 +131,7 @@
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
     </a>
-    <script src="~/admin/js/bootstrap.min.js"></script>    
+    <script src="~/admin/js/bootstrap.min.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/newsletter-subscribe.js"></script>
