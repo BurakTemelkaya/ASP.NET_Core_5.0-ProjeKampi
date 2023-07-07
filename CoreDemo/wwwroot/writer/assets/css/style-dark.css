@@ -3557,7 +3557,7 @@ pre {
     color: #c3c3c3;
     opacity: 1; }
   .form-control:disabled, .form-control[readonly] {
-    background-color: #e9ecef;
+    background-color: #565656;
     opacity: 1; }
 .form-control:hover {
     background-color: #7e9d9b;
@@ -10764,8 +10764,9 @@ code {
   background: linear-gradient(to right, #da8cff, #9a55ff) !important; }
 
 .bg-gradient-secondary {
-  background: -webkit-gradient(linear, left top, right top, from(#e7ebf0), to(#868e96)) !important;
-  background: linear-gradient(to right, #e7ebf0, #868e96) !important; }
+    background: -webkit-gradient(linear, left top, right top, from(#646464), to(#000000)) !important;
+    background: linear-gradient(to right, #646464, #000000) !important;
+}
 
 .bg-gradient-success {
     background-image: linear-gradient(to right, rgb(35, 113, 108), rgb(6, 164, 139)) !important;

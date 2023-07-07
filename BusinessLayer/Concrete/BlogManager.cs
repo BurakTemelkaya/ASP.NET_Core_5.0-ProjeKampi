@@ -136,19 +136,11 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
-            var roles = await _userService.GetUserRoleListAsync(user.Data);
+            var categoryStatusResult = await CheckCategoryStatusAsync(user, blog);
 
-            bool isAdmin = roles.Data.Count(x => x == RolesTexts.AdminRole()) == 1;
-
-            if (!isAdmin)
+            if (!categoryStatusResult.Success)
             {
-                //kategori pasif ise bu kategoride adminler hariç blog eklenemez.
-                var categoryList = await _categoryService.GetListAsync();
-                var category = categoryList.Data.Find(x => x.CategoryID == blog.CategoryID);
-                if (!category.CategoryStatus)
-                {
-                    return new ErrorResult(Messages.BlogCategoryIsPassiveNotAdded);
-                }
+                return categoryStatusResult;
             }
 
             if (blog.BlogImage != null)
@@ -210,6 +202,13 @@ namespace BusinessLayer.Concrete
             var user = await _userService.GetByUserNameAsync(userName);
             var oldValueRaw = await GetBlogByIDAsync(blog.BlogID);
             var oldValue = oldValueRaw.Data;
+
+            var categoryStatusResult = await CheckCategoryStatusAsync(user, blog);
+
+            if (!categoryStatusResult.Success)
+            {
+                return categoryStatusResult;
+            }
 
             blog.WriterID = oldValue.WriterID;
             blog.BlogCreateDate = oldValue.BlogCreateDate;
@@ -549,6 +548,25 @@ namespace BusinessLayer.Concrete
             if (blogThumnailImage == string.Empty)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotEmpty);
+            }
+            return new SuccessResult();
+        }
+
+        async Task<IResult> CheckCategoryStatusAsync(IDataResult<UserDto> user, Blog blog)
+        {
+            var roles = await _userService.GetUserRoleListAsync(user.Data);
+
+            bool isAdmin = roles.Data.Count(x => x == RolesTexts.AdminRole()) == 1;
+
+            if (!isAdmin)
+            {
+                //kategori pasif ise bu kategoride adminler hariç blog eklenemez.
+                var categoryList = await _categoryService.GetListAsync();
+                var category = categoryList.Data.Find(x => x.CategoryID == blog.CategoryID);
+                if (!category.CategoryStatus)
+                {
+                    return new ErrorResult(Messages.BlogCategoryIsPassiveNotAdded);
+                }
             }
             return new SuccessResult();
         }
