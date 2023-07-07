@@ -77,10 +77,18 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(await _categoryDal.GetCountAsync(filter));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isActive">Boş verilirse bütün değerler gelir. True yada False değeri verilirse,
+        /// bu değere göre aktif yada pasif kategoriler gelir.</param>
+        /// <returns></returns>
         [CacheAspect]
-        public async Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync()
+        public async Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync(bool? isActive = null)
         {
-            var categoryList = await GetListAsync();
+            var categoryList = isActive == null ? await GetListAsync()
+                : await GetListAsync(x => x.CategoryStatus == isActive);
+
             return new SuccessDataResult<List<SelectListItem>>((from x in categoryList.Data
                                                                 select new SelectListItem
                                                                 {
@@ -115,7 +123,7 @@ namespace BusinessLayer.Concrete
             {
                 var categoryandBlogCount = new CategoryBlogandBlogCountDto();
                 categoryandBlogCount.Category = value;
-                categoryandBlogCount.CategoryBlogCount = value.Blogs.Count(x=> x.BlogStatus);
+                categoryandBlogCount.CategoryBlogCount = value.Blogs.Count(x => x.BlogStatus);
                 blogCategoryCount.Add(categoryandBlogCount);
             }
             return new SuccessDataResult<List<CategoryBlogandBlogCountDto>>(blogCategoryCount);

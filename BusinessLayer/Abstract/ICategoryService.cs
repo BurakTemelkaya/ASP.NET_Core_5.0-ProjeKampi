@@ -20,7 +20,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Category>> TGetByIDAsync(int id);
         Task<IDataResult<Category>> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Category, bool>> filter = null);
-        Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync();
+        Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync(bool? isActive = null);
         Task<IResult> ChangedStatusAsync(int id);
         Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCountAsync();
     }

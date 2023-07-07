@@ -22,6 +22,8 @@ using CoreLayer.Aspects.AutoFac.Logging;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Aspects.AutoFac.Exception;
 using CoreLayer.Aspects.AutoFac.Caching;
+using Microsoft.AspNetCore.Identity;
+using BusinessLayer.StaticTexts;
 
 namespace BusinessLayer.Concrete
 {
@@ -134,6 +136,21 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
+            var roles = await _userService.GetUserRoleListAsync(user.Data);
+
+            bool isAdmin = roles.Data.Count(x => x == RolesTexts.AdminRole()) == 1;
+
+            if (!isAdmin)
+            {
+                //kategori pasif ise bu kategoride adminler hariç blog eklenemez.
+                var categoryList = await _categoryService.GetListAsync();
+                var category = categoryList.Data.Find(x => x.CategoryID == blog.CategoryID);
+                if (!category.CategoryStatus)
+                {
+                    return new ErrorResult(Messages.BlogCategoryIsPassiveNotAdded);
+                }
+            }
+
             if (blog.BlogImage != null)
             {
                 var image = ImageFileManager.DownloadImage(blog.BlogImage);
@@ -141,7 +158,7 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorResult(Messages.BlogImageNotGetting);
                 }
-                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(),blog.BlogTitle);
+                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), blog.BlogTitle);
             }
             else if (blogImage != null)
             {

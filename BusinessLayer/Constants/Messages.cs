@@ -31,6 +31,8 @@ namespace BusinessLayer.Constants
 
         public static string BlogThumbnailNotEmpty = "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.";
 
+        public static string BlogCategoryIsPassiveNotAdded = "Aktif olmayan kategorilere adminler dışında blog eklenemez.";
+
         public static string CommentNotEmpty = "Yorum boş geçilemez.";
 
         public static string CommentNotFound = "Yorum bulunamadı.";
