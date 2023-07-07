@@ -3573,6 +3573,11 @@ input[type="month"].form-control {
     appearance: none;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #2f3848 inset !important;
+    -webkit-text-fill-color: #fffff4 !important;
+}
+
 select.form-control:focus::-ms-value {
     color: #eaeaea;
     background-color: #6c8684;
@@ -13644,5 +13649,5 @@ dl {
 
 .note-editor.note-frame .note-editing-area .note-editable {
     color: white !important;
-    background-color: #4d4d4d !important;
+    background-color: #7e9d9b !important;
 }
