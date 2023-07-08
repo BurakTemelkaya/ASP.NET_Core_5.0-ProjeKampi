@@ -141,7 +141,9 @@
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', (event) => {
                 const recaptcha = document.querySelector('.g-recaptcha');
-                recaptcha.setAttribute("data-theme", "dark");
+                if (recaptcha != null) {
+                    recaptcha.setAttribute("data-theme", "dark");
+                }
             });
         </script>
         <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>

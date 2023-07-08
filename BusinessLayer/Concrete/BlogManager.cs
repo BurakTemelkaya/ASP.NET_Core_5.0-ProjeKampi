@@ -24,6 +24,7 @@ using CoreLayer.Aspects.AutoFac.Exception;
 using CoreLayer.Aspects.AutoFac.Caching;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.StaticTexts;
+using System.Diagnostics;
 
 namespace BusinessLayer.Concrete
 {
@@ -457,6 +458,14 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Kategori id değerine göre filtreleme yapmak için gerekli değer.</param>
+        /// <param name="page">O anki sayfa sayısını almak ve sayfalama sistemi kullanabilmek için gerekli parametre.</param>
+        /// <param name="take">Page paramatresi 0'dan büyük ise sayfalama değil ise verilen sayı kadar veri gelmesini</param>
+        /// <param name="search">Bloglar içinde başlığa göre filtreleme yapmak için gerekli parametre.</param>
+        /// <returns></returns>
         [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
         {
@@ -474,8 +483,8 @@ namespace BusinessLayer.Concrete
             if (id != null && search == null)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
-                var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id));
-                if (categoryCount.Data != 0)
+                var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.BlogStatus);
+                if (categoryCount.Data > 0)
                 {
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.Category.CategoryStatus &&
                     x.CategoryID == Convert.ToInt32(id), take, page);
@@ -487,6 +496,10 @@ namespace BusinessLayer.Concrete
                         message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
                     }
                 }
+                else
+                {
+                    message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
+                }
             }
 
             if (search != null)
@@ -495,18 +508,30 @@ namespace BusinessLayer.Concrete
                 {
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
                     message = "'" + search + "' aramanıza dair sonuçlar.";
+                    if (!values.Any())
+                    {
+                        message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
+                    }
                 }
                 else
                 {
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) && x.CategoryID == Convert.ToInt32(id), take, page);
-                    message = values.First().Category.CategoryName + " kategorisindeki " + search + " aramanıza dair sonuçlar.";
-                }
-                if (values.Count == 0)
-                {
-                    isSuccess = false;
-                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
-                    message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
-                }
+                    if (values.Any())
+                    {
+                        message = values.First().Category.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuçlar.";
+                    }
+                    else
+                    {
+                        var category = await _categoryService.TGetByIDAsync(int.Parse(id));
+                        message = category.Data.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuç bulunamadı.";
+                    }
+                }               
+            }
+
+            if (!values.Any())
+            {
+                isSuccess = false;
+                values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
             }
 
             foreach (var item in values)
@@ -556,9 +581,9 @@ namespace BusinessLayer.Concrete
         {
             var roles = await _userService.GetUserRoleListAsync(user.Data);
 
-            bool isAdmin = roles.Data.Count(x => x == RolesTexts.AdminRole()) == 1;
+            bool isAdminorModerator = roles.Data.Count(x => x == RolesTexts.AdminRole() || x == RolesTexts.ModeratorRole()) > 0;
 
-            if (!isAdmin)
+            if (!isAdminorModerator)
             {
                 //kategori pasif ise bu kategoride adminler hariç blog eklenemez.
                 var categoryList = await _categoryService.GetListAsync();
