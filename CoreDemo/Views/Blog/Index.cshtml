@@ -3,9 +3,14 @@
     Layout = "~/Views/Shared/UserLayout.cshtml";
     double BlogScore = 0;
     string search = "";
+    string id = "";
     if (ViewBag.Search != null)
     {
         search = ViewBag.Search;
+    }
+    if (ViewBag.Id != null)
+    {
+        id = ViewBag.Id;
     }
     string blogTitle = "";
 
@@ -120,7 +125,7 @@
                 <!--//left-->
             </div>
         </div>
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page , search } ),
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page , search , id } ),
         new PagedListRenderOptions
         {
         LinkToFirstPageFormat="<<İlk",
@@ -132,6 +137,7 @@
         PageClasses=new[] {"page-link"},
         ActiveLiElementClass="active",
         })
+
         <br />
 
         @await Component.InvokeAsync("CategoryList")

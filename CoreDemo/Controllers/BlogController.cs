@@ -38,6 +38,7 @@ namespace CoreDemo.Controllers
                 ViewBag.Message = values.Message;
                 ViewBag.IsSuccess = values.Success;
                 ViewBag.Search = search;
+                ViewBag.Id = id;
             }
 
             return View(await values.Data.ToPagedListAsync(page, 6));
