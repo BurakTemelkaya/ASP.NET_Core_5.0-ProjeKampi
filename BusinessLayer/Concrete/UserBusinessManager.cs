@@ -120,6 +120,7 @@ namespace BusinessLayer.Concrete
             value.Data.Email = user.Email;
             value.Data.About = user.About;
             value.Data.City = user.City;
+            value.Data.ImageUrl = user.ImageUrl;
 
             if (user.Password != null && user.Password == user.PasswordAgain)
             {
