@@ -28,6 +28,10 @@
         <h3>Şehir</h3>
         @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.Cities, new { @class = "form-control dropdown" })
     </div>
+    <div class="col-lg-10 col-md-12">
+        <h3>E-Maili Onaylı Mı ?</h3>
+        <input type="checkbox" asp-for="EmailConfirmed" class="form-control">
+    </div>
     <br />
     <div class="col-lg-10 col-md-12">
         <button class="btn btn-success">Düzenle</button>

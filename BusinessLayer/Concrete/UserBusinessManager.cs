@@ -178,6 +178,7 @@ namespace BusinessLayer.Concrete
             value.About = user.About;
             value.City = user.City;
             user.ImageUrl = value.ImageUrl;
+            value.EmailConfirmed = user.EmailConfirmed;
             var result = await _userManager.UpdateAsync(value);
             if (result.Succeeded)
             {
