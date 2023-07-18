@@ -576,3 +576,9 @@ $RECYCLE.BIN/
 /CoreDemo/obj/CoreDemo.csproj.nuget.g.targets
 /CoreDemo/wwwroot/WriterImageFiles
 /DataAccessLayer/bin/Debug/net5.0/DataAccessLayer.runtimeconfig.dev.json
+/wwwroot_yedek/MessageContents
+/wwwroot_yedek/NewsLetterDraftContents
+/wwwroot_yedek/MessageDraftContents
+/wwwroot_yedek/WriterImageFiles
+/wwwroot_yedek/BlogImageFiles
+/wwwroot_yedek/BlogContents
