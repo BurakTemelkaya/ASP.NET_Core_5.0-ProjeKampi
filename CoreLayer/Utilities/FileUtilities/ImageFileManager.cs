@@ -100,7 +100,6 @@ namespace CoreLayer.Utilities.FileUtilities
                                 Headers = new HeaderDictionary(),
                                 ContentType = "image/*"
                             };
-
                         }
                     }
                 }

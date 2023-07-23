@@ -25,6 +25,7 @@ using CoreLayer.Aspects.AutoFac.Caching;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.StaticTexts;
 using System.Diagnostics;
+using System.IO;
 
 namespace BusinessLayer.Concrete
 {
@@ -151,11 +152,11 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorResult(Messages.BlogImageNotGetting);
                 }
-                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), blog.BlogTitle);
+                blog.BlogImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
             else if (blogImage != null)
             {
-                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), blog.BlogTitle);
+                blog.BlogImage = ImageFileManager.ImageAdd(blogImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
             }
 
             if (blog.BlogImage == null)
@@ -170,11 +171,11 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorResult(Messages.BlogThumbnailNotGetting);
                 }
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), blog.BlogTitle);
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(image, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
             else if (blogThumbnailImage != null)
             {
-                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), blog.BlogTitle);
+                blog.BlogThumbnailImage = ImageFileManager.ImageAdd(blogThumbnailImage, ImageLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
             }
 
             if (blog.BlogThumbnailImage == null)
@@ -468,7 +469,7 @@ namespace BusinessLayer.Concrete
         /// <returns></returns>
         [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
-        {
+        {           
             List<Blog> values = new();
 
             bool isSuccess = true;
@@ -525,7 +526,7 @@ namespace BusinessLayer.Concrete
                         var category = await _categoryService.TGetByIDAsync(int.Parse(id));
                         message = category.Data.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuç bulunamadı.";
                     }
-                }               
+                }
             }
 
             if (!values.Any())
@@ -594,6 +595,56 @@ namespace BusinessLayer.Concrete
                 }
             }
             return new SuccessResult();
+        }
+
+        /// <summary>
+        /// Resim isimlerinin sadece guid kalacak şekilde yeniden adlandırılmasını sağlayan metod.
+        /// </summary>
+        /// <returns></returns>
+        private async Task MoveBlogImageFileAsync()
+        {
+            var blogs = await _blogDal.GetListAllAsync();
+
+            foreach (var blog in blogs)
+            {
+                try
+                {
+                    if (blog.BlogImage == null || blog.BlogImage == string.Empty)
+                        continue;
+
+                    int index = blog.BlogImage.LastIndexOf('-', blog.BlogImage.Length - 41);
+
+                    string oldName = blog.BlogImage;
+
+                    string newName = blog.BlogImage.Substring(index + 1);
+
+                    bool isMove = await FileManager.FileMoveAsync(oldName, newName);
+
+                    if (isMove)
+                        blog.BlogImage = newName;
+
+                    if (blog.BlogThumbnailImage == null || blog.BlogThumbnailImage == string.Empty)
+                        continue;
+
+
+                    int indexThumbnail = blog.BlogThumbnailImage.LastIndexOf('-', blog.BlogThumbnailImage.Length - 41);
+
+                    string oldNameThumbnail = blog.BlogThumbnailImage;
+
+                    string newNameThumbnail = blog.BlogThumbnailImage.Substring(indexThumbnail + 1);
+
+                    bool isMoveThumbnail = await FileManager.FileMoveAsync(oldNameThumbnail, newNameThumbnail);
+
+                    if (isMoveThumbnail)
+                        blog.BlogThumbnailImage = newNameThumbnail;
+                }
+                catch
+                {
+
+                }
+            }
+
+            await _blogDal.UpdateRangeAsync(blogs);
         }
     }
 }
