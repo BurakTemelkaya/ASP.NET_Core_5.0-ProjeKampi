@@ -17,7 +17,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         private readonly ICommentService _commentService;
         private readonly IConfiguration _configuration;
 
-        public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService,IConfiguration configuration)
+        public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService, IConfiguration configuration)
         {
             _blogService = blogService;
             _messageService = message2Service;
@@ -27,7 +27,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            decimal tempCelcius = Convert.ToDecimal(WeatherApi().Value);
+            string tempCelcius = WeatherApi().Value;
+
+            tempCelcius = tempCelcius.Length == 5 ? tempCelcius[..4] : tempCelcius[..3];
 
             var blogCount = await _blogService.GetCountAsync();
 
@@ -40,7 +42,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 BlogCount = blogCount.Data,
                 MessageCount = messageCount.Data,
                 CommentCount = commentCount.Data,
-                Temparature = tempCelcius.ToString("00.0")
+                Temparature = tempCelcius
             };
             ViewBag.v2 = _messageService.GetCountAsync().Result.Data;
             ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
