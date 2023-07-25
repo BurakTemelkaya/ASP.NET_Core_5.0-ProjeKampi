@@ -148,6 +148,7 @@ namespace CoreDemo
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
