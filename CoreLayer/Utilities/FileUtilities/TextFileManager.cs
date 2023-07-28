@@ -39,10 +39,9 @@ namespace CoreLayer.Utilities.FileUtilities
                 string fileLocation = @"wwwroot\" + folderLocation;
                 FileStream fileStream = new(fileLocation, FileMode.Open, FileAccess.Read);
                 StreamReader streamReader = new(fileStream);
-                string content = "";
+                string content = await streamReader.ReadToEndAsync();
                 if (numberOfLetters > 0)
                 {
-                    content = await streamReader.ReadLineAsync();
                     content = Regex.Replace(content, "&nbsp;", " ");
                     var htmlDoc = new HtmlDocument();
                     htmlDoc.LoadHtml(content);
@@ -51,10 +50,6 @@ namespace CoreLayer.Utilities.FileUtilities
                     {
                         content = content[..numberOfLetters];
                     }                 
-                }
-                else
-                {
-                    content = await streamReader.ReadToEndAsync();
                 }
                 streamReader.Close();
                 fileStream.Close();
