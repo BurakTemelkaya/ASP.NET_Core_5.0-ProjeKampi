@@ -20,7 +20,7 @@ namespace CoreLayer.Utilities.FileUtilities
                 var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newFileName);
                 using FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
                 using StreamWriter streamWriter = new(fileStream);
-                await streamWriter.WriteLineAsync(text);
+                await streamWriter.WriteAsync(text);
                 await streamWriter.FlushAsync();
                 streamWriter.Close();
                 fileStream.Close();
@@ -54,7 +54,7 @@ namespace CoreLayer.Utilities.FileUtilities
                 }
                 else
                 {
-                    content = await streamReader.ReadLineAsync();
+                    content = await streamReader.ReadToEndAsync();
                 }
                 streamReader.Close();
                 fileStream.Close();
