@@ -1,4 +1,6 @@
-﻿using EntityLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -12,27 +14,33 @@ namespace BusinessLayer.Middleware
     public class UserDestroyerMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public UserDestroyerMiddleware(RequestDelegate next)
+        private readonly IBusinessUserService _businessUserService;
+        private DateTime ControlTime = DateTime.Now.AddMinutes(1);
+        public UserDestroyerMiddleware(RequestDelegate next, IBusinessUserService businessUserService)
         {
             _next = next;
+            _businessUserService = businessUserService;
         }
         /// <summary>
         /// Kullanıcı yasaklı ise sistemden çıkış yapmasını sağlayan kontrol mekanizması.
         /// </summary>
-        public async Task Invoke(HttpContext httpContext,
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager)
+        public async Task Invoke(HttpContext httpContext, SignInManager<AppUser> signInManager)
         {
             if (!string.IsNullOrEmpty(httpContext.User.Identity.Name))
             {
-                var user = await userManager.FindByNameAsync(httpContext.User.Identity.Name);
-                if (user.LockoutEnd > DateTime.Now)
+                if (ControlTime > DateTime.Now)
+                {
+                    await _next(httpContext);
+                    return;
+                }
+                var user = await _businessUserService.GetByUserNameAsync(httpContext.User.Identity.Name);
+                if (user.Data.LockoutEnd > DateTime.Now)
                 {
                     await signInManager.SignOutAsync();
                     httpContext.Response.Redirect("/Blog/Index");
                 }
             }
+            ControlTime = DateTime.Now.AddMinutes(1);
             await _next(httpContext);
         }
     }

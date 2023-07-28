@@ -17,7 +17,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         private readonly ICommentService _commentService;
         private readonly IConfiguration _configuration;
 
-        public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService,IConfiguration configuration)
+        public Statistic1(IBlogService blogService, IMessageService message2Service, ICommentService commentService, IConfiguration configuration)
         {
             _blogService = blogService;
             _messageService = message2Service;
@@ -27,8 +27,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            decimal tempFah = Convert.ToDecimal(WeatherApi().Value);
-            tempFah -= Convert.ToDecimal(273.15);
+            string tempCelcius = WeatherApi().Value;
+
+            tempCelcius = tempCelcius.Length == 5 ? tempCelcius[..4] : tempCelcius[..3];
 
             var blogCount = await _blogService.GetCountAsync();
 
@@ -41,7 +42,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
                 BlogCount = blogCount.Data,
                 MessageCount = messageCount.Data,
                 CommentCount = commentCount.Data,
-                Temparature = tempFah.ToString()
+                Temparature = tempCelcius
             };
             ViewBag.v2 = _messageService.GetCountAsync().Result.Data;
             ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
@@ -50,7 +51,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         private XAttribute WeatherApi(string city = "istanbul")
         {
             string apiKey = _configuration["OpenWeatherApiKeys:Key"];
-            string connection = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&mode=xml&appid=" + apiKey;
+            string connection = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&mode=xml&appid=" + apiKey + "&units=metric";
             XDocument document = XDocument.Load(connection);
             return document.Descendants("temperature").ElementAt(0).Attribute("value");
         }

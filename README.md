@@ -1,6 +1,6 @@
 # ASP.NET Core 5.0 ProjeKampi
 
-Sitenin linki: https://coreblogsite.azurewebsites.net/
+Sitenin linki: https://blog.buraktemelkaya.com/
 
 # Sertifika
 
