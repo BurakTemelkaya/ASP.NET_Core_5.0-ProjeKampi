@@ -81,7 +81,11 @@ namespace CoreDemo
 
             services.AddControllersWithViews();
 
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(30);
+                options.Cookie.IsEssential = true;
+            });
 
             services.AddMvc(config =>
             {
