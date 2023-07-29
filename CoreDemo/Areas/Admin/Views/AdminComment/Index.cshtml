@@ -52,30 +52,33 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
+                            if (item == null)
                             {
-                                if (item.CommentStatus)
-                                {
-                                    durumRengi = "btn-outline-secondary";
-                                    durum = "Pasifleştir";
-                                }
-                                else
-                                {
-                                    durum = "btn-outline-primary";
-                                    durum = "Aktifleştir";
-                                }
-                                if (item.BlogScore < 3)
-                                {
-                                    puanRengi = "text-danger";
-                                }
-                                else if (item.BlogScore >= 4 && item.BlogScore <= 6)
-                                {
-                                    puanRengi = "text-success";
-                                }
-                                else
-                                {
-                                    puanRengi = "text-warning";
-                                }
+                                continue;
                             }
+                            if (item.CommentStatus)
+                            {
+                                durumRengi = "btn-outline-secondary";
+                                durum = "Pasifleştir";
+                            }
+                            else
+                            {
+                                durum = "btn-outline-primary";
+                                durum = "Aktifleştir";
+                            }
+                            if (item.BlogScore < 3)
+                            {
+                                puanRengi = "text-danger";
+                            }
+                            else if (item.BlogScore >= 4 && item.BlogScore <= 6)
+                            {
+                                puanRengi = "text-success";
+                            }
+                            else
+                            {
+                                puanRengi = "text-warning";
+                            }
+
                             <tr>
                                 <td class="col-2">@item.CommentUserName</td>
                                 <td class="col-2">@item.CommentTitle</td>

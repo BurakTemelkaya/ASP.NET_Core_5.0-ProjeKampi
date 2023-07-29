@@ -46,13 +46,9 @@ namespace CoreDemo
             services.AddHttpContextAccessor();
 
             services.AddDbContext<Context>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("SQLServer"))
-            , ServiceLifetime.Scoped);
+            options.UseSqlServer(Configuration.GetConnectionString("SQLServer")), ServiceLifetime.Scoped);
 
-            CultureInfo[] supportedCultures = new[]
-            {
-                new CultureInfo("tr"),
-            };
+            CultureInfo[] supportedCultures = new[] { new CultureInfo("tr"), };
 
             services.Configure<RequestLocalizationOptions>(options =>
             {

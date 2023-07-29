@@ -17,9 +17,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             _commentService = commentService;
         }
 
+        //TODO: Silinen bloglara ait yorumlar gelmiyor onun için ayrı bir sayfa yap.
         public async Task<IActionResult> Index(int page = 1)
-        {
-            var comments = await _commentService.GetCommentListWithBlogByPagingAsync(5,page);
+        {            
+            var comments = await _commentService.GetCommentListWithBlogByPagingAsync(5, page);
             var values = await comments.Data.ToPagedListAsync(page, 5);
             return View(values);
         }
