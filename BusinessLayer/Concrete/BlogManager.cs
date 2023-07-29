@@ -110,16 +110,16 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count)
+        public async Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count, int skip = 0, bool sortInReverse = true)
         {
-            var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count);
+            var value = await _blogDal.GetListAllAsync(x => x.BlogStatus, count, skip, sortInReverse);
 
             if (value == null)
             {
                 return new ErrorDataResult<List<Blog>>(Messages.BlogNotFound);
             }
 
-            return new SuccessDataResult<List<Blog>>(value.OrderByDescending(x => x.BlogID).ToList());
+            return new SuccessDataResult<List<Blog>>(value);
         }
 
         [CacheAspect]
@@ -469,7 +469,7 @@ namespace BusinessLayer.Concrete
         /// <returns></returns>
         [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
-        {           
+        {
             List<Blog> values = new();
 
             bool isSuccess = true;

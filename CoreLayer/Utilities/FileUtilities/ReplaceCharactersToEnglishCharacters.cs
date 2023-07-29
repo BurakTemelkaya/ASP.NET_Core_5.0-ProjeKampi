@@ -17,10 +17,6 @@ namespace CoreLayer.Utilities.FileUtilities
                 return "";
             }
 
-            if (s.Length > 80)
-            {
-                s = s.Substring(0, 80);
-            }
             s = s.Replace("ş", "s");
             s = s.Replace("Ş", "S");
             s = s.Replace("ğ", "g");

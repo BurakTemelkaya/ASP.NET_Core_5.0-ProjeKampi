@@ -19,7 +19,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
-        Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count);
+        Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count, int skip = 0, bool sortInReserver = true);
         Task<IResult> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IResult> DeleteBlogAsync(Blog blog, string userName);

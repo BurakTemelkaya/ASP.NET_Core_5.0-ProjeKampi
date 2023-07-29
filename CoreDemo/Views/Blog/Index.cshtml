@@ -47,6 +47,7 @@
                 <div class="row">
                     @foreach (var item in Model)
                     {
+                        string seoTitle = ReplaceCharactersToEnglishCharacters.ReplaceCharacters(item.BlogTitle);
                         blogTitle = item.BlogTitle;
                         @if (blogTitle.Length > 50)
                         {
@@ -58,7 +59,7 @@
                             BlogScore = Math.Round(item.Comments.Average(x => x.BlogScore), 1);
                         }
                         <div class="col-lg-4 card">
-                            <a href="/Blog/BlogReadAll/@item.BlogID">
+                            <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">
                                 <img src="@item.BlogThumbnailImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
                             </a>
                             <div class="card-body">
@@ -86,9 +87,8 @@
 
                                 </ul>
 
-
                                 <h5 class="card-title">
-                                    <a href="/Blog/BlogReadAll/@item.BlogID">@blogTitle</a>
+                                    <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">@blogTitle</a>
                                 </h5>
 
 

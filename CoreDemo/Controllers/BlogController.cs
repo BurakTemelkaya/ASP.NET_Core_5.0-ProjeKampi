@@ -24,7 +24,7 @@ namespace CoreDemo.Controllers
             _businessUserService = businessUserService;
             _categoryService = categoryService;
         }
-
+       
         [AllowAnonymous]
         public async Task<IActionResult> Index(string id, int page = 1, string search = null)
         {
@@ -43,6 +43,9 @@ namespace CoreDemo.Controllers
 
             return View(await values.Data.ToPagedListAsync(page, 6));
         }
+
+        [Route("/Blog/BlogReadAll/{title}/{id:int}")]
+        [Route("/Blog/BlogReadAll/{id:int}")]
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
         {

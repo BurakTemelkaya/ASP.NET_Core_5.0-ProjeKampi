@@ -48,7 +48,14 @@ namespace CoreLayer.DataAccess.EntityFramework
                 if (sortInReverse)
                 {
                     var count = await GetCountAsync(filter);
-                    skip = count - take;
+                    if (skip == 0)
+                    {
+                        skip = count - take;
+                    }
+                    if (skip > 0)
+                    {
+                        skip = count - skip;
+                    }
                     if (skip < 0)
                     {
                         skip = 0;
@@ -103,7 +110,7 @@ namespace CoreLayer.DataAccess.EntityFramework
 
             values.AddRange(AddNullObject<TEntity>.GetNullValuesForAfter(page, take, count));
 
-            
+
 
             return values;
         }
