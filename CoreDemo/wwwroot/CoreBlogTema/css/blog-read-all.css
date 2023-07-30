@@ -4,4 +4,6 @@
     font-weight: 700;
 }
 
-
+article img {
+    max-width: 100%;
+}
