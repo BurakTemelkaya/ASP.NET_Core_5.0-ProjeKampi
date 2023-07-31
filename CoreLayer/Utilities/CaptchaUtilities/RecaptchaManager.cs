@@ -29,16 +29,11 @@ namespace CoreLayer.Utilities.CaptchaUtilities
 
         public async Task<bool> CheckCaptchaValidate(string captcharesponse = null)
         {
-            string responseRecaptchaValue;
             if (string.IsNullOrEmpty(captcharesponse))
             {
-                responseRecaptchaValue = _httpContextAccessor.HttpContext.Request.Form["g-recaptcha-response"];
+                captcharesponse = _httpContextAccessor.HttpContext.Request.Form["g-recaptcha-response"].ToString();
             }
-            else if (!string.IsNullOrEmpty(captcharesponse))
-            {
-                responseRecaptchaValue = captcharesponse;
-            }
-            else
+            if (string.IsNullOrEmpty(captcharesponse))
             {
                 return false;
             }
@@ -46,7 +41,7 @@ namespace CoreLayer.Utilities.CaptchaUtilities
             {
                 new KeyValuePair<string, string>("secret", GetSecretKey()),
                 new KeyValuePair<string, string>("remoteip", _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()),
-                new KeyValuePair<string, string>("response", responseRecaptchaValue)
+                new KeyValuePair<string, string>("response", captcharesponse)
             };
 
             var client = new HttpClient();
@@ -69,26 +64,18 @@ namespace CoreLayer.Utilities.CaptchaUtilities
             {
                 return "Recaptcha doğrulamasını yanlış yaptınız.";
             }
-            
+
             return null;
         }
 
         public string GetSecretKey()
         {
-            if (_webHostEnvironment.IsProduction())
-            {
-                return Configuration["RecaptchaKeys:SecretKey"];
-            }
-            return Configuration["RecaptchaTestKeys:SecretKey"];
+            return Configuration["RecaptchaKeys:SecretKey"];
         }
 
         public string GetSiteKey()
         {
-            if (_webHostEnvironment.IsProduction())
-            {
-                return Configuration["RecaptchaKeys:SiteKey"];
-            }
-            return Configuration["RecaptchaTestKeys:SiteKey"];
+            return Configuration["RecaptchaKeys:SiteKey"];
         }
     }
 }

@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoreLayer.Utilities.MailUtilities
 {
-    public class OutlookMailManager : IMailService
+    public class MailManager : IMailService
     {
         readonly IConfiguration _configuration;
 
-        public OutlookMailManager(IConfiguration configuration)
+        public MailManager(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -25,9 +25,9 @@ namespace CoreLayer.Utilities.MailUtilities
                 var senderMail = _configuration["MailInfo:Mail"];
                 var senderPassword = _configuration["MailInfo:Password"];
                 smtp.Credentials = new System.Net.NetworkCredential(senderMail, senderPassword);
-                smtp.Port = 587;
-                smtp.Host = "smtp-mail.outlook.com";
-                smtp.EnableSsl = true;
+                smtp.Port = int.Parse(_configuration["MailInfo:Port"]);
+                smtp.Host = _configuration["MailInfo:Host"];
+                smtp.EnableSsl = Convert.ToBoolean(_configuration["MailInfo:SSL"]);
                 MailMessage eMail = new();
                 eMail.From = new MailAddress(_configuration["MailInfo:Mail"]);
                 eMail.To.Add(mail);

@@ -26,7 +26,7 @@ namespace CoreLayer.DependancyResolvers
 
             serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
 
-            serviceCollection.AddSingleton<IMailService, OutlookMailManager>();
+            serviceCollection.AddSingleton<IMailService, MailManager>();
 
             serviceCollection.AddSingleton<ICaptchaService, RecaptchaManager>();
 
