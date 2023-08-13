@@ -3,7 +3,7 @@
     ViewData["Title"] = "İletişim";
     Layout = "~/Views/Shared/UserLayout.cshtml";
     @inject IHttpContextAccessor httpContextaccessor;
-    var thema = "";
+    string thema = "";
     if (httpContextaccessor.HttpContext.Request.Cookies["thema"] != null)
     {
         thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
@@ -58,7 +58,7 @@
                             <h6>Email</h6>
                             <p>
                                 Email :
-                                <a href="mailto:temelkayaburak@gmail.com"> temelkayaburak@gmail.com</a>
+                                <a href="mailto:support@blog.buraktemelkaya.com"> support@blog.buraktemelkaya.com</a>
                             </p>
                         </div>
 
