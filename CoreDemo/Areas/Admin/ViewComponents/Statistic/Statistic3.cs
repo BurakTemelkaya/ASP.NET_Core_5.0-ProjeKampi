@@ -43,8 +43,16 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
 
             var currencies = _currencyService.GetCurrencys(CurrencyCodes.Euro, CurrencyCodes.Dollar);
-            ViewBag.Euro = currencies.First(x => x.Code == CurrencyCodes.Euro).Value;
-            ViewBag.Dolar = currencies.First(x => x.Code == CurrencyCodes.Dollar).Value;
+            if (currencies.Success)
+            {
+                ViewBag.Euro = currencies.Data.First(x => x.Code == CurrencyCodes.Euro).Value;
+                ViewBag.Dolar = currencies.Data.First(x => x.Code == CurrencyCodes.Dollar).Value;
+            }
+            else
+            {
+                ViewBag.Euro = currencies.Message;
+                ViewBag.Dolar = currencies.Message;
+            }
 
             return View();
         }

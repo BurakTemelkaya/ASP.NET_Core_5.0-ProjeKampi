@@ -17,13 +17,13 @@
 }
 @section HeaderSection{
     <meta property="og:title" content="Core Blog - Güncel Teknoloji Blogları ve daha fazlası" />
-    <meta property="og:url" content="https://coreblogsite.azurewebsites.net/" />
+    <meta property="og:url" content="https://blog.buraktemelkaya.com" />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Core Blog" />
-    <meta property="og:image" content="https://coreblogsite.azurewebsites.net/writer/assets/images/favicon.ico" />
+    <meta property="og:image" content="https://blog.buraktemelkaya.com/writer/assets/images/favicon.ico" />
 }
 
-<section class="main-content-w3layouts-agileits">
+<section class="main-content-w3layouts-agileits center">
     <div class="container">
 
         @if (ViewBag.Message != null)
@@ -115,18 +115,21 @@
                 <!--//left-->
             </div>
         </div>
+
         @Html.PagedListPager(Model, page => Url.Action("Index", new { page , search , id } ),
         new PagedListRenderOptions
         {
-        LinkToFirstPageFormat="<<İlk",
-        LinkToLastPageFormat="Son>>",
-        LinkToNextPageFormat="sonraki>",
-        LinkToPreviousPageFormat="<önceki",
+        DisplayEllipsesWhenNotShowingAllPageNumbers=false,
+        DisplayLinkToNextPage=PagedListDisplayMode.Never,
+        DisplayLinkToPreviousPage=PagedListDisplayMode.Never,
         ContainerDivClasses=new[] {"navigation"},
         LiElementClasses= new[] {"page-item"},
         PageClasses=new[] {"page-link"},
         ActiveLiElementClass="active",
+        MaximumPageNumbersToDisplay=3
         })
+
+
 
         <br />
 

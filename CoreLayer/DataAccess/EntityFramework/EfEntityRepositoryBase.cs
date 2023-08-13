@@ -52,10 +52,11 @@ namespace CoreLayer.DataAccess.EntityFramework
                     {
                         skip = count - take;
                     }
-                    if (skip > 0)
+                    else if (skip > 0)
                     {
                         skip = count - skip;
                     }
+
                     if (skip < 0)
                     {
                         skip = 0;

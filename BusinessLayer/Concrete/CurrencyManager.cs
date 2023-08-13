@@ -2,6 +2,7 @@
 using BusinessLayer.Constants;
 using BusinessLayer.Models;
 using CoreLayer.Aspects.AutoFac.Caching;
+using CoreLayer.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace BusinessLayer.Concrete
 {
     internal class CurrencyManager : ICurrencyService
     {
-        [CacheAspect(10)]
-        public List<CurrencysModel> GetCurrencys(params string[] currencys)
+        [CacheAspect(60)]
+        public IDataResult<List<CurrencysModel>> GetCurrencys(params string[] currencys)
         {
             try
             {
@@ -30,11 +31,11 @@ namespace BusinessLayer.Concrete
                         Value = xmlDoc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{currency}']/BanknoteSelling").InnerXml[..5].ToString()
                     });
                 }
-                return model;
+                return new SuccessDataResult<List<CurrencysModel>>(model);
             }
             catch
             {
-                return null;
+                return new ErrorDataResult<List<CurrencysModel>>(Messages.ErrorFetchingCurrencyData);
             }
         }
     }

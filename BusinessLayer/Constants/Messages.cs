@@ -114,5 +114,7 @@ namespace BusinessLayer.Constants
         public static string AdminNotBanned = "Adminler banlanamaz.";
 
         public static string BannedLaterThanTheCurrentDate = "Girilen ban süresi şu anki tarihten ileride olamaz.";
+
+        public static string ErrorFetchingCurrencyData = "Döviz verileri alınırken bir hata oluştu.";
     }
 }
