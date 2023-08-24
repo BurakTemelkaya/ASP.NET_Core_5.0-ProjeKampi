@@ -39,14 +39,14 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("INotificationService.Get")]
-        public async Task<IResult> TAddAsync(Notification t)
+        public async Task<IResultObject> TAddAsync(Notification t)
         {
             await _notificationDal.InsertAsync(t);
             return new SuccessResult();
         }
 
         [CacheRemoveAspect("INotificationService.Get")]
-        public async Task<IResult> TDeleteAsync(Notification t)
+        public async Task<IResultObject> TDeleteAsync(Notification t)
         {
             await _notificationDal.DeleteAsync(t);
             return new SuccessResult();
@@ -65,7 +65,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("INotificationService.Get")]
-        public async Task<IResult> TUpdateAsync(Notification t)
+        public async Task<IResultObject> TUpdateAsync(Notification t)
         {
             await _notificationDal.UpdateAsync(t);
             return new SuccessResult();

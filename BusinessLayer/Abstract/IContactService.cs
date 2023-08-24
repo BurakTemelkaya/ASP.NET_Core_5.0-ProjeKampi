@@ -10,11 +10,11 @@ namespace BusinessLayer.Abstract
 {
     public interface IContactService : IGenericService<Contact>
     {
-        Task<IResult> ContactAddAsync(Contact contact);
-        Task<IResult> DeleteContactsAsync(List<string> ids);
-        Task<IResult> MarkUsReadAsync(int contactId);
-        Task<IResult> MarksUsReadAsync(List<string> Ids);
-        Task<IResult> MarkUsUnreadAsync(int contactId);
-        Task<IResult> MarksUsUnreadAsync(List<string> Ids);
+        Task<IResultObject> ContactAddAsync(Contact contact);
+        Task<IResultObject> DeleteContactsAsync(List<string> ids);
+        Task<IResultObject> MarkUsReadAsync(int contactId);
+        Task<IResultObject> MarksUsReadAsync(List<string> Ids);
+        Task<IResultObject> MarkUsUnreadAsync(int contactId);
+        Task<IResultObject> MarksUsUnreadAsync(List<string> Ids);
     }
 }

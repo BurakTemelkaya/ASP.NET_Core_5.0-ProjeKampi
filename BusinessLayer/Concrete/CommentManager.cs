@@ -28,7 +28,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
         [ValidationAspect(typeof(CommentValidator))]
-        public async Task<IResult> TAddAsync(Comment comment)
+        public async Task<IResultObject> TAddAsync(Comment comment)
         {
             comment.CommentDate = DateTime.Now;
             comment.CommentStatus = true;
@@ -56,7 +56,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> TDeleteAsync(Comment t)
+        public async Task<IResultObject> TDeleteAsync(Comment t)
         {
             if (t == null)
             {
@@ -86,7 +86,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("ICommentService.Get")]
         [ValidationAspect(typeof(CommentValidator))]
-        public async Task<IResult> TUpdateAsync(Comment t)
+        public async Task<IResultObject> TUpdateAsync(Comment t)
         {
             var oldValueRaw = await TGetByIDAsync(t.CommentID);
             var oldValue = oldValueRaw.Data;
@@ -128,7 +128,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> DeleteCommentByWriter(string userName, int id)
+        public async Task<IResultObject> DeleteCommentByWriter(string userName, int id)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
@@ -146,7 +146,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> DisabledCommentByWriter(string userName, int id)
+        public async Task<IResultObject> DisabledCommentByWriter(string userName, int id)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
@@ -169,7 +169,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> EnabledCommentByWriter(string userName, int id)
+        public async Task<IResultObject> EnabledCommentByWriter(string userName, int id)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
@@ -192,7 +192,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> ChangeStatusCommentByWriter(string userName, int id)
+        public async Task<IResultObject> ChangeStatusCommentByWriter(string userName, int id)
         {
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment == null)
@@ -220,7 +220,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResult> ChangeStatusCommentByAdmin(int id)
+        public async Task<IResultObject> ChangeStatusCommentByAdmin(int id)
         {
             var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
             if (comment == null)

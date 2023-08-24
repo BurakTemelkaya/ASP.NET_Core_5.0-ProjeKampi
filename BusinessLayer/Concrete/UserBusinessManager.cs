@@ -77,7 +77,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBusinessUserService.Get")]
-        public async Task<IResult> CastUserRole(AppUser user, string role)
+        public async Task<IResultObject> CastUserRole(AppUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
             return new SuccessResult();
@@ -86,7 +86,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
-        public async Task<IResult> DeleteUserAsync(AppUser t)
+        public async Task<IResultObject> DeleteUserAsync(AppUser t)
         {
             await _userManager.DeleteAsync(t);
             return new SuccessResult();
@@ -280,7 +280,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
         [LogAspect(typeof(DatabaseLogger))]
-        public async Task<IResult> BannedUser(string id, DateTime expiration, string banMessageContent)
+        public async Task<IResultObject> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
             var user = await GetByIDAsync(id);
             var userData = user.Data;
@@ -319,13 +319,13 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("IBusinessUserService.Get")]
-        public async Task<IResult> BanOpenUser(string id)
+        public async Task<IResultObject> BanOpenUser(string id)
         {
             var user = await GetByIDAsync(id);
 
             var userDto = Mapper.Map<UserDto>(user);
 
-            IResult businessRulesResult = BusinessRules.Run(UserNotEmpty(new SuccessDataResult<UserDto>(userDto)));
+            IResultObject businessRulesResult = BusinessRules.Run(UserNotEmpty(new SuccessDataResult<UserDto>(userDto)));
 
             if (!businessRulesResult.Success)
             {
@@ -378,7 +378,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<string>(await _userManager.GenerateEmailConfirmationTokenAsync(user), "Başarılı");
         }
 
-        public async Task<IResult> ConfirmMailAsync(string email, string token)
+        public async Task<IResultObject> ConfirmMailAsync(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
 

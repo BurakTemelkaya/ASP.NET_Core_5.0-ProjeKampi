@@ -12,7 +12,7 @@ namespace BusinessLayer.Abstract
     public interface IAboutService
     {
 
-        Task<IResult> UpdateAsync(About t, IFormFile aboutImage1, IFormFile aboutImage2);
+        Task<IResultObject> UpdateAsync(About t, IFormFile aboutImage1, IFormFile aboutImage2);
 
         Task<IDataResult<About>> GetAboutAsync();
 

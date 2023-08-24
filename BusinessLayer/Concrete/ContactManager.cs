@@ -25,7 +25,7 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task<IResult> ContactAddAsync(Contact contact)
+        public async Task<IResultObject> ContactAddAsync(Contact contact)
         {
             contact.ContactDate = DateTime.Now;
             contact.ContactStatus = false;
@@ -44,14 +44,14 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task<IResult> TAddAsync(Contact t)
+        public async Task<IResultObject> TAddAsync(Contact t)
         {
             t.ContactStatus = false;
             await _contactDal.InsertAsync(t);
             return new SuccessResult();
         }
 
-        public async Task<IResult> TDeleteAsync(Contact t)
+        public async Task<IResultObject> TDeleteAsync(Contact t)
         {
             if (t == null)
             {
@@ -73,13 +73,13 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(ContactValidator))]
-        public async Task<IResult> TUpdateAsync(Contact t)
+        public async Task<IResultObject> TUpdateAsync(Contact t)
         {
             await _contactDal.UpdateAsync(t);
             return new SuccessResult();
         }
 
-        public async Task<IResult> MarkUsReadAsync(int contactId)
+        public async Task<IResultObject> MarkUsReadAsync(int contactId)
         {
             if (contactId != 0)
             {
@@ -105,7 +105,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult(Messages.ContactIsEmpty);
         }
 
-        public async Task<IResult> MarkUsUnreadAsync(int contactId)
+        public async Task<IResultObject> MarkUsUnreadAsync(int contactId)
         {
             if (contactId != 0)
             {
@@ -126,7 +126,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult(Messages.ContactIsEmpty);
         }
 
-        public async Task<IResult> DeleteContactsAsync(List<string> ids)
+        public async Task<IResultObject> DeleteContactsAsync(List<string> ids)
         {
             if (ids == null)
             {
@@ -144,7 +144,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IResult> MarksUsReadAsync(List<string> Ids)
+        public async Task<IResultObject> MarksUsReadAsync(List<string> Ids)
         {
             List<Contact> contacts = new();
 
@@ -175,7 +175,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IResult> MarksUsUnreadAsync(List<string> Ids)
+        public async Task<IResultObject> MarksUsUnreadAsync(List<string> Ids)
         {
             List<Contact> contacts = new();
 

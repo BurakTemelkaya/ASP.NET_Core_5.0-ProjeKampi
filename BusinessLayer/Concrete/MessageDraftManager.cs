@@ -79,7 +79,7 @@ namespace BusinessLayer.Concrete
         }
 
 
-        public async Task<IResult> AddAsync(MessageDraft t, string userName)
+        public async Task<IResultObject> AddAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.GetByUserNameAsync(userName);
 
@@ -94,12 +94,12 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IResult> DeleteAsync(int id, string userName)
+        public async Task<IResultObject> DeleteAsync(int id, string userName)
         {
 
             var user = await _businessUserService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(UserNotEmpty(user), IdNotEqualZero(id));
+            IResultObject result = BusinessRules.Run(UserNotEmpty(user), IdNotEqualZero(id));
 
             if (!result.Success)
             {
@@ -117,9 +117,9 @@ namespace BusinessLayer.Concrete
             return new ErrorResult("Bu mesaj " + user.Data.UserName + " adlı kullanıcıya ait değil.");
         }
 
-        public async Task<IResult> DeleteMessageDraftsAsync(List<string> ids, string userName)
+        public async Task<IResultObject> DeleteMessageDraftsAsync(List<string> ids, string userName)
         {
-            IResult result = BusinessRules.Run(IdsNotNull(ids));
+            IResultObject result = BusinessRules.Run(IdsNotNull(ids));
 
             if (!result.Success)
             {
@@ -175,7 +175,7 @@ namespace BusinessLayer.Concrete
         {
             var user = await _businessUserService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(IdNotEqualZero(id), UserNotEmpty(user));
+            IResultObject result = BusinessRules.Run(IdNotEqualZero(id), UserNotEmpty(user));
 
             if (!result.Success)
             {
@@ -191,11 +191,11 @@ namespace BusinessLayer.Concrete
             return null;
         }
 
-        public async Task<IResult> UpdateAsync(MessageDraft t, string userName)
+        public async Task<IResultObject> UpdateAsync(MessageDraft t, string userName)
         {
             var user = await _businessUserService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(IdNotEqualZero(t.MessageDraftID), UserNotEmpty(user));
+            IResultObject result = BusinessRules.Run(IdNotEqualZero(t.MessageDraftID), UserNotEmpty(user));
 
             if (!result.Success)
             {
@@ -225,7 +225,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult(Messages.MessageDraftIsNotAuthors);
         }
 
-        IResult IdNotEqualZero(int id)
+        IResultObject IdNotEqualZero(int id)
         {
             if (id == 0)
             {
@@ -234,7 +234,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        IResult IdsNotNull(List<string> ids)
+        IResultObject IdsNotNull(List<string> ids)
         {
             if (ids == null)
             {

@@ -56,7 +56,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> GetMessageList(int take = 3)
         {
             var values = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null);
-            var jsonValues = JsonConvert.SerializeObject(await values.Data.TakeLast(take).ToListAsync());
+            var jsonValues = JsonConvert.SerializeObject(values.Data.TakeLast(take).ToList());
             return Json(jsonValues);
         }
 

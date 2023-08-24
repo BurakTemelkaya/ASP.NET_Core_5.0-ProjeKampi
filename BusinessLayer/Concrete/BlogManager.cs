@@ -134,7 +134,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task<IResult> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
+        public async Task<IResultObject> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -199,7 +199,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task<IResult> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        public async Task<IResultObject> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var oldValueRaw = await GetBlogByIDAsync(blog.BlogID);
@@ -286,7 +286,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
-        public async Task<IResult> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
+        public async Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
             var OldValueRaw = await GetBlogByIDAsync(blog.BlogID);
             var oldValue = OldValueRaw.Data;
@@ -357,7 +357,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResult> DeleteBlogAsync(Blog blog, string userName)
+        public async Task<IResultObject> DeleteBlogAsync(Blog blog, string userName)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             if (user.Data.Id == blog.WriterID)
@@ -414,7 +414,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResult> ChangedBlogStatusAsync(int id, string userName)
+        public async Task<IResultObject> ChangedBlogStatusAsync(int id, string userName)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
             var user = await _userService.GetByUserNameAsync(userName);
@@ -438,7 +438,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResult> DeleteBlogByAdminAsync(Blog blog)
+        public async Task<IResultObject> DeleteBlogByAdminAsync(Blog blog)
         {
             await _blogDal.DeleteAsync(blog);
             DeleteFileManager.DeleteFile(blog.BlogContent);
@@ -446,7 +446,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResult> ChangedBlogStatusByAdminAsync(int id)
+        public async Task<IResultObject> ChangedBlogStatusByAdminAsync(int id)
         {
             var blog = await GetFileNameContentBlogByIDAsync(id);
             var value = await _blogDal.GetByIDAsync(blog.Data.BlogID);
@@ -560,7 +560,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<Blog>(Messages.BlogNotFound);
         }
 
-        IResult BlogImageNotEmpty(string blogImage)
+        IResultObject BlogImageNotEmpty(string blogImage)
         {
             if (blogImage == string.Empty)
             {
@@ -569,7 +569,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        IResult BlogThumbnailNotEmpty(string blogThumnailImage)
+        IResultObject BlogThumbnailNotEmpty(string blogThumnailImage)
         {
             if (blogThumnailImage == string.Empty)
             {
@@ -578,7 +578,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        async Task<IResult> CheckCategoryStatusAsync(IDataResult<UserDto> user, Blog blog)
+        async Task<IResultObject> CheckCategoryStatusAsync(IDataResult<UserDto> user, Blog blog)
         {
             var roles = await _userService.GetUserRoleListAsync(user.Data);
 

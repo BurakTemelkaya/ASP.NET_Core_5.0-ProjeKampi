@@ -11,11 +11,11 @@ namespace BusinessLayer.Abstract
 {
     public interface ICommentService
     {
-        Task<IResult> TAddAsync(Comment t);
+        Task<IResultObject> TAddAsync(Comment t);
 
-        Task<IResult> TDeleteAsync(Comment t);
+        Task<IResultObject> TDeleteAsync(Comment t);
 
-        Task<IResult> TUpdateAsync(Comment t);
+        Task<IResultObject> TUpdateAsync(Comment t);
 
         Task<IDataResult<List<Comment>>> GetListAsync(Expression<Func<Comment, bool>> filter = null);
 
@@ -35,14 +35,14 @@ namespace BusinessLayer.Abstract
 
         Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id);
 
-        Task<IResult> DeleteCommentByWriter(string userName, int id);
+        Task<IResultObject> DeleteCommentByWriter(string userName, int id);
 
-        Task<IResult> DisabledCommentByWriter(string userName, int id);
+        Task<IResultObject> DisabledCommentByWriter(string userName, int id);
 
-        Task<IResult> EnabledCommentByWriter(string userName, int id);
+        Task<IResultObject> EnabledCommentByWriter(string userName, int id);
 
-        Task<IResult> ChangeStatusCommentByWriter(string userName, int id);
+        Task<IResultObject> ChangeStatusCommentByWriter(string userName, int id);
 
-        Task<IResult> ChangeStatusCommentByAdmin(int id);
+        Task<IResultObject> ChangeStatusCommentByAdmin(int id);
     }
 }

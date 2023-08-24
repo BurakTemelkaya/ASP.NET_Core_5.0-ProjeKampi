@@ -35,7 +35,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(CategoryValidator))]
-        public async Task<IResult> TAddAsync(Category t)
+        public async Task<IResultObject> TAddAsync(Category t)
         {
             t.CategoryStatus = true;
             await _categoryDal.InsertAsync(t);
@@ -44,7 +44,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
-        public async Task<IResult> TDeleteAsync(Category t)
+        public async Task<IResultObject> TDeleteAsync(Category t)
         {
             await _categoryDal.DeleteAsync(t);
             return new SuccessResult();
@@ -53,7 +53,7 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(CategoryValidator))]
-        public async Task<IResult> TUpdateAsync(Category t)
+        public async Task<IResultObject> TUpdateAsync(Category t)
         {
             await _categoryDal.UpdateAsync(t);
             return new SuccessResult();
@@ -99,7 +99,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
-        public async Task<IResult> ChangedStatusAsync(int id)
+        public async Task<IResultObject> ChangedStatusAsync(int id)
         {
             var value = await TGetByIDAsync(id);
             if (value.Data.CategoryStatus)

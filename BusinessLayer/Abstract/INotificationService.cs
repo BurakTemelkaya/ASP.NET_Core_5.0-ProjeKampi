@@ -11,9 +11,9 @@ namespace BusinessLayer.Abstract
 {
     public interface INotificationService
     {
-        Task<IResult> TAddAsync(Notification t);
-        Task<IResult> TDeleteAsync(Notification t);
-        Task<IResult> TUpdateAsync(Notification t);
+        Task<IResultObject> TAddAsync(Notification t);
+        Task<IResultObject> TDeleteAsync(Notification t);
+        Task<IResultObject> TUpdateAsync(Notification t);
         Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null);
         Task<IDataResult<Notification>> TGetByIDAsync(int id);
         Task<IDataResult<Notification>> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null);

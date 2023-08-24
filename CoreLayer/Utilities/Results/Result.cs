@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.Results
 {
-    public class Result : IResult
+    public class Result : IResultObject
     {
         public Result(bool success, string message) : this(success)
         {

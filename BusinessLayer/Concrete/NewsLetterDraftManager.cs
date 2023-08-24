@@ -21,9 +21,9 @@ namespace BusinessLayer.Concrete
             _newsLetterDraftDal = newsLetterDraftDal;
         }
 
-        public async Task<IResult> DeleteById(int id)
+        public async Task<IResultObject> DeleteById(int id)
         {
-            IResult result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(id));
+            IResultObject result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(id));
 
             if (!result.Success)
             {
@@ -55,7 +55,7 @@ namespace BusinessLayer.Concrete
         }
 
 
-        public async Task<IResult> TAddAsync(NewsLetterDraft t)
+        public async Task<IResultObject> TAddAsync(NewsLetterDraft t)
         {
             t.TimeToAdd = DateTime.Now;
             t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation());
@@ -63,7 +63,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IResult> TDeleteAsync(NewsLetterDraft t)
+        public async Task<IResultObject> TDeleteAsync(NewsLetterDraft t)
         {
             DeleteFileManager.DeleteFile(t.Content);
             await _newsLetterDraftDal.DeleteAsync(t);
@@ -90,9 +90,9 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<NewsLetterDraft>(value);
         }
 
-        public async Task<IResult> TUpdateAsync(NewsLetterDraft t)
+        public async Task<IResultObject> TUpdateAsync(NewsLetterDraft t)
         {
-            IResult result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(t.NewsLetterDraftId));
+            IResultObject result = BusinessRules.Run(NewsLetterDraftIdNotEqualZero(t.NewsLetterDraftId));
 
             if (!result.Success)
             {
@@ -115,7 +115,7 @@ namespace BusinessLayer.Concrete
 
         }
 
-        private IResult NewsLetterDraftIdNotEqualZero(int newsLetterId)
+        private IResultObject NewsLetterDraftIdNotEqualZero(int newsLetterId)
         {
             if (newsLetterId == 0)
             {

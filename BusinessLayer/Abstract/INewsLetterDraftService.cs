@@ -10,6 +10,6 @@ namespace BusinessLayer.Abstract
 {
     public interface INewsLetterDraftService : IGenericService<NewsLetterDraft>
     {
-        Task<IResult> DeleteById(int id);
+        Task<IResultObject> DeleteById(int id);
     }
 }

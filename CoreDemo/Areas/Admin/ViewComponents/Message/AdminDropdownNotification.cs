@@ -19,7 +19,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
             var notifications = await _notificationService.GetListAsync(x => x.NotificationStatus);
             if (notifications.Success)
             {
-                var values = await notifications.Data.TakeLast(3).ToListAsync();
+                var values = notifications.Data.TakeLast(3).ToList();
                 ViewBag.NotificationCount = notifications.Data.Count;
                 return View(values);
             }

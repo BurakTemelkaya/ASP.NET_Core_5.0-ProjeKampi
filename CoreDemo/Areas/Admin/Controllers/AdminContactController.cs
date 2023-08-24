@@ -27,7 +27,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> GetContactList()
         {
             var result = await _contactService.GetListAsync();
-            var values = await result.Data.OrderByDescending(x => x.ContactID).ToListAsync();
+            var values = result.Data.OrderByDescending(x => x.ContactID).ToList();
             var jsonValues = JsonConvert.SerializeObject(values);
             return Ok(jsonValues);
         }

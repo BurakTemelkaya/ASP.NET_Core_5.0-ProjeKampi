@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using CoreLayer.Utilities.IoC;
+using System.Collections;
+using System.Reflection;
 
 namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
 {
@@ -48,13 +50,19 @@ namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
 
         public void RemoveByPattern(string pattern)
         {
-            var cacheEntriesCollectionDefinition = typeof(MemoryCache).GetProperty("EntriesCollection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(_memoryCache) as dynamic;
-            List<ICacheEntry> cacheCollectionValues = new List<ICacheEntry>();
+            var coherentState = typeof(MemoryCache).GetField("_coherentState", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            foreach (var cacheItem in cacheEntriesCollection)
+            var coherentStateValue = coherentState.GetValue(_memoryCache);
+
+            var entriesCollection = coherentStateValue.GetType().GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            var entriesCollectionValue = entriesCollection.GetValue(coherentStateValue) as ICollection;
+
+            List<ICacheEntry> cacheCollectionValues = new();
+
+            foreach (var cacheItem in entriesCollectionValue)
             {
-                ICacheEntry cacheItemValue = cacheItem.GetType().GetProperty("Value").GetValue(cacheItem, null);
+                ICacheEntry cacheItemValue = (ICacheEntry)cacheItem.GetType().GetProperty("Value").GetValue(cacheItem, null);
                 cacheCollectionValues.Add(cacheItemValue);
             }
 

@@ -43,7 +43,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<NewsLetter>>(await _newsLetterDal.GetListAllAsync(filter));
         }
 
-        public async Task<IResult> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IResultObject> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
         {
             var value = await _newsLetterDal.GetListAllAsync(filter);
             bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);
@@ -54,7 +54,7 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]
-        public async Task<IResult> TAddAsync(NewsLetter t)
+        public async Task<IResultObject> TAddAsync(NewsLetter t)
         {
             var mail = await GetByMailAsync(t.Mail);
 
@@ -68,7 +68,7 @@ namespace BusinessLayer.Concrete
             return new ErrorResult(Messages.NewsLetterAlreadyRegistered);
         }
 
-        public async Task<IResult> TDeleteAsync(NewsLetter t)
+        public async Task<IResultObject> TDeleteAsync(NewsLetter t)
         {
             await _newsLetterDal.DeleteAsync(t);
             return new SuccessResult();
@@ -85,7 +85,7 @@ namespace BusinessLayer.Concrete
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]
-        public async Task<IResult> TUpdateAsync(NewsLetter t)
+        public async Task<IResultObject> TUpdateAsync(NewsLetter t)
         {
             await _newsLetterDal.UpdateAsync(t);
             return new SuccessResult();

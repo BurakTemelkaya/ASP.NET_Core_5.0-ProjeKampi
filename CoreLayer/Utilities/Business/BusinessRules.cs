@@ -9,7 +9,7 @@ namespace CoreLayer.Utilities.Business
 {
     public class BusinessRules
     {
-        public static IResult Run(params IResult[] logics)
+        public static IResultObject Run(params IResultObject[] logics)
         {
             foreach (var logic in logics)
             {

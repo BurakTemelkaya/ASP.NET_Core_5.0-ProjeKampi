@@ -62,7 +62,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IMessageService.Get")]
         [ValidationAspect(typeof(MessageValidator))]
-        public async Task<IResult> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
+        public async Task<IResultObject> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
         {
             if (senderUserName == string.Empty || senderUserName == null)
             {
@@ -85,7 +85,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorResult(Messages.MessageReceiverNotFound);
             }
 
-            IResult result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
+            IResultObject result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
 
             if (!result.Success)
             {
@@ -102,11 +102,11 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> DeleteMessageAsync(int id, string userName)
+        public async Task<IResultObject> DeleteMessageAsync(int id, string userName)
         {
             var message = await GetByIdAsync(id);
 
-            IResult result = BusinessRules.Run(MessageNotEmpty(message));
+            IResultObject result = BusinessRules.Run(MessageNotEmpty(message));
 
             if (!result.Success)
             {
@@ -135,7 +135,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> UpdateMessageAsync(Message t, string userName)
+        public async Task<IResultObject> UpdateMessageAsync(Message t, string userName)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -177,7 +177,7 @@ namespace BusinessLayer.Concrete
         {
             var receiverUser = await _userService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
+            IResultObject result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
 
             if (!result.Success)
             {
@@ -206,9 +206,9 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> MarkChangedAsync(int messageId, string userName)
+        public async Task<IResultObject> MarkChangedAsync(int messageId, string userName)
         {
-            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
+            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
 
             if (!result.Success)
             {
@@ -236,7 +236,7 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
+            IResultObject result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
 
             if (!result.Success)
             {
@@ -262,7 +262,7 @@ namespace BusinessLayer.Concrete
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(UserNotEmpty(user));
+            IResultObject result = BusinessRules.Run(UserNotEmpty(user));
 
             if (!result.Success)
             {
@@ -281,12 +281,12 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> MarkUsReadAsync(int messageId, string userName)
+        public async Task<IResultObject> MarkUsReadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
             var activeUser = await _userService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
 
             if (!result.Success)
             {
@@ -310,12 +310,12 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> MarkUsUnreadAsync(int messageId, string userName)
+        public async Task<IResultObject> MarkUsUnreadAsync(int messageId, string userName)
         {
             var message = await GetByFilterFileName(x => x.MessageID == messageId);
             var activeUser = await _userService.GetByUserNameAsync(userName);
 
-            IResult result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
 
             if (!result.Success)
             {
@@ -338,7 +338,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> DeleteMessagesAsync(List<string> ids, string userName)
+        public async Task<IResultObject> DeleteMessagesAsync(List<string> ids, string userName)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -367,7 +367,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> MarksUsReadAsync(List<string> messageIds, string userName)
+        public async Task<IResultObject> MarksUsReadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();
 
@@ -406,7 +406,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResult> MarksUsUnreadAsync(List<string> messageIds, string userName)
+        public async Task<IResultObject> MarksUsUnreadAsync(List<string> messageIds, string userName)
         {
             List<Message> messages = new();
 
@@ -447,7 +447,7 @@ namespace BusinessLayer.Concrete
 
         //Business Rules
 
-        private IResult ReceiverUserNotEqualsSenderUser(string receiverUser, string senderUser)
+        private IResultObject ReceiverUserNotEqualsSenderUser(string receiverUser, string senderUser)
         {
             if (receiverUser == senderUser)
             {
@@ -456,7 +456,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult ReceiverUserNotEmpty(IDataResult<UserDto> receiverUser)
+        private IResultObject ReceiverUserNotEmpty(IDataResult<UserDto> receiverUser)
         {
             if (!receiverUser.Success)
             {
@@ -465,7 +465,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult SenderUserNotEmpty(IDataResult<UserDto> senderUser)
+        private IResultObject SenderUserNotEmpty(IDataResult<UserDto> senderUser)
         {
             if (!senderUser.Success)
             {
@@ -474,7 +474,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult MessageNotEmpty(IDataResult<Message> message)
+        private IResultObject MessageNotEmpty(IDataResult<Message> message)
         {
             if (message.Data == null)
             {
@@ -483,7 +483,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult MessageIdNotEqualZero(int id)
+        private IResultObject MessageIdNotEqualZero(int id)
         {
             if (id == 0)
             {
@@ -492,7 +492,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult MessageIdsNotEmpty(List<string> Ids)
+        private IResultObject MessageIdsNotEmpty(List<string> Ids)
         {
             if (Ids == null)
             {
@@ -501,7 +501,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        private IResult ReceiverUserEqualActiveUser(string receiverUserName, string activeUserName)
+        private IResultObject ReceiverUserEqualActiveUser(string receiverUserName, string activeUserName)
         {
             if (receiverUserName != activeUserName)
             {

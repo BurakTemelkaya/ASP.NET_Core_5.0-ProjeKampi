@@ -18,7 +18,7 @@ namespace BusinessLayer.Concrete
         }
         protected IMapper Mapper { get; }
 
-        public IResult UserNotEmpty(IDataResult<UserDto> user)
+        public IResultObject UserNotEmpty(IDataResult<UserDto> user)
         {
             if (!user.Success)
             {

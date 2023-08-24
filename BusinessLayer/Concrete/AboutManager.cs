@@ -55,7 +55,7 @@ namespace BusinessLayer.Concrete
 
         [ValidationAspect(typeof(AboutValidator))]
         [CacheRemoveAspect("IAboutService.Get")]
-        public async Task<IResult> UpdateAsync(About about, IFormFile aboutImage1, IFormFile aboutImage2)
+        public async Task<IResultObject> UpdateAsync(About about, IFormFile aboutImage1, IFormFile aboutImage2)
         {
             var oldValue = await GetAboutAsync();
 

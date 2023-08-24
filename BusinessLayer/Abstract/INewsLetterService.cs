@@ -13,6 +13,6 @@ namespace BusinessLayer.Abstract
     public interface INewsLetterService : IGenericService<NewsLetter>
     {
         Task<IDataResult<NewsLetter>> GetByMailAsync(string mail);
-        Task<IResult> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
+        Task<IResultObject> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null);
     }
 }

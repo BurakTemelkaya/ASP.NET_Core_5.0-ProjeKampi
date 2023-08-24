@@ -16,11 +16,11 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<int>> GetCountAsync(Expression<Func<MessageDraft, bool>> filter = null);
         Task<IDataResult<int>> GetCountByUserNameAsync(string userName);
         Task<IDataResult<List<MessageDraft>>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null);
-        Task<IResult> AddAsync(MessageDraft t, string userName);
-        Task<IResult> DeleteAsync(int id, string userName);
-        Task<IResult> DeleteMessageDraftsAsync(List<string> ids, string userName);
+        Task<IResultObject> AddAsync(MessageDraft t, string userName);
+        Task<IResultObject> DeleteAsync(int id, string userName);
+        Task<IResultObject> DeleteMessageDraftsAsync(List<string> ids, string userName);
         Task<IDataResult<MessageDraft>> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null);
         Task<IDataResult<MessageDraft>> GetByIDAsync(int id, string userName);
-        Task<IResult> UpdateAsync(MessageDraft t, string userName);
+        Task<IResultObject> UpdateAsync(MessageDraft t, string userName);
     }
 }
