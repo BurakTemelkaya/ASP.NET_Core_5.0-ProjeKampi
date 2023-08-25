@@ -27,9 +27,11 @@ using System.Globalization;
 using Core.Extensions;
 using DataAccessLayer.DependancyInjection;
 using BusinessLayer.Extension;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
+using CvProjectUI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHostedService<Worker>();
 
 builder.Services.AddRazorPages();
 
@@ -137,7 +139,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
