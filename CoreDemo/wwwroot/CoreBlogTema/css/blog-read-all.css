@@ -4,6 +4,6 @@
     font-weight: 700;
 }
 
-article img {
+article * {
     max-width: 100%;
 }
