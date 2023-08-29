@@ -32,4 +32,24 @@ else
 <br />
 <button class="btn btn-gradient-primary" id="MarkUsUnread">Okunmadı olarak işaretle</button>
 <br />
-<button href="/Message/Inbox" class="btn btn-success">Mesajlara Dön</button>
+
+
+<a href="/Message/Inbox" class="btn btn-success">Mesajlara Dön</a>
+
+@section ScriptSection{
+    <script>
+        $(document).ready(function () {
+            const id = @Model.MessageID;
+            $("#MarkUsUnread").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Message/MarkUnreadMessage',
+                    data: { id },
+                    success: function () {
+                        window.location.replace("/Message/Inbox");
+                    }
+                });
+            });
+        });
+    </script>
+}

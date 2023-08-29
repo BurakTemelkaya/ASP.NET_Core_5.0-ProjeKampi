@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="~/writer/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/writer/assets/vendors/css/vendor.bundle.base.css">
     <link rel="shortcut icon" href="~/writer/assets/images/favicon.ico" />
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @if (thema == "dark")
     {
         <link rel="stylesheet" href="~/writer/assets/css/style-dark.css">
@@ -27,7 +27,7 @@
     else
     {
         <link rel="stylesheet" href="~/writer/assets/css/style.css">
-        <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/writer/assets/css/SweetAlert2.min.css" />
     }
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
@@ -113,7 +113,18 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/writer-message-notification.js"></script>
-    <script src="~/writer/assets/js/SweetAlert2.js"></script>
+
     @RenderSection("ScriptSection",false)
+
+    @if (thema == "dark")
+    {
+        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
+    }
+    else
+    {
+        <script src="~/writer/assets/js/SweetAlert2.js"></script>
+    }
+
+    
 </body>
 </html>

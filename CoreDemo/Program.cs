@@ -27,7 +27,7 @@ using System.Globalization;
 using Core.Extensions;
 using DataAccessLayer.DependancyInjection;
 using BusinessLayer.Extension;
-using CvProjectUI;
+using CoreDemo;
 
 var builder = WebApplication.CreateBuilder(args);
 
