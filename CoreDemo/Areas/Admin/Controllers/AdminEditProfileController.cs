@@ -29,7 +29,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = _writerCity.GetCityList();
             var value = await _businessUserService.GetByUserNameForUpdateAsync(User.Identity.Name);
             return View(value.Data);
         }
@@ -51,7 +51,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                     ModelState.AddModelError("", result.Message);
                 }
 
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.Cities = _writerCity.GetCityList();
                 return View(userDto);
             }
 
@@ -68,7 +68,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +
                     "emin olunuz. Eğer Düzenlediyseniz diğer bilgileriniz güncellenmiştir.");
             }
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = _writerCity.GetCityList();
             return View(userDto);
         }
     }

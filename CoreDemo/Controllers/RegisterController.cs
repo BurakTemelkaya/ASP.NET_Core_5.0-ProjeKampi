@@ -41,7 +41,7 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Index", "Dashboard");
             }
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = await _writerCity.GetCityList();
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View();
         }
@@ -50,7 +50,7 @@ namespace CoreDemo.Controllers
         {
             string captchaMessage = await _captchaService.RecaptchaControl();
             ViewBag.SiteKey = _captchaService.GetSiteKey();
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = await _writerCity.GetCityList();
 
             if (!string.IsNullOrEmpty(captchaMessage))
             {

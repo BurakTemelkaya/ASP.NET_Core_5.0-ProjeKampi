@@ -90,7 +90,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var value = await _userService.GetByIDAsync(id.ToString());
             if (value.Success)
             {
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.Cities = _writerCity.GetCityList();
                 return View(value.Data);
             }
             return RedirectToAction("Index");
@@ -104,7 +104,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("Email", "Kullanıcı bilgilerinizi güncellerken bir hata meydana geldi." +
                     " Lütfen daha sonra tekrar deneyiniz");
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.Cities = _writerCity.GetCityList();
                 return View(userDto);
             }
             var user = await _userService.GetByIDAsync(userDto.Id.ToString());
@@ -114,7 +114,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +
                     "emin olunuz. Eğer Düzenlediyseniz diğer bilgileriniz güncellenmiştir.");
             }
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = await _writerCity.GetCityList();
             return View(userDto);
         }
     }

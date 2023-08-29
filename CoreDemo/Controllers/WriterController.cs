@@ -51,7 +51,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> WriterEditProfile()
         {
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = await _writerCity.GetCityList();
             var writer = await _userManager.GetByUserNameForUpdateAsync(User.Identity.Name);
             return View(writer.Data);
         }
@@ -66,7 +66,7 @@ namespace CoreDemo.Controllers
                 {
                     ModelState.AddModelError("Email", item.Description);
                 }
-                ViewBag.Cities = await _writerCity.GetCityListAsync();
+                ViewBag.Cities = await _writerCity.GetCityList();
                 return View(userDto);
             }
             var user = await _userManager.GetByIDAsync(userDto.Id.ToString());
@@ -80,7 +80,7 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +
                     "emin olunuz. Eğer Düzenlediyseniz diğer bilgileriniz güncellenmiştir.");
             }
-            ViewBag.Cities = await _writerCity.GetCityListAsync();
+            ViewBag.Cities = await _writerCity.GetCityList();
             return View(userDto);
         }
     }
