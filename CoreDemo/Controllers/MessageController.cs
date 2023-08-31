@@ -3,7 +3,6 @@ using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,26 +162,24 @@ namespace CoreDemo.Controllers
             return Json(value.Data);
         }
 
-        public async Task<JsonResult> OnUserNameGet(String term)
+        public async Task<ActionResult> OnUserNameGet(string term)
         {
-            var values = new List<AppUser>();
-            if (term == null)
+            if (term.Length < 2)
             {
-                var result = await _userService.GetUserListAsync();
-                if (result.Success)
-                {
-                    values = result.Data;
-                }
+                return NoContent();
             }
-
-            else
+            List<AppUser> values;
+            var result = await _userService.GetUserListByUserNameAsync(term);
+            if (result.Success)
             {
-                var result = await _userService.GetUserListAsync(x => x.UserName.ToLower().Contains(term.ToLower()));
                 values = result.Data;
+
+                var users = values.Select(x => x.UserName);
+
+                return new JsonResult(users);
             }
 
-            var users = values.Select(x => x.UserName);
-            return new JsonResult(users);
+            return NoContent();
         }
     }
 }

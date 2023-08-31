@@ -26,6 +26,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user);
         Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null);
         Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null);
+        Task<IDataResult<List<AppUser>>> GetUserListByUserNameAsync(string userName);
         Task<IResultObject> BannedUser(string id, DateTime expiration, string banMessageContent);
         Task<IResultObject> BanOpenUser(string id);
         Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail);

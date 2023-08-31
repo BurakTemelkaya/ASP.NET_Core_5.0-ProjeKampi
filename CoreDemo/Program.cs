@@ -145,9 +145,9 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.ConfigureCustomExceptionMiddleware();
-    app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
     app.UseHsts();
+    app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
+    app.ConfigureCustomExceptionMiddleware();   
 }
 
 app.UseHttpsRedirection();
@@ -177,6 +177,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
-
 
 app.Run();

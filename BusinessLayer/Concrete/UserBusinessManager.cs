@@ -138,13 +138,11 @@ namespace BusinessLayer.Concrete
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
                 value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
-
             else if (user.ProfileImageFile != null)
             {
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
                 value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
-
             else
             {
                 user.ImageUrl = value.Data.ImageUrl;
@@ -179,7 +177,9 @@ namespace BusinessLayer.Concrete
             value.City = user.City;
             user.ImageUrl = value.ImageUrl;
             value.EmailConfirmed = user.EmailConfirmed;
+
             var result = await _userManager.UpdateAsync(value);
+
             if (result.Succeeded)
             {
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
@@ -258,13 +258,27 @@ namespace BusinessLayer.Concrete
         /// <param name="filter"></param>
         /// <returns>Kullanıcı listesi döner.</returns>
 
-        [CacheAspect]
         public async Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
         {
             if (filter == null)
                 return new SuccessDataResult<List<AppUser>>(await _userManager.Users.ToListAsync());
             else
                 return new SuccessDataResult<List<AppUser>>(await _userManager.Users.Where(filter).ToListAsync());
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<List<AppUser>>> GetUserListByUserNameAsync(string userName)
+        {
+            if (userName != null)
+            {
+                var data = await _userManager.Users.Where(x=> x.UserName.ToLower().Contains(userName.ToLower())).ToListAsync();
+                if (data != null)
+                {
+                    return new SuccessDataResult<List<AppUser>>(data);
+                }
+            }
+
+            return new ErrorDataResult<List<AppUser>>(Messages.UserNotFound);
         }
 
         /// <summary>

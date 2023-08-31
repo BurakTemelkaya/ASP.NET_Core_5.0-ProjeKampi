@@ -2,12 +2,7 @@
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
@@ -26,9 +21,20 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Log>(await _logDal.GetByIDAsync(id));
         }
 
-        public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, Expression<Func<Log, bool>> filter = null)
+        public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, string search = null)
         {
-            var data = await _logDal.GetListAllByPagingAsync(filter, take, page);
+            List<Log> data;
+            if (search == null)
+            {
+                data = await _logDal.GetListAllByPagingAsync(null, take, page);
+            }
+            else
+            {
+                data = await _logDal.GetListAllByPagingAsync(
+                x => (search != null && (x.Details.ToLower().Contains(search.ToLower())))
+                , take, page);
+            }
+
             return new SuccessDataResult<List<Log>>(data);
         }
     }

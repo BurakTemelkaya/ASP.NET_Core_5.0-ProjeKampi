@@ -6,14 +6,19 @@
     string status = "";
 }
 
-<h1>Kategori Listesi</h1>
-
 <br />
+<h1 class="float-left">Kategori Listesi</h1>
+<div class="col-6 text-center float-right">
+    <input type="search" class="form-control" id="txt-search" placeholder="Aranacak kelimeyi giriniz" />
+    <button class="btn btn-outline-primary full-width" id="btn-search">Ara</button>
+</div>
+
 
 <table class="table table-bordered">
     <thead>
         <tr>
             <th scope="col">#</th>
+            <th>Tarih</th>
             <th>Önem Derecesi</th>
             <th>Ayrıntı</th>
         </tr>
@@ -31,6 +36,7 @@
             }
             <tr>
                 <th scope="row">@item.Id</th>
+                <th>@item.Log_Date.ToString("dd-MM-yyyy")</th>
                 <td class="@status">@item.Audit</td>
                 <td><article>@Html.Raw(item.Details.Replace("\n","<br/>"))</article> </td>
             </tr>
@@ -38,7 +44,7 @@
     </tbody>
 </table>
 <br />
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page , ViewBag.Search }),
 new X.PagedList.Web.Common.PagedListRenderOptions
 {
     LinkToFirstPageFormat="<<İlk",
@@ -52,6 +58,6 @@ new X.PagedList.Web.Common.PagedListRenderOptions
 })
 
 @section ScriptSection{
-    <script src="~/js/admin-category.js"></script>
+    <script src="~/js/admin-log.js"></script>
 }
 

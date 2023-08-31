@@ -16,6 +16,6 @@
 $(function () {
     $("#Receiver").autocomplete({
         source: "/Message/OnUserNameGet/",
-        minLengt: 3
+        minLengt: 2
     });
 }); 

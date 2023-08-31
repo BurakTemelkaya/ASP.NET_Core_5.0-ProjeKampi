@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -17,14 +18,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             _logService = logService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(string search = null, int page = 1)
         {
-            var result = await _logService.GetLogListAsync(5, page);
+            if (search != null)
+            {
+                ViewBag.Search = search;
+            }
+            var result = await _logService.GetLogListAsync(5, page, search);
             if (result.Success)
             {
                 return View(await result.Data.ToPagedListAsync(page, 5));
             }
-            return View();
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public async Task<IActionResult> Detail(int id)

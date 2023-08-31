@@ -11,7 +11,7 @@ namespace BusinessLayer.Abstract
 {
     public interface ILogService
     {
-        public Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, Expression<Func<Log, bool>> filter = null);
+        public Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, string search = null);
 
         public Task<IDataResult<Log>> GetLogByIdAsync(int id);
     }
