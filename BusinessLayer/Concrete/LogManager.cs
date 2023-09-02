@@ -5,37 +5,27 @@ using EntityLayer.Concrete;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Concrete
+namespace BusinessLayer.Concrete;
+
+public class LogManager : ILogService
 {
-    public class LogManager : ILogService
+    private readonly ILogDal _logDal;
+
+    public LogManager(ILogDal logDal)
     {
-        private readonly ILogDal _logDal;
+        _logDal = logDal;
+    }
 
-        public LogManager(ILogDal logDal)
-        {
-            _logDal = logDal;
-        }
+    public async Task<IDataResult<Log>> GetLogByIdAsync(int id)
+    {
+        return new SuccessDataResult<Log>(await _logDal.GetByIDAsync(id));
+    }
 
-        public async Task<IDataResult<Log>> GetLogByIdAsync(int id)
-        {
-            return new SuccessDataResult<Log>(await _logDal.GetByIDAsync(id));
-        }
+    public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, string search = null)
+    {
+        var data = await _logDal.GetListAllByPagingAsync(
+         x => (search == null || (x.Details.ToLower().Contains(search.ToLower()))), take, page);
 
-        public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, string search = null)
-        {
-            List<Log> data;
-            if (search == null)
-            {
-                data = await _logDal.GetListAllByPagingAsync(null, take, page);
-            }
-            else
-            {
-                data = await _logDal.GetListAllByPagingAsync(
-                x => (search != null && (x.Details.ToLower().Contains(search.ToLower())))
-                , take, page);
-            }
-
-            return new SuccessDataResult<List<Log>>(data);
-        }
+        return new SuccessDataResult<List<Log>>(data);
     }
 }

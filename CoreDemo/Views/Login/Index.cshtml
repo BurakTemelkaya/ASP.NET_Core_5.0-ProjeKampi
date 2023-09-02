@@ -3,6 +3,7 @@
     ViewData["Title"] = "Giriş Yap";
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
+
 @section HeaderSection{
     <meta property="og:title" content="Core Blog - Giriş Yap" />
 }
@@ -22,8 +23,8 @@
                         <input type="password" asp-for="Password" class="form-control" id="exampleInputPassword1" placeholder="Parolanızı Giriniz" required="">
                     </div>
                     <div class="form-check mb-2">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" asp-for="IsPersistent" for="exampleCheck1">Oturumu açık bırak</label>
+                        <input type="checkbox" class="form-check-input checkbox-primary checkbox" id="exampleCheck1">
+                        <label class="form-check-label label" asp-for="IsPersistent" for="exampleCheck1">Oturumu açık bırak</label>
                     </div>
                     <div class="form-group">
                         <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
