@@ -114,7 +114,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 ModelState.AddModelError("Password", "Parola güncellenirken bir hata oluştu lütfen değerleri düzgün girdiğinizden" +
                     "emin olunuz. Eğer Düzenlediyseniz diğer bilgileriniz güncellenmiştir.");
             }
-            ViewBag.Cities = await _writerCity.GetCityList();
+            ViewBag.Cities = _writerCity.GetCityList();
             return View(userDto);
         }
     }

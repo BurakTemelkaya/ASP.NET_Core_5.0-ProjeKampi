@@ -8,24 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using CoreLayer.Utilities.FileUtilities;
-using CoreDemo.Models;
 using CoreLayer.Utilities.Results;
 using CoreLayer.Utilities.Business;
 using AutoMapper;
-using CoreLayer.Aspects.AutoFac.Performance;
 using EntityLayer.DTO;
 using BusinessLayer.Constants;
-using CoreLayer.Aspects.AutoFac.Logging;
-using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
-using CoreLayer.Aspects.AutoFac.Exception;
 using CoreLayer.Aspects.AutoFac.Caching;
-using Microsoft.AspNetCore.Identity;
 using BusinessLayer.StaticTexts;
-using System.Diagnostics;
-using System.IO;
 
 namespace BusinessLayer.Concrete
 {
@@ -541,13 +532,11 @@ namespace BusinessLayer.Concrete
                 {
                     item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
                 }
-
             }
 
             return new DataResult<List<Blog>>(values, isSuccess, message);
         }
-
-        [CacheAspect]
+ 
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
         {
             var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id, x => x.BlogStatus && x.Category.CategoryStatus);
