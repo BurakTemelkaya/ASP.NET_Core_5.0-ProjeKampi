@@ -28,6 +28,9 @@ using Core.Extensions;
 using DataAccessLayer.DependancyInjection;
 using BusinessLayer.Extension;
 using CoreDemo;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Configuration;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,10 +64,10 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
     options.RequestCultureProviders = new List<IRequestCultureProvider>
-                {
-                    new QueryStringRequestCultureProvider(),
-                    new CookieRequestCultureProvider()
-                };
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider()
+    };
 });
 
 builder.Services.AddIdentity<AppUser, AppRole>(x =>
@@ -131,11 +134,21 @@ builder.Services.IocDataAccessInstall();
 
 builder.Services.IocBusinessInstall();
 
-builder.Services.AddDependencyResolvers(new ICoreModule[] {
+builder.Services
+    .AddDependencyResolvers(
+            new ICoreModule[] {
                new CoreModule()
             });
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services
+    .AddHealthChecks()
+    .AddSqlServer(config.GetConnectionString("SQLServer"));
+
+builder.Services
+    .AddHealthChecksUI()
+    .AddSqlServerStorage(config.GetConnectionString("SQLServer"));
 
 var app = builder.Build();
 
@@ -145,9 +158,9 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseHsts();
     app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
-    app.ConfigureCustomExceptionMiddleware();   
+    app.UseHsts();   
+    app.ConfigureCustomExceptionMiddleware();
 }
 
 app.UseHttpsRedirection();
@@ -177,5 +190,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
+
+app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
+app.UseHealthChecks("/health");
+
+app.UseHealthChecksUI(options =>
+{
+    options.UIPath = "/health-ui";
+});
 
 app.Run();
