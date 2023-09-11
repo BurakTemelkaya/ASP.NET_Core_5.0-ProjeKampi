@@ -31,6 +31,8 @@ using CoreDemo;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Configuration;
 using System.Net;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -144,10 +146,13 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services
     .AddHealthChecks()
+    .AddDbContextCheck<Context>()
+    .AddApplicationInsightsPublisher()
     .AddSqlServer(config.GetConnectionString("SQLServer"));
 
 builder.Services
     .AddHealthChecksUI()
+    .AddInMemoryStorage()
     .AddSqlServerStorage(config.GetConnectionString("SQLServer"));
 
 var app = builder.Build();
@@ -159,7 +164,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
-    app.UseHsts();   
+    app.UseHsts();
     app.ConfigureCustomExceptionMiddleware();
 }
 
@@ -193,11 +198,16 @@ app.MapControllerRoute(
 
 app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/healthcheck", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseHealthChecksUI(options =>
 {
-    options.UIPath = "/health-ui";
+    options.UIPath = "/healthchecks-ui";
+    options.ApiPath = "/health-ui-api";
 });
 
 app.Run();

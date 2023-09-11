@@ -4,7 +4,7 @@
     string sure = "";
     string bildirimZamanAsimi = "";
     DateTime now = DateTime.Now;
-    if (now.Subtract(Model.OrderByDescending(x=> x.NotificationID).FirstOrDefault().NotificationDate).Days < 30)
+    if (Model != null && now.Subtract(Model.OrderByDescending(x => x.NotificationID).FirstOrDefault().NotificationDate).Days < 30)
     {
         bildirimZamanAsimi = "count-symbol";
     }
