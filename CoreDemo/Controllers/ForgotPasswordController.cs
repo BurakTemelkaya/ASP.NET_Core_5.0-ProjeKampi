@@ -43,55 +43,56 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(string email)
         {
             string captchaMessage = await _captchaService.RecaptchaControl();
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             if (!string.IsNullOrEmpty(captchaMessage))
             {
-                ModelState.AddModelError("Captcha", captchaMessage);
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
+                ModelState.AddModelError("Captcha", captchaMessage);   
                 return View();
             }
             if (email != null)
             {
-                var token = await _businessUserService.GetPasswordResetTokenAsync(email);
-                if (token!=null)
+                var tokenResult = await _businessUserService.GetPasswordResetTokenAsync(email);
+                if (tokenResult.Success)
                 {
-                    var callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token, email }, Request.Scheme);
+                    var callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token = tokenResult.Data, email }, Request.Scheme);
                     _mailService.SendMail(email, MailTemplates.ResetPasswordSubject(), MailTemplates.ResetPasswordContent(callBack));
                     TempData["OkMessage"] = "Parola sıfırlama maili gönderildi.";
                     return View();
                 }                
             }
-            ViewBag.SiteKey = _captchaService.GetSiteKey();
             TempData["ErrorMessage"] = "Böyle bir mail adresine sahip hesap bulunamadı.";
             return View();
         }
         [HttpGet]
         public IActionResult ResetPassword(ForgotPasswordModel forgotPasswordModel)
-        {
+        {     
             if (forgotPasswordModel.Token == null || forgotPasswordModel.Email == null)
             {
-                Response.Redirect("/Blog/Index");
+                @TempData["ErrorMessage"] = "Geçersiz link girdiniz.";
             }
-            ViewBag.SiteKey = _captchaService.GetSiteKey();
+            
             var value = Mapper.Map<ResetPasswordDto>(forgotPasswordModel);
+
+            TempData["SiteKey"] = _captchaService.GetSiteKey();
+
             return View(value);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
-            string captchaMessage = await _captchaService.RecaptchaControl();
+            TempData["SiteKey"] = _captchaService.GetSiteKey();
+            string captchaMessage = await _captchaService.RecaptchaControl();            
             if (!string.IsNullOrEmpty(captchaMessage))
             {
                 ModelState.AddModelError("Captcha", captchaMessage);
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
                 return View();
             }
             var result = await _businessUserService.ResetPassword(resetPasswordDto);
-            if (result.Success)
+            if (!result.Success)
             {
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
                 @TempData["ErrorMessage"] = "Mailinizin geçerlilik süresi doldu.";
-                return View(resetPasswordDto);
+                return View();
             }
             var user = await _businessUserService.GetByMailAsync(resetPasswordDto.Email);
 

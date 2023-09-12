@@ -137,8 +137,6 @@
     <script src="~/js/newsletter-subscribe.js"></script>
     <script src="~/js/blog-search.js"></script>
 
-    @RenderSection("ScriptSection",false)
-
     @if (thema == "dark")
     {
         <script type="text/javascript">
@@ -156,6 +154,7 @@
         <script src="~/writer/assets/js/SweetAlert2.js"></script>
     }
 
+    @RenderSection("ScriptSection",false)
     
 </body>
 </html>

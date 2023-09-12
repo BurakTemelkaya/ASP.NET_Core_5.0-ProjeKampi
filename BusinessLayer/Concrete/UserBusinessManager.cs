@@ -271,7 +271,7 @@ namespace BusinessLayer.Concrete
         {
             if (userName != null)
             {
-                var data = await _userManager.Users.Where(x=> x.UserName.ToLower().Contains(userName.ToLower())).ToListAsync();
+                var data = await _userManager.Users.Where(x => x.UserName.ToLower().Contains(userName.ToLower())).ToListAsync();
                 if (data != null)
                 {
                     return new SuccessDataResult<List<AppUser>>(data);
@@ -361,12 +361,18 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail)
         {
-            var user = await _userManager.FindByEmailAsync(mail);
-            var result = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var user = await GetByMailAsync(mail);
+            if (!user.Success)
+            {
+                return new ErrorDataResult<string>(user.Message);
+            }
+
+            var result = await _userManager.GeneratePasswordResetTokenAsync(user.Data);
             if (result != null)
             {
-                return new SuccessDataResult<string>(result);
+                return new SuccessDataResult<string>(result, null);
             }
+
             return new ErrorDataResult<string>(result);
         }
 
@@ -376,14 +382,14 @@ namespace BusinessLayer.Concrete
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
 
             var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
-            if (result != null)
+            if (result.Succeeded)
             {
                 _mailService.SendMail(user.Email, MailTemplates.ResetPasswordInformationSubject(),
                 MailTemplates.ResetPasswordInformationMessage());
                 return new SuccessDataResult<IdentityResult>(result);
             }
 
-            return new ErrorDataResult<IdentityResult>(result);
+            return new ErrorDataResult<IdentityResult>(result, result.Errors.ToString());
         }
 
         public async Task<IDataResult<string>> CreateMailTokenAsync(string email)
