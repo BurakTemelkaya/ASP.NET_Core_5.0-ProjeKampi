@@ -536,11 +536,11 @@ namespace BusinessLayer.Concrete
 
             return new DataResult<List<Blog>>(values, isSuccess, message);
         }
- 
+
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id, x => x.BlogStatus && x.Category.CategoryStatus);
-            result.Comments = result.Comments.Where(x => x.CommentStatus).ToList();
+            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id, true, x => x.BlogStatus
+            && x.Category.CategoryStatus);
             if (result != null)
             {
                 result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);

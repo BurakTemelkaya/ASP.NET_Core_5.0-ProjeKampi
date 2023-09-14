@@ -1,17 +1,13 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
-using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.MailUtilities;
-using DocumentFormat.OpenXml.Vml;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers

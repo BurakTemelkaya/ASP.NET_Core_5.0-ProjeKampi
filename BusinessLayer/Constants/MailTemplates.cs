@@ -1,12 +1,7 @@
-﻿using CoreLayer.Utilities.MailUtilities.Models;
+﻿using BusinessLayer.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CoreLayer.Utilities.MailUtilities
+namespace BusinessLayer.Constants
 {
     public class MailTemplates
     {

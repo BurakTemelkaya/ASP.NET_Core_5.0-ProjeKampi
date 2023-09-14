@@ -4,22 +4,22 @@ $("#btnSendComment").click(function () {
     var captcharesponse = grecaptcha.getResponse();
 
     let BlogScore = 0;
-    if (document.getElementById("5-star-rating").checked == true) {
+    if (document.getElementById("5-star-rating").checked) {
         BlogScore = 5;
     }
-    else if (document.getElementById("4-star-rating").checked == true) {
+    else if (document.getElementById("4-star-rating").checked) {
         BlogScore = 4;
     }
-    else if (document.getElementById("3-star-rating").checked == true) {
+    else if (document.getElementById("3-star-rating").checked) {
         BlogScore = 3;
     }
-    else if (document.getElementById("2-star-rating").checked == true) {
+    else if (document.getElementById("2-star-rating").checked) {
         BlogScore = 2;
     }
-    else if (document.getElementById("1-star-rating").checked == true) {
+    else if (document.getElementById("1-star-rating").checked) {
         BlogScore = 1;
     }
-    let Comment = {
+    const Comment = {
         BlogId: $("#blogId").val(),
         CommentUserName: $("#CommentUserName").val(),
         CommentTitle: $("#CommentTitle").val(),
@@ -92,6 +92,12 @@ $("#btnSendComment").click(function () {
                 }
             }
         });
+
         grecaptcha.reset();
+
+        $("#blogId").val("");
+        $("#CommentUserName").val("");
+        $("#CommentTitle").val("");
+        $("#CommentContent").val("");
     }
-});       
+});

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
+using BusinessLayer.Models;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Caching;
@@ -10,7 +11,6 @@ using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.MailUtilities;
-using CoreLayer.Utilities.MailUtilities.Models;
 using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
@@ -389,7 +389,11 @@ namespace BusinessLayer.Concrete
                 return new SuccessDataResult<IdentityResult>(result);
             }
 
-            return new ErrorDataResult<IdentityResult>(result, result.Errors.ToString());
+            string errorMessages = "";
+            foreach (var error in result.Errors)
+                errorMessages += "\n" + error.Description;
+
+            return new ErrorDataResult<IdentityResult>(result, errorMessages);
         }
 
         public async Task<IDataResult<string>> CreateMailTokenAsync(string email)

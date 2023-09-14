@@ -86,9 +86,20 @@ namespace DataAccessLayer.Concrete.EntityFramework
             return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryByWriterAsync(id, filter, take, skip), take, page, count);
         }
 
-        public async Task<Blog> GetBlogByIdWithCommentandWriterAsync(int id, Expression<Func<Blog, bool>> filter = null)
+        public async Task<Blog> GetBlogByIdWithCommentandWriterAsync(int id, bool isCommentStatus, Expression<Func<Blog, bool>> filter = null)
         {
-            return await Context.Blogs.Include(x => x.Comments).Include(u => u.Writer).Where(x => x.BlogID == id).Where(filter).FirstAsync();
+            try
+            {
+                return await Context.Blogs
+                .Include(x => x.Comments.Where(x => x.CommentStatus == isCommentStatus))
+                .Include(u => u.Writer)
+                    .Where(x => x.BlogID == id)
+                    .Where(filter).FirstAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

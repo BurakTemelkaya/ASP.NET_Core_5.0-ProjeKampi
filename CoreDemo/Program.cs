@@ -51,12 +51,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(
         builder.RegisterModule(new AutofacValidationModule());
     });
 
-var config = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: false)
-        .Build();
-
 builder.Services.AddDbContext<Context>(options =>
-            options.UseSqlServer(config.GetConnectionString("SQLServer")), ServiceLifetime.Scoped);
+            options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer")), ServiceLifetime.Scoped);
 
 CultureInfo[] supportedCultures = new[] { new CultureInfo("tr"), };
 
@@ -148,24 +144,25 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<Context>()
     .AddApplicationInsightsPublisher()
-    .AddSqlServer(config.GetConnectionString("SQLServer"));
+    .AddSqlServer(builder.Configuration.GetConnectionString("SQLServer"));
 
 builder.Services
     .AddHealthChecksUI()
     .AddInMemoryStorage()
-    .AddSqlServerStorage(config.GetConnectionString("SQLServer"));
+    .AddSqlServerStorage(builder.Configuration.GetConnectionString("SQLServer"));
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
+
+if (app.Environment.IsProduction())
 {
-    app.UseDeveloperExceptionPage();
+    app.UseHsts();      
+    app.ConfigureCustomExceptionMiddleware();
 }
 else
 {
-    app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
-    app.UseHsts();
-    app.ConfigureCustomExceptionMiddleware();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -196,18 +193,21 @@ app.MapControllerRoute(
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
 
-app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+app.MapHealthChecks("/health");
 
-app.UseHealthChecks("/healthcheck", new HealthCheckOptions
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
+app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
 app.UseHealthChecksUI(options =>
 {
     options.UIPath = "/healthchecks-ui";
     options.ApiPath = "/health-ui-api";
+});
+
+app.UseHealthChecks("/healthcheck", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = true
 });
 
 app.Run();

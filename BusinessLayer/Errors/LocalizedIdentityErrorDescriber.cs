@@ -59,7 +59,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(InvalidToken),
-                Description = "Doğrulama kodu geçerli değildir."
+                Description = "Linkiniz geçersiz veya geçerlilik süresi dolmuştur."
             };
         }
 

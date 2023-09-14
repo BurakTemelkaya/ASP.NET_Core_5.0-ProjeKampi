@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
 using CoreLayer.Utilities.MailUtilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -91,7 +88,7 @@ namespace CoreDemo.Controllers
             var result = await _businessUserService.ResetPassword(resetPasswordDto);
             if (!result.Success)
             {
-                @TempData["ErrorMessage"] = "Mailinizin geçerlilik süresi doldu.";
+                @TempData["ErrorMessage"] = result.Message;
                 return View();
             }
             var user = await _businessUserService.GetByMailAsync(resetPasswordDto.Email);

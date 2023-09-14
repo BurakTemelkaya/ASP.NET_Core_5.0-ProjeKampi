@@ -24,7 +24,7 @@ namespace CoreDemo.Controllers
             _businessUserService = businessUserService;
             _categoryService = categoryService;
         }
-       
+
         [AllowAnonymous]
         public async Task<IActionResult> Index(string id, int page = 1, string search = null)
         {
@@ -51,7 +51,7 @@ namespace CoreDemo.Controllers
         {
             ViewBag.i = id;
             var value = await _blogService.GetBlogByIdWithCommentAsync(id);
-            if (value == null || !value.Data.BlogStatus)
+            if (!value.Success)
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
@@ -61,8 +61,8 @@ namespace CoreDemo.Controllers
                 if (value.Data.Comments.Count > 0)
                 {
                     double star = value.Data.Comments.Average(x => x.BlogScore);
-                    ViewBag.Star = Math.Round(star,1);
-                }               
+                    ViewBag.Star = Math.Round(star, 1);
+                }
             }
             ViewBag.WriterId = value.Data.Writer.Id;
             ViewBag.WriterName = value.Data.Writer.NameSurname;
