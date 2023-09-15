@@ -461,7 +461,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
         {
-            List<Blog> values = new();
+            List<Blog> values = null;
 
             bool isSuccess = true;
 
