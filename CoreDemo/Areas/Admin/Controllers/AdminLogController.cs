@@ -24,10 +24,10 @@ namespace CoreDemo.Areas.Admin.Controllers
             {
                 ViewBag.Search = search;
             }
-            var result = await _logService.GetLogListAsync(5, page, search);
+            var result = await _logService.GetLogListAsync(4, page, search);
             if (result.Success)
             {
-                return View(await result.Data.ToPagedListAsync(page, 5));
+                return View(await result.Data.ToPagedListAsync(page, 4));
             }
             return RedirectToAction("Index", "Dashboard");
         }

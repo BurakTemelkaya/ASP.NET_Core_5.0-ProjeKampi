@@ -17,10 +17,8 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th>Tarih</th>
             <th>Önem Derecesi</th>
-            <th>Ayrıntı</th>
         </tr>
     </thead>
     <tbody>
@@ -35,10 +33,11 @@
                 status = "bg-danger";
             }
             <tr>
-                <th scope="row">@item.Id</th>
-                <th>@item.Log_Date.ToString("dd-MM-yyyy")</th>
-                <td class="@status">@item.Audit</td>
-                <td><article>@Html.Raw(item.Details.Replace("\n","<br/>"))</article> </td>
+                <th colspan="1">@item.Log_Date</th>
+                <td colspan="1" class="@status">@item.Audit</td>
+            </tr>
+            <tr>
+                <td colspan="2"><article>@Html.Raw(item.Details.Replace("\n","<br/>"))</article></td>
             </tr>
         }
     </tbody>

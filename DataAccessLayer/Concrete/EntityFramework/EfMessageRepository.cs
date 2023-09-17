@@ -63,8 +63,21 @@ namespace DataAccessLayer.Concrete.EntityFramework
             if (take > 0)
             {
                 return filter == null ?
-                await Context.Messages.Include(x => x.ReceiverUser).Where(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Messages.Include(x => x.ReceiverUser).Where(x => x.SenderUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
+                await Context.Messages
+                .Include(x => x.ReceiverUser)
+                .Where(x => x.SenderUser.Id == id)
+                    .OrderByDescending(x => x.MessageID)
+                        .Skip(skip)
+                        .Take(take)
+                            .ToListAsync() :
+                await Context.Messages
+                .Include(x => x.ReceiverUser)
+                    .Where(x => x.SenderUser.Id == id)
+                        .OrderByDescending(x => x.MessageID)
+                            .Where(filter)
+                                .Skip(skip)
+                                .Take(take)
+                                    .ToListAsync();
             }
 
             return filter == null ?
