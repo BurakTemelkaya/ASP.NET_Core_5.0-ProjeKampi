@@ -33,7 +33,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> ChangedBlogStatusByAdminAsync(int id);
         Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
-        Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null);
+        Task<IDataResult<List<Blog>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null);
         Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id);
     }
 }

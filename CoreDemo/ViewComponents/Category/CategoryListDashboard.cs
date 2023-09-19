@@ -19,13 +19,13 @@ namespace CoreDemo.ViewComponents.Category
         {
             var categories = await _categoryService.GetCategoryandBlogCountAsync();
             var categoryandBlogCounts = new List<CategoryandBlogPercent>();
-            int totalCount = categories.Data.Sum(x => x.CategoryBlogCount);
+            int totalCount = categories.Data.Sum(x => x.NumberofBloginCategory);
             foreach (var category in categories.Data)
             {
                 var categoryandBlogCount = new CategoryandBlogPercent
                 {
-                    Category = category.Category,
-                    BlogPercent = Math.Round(decimal.Divide(category.CategoryBlogCount, totalCount) * 100).ToString()
+                    CategoryName = category.CategoryName,
+                    BlogPercent = Math.Round(decimal.Divide(category.NumberofBloginCategory, totalCount) * 100).ToString()
                 };
                 categoryandBlogCounts.Add(categoryandBlogCount);
             }

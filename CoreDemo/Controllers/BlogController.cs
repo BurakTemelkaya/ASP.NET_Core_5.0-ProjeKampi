@@ -26,13 +26,13 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string id, int page = 1, string search = null)
+        public async Task<IActionResult> Index(int id = 0, int page = 1, string search = null)
         {
             var values = await _blogService.GetBlogListByMainPage(id, page, 6, search);
 
             ViewData["Title"] = "Ana Sayfa";
 
-            if (id != null || search != null)
+            if (id > 0 || search != null)
             {
                 ViewData["Title"] = values.Message;
                 ViewBag.Message = values.Message;

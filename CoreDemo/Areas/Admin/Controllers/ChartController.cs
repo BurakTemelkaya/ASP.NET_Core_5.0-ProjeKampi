@@ -38,8 +38,8 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var categoryCount = categoryList.Data.Count;
                 list.Add(new CategoryModel
                 {
-                    categoryname = item.Category.CategoryName,
-                    categorycount = item.CategoryBlogCount
+                    categoryname = item.CategoryName,
+                    categorycount = item.NumberofBloginCategory
                 });
             }
 

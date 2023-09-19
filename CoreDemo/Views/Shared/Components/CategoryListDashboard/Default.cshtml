@@ -18,10 +18,10 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td> @item.Category.CategoryID </td>
-                                    <td> @item.Category.CategoryName </td>
+                                    <td> @item.CategoryID </td>
+                                    <td> @item.CategoryName </td>
                                     <td>
-                                        @if (item.Category.CategoryStatus)
+                                        @if (item.CategoryStatus)
                                         {
                                             <p class="badge badge-primary">Aktif</p>
                                         }

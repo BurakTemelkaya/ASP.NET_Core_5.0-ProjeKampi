@@ -30,15 +30,17 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<Blog>> GetListWithCategoryandCommentAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
         {
-            if (take > 0)
-            {
-                return filter == null ?
-                await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).OrderByDescending(x => x.BlogID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).OrderByDescending(x => x.BlogID).Where(filter).Skip(skip).Take(take).ToListAsync();
-            }
-            return filter == null ?
-                await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).ToListAsync() :
-                await Context.Blogs.Include(x => x.Category).Include(x => x.Comments).Where(filter).ToListAsync();
+            var query =
+            Context.Blogs.Include(x => x.Category)
+            .Include(x => x.Comments)
+                .OrderByDescending(x => x.BlogID).AsQueryable();
+
+            query = filter != null ? query.Where(filter) : query;
+
+            query = take != 0 ? query.Skip(skip).Take(take) : query;
+
+            return await query.ToListAsync();
+
         }
 
         public async Task<List<Blog>> GetListWithCategoryandCommentByPagingAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
@@ -62,9 +64,18 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
         {
-            return filter == null ?
-                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).OrderByDescending(x => x.BlogID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Blogs.Include(x => x.Category).Where(x => x.WriterID == id).OrderByDescending(x => x.BlogID).Where(filter).Skip(skip).Take(take).ToListAsync();
+            var query = Context.Blogs.Include(x => x.Category)
+                .Where(x => x.WriterID == id)
+                    .OrderByDescending(x => x.BlogID)
+                    .Skip(skip)
+                    .Take(take)
+                        .Where(x => x.WriterID == id)
+                            .AsQueryable();
+
+            return filter != null ?
+                await query.Where(filter)
+                .ToListAsync()
+                : await query.ToListAsync();
         }
 
         public async Task<List<Blog>> GetListWithCategoryByWriterandPagingAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)

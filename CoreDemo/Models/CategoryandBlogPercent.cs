@@ -2,9 +2,8 @@
 
 namespace CoreDemo.Models
 {
-    public class CategoryandBlogPercent
+    public class CategoryandBlogPercent : Category
     {
-        public Category Category { get; set; }
         public string BlogPercent { get; set; }
     }
 }

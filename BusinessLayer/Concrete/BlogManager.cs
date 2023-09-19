@@ -459,7 +459,7 @@ namespace BusinessLayer.Concrete
         /// <param name="search">Bloglar içinde başlığa göre filtreleme yapmak için gerekli parametre.</param>
         /// <returns></returns>
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(string id, int page = 1, int take = 6, string search = null)
+        public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null)
         {
             List<Blog> values = null;
 
@@ -467,12 +467,12 @@ namespace BusinessLayer.Concrete
 
             var message = string.Empty;
 
-            if (id == null && search == null)
+            if (id < 1 && search == null)
             {
                 values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
             }
 
-            if (id != null && search == null)
+            if (id > 0 && search == null)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
                 var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.BlogStatus);
@@ -496,7 +496,7 @@ namespace BusinessLayer.Concrete
 
             if (search != null)
             {
-                if (id == null)
+                if (id < 1)
                 {
                     values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
                     message = "'" + search + "' aramanıza dair sonuçlar.";
@@ -514,7 +514,7 @@ namespace BusinessLayer.Concrete
                     }
                     else
                     {
-                        var category = await _categoryService.TGetByIDAsync(int.Parse(id));
+                        var category = await _categoryService.TGetByIDAsync(id);
                         message = category.Data.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuç bulunamadı.";
                     }
                 }

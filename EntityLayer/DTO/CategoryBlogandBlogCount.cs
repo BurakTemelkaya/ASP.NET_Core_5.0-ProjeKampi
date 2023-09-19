@@ -1,12 +1,11 @@
 ﻿using CoreLayer.Entities;
 using EntityLayer.Concrete;
-using System.Collections.Generic;
 
 namespace EntityLayer.DTO
 {
-    public class CategoryBlogandBlogCountDto : IDto
+    public class CategoryBlogandBlogCountDto : Category, IDto
     {
-        public Category Category { get; set; }
-        public int CategoryBlogCount { get; set; }
+        public int NumberofBloginCategory { get; set; }
+        public bool BlogStatus { get; set; }
     }
 }

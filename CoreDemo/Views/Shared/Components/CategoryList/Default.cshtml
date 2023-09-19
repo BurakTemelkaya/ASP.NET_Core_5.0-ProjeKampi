@@ -5,9 +5,9 @@
         @foreach (var item in Model)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a class="categoryLink" href="/Blog/Index/?id=@item.Category.CategoryID" name="@item.Category.CategoryID" style="color:#01cd74;">
-                    @item.Category.CategoryName
-                    <span class="badge badge-primary badge-pill">@item.CategoryBlogCount</span>
+                <a class="categoryLink" href="/Blog/Index/?id=@item.CategoryID" name="@item.CategoryID" style="color:#01cd74;">
+                    @item.CategoryName
+                    <span class="badge badge-primary badge-pill">@item.NumberofBloginCategory</span>
                 </a>
             </li>
         }
