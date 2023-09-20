@@ -465,63 +465,32 @@ namespace BusinessLayer.Concrete
 
             bool isSuccess = true;
 
-            var message = string.Empty;
+            string message = string.Empty;
 
-            if (id < 1 && search == null)
-            {
-                values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
-            }
+            values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(
+                        x => x.BlogStatus && x.Category.CategoryStatus
+                        && (id < 1 || x.CategoryID == id)
+                        && (string.IsNullOrEmpty(search) || x.BlogTitle.ToLower().Contains(search.ToLower()))
+                        , take, page
+                    );
 
             if (id > 0 && search == null)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
-                var categoryCount = await GetCountAsync(x => x.CategoryID == Convert.ToInt32(id) && x.BlogStatus);
-                if (categoryCount.Data > 0)
+                if (category.Success)
                 {
-                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.Category.CategoryStatus &&
-                    x.CategoryID == Convert.ToInt32(id), take, page);
                     message = category.Data.CategoryName + " kategorisindeki bloglar.";
-                    if (values == null)
-                    {
-                        values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
-                        isSuccess = false;
-                        message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
-                    }
-                }
-                else
-                {
-                    message = "Şu anda " + category.Data.CategoryName + " kategorisinde blog bulunmamaktadır.";
                 }
             }
 
             if (search != null)
             {
-                if (id < 1)
-                {
-                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()), take, page);
-                    message = "'" + search + "' aramanıza dair sonuçlar.";
-                    if (!values.Any())
-                    {
-                        message = "'" + search + "' aramanıza dair sonuç bulunamadı.";
-                    }
-                }
-                else
-                {
-                    values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogTitle.ToLower().Contains(search.ToLower()) && x.CategoryID == Convert.ToInt32(id), take, page);
-                    if (values.Any())
-                    {
-                        message = values.First().Category.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuçlar.";
-                    }
-                    else
-                    {
-                        var category = await _categoryService.TGetByIDAsync(id);
-                        message = category.Data.CategoryName + " kategorisindeki '" + search + "' aramanıza dair sonuç bulunamadı.";
-                    }
-                }
+                message += "Aranan kelime = " + search;
             }
 
             if (!values.Any())
             {
+                message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
                 values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
             }
