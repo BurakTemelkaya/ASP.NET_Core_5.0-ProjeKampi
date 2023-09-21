@@ -124,6 +124,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
+        [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResultObject> BlogAddAsync(Blog blog, string userName, IFormFile blogImage, IFormFile blogThumbnailImage)
         {
@@ -189,6 +190,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
+        [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResultObject> BlogUpdateAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
@@ -276,6 +278,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
+        [CacheRemoveAspect("ICategoryService.Get")]
         [ValidationAspect(typeof(BlogValidator))]
         public async Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
         {
@@ -347,6 +350,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResultObject> DeleteBlogAsync(Blog blog, string userName)
         {
@@ -404,6 +408,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
         }
 
+        [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResultObject> ChangedBlogStatusAsync(int id, string userName)
         {
@@ -428,6 +433,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<Blog>(await _blogDal.GetByIDAsync(id));
         }
 
+        [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResultObject> DeleteBlogByAdminAsync(Blog blog)
         {
@@ -436,6 +442,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResultObject> ChangedBlogStatusByAdminAsync(int id)
         {
@@ -474,7 +481,7 @@ namespace BusinessLayer.Concrete
                         , take, page
                     );
 
-            if (id > 0 && search == null)
+            if (id > 0)
             {
                 var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
                 if (category.Success)
