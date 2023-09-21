@@ -28,19 +28,19 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(bool categoryStatus = true, bool blogStatus = true)
+        public async Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null)
         {
             var data = await Context.Categories.Include(x => x.Blogs)
                 .SelectMany(category => category.Blogs, (category, blog) =>
-                new
+                new CategoryBlogandBlogCountDto
                 {
-                    category.CategoryID,
-                    category.CategoryName,
-                    category.CategoryStatus,
-                    category.CategoryDescription,
-                    blog.BlogStatus
+                    CategoryID = category.CategoryID,
+                    CategoryName = category.CategoryName,
+                    CategoryStatus = category.CategoryStatus,
+                    CategoryDescription = category.CategoryDescription,
+                    BlogStatus = blog.BlogStatus
                 })
-                .Where(x => x.CategoryStatus == categoryStatus && x.BlogStatus == blogStatus)
+                .Where(filter)
                 .GroupBy(data => new
                 {
                     data.CategoryName,

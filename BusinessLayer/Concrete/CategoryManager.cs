@@ -117,7 +117,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCountAsync()
         {
-            var values = await _categoryDal.GetListWithCategoryByBlog(true, true);
+            var values = await _categoryDal.GetListWithCategoryByBlog(x=> x.CategoryStatus && x.BlogStatus);
             return new SuccessDataResult<List<CategoryBlogandBlogCountDto>>(values);
         }
     }

@@ -10,6 +10,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface ICategoryDal : IEntityRepository<Category>
     {
-        Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(bool categoryStatus = true, bool blogStatus = true);
+        Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null);
     }
 }
