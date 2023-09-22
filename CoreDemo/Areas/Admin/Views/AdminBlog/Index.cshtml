@@ -1,4 +1,4 @@
-﻿@model IPagedList<Blog>
+﻿@model IPagedList<BlogCategoryandCommentCountDto>
 @{
     ViewData["Title"] = "Bloglar";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -41,7 +41,7 @@
                                 <span class="product-price">
                                     @item.BlogCreateDate.ToString("dd.MM.yyyy")
                                 </span>
-                                <small class="text-muted">@item.Category.CategoryName</small>
+                                <small class="text-muted">@item.CategoryName</small>
                                 <a href="/Blog/BlogReadAll/@item.BlogID" target="_blank" class="product-name"> @item.BlogTitle</a>
                                 <a href="/Admin/AdminBlog/BlogUpdate/@item.BlogID" class="btn btn-primary mr-2">Güncelle</a>
                                 <a href="/Admin/AdminBlog/DeleteBlog/@item.BlogID" class="btn btn-danger mr-2 Sil"> Sil</a>

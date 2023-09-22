@@ -1,4 +1,4 @@
-﻿@model IPagedList<Blog>
+﻿@model IPagedList<BlogCategoryandCommentCountDto>
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
     double BlogScore = 0;
@@ -54,9 +54,9 @@
                             blogTitle = blogTitle.Substring(0, 50) + "...";
                         }
 
-                        if (item.Comments.Count(x => x.CommentStatus) > 0)
+                        if (item.CommentCount > 0)
                         {
-                            BlogScore = Math.Round(item.Comments.Average(x => x.BlogScore), 1);
+                            BlogScore = Math.Round(item.CommentScore, 1);
                         }
                         <div class="col-lg-4 card">
                             <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">
@@ -76,12 +76,12 @@
                                     </li>
                                     <li>
                                         <a href="/Blog/BlogReadAll/@item.BlogID">
-                                            <i class="fa fa-comment"></i> @item.Comments.Count(x => x.CommentStatus)
+                                            <i class="fa fa-comment"></i> @item.CommentCount
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/Blog/Index?id=@item.CategoryID">
-                                            <i class="fa fa-bars"></i> @item.Category.CategoryName
+                                            <i class="fa fa-bars"></i> @item.CategoryName
                                         </a>
                                     </li>
 
@@ -126,7 +126,8 @@
         LiElementClasses= new[] {"page-item"},
         PageClasses=new[] {"page-link"},
         ActiveLiElementClass="active",
-        MaximumPageNumbersToDisplay=5
+        MaximumPageNumbersToDisplay=5,
+        UlElementClasses=new[]{"pagination","pagination-lg","justify-content-center"}
         })
 
         <br />

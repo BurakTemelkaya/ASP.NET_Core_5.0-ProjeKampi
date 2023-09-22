@@ -3,6 +3,7 @@ using CoreLayer.DataAccess.EntityFramework;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -28,22 +29,38 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<Blog>> GetListWithCategoryandCommentAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<List<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null, int take = 0, int skip = 0)
         {
             var query =
-            Context.Blogs.Include(x => x.Category)
+            Context.Blogs
+            .Include(x => x.Category)
             .Include(x => x.Comments)
-                .OrderByDescending(x => x.BlogID).AsQueryable();
+            .Select(blog =>
+            new BlogCategoryandCommentCountDto
+            {
+                BlogID = blog.BlogID,
+                BlogContent = blog.BlogContent,
+                BlogImage = blog.BlogImage,
+                BlogThumbnailImage = blog.BlogThumbnailImage,
+                BlogTitle = blog.BlogTitle,
+                BlogCreateDate = blog.BlogCreateDate,
+                BlogStatus = blog.BlogStatus,
+                CategoryID = blog.Category.CategoryID,
+                CategoryName = blog.Category.CategoryName,
+                CategoryStatus = blog.Category.CategoryStatus,
+                CommentCount = blog.Comments.Count > 0 ? blog.Comments.Count : 0,
+                CommentScore = blog.Comments.Count > 0 ? blog.Comments.Average(x => x.BlogScore) : 0
+            })
+            .OrderByDescending(x => x.BlogID).AsQueryable();
 
             query = filter != null ? query.Where(filter) : query;
 
             query = take != 0 ? query.Skip(skip).Take(take) : query;
 
             return await query.ToListAsync();
-
         }
 
-        public async Task<List<Blog>> GetListWithCategoryandCommentByPagingAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
+        public async Task<List<BlogCategoryandCommentCountDto>> GetListWithCategoryandCommentCountByPagingAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null, int take = 0, int page = 1)
         {
             int skip = 0;
             if (page > 1)
@@ -51,7 +68,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 skip = take * (page - 1);
             }
 
-            int count = await GetCountAsync(filter);
+            int count = await GetCountByBlogCategoryandCommentCountAsync(filter);
 
             if (skip >= count)
             {
@@ -59,7 +76,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 page = 1;
             }
 
-            return AddNullObject<Blog>.GetListByPaging(await GetListWithCategoryandCommentAsync(filter, take, skip), take, page, count);
+            return AddNullObject<BlogCategoryandCommentCountDto>.GetListByPaging(await GetBlogListWithCategoryandCommentCountAsync(filter, take, skip), take, page, count);
         }
 
         public async Task<List<Blog>> GetListWithCategoryByWriterAsync(int id, Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
@@ -111,6 +128,28 @@ namespace DataAccessLayer.Concrete.EntityFramework
             {
                 return null;
             }
+        }
+
+        public async Task<int> GetCountByBlogCategoryandCommentCountAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
+        {
+            var query = Context.Blogs.Select(data =>
+                new BlogCategoryandCommentCountDto
+                {
+                    BlogID = data.BlogID,
+                    BlogContent = data.BlogContent,
+                    BlogImage = data.BlogImage,
+                    BlogTitle = data.BlogTitle,
+                    BlogCreateDate = data.BlogCreateDate,
+                    BlogThumbnailImage = data.BlogThumbnailImage,
+                    BlogStatus = data.BlogStatus,
+                    CategoryID = data.CategoryID,
+                    CategoryName = data.Category.CategoryName,
+                    CategoryStatus = data.Category.CategoryStatus
+                });
+
+            query = filter != null ? query.Where(filter) : query;
+
+            return await query.CountAsync();
         }
     }
 }

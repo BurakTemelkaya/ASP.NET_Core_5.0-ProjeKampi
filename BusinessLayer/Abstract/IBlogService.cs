@@ -1,6 +1,7 @@
 ﻿using CoreDemo.Models;
 using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,8 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Blog>> GetBlogByIDAsync(int id);
         Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
         Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null);
-        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null);
-        Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null);
+        Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountAsync(int take = 0, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null);
+        Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountByPagingAsync(int take, int page, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
         Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count, int skip = 0, bool sortInReserver = true);
         Task<IResultObject> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
@@ -33,7 +34,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> ChangedBlogStatusByAdminAsync(int id);
         Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
-        Task<IDataResult<List<Blog>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null);
+        Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null);
         Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id);
     }
 }

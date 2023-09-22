@@ -1,10 +1,10 @@
 ﻿@model List<CategoryBlogandBlogCountDto>;
-<div class="tech-btm">
-    <h4>Kategoriler</h4>
+<div class="container tech-btm text-center justify-content-center">
+    <h2 class="mb-3">Kategoriler</h2>
     <ul class="list-group single">
         @foreach (var item in Model)
         {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item justify-content-center col-6 mx-auto" title="@item.CategoryDescription">
                 <a class="categoryLink" href="/Blog/Index/?id=@item.CategoryID" name="@item.CategoryID" style="color:#01cd74;">
                     @item.CategoryName
                     <span class="badge badge-primary badge-pill">@item.NumberofBloginCategory</span>

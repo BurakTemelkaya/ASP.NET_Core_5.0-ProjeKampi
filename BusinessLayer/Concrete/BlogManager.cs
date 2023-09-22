@@ -34,20 +34,20 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryAsync(int take = 0, Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountAsync(int take = 0, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryandCommentAsync(filter, take);
+            var values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(filter, take);
 
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
 
-            return new SuccessDataResult<List<Blog>>(values);
+            return new SuccessDataResult<List<BlogCategoryandCommentCountDto>>(values);
         }
 
 
-        public async Task<IDataResult<List<Blog>>> GetBlogListWithCategoryByPagingAsync(int take, int page, Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountByPagingAsync(int take, int page, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(filter, take, page);
+            var values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(filter, take, page);
 
             foreach (var item in values)
             {
@@ -57,7 +57,7 @@ namespace BusinessLayer.Concrete
                 }
             }
 
-            return new SuccessDataResult<List<Blog>>(values);
+            return new SuccessDataResult<List<BlogCategoryandCommentCountDto>>(values);
         }
 
         [CacheAspect]
@@ -466,41 +466,39 @@ namespace BusinessLayer.Concrete
         /// <param name="search">Bloglar içinde başlığa göre filtreleme yapmak için gerekli parametre.</param>
         /// <returns></returns>
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null)
+        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(int id = 0, int page = 1, int take = 6, string search = null)
         {
-            List<Blog> values = null;
+            List<BlogCategoryandCommentCountDto> values = null;
 
             bool isSuccess = true;
 
             string message = string.Empty;
 
-            values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(
-                        x => x.BlogStatus && x.Category.CategoryStatus
+            values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(
+                        x => x.BlogStatus == true && x.CategoryStatus == true
                         && (id < 1 || x.CategoryID == id)
                         && (string.IsNullOrEmpty(search) || x.BlogTitle.ToLower().Contains(search.ToLower()))
                         , take, page
                     );
 
-            if (id > 0)
-            {
-                var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
-                if (category.Success)
-                {
-                    message = category.Data.CategoryName + " kategorisindeki bloglar.";
-                }
-            }
-
-            if (search != null)
-            {
-                message += "Aranan kelime = " + search;
-            }
-
             if (!values.Any())
             {
                 message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
-                values = await _blogDal.GetListWithCategoryandCommentByPagingAsync(x => x.BlogStatus && x.Category.CategoryStatus, take, page);
+                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus, take, page);
             }
+            else
+            {
+                if (id > 0)
+                {
+                    var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
+
+                    message = category.Success ? category.Data.CategoryName + " kategorisindeki bloglar." : "";
+                }
+
+                message += search != null ? " Aranan kelime = " + search : "";
+            }
+
 
             foreach (var item in values)
             {
@@ -510,7 +508,7 @@ namespace BusinessLayer.Concrete
                 }
             }
 
-            return new DataResult<List<Blog>>(values, isSuccess, message);
+            return new DataResult<List<BlogCategoryandCommentCountDto>>(values, isSuccess, message);
         }
 
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)

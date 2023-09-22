@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +28,12 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int id = 0, int page = 1)
         {
-            var blogs = new List<Blog>();
+            var blogs = new List<BlogCategoryandCommentCountDto>();
 
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
-                var value = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page, x => x.WriterID == id);
+                var value = await _blogService.GetBlogListWithCategoryandCommentCountByPagingAsync(4, page, x => x.WriterID == id);
                 if (value.Data.Count > 0)
                 {
                     blogs = value.Data;
@@ -45,7 +46,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             else
             {
-                var result = await _blogService.GetBlogListWithCategoryByPagingAsync(4, page);
+                var result = await _blogService.GetBlogListWithCategoryandCommentCountByPagingAsync(4, page);
                 blogs = result.Data;
             }
             var values = await blogs.ToPagedListAsync(page, 4);

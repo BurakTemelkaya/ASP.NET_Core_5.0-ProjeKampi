@@ -30,7 +30,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null)
         {
-            var data = await Context.Categories.Include(x => x.Blogs)
+            return await Context.Categories.Include(x => x.Blogs)
                 .SelectMany(category => category.Blogs, (category, blog) =>
                 new CategoryBlogandBlogCountDto
                 {
@@ -53,12 +53,11 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 {
                     CategoryID = data.Key.CategoryID,
                     CategoryName = data.Key.CategoryName,
+                    CategoryDescription= data.Key.CategoryDescription,
                     NumberofBloginCategory = data.Count(),
                     BlogStatus = data.Key.BlogStatus
                 })
                 .ToListAsync();
-
-            return data;
         }
     }
 }
