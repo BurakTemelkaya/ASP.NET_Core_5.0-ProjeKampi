@@ -8,3 +8,6 @@ article * {
     max-width: 100% !important;
 }
 
+.list-group-item {
+    min-width: 100% !important;
+}
