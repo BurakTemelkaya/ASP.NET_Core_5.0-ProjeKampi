@@ -29,7 +29,6 @@ using DataAccessLayer.DependancyInjection;
 using BusinessLayer.Extension;
 using CoreDemo;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Configuration;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;

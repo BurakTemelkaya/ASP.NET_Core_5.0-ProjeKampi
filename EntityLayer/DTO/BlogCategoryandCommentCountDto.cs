@@ -1,9 +1,4 @@
 ﻿using EntityLayer.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityLayer.DTO
 {
@@ -12,6 +7,8 @@ namespace EntityLayer.DTO
         public string CategoryName { get; set; }
 
         public bool CategoryStatus { get; set; }
+
+        public bool CommentStatus { get; set; } = false;
 
         public int CommentCount { get; set; } = 0;
 

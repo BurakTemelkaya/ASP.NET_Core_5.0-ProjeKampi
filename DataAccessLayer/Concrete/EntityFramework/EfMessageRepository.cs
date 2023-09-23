@@ -15,7 +15,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
     {
         public EfMessageRepository(Context context) : base(context)
         {
-
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         private Context Context

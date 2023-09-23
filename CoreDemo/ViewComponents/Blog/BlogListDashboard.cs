@@ -1,8 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
-using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Blog
 {
@@ -17,7 +15,7 @@ namespace CoreDemo.ViewComponents.Blog
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var blogs = await _blogService.GetBlogListWithCategoryandCommentCountAsync(10);
+            var blogs = await _blogService.GetListWithCategory(x => x.BlogStatus, 10);
             return View(blogs.Data);
         }
     }

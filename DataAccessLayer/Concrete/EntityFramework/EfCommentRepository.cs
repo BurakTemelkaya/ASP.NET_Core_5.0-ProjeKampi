@@ -17,7 +17,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
     {
         public EfCommentRepository(Context context) : base(context)
         {
-
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         private Context Context

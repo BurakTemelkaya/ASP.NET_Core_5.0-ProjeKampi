@@ -1,5 +1,5 @@
 ﻿@using EntityLayer.Concrete
-@model List<BlogCategoryandCommentCountDto>
+@model List<Blog>
 <div class="row">
     <div class="col-12 grid-margin">
         <div class="card">
@@ -26,13 +26,12 @@
 
                                     <td> @item.BlogTitle </td>
                                     <td>
-                                        <label class="badge badge-gradient-success"> @item.CategoryName</label>
+                                        <label class="badge badge-gradient-success"> @item.Category.CategoryName</label>
                                     </td>
                                     <td> @(((DateTime)item.BlogCreateDate).ToString("dd-MM-yyyy")) </td>
                                     <td><a href="/Blog/BlogReadAll/@item.BlogID" class="btn-sm btn-dark">Detaylar</a></td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>

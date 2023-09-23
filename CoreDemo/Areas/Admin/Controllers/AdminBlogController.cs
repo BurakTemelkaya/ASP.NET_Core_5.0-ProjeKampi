@@ -28,12 +28,12 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int id = 0, int page = 1)
         {
-            var blogs = new List<BlogCategoryandCommentCountDto>();
+            var blogs = new List<Blog>();
 
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
-                var value = await _blogService.GetBlogListWithCategoryandCommentCountByPagingAsync(4, page, x => x.WriterID == id);
+                var value = await _blogService.GetListWithCategoryByWriterWitchPagingAsync(user.Data.UserName, 4, page);
                 if (value.Data.Count > 0)
                 {
                     blogs = value.Data;
@@ -46,7 +46,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             else
             {
-                var result = await _blogService.GetBlogListWithCategoryandCommentCountByPagingAsync(4, page);
+                var result = await _blogService.GetListWithCategoryByPaging(4,page);
                 blogs = result.Data;
             }
             var values = await blogs.ToPagedListAsync(page, 4);

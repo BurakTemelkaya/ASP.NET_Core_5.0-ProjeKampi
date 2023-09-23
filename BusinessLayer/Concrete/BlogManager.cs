@@ -17,6 +17,7 @@ using EntityLayer.DTO;
 using BusinessLayer.Constants;
 using CoreLayer.Aspects.AutoFac.Caching;
 using BusinessLayer.StaticTexts;
+using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace BusinessLayer.Concrete
 {
@@ -36,7 +37,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountAsync(int take = 0, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
         {
-            var values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(filter, take);
+            var values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(filter, true, take);
 
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
@@ -47,7 +48,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountByPagingAsync(int take, int page, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
         {
-            var values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(filter, take, page);
+            var values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(filter, true, take, page);
 
             foreach (var item in values)
             {
@@ -61,10 +62,31 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterBmAsync(string userName, int take, int page, Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWitchPagingAsync(string userName, int take, int page)
         {
             var user = await _userService.GetByUserNameAsync(userName);
-            var values = await _blogDal.GetListWithCategoryByWriterandPagingAsync(user.Data.Id, filter, take, page);
+            var values = await _blogDal.GetListWithCategoryByPagingAsync(
+                x => x.WriterID == user.Data.Id, take, page);
+            foreach (var item in values)
+            {
+                if (item != null)
+                {
+                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+                }
+            }
+            return new SuccessDataResult<List<Blog>>(values);
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<List<Blog>>> GetListWithCategory(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
+        {
+            var values = await _blogDal.GetListBlogWithCategoryAsync(filter, take);
+            return new SuccessDataResult<List<Blog>>(values);
+        }
+
+        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1, Expression<Func<Blog, bool>> filter = null)
+        {
+            var values = await _blogDal.GetListWithCategoryByPagingAsync(filter, take, page);
             foreach (var item in values)
             {
                 if (item != null)
@@ -478,14 +500,14 @@ namespace BusinessLayer.Concrete
                         x => x.BlogStatus == true && x.CategoryStatus == true
                         && (id < 1 || x.CategoryID == id)
                         && (string.IsNullOrEmpty(search) || x.BlogTitle.ToLower().Contains(search.ToLower()))
-                        , take, page
+                        , true, take, page
                     );
 
             if (!values.Any())
             {
                 message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
-                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus, take, page);
+                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus && x.CommentStatus, true, take, page);
             }
             else
             {
@@ -513,7 +535,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(id, true, x => x.BlogStatus
+            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(true, x => x.BlogStatus
             && x.Category.CategoryStatus);
             if (result != null)
             {
