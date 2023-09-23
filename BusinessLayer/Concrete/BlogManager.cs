@@ -535,7 +535,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogByIdWithCommentandWriterAsync(true, x => x.BlogStatus
+            var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x=> x.BlogID == id && x.BlogStatus
             && x.Category.CategoryStatus);
             if (result != null)
             {

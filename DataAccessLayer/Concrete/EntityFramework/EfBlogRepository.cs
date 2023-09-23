@@ -138,7 +138,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
             return AddNullObject<Blog>.GetListByPaging(await GetListBlogWithCategoryAsync(filter, take, skip), take, page, count);
         }
 
-        public async Task<Blog> GetBlogByIdWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<Blog, bool>> filter = null)
+        public async Task<Blog> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<Blog, bool>> filter = null)
         {
             try
             {
