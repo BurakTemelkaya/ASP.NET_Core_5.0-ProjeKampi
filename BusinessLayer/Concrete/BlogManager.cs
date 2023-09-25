@@ -533,16 +533,15 @@ namespace BusinessLayer.Concrete
             return new DataResult<List<BlogCategoryandCommentCountDto>>(values, isSuccess, message);
         }
 
-        public async Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id)
+        public async Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x=> x.BlogID == id && x.BlogStatus
-            && x.Category.CategoryStatus);
+            var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x=> x.BlogID == id);
             if (result != null)
             {
                 result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
-                return new SuccessDataResult<Blog>(result);
+                return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);
             }
-            return new ErrorDataResult<Blog>(Messages.BlogNotFound);
+            return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(Messages.BlogNotFound);
         }
 
         IResultObject BlogImageNotEmpty(string blogImage)

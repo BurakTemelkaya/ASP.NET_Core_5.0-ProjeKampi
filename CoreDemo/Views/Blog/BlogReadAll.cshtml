@@ -1,4 +1,4 @@
-﻿@model Blog
+﻿@model BlogCategoryandCommentCountandWriterDto
 @inject IHttpContextAccessor httpContextaccessor;
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -16,7 +16,7 @@
     <meta property="og:image" content="https://coreblogsite.azurewebsites.net/@Model.BlogThumbnailImage" />
     <meta property="og:image:type" content="image/jpeg">
     <meta property="article:published_time" content="@Model.BlogCreateDate" />
-    <meta name="author" content="@ViewBag.WriterName">
+    <meta name="author" content="@Model.WriterNameSurName">
     <meta property="og:image:width" content="640">
     <meta property="og:image:height" content="360">
     <link href="~/coreblogtema/css/blog-read-all.css" rel="stylesheet" />
@@ -50,13 +50,13 @@
                                 </li>
                                 <li class="mx-2">
                                     <a href="#">
-                                        <i class="far fa-star"></i> @ViewBag.Star
+                                        <i class="far fa-star"></i> @Math.Round(Model.CommentScore, 1)
                                     </a>
 
                                 </li>
                                 <li>
                                     <a href="#comment">
-                                        <i class="far fa-comment"></i> @ViewBag.CommentCount
+                                        <i class="far fa-comment"></i> @Model.CommentCount
                                     </a>
                                 </li>
                             </ul>
@@ -75,7 +75,7 @@
 
                     <br />
                     <p>
-                        Yazar Adı : <b>@ViewBag.WriterName</b>
+                        Yazar Adı : <b>@Model.WriterNameSurName</b>
                     </p>
                     <a href="/Blog/Index" class="btn btn-primary read-m">Blog Listesi</a>
                 </div>

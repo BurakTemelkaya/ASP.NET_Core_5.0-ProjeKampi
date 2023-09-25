@@ -55,17 +55,7 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Error404", "ErrorPage");
             }
-            ViewBag.CommentCount = value.Data.Comments.Count;
-            if (value.Data.Comments != null)
-            {
-                if (value.Data.Comments.Count > 0)
-                {
-                    double star = value.Data.Comments.Average(x => x.BlogScore);
-                    ViewBag.Star = Math.Round(star, 1);
-                }
-            }
-            ViewBag.WriterId = value.Data.Writer.Id;
-            ViewBag.WriterName = value.Data.Writer.NameSurname;
+            ViewBag.WriterId = value.Data.WriterID;
             ViewData["Title"] = value.Data.BlogTitle;
             return View(value.Data);
         }

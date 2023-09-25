@@ -37,6 +37,6 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
         Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null);
-        Task<IDataResult<Blog>> GetBlogByIdWithCommentAsync(int id);
+        Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id);
     }
 }

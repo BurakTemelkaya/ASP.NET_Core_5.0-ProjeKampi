@@ -20,7 +20,7 @@ namespace DataAccessLayer.Abstract
 
         Task<List<Blog>> GetListWithCategoryByPagingAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1);
 
-        Task<Blog> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<Blog, bool>> filter = null);
+        Task<BlogCategoryandCommentCountandWriterDto> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<BlogCategoryandCommentCountandWriterDto, bool>> filter = null);
 
         Task<int> GetCountByBlogCategoryandCommentCountAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null);
     }

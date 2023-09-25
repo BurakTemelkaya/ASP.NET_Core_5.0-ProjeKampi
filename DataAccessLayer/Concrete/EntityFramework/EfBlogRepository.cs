@@ -47,13 +47,13 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                 BlogStatus = blog.BlogStatus,
                                 CategoryID = blog.Category.CategoryID,
                                 CategoryName = blog.Category.CategoryName,
-                                CategoryStatus = blog.Category.CategoryStatus,
+                                CategoryStatus = category.CategoryStatus,
                                 CommentCount = comment != null ? blog.Comments.Count : 0,
                                 CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
                                 CommentStatus = comment == null ? false : comment.CommentStatus
                             };
 
-            var rightQuery = from comment in Context.Comments
+            var rightQuery = from comment in Context.Comments.Where(x => x.CommentStatus == commentStatus)
                              join category in Context.Categories
                                  on comment.Blog.CategoryID equals category.CategoryID
                              join blog in Context.Blogs
@@ -68,9 +68,9 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                  BlogTitle = blog.BlogTitle,
                                  BlogCreateDate = blog.BlogCreateDate,
                                  BlogStatus = blog.BlogStatus,
-                                 CategoryID = blog.Category.CategoryID,
-                                 CategoryName = blog.Category.CategoryName,
-                                 CategoryStatus = blog.Category.CategoryStatus,
+                                 CategoryID = category.CategoryID,
+                                 CategoryName = category.CategoryName,
+                                 CategoryStatus = category.CategoryStatus,
                                  CommentCount = comment != null ? blog.Comments.Count : 0,
                                  CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
                                  CommentStatus = comment == null ? false : comment.CommentStatus
@@ -106,7 +106,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<Blog>> GetListBlogWithCategoryAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
         {
-            var query = Context.Blogs.Include(x => x.Category).AsQueryable();                    
+            var query = Context.Blogs.Include(x => x.Category).AsQueryable();
 
             query = filter != null ?
                 query.Where(filter)
@@ -138,14 +138,68 @@ namespace DataAccessLayer.Concrete.EntityFramework
             return AddNullObject<Blog>.GetListByPaging(await GetListBlogWithCategoryAsync(filter, take, skip), take, page, count);
         }
 
-        public async Task<Blog> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<Blog, bool>> filter = null)
+        public async Task<BlogCategoryandCommentCountandWriterDto> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<BlogCategoryandCommentCountandWriterDto, bool>> filter)
         {
             try
             {
-                return await Context.Blogs
-                .Include(x => x.Comments.Where(x => x.CommentStatus == isCommentStatus))
-                .Include(u => u.Writer)
-                    .Where(filter).FirstAsync();
+                var leftQuery = from blog in Context.Blogs
+                                join category in Context.Categories
+                                    on blog.CategoryID equals category.CategoryID
+                                join writer in Context.Users
+                                    on blog.WriterID equals writer.Id
+                                join comment in Context.Comments.Where(x => x.CommentStatus == isCommentStatus)
+                                    on blog.BlogID equals comment.BlogID into BlogComments
+                                from comment in BlogComments.DefaultIfEmpty()
+                                select new BlogCategoryandCommentCountandWriterDto
+                                {
+                                    BlogID = blog.BlogID,
+                                    BlogContent = blog.BlogContent,
+                                    BlogImage = blog.BlogImage,
+                                    BlogThumbnailImage = blog.BlogThumbnailImage,
+                                    BlogTitle = blog.BlogTitle,
+                                    BlogCreateDate = blog.BlogCreateDate,
+                                    BlogStatus = blog.BlogStatus,
+                                    CategoryID = blog.Category.CategoryID,
+                                    CategoryName = blog.Category.CategoryName,
+                                    CategoryStatus = category.CategoryStatus,
+                                    CommentCount = comment != null ? blog.Comments.Count : 0,
+                                    CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                    CommentStatus = comment == null ? false : comment.CommentStatus,
+                                    WriterID = writer.Id,
+                                    WriterNameSurName = writer.NameSurname,
+                                    WriterUserName = writer.UserName,
+                                };
+
+                var rightQuery = from comment in Context.Comments.Where(x => x.CommentStatus == isCommentStatus)
+                                 join category in Context.Categories
+                                     on comment.Blog.CategoryID equals category.CategoryID
+                                 join blog in Context.Blogs
+                                     on comment.BlogID equals blog.BlogID into BlogComments
+                                 from blog in BlogComments.DefaultIfEmpty()
+                                 join writer in Context.Users
+                                    on blog.WriterID equals writer.Id
+                                 select new BlogCategoryandCommentCountandWriterDto
+                                 {
+                                     BlogID = blog.BlogID,
+                                     BlogContent = blog.BlogContent,
+                                     BlogImage = blog.BlogImage,
+                                     BlogThumbnailImage = blog.BlogThumbnailImage,
+                                     BlogTitle = blog.BlogTitle,
+                                     BlogCreateDate = blog.BlogCreateDate,
+                                     BlogStatus = blog.BlogStatus,
+                                     CategoryID = category.CategoryID,
+                                     CategoryName = category.CategoryName,
+                                     CategoryStatus = category.CategoryStatus,
+                                     CommentCount = comment != null ? blog.Comments.Count : 0,
+                                     CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                     CommentStatus = comment == null ? false : comment.CommentStatus,
+                                     WriterID = writer.Id,
+                                     WriterNameSurName = writer.NameSurname,
+                                     WriterUserName = writer.UserName
+                                 };
+
+                return await leftQuery.Union(rightQuery).Where(filter).FirstAsync();
+
             }
             catch
             {
