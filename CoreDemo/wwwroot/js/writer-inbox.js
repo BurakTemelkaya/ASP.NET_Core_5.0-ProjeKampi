@@ -50,7 +50,7 @@ async function GetMessageList() {
                 </div>
                 </td>              
                 <td>${item.Subject}</td>
-                <td>${item.SenderUser.NameSurname} </td>
+                <td>${item.SenderNameSurname} </td>
                 <td>${item.Details}</td>
                 <td>${date}</td>
                 <td><a href="/Message/MessageDetails/${item.MessageID}" class="btn btn-primary">Mesajı Aç</a></td>

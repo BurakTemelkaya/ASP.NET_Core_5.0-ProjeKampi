@@ -1,4 +1,4 @@
-﻿@model List<Message>
+﻿@model List<MessageSenderUserDto>
 @{
     string sure = "";
     DateTime now = DateTime.Now;
@@ -34,11 +34,11 @@
             <li>
                 <div class="dropdown-messages-box">
                     <a class="dropdown-item float-left" href="/Admin/AdminMessage/Read/@item.MessageID">
-                        <img alt="image" class="rounded-circle" src="@item.SenderUser.ImageUrl">
+                        <img alt="image" class="rounded-circle" src="@item.SenderImageUrl">
                     </a>
                     <div class="media-body pointer" onclick='location.href="/Admin/AdminMessage/Read/@item.MessageID"'>
                             <small class="float-right">@sure</small>
-                            <strong>@item.SenderUser.UserName</strong> sana mesaj gönderdi.<br>
+                            <strong>@item.SenderUserName</strong> sana mesaj gönderdi.<br>
                         <small class="text-muted">@item.MessageDate.ToString("dd.MM.yyyy hh:mm")</small>
                         </div>                  
                 </div>

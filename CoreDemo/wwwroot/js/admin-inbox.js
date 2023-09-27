@@ -31,7 +31,7 @@ function GetMessageList() {
                                 <td class="check-mail">
                                     <input type="checkbox" class="i-checks" id="${item.MessageID}">
                                 </td>
-                                <td class="mail-contact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderUser.NameSurname}</a></td>
+                                <td class="mail-contact"><a href="/Admin/AdminMessage/Read/${item.MessageID}">${item.SenderNameSurname}</a></td>
                                 <td class="mail-subject"><a href="/Admin/AdminMessage/Read/${item.MessageID}"> <b> ${item.Subject} </b> - ${item.Details}</a></td>
                                 <td class="text-right mail-date">${date}</td>
                             </tr>`;

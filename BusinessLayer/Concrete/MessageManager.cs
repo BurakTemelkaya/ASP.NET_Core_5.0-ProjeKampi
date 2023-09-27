@@ -33,16 +33,16 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Message>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
             if (!user.Success)
             {
-                return new ErrorDataResult<List<Message>>(user.Message);
+                return new ErrorDataResult<List<MessageSenderUserDto>>(user.Message);
             }
 
-            var values = new List<Message>();
+            var values = new List<MessageSenderUserDto>();
             if (search == null)
             {
                 values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, filter, take, skip);
@@ -53,11 +53,10 @@ namespace BusinessLayer.Concrete
             }
             foreach (var item in values)
             {
-                item.SenderUser.SenderUserInfo = null;
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
             }
 
-            return new SuccessDataResult<List<Message>>(values.OrderByDescending(x => x.MessageDate).ToList());
+            return new SuccessDataResult<List<MessageSenderUserDto>>(values);
         }
 
         [CacheRemoveAspect("IMessageService.Get")]
@@ -195,14 +194,14 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Message>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<MessageReceiverUserDto>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<MessageReceiverUserDto, bool>> filter = null, int take = 0, int skip = 0)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter, take, skip);
 
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
-            return new SuccessDataResult<List<Message>>(values);
+            return new SuccessDataResult<List<MessageReceiverUserDto>>(values);
         }
 
         [CacheRemoveAspect("IMessageService.Get")]

@@ -28,11 +28,11 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item" href="/Message/MessageDetails/${item.MessageID}">
                     <div class="preview-thumbnail">
-                    <img src="${item.SenderUser.ImageUrl}" alt="${item.SenderUser.NameSurname} image" class="profile-pic">
+                    <img src="${item.SenderImageUrl}" alt="${item.SenderNameSurname} image" class="profile-pic">
                      </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                     <h6>
-                    ${item.SenderUser.NameSurname}- ${item.Subject}
+                    ${item.SenderNameSurname}- ${item.Subject}
                     </h6>
                     <p class="text-gray mb-0">
                     ${date}

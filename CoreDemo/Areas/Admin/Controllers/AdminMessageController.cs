@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -49,7 +50,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> SendBox(string search = null)
         {
-            List<Message> values = new();
+            List<MessageReceiverUserDto> values = null;
             if (search != null)
             {
                 var result = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name,
@@ -58,12 +59,12 @@ namespace CoreDemo.Areas.Admin.Controllers
                 values = result.Data;
 
             }
-            if (values.Count == 0)
+            if (values == null || values.Any())
             {
                 var result = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name);
                 values = result.Data;
             }
-            return View(values.OrderByDescending(x => x.MessageDate).ToList());
+            return View(values.ToList());
         }
 
         [HttpGet]

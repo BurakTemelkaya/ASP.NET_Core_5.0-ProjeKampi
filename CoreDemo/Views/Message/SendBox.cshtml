@@ -1,4 +1,4 @@
-﻿@model List<Message>
+﻿@model List<MessageReceiverUserDto>
 @{
     ViewData["Title"] = "Gönderilmiş Mesajlar";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
@@ -21,7 +21,7 @@
             <tr>
                 <td scope="row">@item.MessageID</td>
                 <td>@item.Subject</td>
-                <td>@item.ReceiverUser.NameSurname</td>
+                <td>@item.ReceiverNameSurname</td>
                 <td>@item.Details...</td>
                 <td>@item.MessageDate.ToString("dd.MM.yyyy")</td>
                 <td><a href="/Message/MessageDetails/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>

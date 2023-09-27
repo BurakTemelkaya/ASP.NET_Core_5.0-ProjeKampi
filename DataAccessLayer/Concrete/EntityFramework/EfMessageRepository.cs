@@ -1,12 +1,12 @@
 ﻿using CoreLayer.DataAccess.EntityFramework;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Concrete.EntityFramework
@@ -26,20 +26,33 @@ namespace DataAccessLayer.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<Message>> GetInboxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<List<MessageSenderUserDto>> GetInboxWithMessageListAsync(int id, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
         {
+            var query = Context.Messages
+               .Include(x => x.SenderUser)
+                   .Where(x => x.ReceiverUserId == id)
+                   .Select(x => new MessageSenderUserDto
+                   {
+                       MessageID = x.MessageID,
+                       Subject = x.Subject,
+                       Details = x.Details,
+                       MessageDate = x.MessageDate,
+                       MessageStatus = x.MessageStatus,
+                       SenderUserName = x.SenderUser.UserName,
+                       SenderNameSurname= x.SenderUser.NameSurname,
+                       SenderImageUrl = x.ReceiverUser.ImageUrl,
+                       SenderUserId = x.SenderUserId,
+                       ReceiverUserId = x.ReceiverUserId
+                   });
 
-            if (take > 0)
-            {
-                return filter == null ?
-                await Context.Messages.Include(x => x.SenderUser).Where(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Skip(skip).Take(take).ToListAsync() :
-                await Context.Messages.Include(x => x.SenderUser).Where(x => x.ReceiverUser.Id == id).OrderByDescending(x => x.MessageID).Where(filter).Skip(skip).Take(take).ToListAsync();
-            }
-            return filter == null ?
-                await Context.Messages.Include(x => x.SenderUser)
-            .Where(x => x.ReceiverUser.Id == id).ToListAsync() :
-           await Context.Messages.Include(x => x.SenderUser)
-            .Where(x => x.ReceiverUser.Id == id).Where(filter).ToListAsync();
+            query = filter == null ?
+               query : query.Where(filter);
+
+            query = query.OrderByDescending(x => x.MessageID).AsQueryable();
+
+            query = take > 0 ? query.Skip(skip).Take(take) : query;
+
+            return await query.ToListAsync();
         }
         public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
         {
@@ -58,33 +71,33 @@ namespace DataAccessLayer.Concrete.EntityFramework
             .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync(filter);
         }
 
-        public async Task<List<Message>> GetSendBoxWithMessageListAsync(int id, Expression<Func<Message, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<List<MessageReceiverUserDto>> GetSendBoxWithMessageListAsync(int id, Expression<Func<MessageReceiverUserDto, bool>> filter = null, int take = 0, int skip = 0)
         {
-            if (take > 0)
-            {
-                return filter == null ?
-                await Context.Messages
-                .Include(x => x.ReceiverUser)
-                .Where(x => x.SenderUser.Id == id)
-                    .OrderByDescending(x => x.MessageID)
-                        .Skip(skip)
-                        .Take(take)
-                            .ToListAsync() :
-                await Context.Messages
-                .Include(x => x.ReceiverUser)
-                    .Where(x => x.SenderUser.Id == id)
-                        .OrderByDescending(x => x.MessageID)
-                            .Where(filter)
-                                .Skip(skip)
-                                .Take(take)
-                                    .ToListAsync();
-            }
+            var query = Context.Messages
+               .Include(x => x.ReceiverUser)
+                   .Where(x => x.SenderUserId == id)
+                   .Select(x => new MessageReceiverUserDto
+                   {
+                       MessageID = x.MessageID,
+                       Subject = x.Subject,
+                       Details = x.Details,
+                       MessageDate = x.MessageDate,
+                       MessageStatus = x.MessageStatus,
+                       ReceiverUserName = x.ReceiverUser.UserName,
+                       ReceiverNameSurname = x.ReceiverUser.NameSurname,
+                       ReceiverImageUrl = x.ReceiverUser.ImageUrl,
+                       SenderUserId = x.SenderUserId,
+                       ReceiverUserId = x.ReceiverUserId
+                   });
 
-            return filter == null ?
-               await Context.Messages.Include(x => x.ReceiverUser)
-            .Where(x => x.SenderUser.Id == id).ToListAsync() :
-            await Context.Messages.Include(x => x.ReceiverUser)
-            .Where(x => x.SenderUser.Id == id).Where(filter).ToListAsync();
+            query = filter == null ?
+               query : query.Where(filter);
+
+            query = query.OrderByDescending(x => x.MessageID).AsQueryable();
+
+            query = take > 0 ? query.Skip(skip).Take(take) : query;
+
+            return await query.ToListAsync();
         }
     }
 }
