@@ -40,7 +40,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                        MessageStatus = x.MessageStatus,
                        SenderUserName = x.SenderUser.UserName,
                        SenderNameSurname= x.SenderUser.NameSurname,
-                       SenderImageUrl = x.ReceiverUser.ImageUrl,
+                       SenderImageUrl = x.SenderUser.ImageUrl,
                        SenderUserId = x.SenderUserId,
                        ReceiverUserId = x.ReceiverUserId
                    });
