@@ -497,7 +497,7 @@ namespace BusinessLayer.Concrete
             string message = string.Empty;
 
             values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(
-                        x => x.BlogStatus == true && x.CategoryStatus == true
+                        x => (x.BlogStatus == true && x.CategoryStatus == true)
                         && (id < 1 || x.CategoryID == id)
                         && (string.IsNullOrEmpty(search) || x.BlogTitle.ToLower().Contains(search.ToLower()))
                         , true, take, page
@@ -507,7 +507,7 @@ namespace BusinessLayer.Concrete
             {
                 message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
-                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus && x.CommentStatus, true, take, page);
+                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus, true, take, page);
             }
             else
             {
