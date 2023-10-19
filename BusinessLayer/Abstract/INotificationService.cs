@@ -14,7 +14,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> TAddAsync(Notification t);
         Task<IResultObject> TDeleteAsync(Notification t);
         Task<IResultObject> TUpdateAsync(Notification t);
-        Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null);
+        Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null, int take = 0, int skip = 0);
         Task<IDataResult<Notification>> TGetByIDAsync(int id);
         Task<IDataResult<Notification>> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null);
         Task<IDataResult<int>> GetCountAsync(Expression<Func<Notification, bool>> filter = null);

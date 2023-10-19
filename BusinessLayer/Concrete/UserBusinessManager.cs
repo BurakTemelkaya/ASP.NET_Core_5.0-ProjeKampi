@@ -337,7 +337,7 @@ namespace BusinessLayer.Concrete
         {
             var user = await GetByIDAsync(id);
 
-            var userDto = Mapper.Map<UserDto>(user);
+            var userDto = Mapper.Map<UserDto>(user.Data);
 
             IResultObject businessRulesResult = BusinessRules.Run(UserNotEmpty(new SuccessDataResult<UserDto>(userDto)));
 

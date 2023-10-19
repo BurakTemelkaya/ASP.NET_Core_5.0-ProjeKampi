@@ -44,7 +44,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var user = await _userService.GetByIDAsync(id.ToString());
             if (user != null)
             {
-                var value = Mapper.Map<BannedUserModel>(user);
+                var value = Mapper.Map<BannedUserModel>(user.Data);
                 return View(value);
             }
 
@@ -54,7 +54,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> BannedUser(BannedUserModel bannedUserModel)
         {
             var user = await _userService.GetByIDAsync(bannedUserModel.Id);
-            if (user == null)
+            if (!user.Success)
             {
                 return RedirectToAction("Index");
             }
@@ -62,7 +62,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (!result.Success)
             {
                 ModelState.AddModelError("BanExpirationTime", result.Message);
-                return View(user);
+                return View(Mapper.Map<BannedUserModel>(user.Data));
             }
             return RedirectToAction("Index");
         }
@@ -71,18 +71,18 @@ namespace CoreDemo.Areas.Admin.Controllers
             var result = await _userService.BannedUser(id, DateTime.Now.AddDays(date), null);
             if (!result.Success)
             {
-                ModelState.AddModelError("BanExpirationTime", result.Message);
+                return BadRequest(result.Message);
             }
-            return RedirectToAction("BannedUser");
+            return RedirectToAction("Index");
         }
         public async Task<IActionResult> OpenBanUser(string Id)
         {
             var result = await _userService.BanOpenUser(Id);
             if (!result.Success)
             {
-                ModelState.AddModelError("BanExpirationTime", result.Message);
+                return BadRequest(result.Message);
             }
-            return RedirectToAction("BannedUser");
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public async Task<IActionResult> EditUser(int id)

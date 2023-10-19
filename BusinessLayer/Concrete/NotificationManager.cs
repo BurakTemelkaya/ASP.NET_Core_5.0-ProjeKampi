@@ -28,9 +28,9 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null, int take = 0, int skip = 0)
         {
-            return new SuccessDataResult<List<Notification>>(await _notificationDal.GetListAllAsync(filter));
+            return new SuccessDataResult<List<Notification>>(await _notificationDal.GetListAllAsync(filter, take, skip));
         }
 
         public async Task<IDataResult<List<Notification>>> GetListByTakeAsync(int take, Expression<Func<Notification, bool>> filter = null)

@@ -1,7 +1,17 @@
 ﻿@model List<Notification>
+@{
+    int count = @ViewBag.NotificationCount;
+}
 <li class="dropdown">
     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-        <i class="fa fa-bell"></i>  <span class="label label-primary">@ViewBag.NotificationCount</span>
+        <i class="fa fa-bell"></i>
+        @if (count > 0)
+        {
+            <span class="label label-primary">
+                @count
+            </span>
+        }
+
     </a>
     <ul class="dropdown-menu dropdown-alerts">
         @foreach (var item in Model)
@@ -19,7 +29,7 @@
         <li class="dropdown-divider"></li>
         <li>
             <div class="text-center link-block">
-                <a href="notifications.html" class="dropdown-item">
+                <a href="#" class="dropdown-item">
                     <strong>Bütün bildirimleri gör</strong>
                     <i class="fa fa-angle-right"></i>
                 </a>

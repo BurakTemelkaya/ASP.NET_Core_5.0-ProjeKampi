@@ -521,7 +521,6 @@ namespace BusinessLayer.Concrete
                 message += search != null ? " Aranan kelime = " + search : "";
             }
 
-
             foreach (var item in values)
             {
                 if (item != null)
