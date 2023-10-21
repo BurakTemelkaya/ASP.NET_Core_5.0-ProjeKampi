@@ -12,8 +12,8 @@
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="@Model.BlogTitle" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://coreblogsite.azurewebsites.net/Blog/BlogReadAll/@Model.BlogID" />
-    <meta property="og:image" content="https://coreblogsite.azurewebsites.net/@Model.BlogThumbnailImage" />
+    <meta property="og:url" content="@httpContextaccessor.HttpContext.Request.Host/Blog/BlogReadAll/@Model.BlogID" />
+    <meta property="og:image" content="@httpContextaccessor.HttpContext.Request.Host@Model.BlogThumbnailImage" />
     <meta property="og:image:type" content="image/jpeg">
     <meta property="article:published_time" content="@Model.BlogCreateDate" />
     <meta name="author" content="@Model.WriterNameSurName">
