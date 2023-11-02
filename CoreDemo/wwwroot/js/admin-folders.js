@@ -1,4 +1,10 @@
 ﻿let isUnreadMessage;
+let unreadMessageCount;
+let isLoad;
+
+
+GetUnreadMessageCount();
+
 
 function GetUnreadMessageCount() {
     $(document).ready(function () {
@@ -8,39 +14,38 @@ function GetUnreadMessageCount() {
             success: function (data) {
                 if (data != '0') {
                     isUnreadMessage = true;
+                    unreadMessageCount = data;
+
                 }
+                Load();
+                isLoad = true;
             }
         });
     });
 }
 
 
-GetUnreadMessageCount();
 function GetMessageListForDropDown() {
     $(document).ready(function () {
         let badgeHtml = '<i class="fa fa-envelope">';
         if (isUnreadMessage) {
-            badgeHtml += '<span class="label label-warning">' + data + '</span>';
+            badgeHtml += '<span class="label label-warning">' + unreadMessageCount + '</span>';
         }
         badgeHtml += '</i>';
         $("#UnreadMessagesCountBadge").html(badgeHtml);
     });
 };
 
-GetMessageListForDropDown();
-
 function GetMessageListForMessageFolder() {
     $(document).ready(function () {
         let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
         if (isUnreadMessage != null) {
-            badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
+            badgeHtml += '<span class="label label-warning float-right">' + unreadMessageCount + '</span>';
         }
         badgeHtml += '</i>';
         $("#messageFolderBadge").html(badgeHtml);
     });
 };
-
-GetMessageListForMessageFolder();
 
 function GetMessageDraftListForMessageFolder() {
     $(document).ready(function () {
@@ -50,7 +55,7 @@ function GetMessageDraftListForMessageFolder() {
             success: function (data) {
                 let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
                 if (data != '0') {
-                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
+                    badgeHtml += '<span class="label label-danger float-right">' + unreadMessageCount + '</span>';
                 }
                 $("#messageFolderDraftBadge").html(badgeHtml);
             }
@@ -58,4 +63,10 @@ function GetMessageDraftListForMessageFolder() {
     });
 };
 
-GetMessageDraftListForMessageFolder();
+function Load() {
+    $(document).ready(function () {
+        GetMessageListForDropDown();
+        GetMessageListForMessageFolder();
+        GetMessageDraftListForMessageFolder();
+    });
+}

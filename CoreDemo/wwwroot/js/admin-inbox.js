@@ -58,7 +58,6 @@ function GetMessageList() {
     });
 };
 
-
 GetMessageList();
 
 var isClickCheckboxToggle;
@@ -164,42 +163,6 @@ $(document).ready(function () {
         })       
     });
 });
-
-function GetMessageListForDropDown() {
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Message/GetUnreadMessagesCount',
-            type: "GET",
-            success: function (data) {
-                let badgeHtml = '<i class="fa fa-envelope">';
-                if (data != '0') {
-                    badgeHtml += '<span class="label label-warning">' + data + '</span>';
-                }
-                badgeHtml += '</i>';
-                $("#UnreadMessagesCountBadge").html(badgeHtml);
-            }
-        });
-    });
-};
-
-function GetMessageListForMessageFolder() {
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Message/GetUnreadMessagesCount',
-            type: "GET",
-            success: function (data) {
-                let badgeHtml = '<i class="fa fa-inbox "></i> Gelen Mesajlar ';
-                if (data != '0') {
-                    badgeHtml += '<span class="label label-warning float-right">' + data + '</span>';
-                }
-                badgeHtml += '</i>';
-                $("#messageFolderBadge").html(badgeHtml);
-            }
-        });
-
-
-    });
-};
 
 function GetMessageDraftListForMessageFolder() {
     $(document).ready(function () {
