@@ -21,7 +21,7 @@
                                     <td> @item.CategoryID </td>
                                     <td> @item.CategoryName </td>
                                     <td>
-                                        @if (item.CategoryStatus)
+                                        @if (!item.CategoryStatus)
                                         {
                                             <p class="badge badge-primary">Aktif</p>
                                         }

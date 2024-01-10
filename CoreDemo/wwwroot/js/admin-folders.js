@@ -2,9 +2,7 @@
 let unreadMessageCount;
 let isLoad;
 
-
 GetUnreadMessageCount();
-
 
 function GetUnreadMessageCount() {
     $(document).ready(function () {
@@ -53,9 +51,10 @@ function GetMessageDraftListForMessageFolder() {
             url: '/Admin/AdminMessage/GetDraftMessagesCount',
             type: "GET",
             success: function (data) {
+                console.log(data)
                 let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
-                if (data != '0') {
-                    badgeHtml += '<span class="label label-danger float-right">' + unreadMessageCount + '</span>';
+                if (data != 0) {
+                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
                 }
                 $("#messageFolderDraftBadge").html(badgeHtml);
             }

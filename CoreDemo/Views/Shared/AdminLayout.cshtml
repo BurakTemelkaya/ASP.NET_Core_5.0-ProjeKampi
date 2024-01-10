@@ -50,7 +50,6 @@
 
                         @await Component.InvokeAsync("AdminDropdownNotification")
 
-
                         <li>
                             <a href="/Login/Logout">
                                 <i class="fa fa-sign-out"></i> Çıkış Yap
@@ -84,6 +83,7 @@
     <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/admin-folders.js"></script>
     <script>
         $(document).ready(function () {
@@ -93,8 +93,7 @@
             });
         });
     </script>
-
-    @RenderSection("ScriptSection",false)
+    @RenderSection("ScriptSection", false)
 </body>
 </html>
 

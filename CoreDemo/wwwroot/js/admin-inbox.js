@@ -160,7 +160,7 @@ $(document).ready(function () {
                     }
                 });
             }
-        })       
+        })
     });
 });
 
@@ -173,9 +173,9 @@ function GetMessageDraftListForMessageFolder() {
             success: function (data) {
                 if (data != '0') {
                     badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
+                    $("#messageFolderDraftBadge").html(badgeHtml);
                 }
             }
         });
-        $("#messageFolderDraftBadge").html(badgeHtml);
     });
 };
