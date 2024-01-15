@@ -8,7 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
@@ -28,13 +30,16 @@ namespace BusinessLayer.Concrete
             Configuration = configuration;
         }
 
-        private string GetLocation(string ip)
+        private async Task<string> GetLocationAsync(string ip)
         {
             string location = "";
             try
             {
-                string apiUrl = $"http://api.ipstack.com/{ip}?access_key={Configuration["IpStackApiKeys:key"]}\r\n";
-                string json = new WebClient().DownloadString(apiUrl);
+                using var httpClient = new HttpClient();
+                using var request = new HttpRequestMessage(HttpMethod.Get, $"http://api.ipstack.com/{ip}?access_key={Configuration["IpStackApiKeys:key"]}\r\n");
+                using var response = await httpClient.SendAsync(request);
+                using var reader = new StreamReader(await response.Content.ReadAsStreamAsync());
+                var json = await reader.ReadToEndAsync();
                 var data = JObject.Parse(json);
                 string city = data["city"].ToString();
                 string country = data["country_name"].ToString();
@@ -59,7 +64,7 @@ namespace BusinessLayer.Concrete
             }
 
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            var location = GetLocation(ip);
+            var location = await GetLocationAsync(ip);
 
             var logginLogger = new LoginLogger
             {
