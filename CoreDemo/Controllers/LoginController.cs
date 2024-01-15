@@ -16,12 +16,15 @@ namespace CoreDemo.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IBusinessUserService _userService;
         private readonly ICaptchaService _captchaService;
+        private readonly ILoginLoggerService _loginLoggerService;
 
-        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService, ICaptchaService captchaService)
+        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService,
+            ICaptchaService captchaService, ILoginLoggerService loginLoggerService)
         {
             _signInManager = signInManager;
             _userService = userService;
             _captchaService = captchaService;
+            _loginLoggerService = loginLoggerService;
         }
 
         [HttpGet]
@@ -47,6 +50,7 @@ namespace CoreDemo.Controllers
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
             if (result.Succeeded)
             {
+                await _loginLoggerService.AddAsync(appUser.UserName);
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 return RedirectToAction("Index", "Dashboard");

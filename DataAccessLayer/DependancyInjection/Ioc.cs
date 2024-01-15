@@ -38,6 +38,8 @@ namespace DataAccessLayer.DependancyInjection
             services.AddScoped<INewsLetterDraftDal, EfNewsLetterDraftRepository>();
 
             services.AddScoped<ILogDal, EfLogRepository>();
+
+            services.AddScoped<ILoginLoggerDal, EfLoginLoggerRepository>();
         }
     }
 }

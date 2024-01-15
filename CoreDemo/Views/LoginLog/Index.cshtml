@@ -1,0 +1,46 @@
+﻿@model IPagedList<LoginLogger>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>Giriş Yapılan Konumlar</h1>
+<div class="mb-3 mt-3">
+    <table class="table table-bordered col-11">
+        <thead>
+            <tr>
+                <th class="col-4">IP Adresi</th>
+                <th class="col-4">Tahmini Konum</th>
+                <th class="col-4">Giriş Yapılma Zamanı</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IpAddress</td>
+                    <td>@item.Location</td>
+                    <td>@item.LoginDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                    new PagedListRenderOptions
+                {
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = false,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Never,
+                    ContainerDivClasses = new[] { "navigation" },
+                    LiElementClasses = new[] { "page-item" },
+                    PageClasses = new[] { "page-link" },
+                    ActiveLiElementClass = "active",
+                    MaximumPageNumbersToDisplay = 5,
+                    UlElementClasses = new[] { "pagination", "pagination-lg", "justify-content-center" }
+                })
+
+
+

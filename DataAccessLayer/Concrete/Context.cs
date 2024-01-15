@@ -16,7 +16,7 @@ namespace DataAccessLayer.Concrete
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,5 +46,6 @@ namespace DataAccessLayer.Concrete
         public virtual DbSet<MessageDraft> MessagesDrafts { get; set; }
         public virtual DbSet<NewsLetterDraft> NewsLetterDrafts { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<LoginLogger> LogginLoggers { get; set; }
     }
 }
