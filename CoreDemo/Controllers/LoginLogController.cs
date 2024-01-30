@@ -14,13 +14,13 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> Index(int page = 1)
         {
-            var logs = await _loginLoggerService.GetListAsync(page, 10);
+            var logs = await _loginLoggerService.GetListByUserAsync(page, 10);
             return View(await logs.Data.ToPagedListAsync(page, 10));
         }
 
         public async Task<IActionResult> Detail(int id)
         {
-            var log = await _loginLoggerService.GetAsync(id);
+            var log = await _loginLoggerService.GetByUserAsync(id);
             return View(log.Data);
         }
     }

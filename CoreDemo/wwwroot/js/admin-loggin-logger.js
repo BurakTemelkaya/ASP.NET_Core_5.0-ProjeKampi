@@ -3,13 +3,13 @@
     if (search != '') {
         const params = GetURLSearchParams();
         const page = params.page;
-        var query = '/Admin/AdminLog/Index?Page=1&Search=' + search;
+        var query = '/Admin/AdminLoginLogger/Index?Page=1&userName=' + search;
         window.location = query;
     }
     else {
         Swal.fire(
             'Hata!',
-            'Lütfen aranacak kelimeyi giriniz.',
+            'Lütfen kayıtları aranacak kullanıcının adını giriniz.',
             'error'
         )
     }
@@ -19,6 +19,12 @@ $("#txt-search").keyup(function (event) {
     if (event.keyCode === 13) {
         $('#btn-search').click();
     }
+});
+
+$(function () {
+    $("#txt-search").autocomplete({
+        source: "/Message/OnUserNameGet/",
+    });
 });
 
 function GetURLSearchParams() {

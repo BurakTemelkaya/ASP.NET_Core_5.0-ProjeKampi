@@ -31,12 +31,12 @@ namespace DataAccessLayer.Concrete.EntityFramework
             if (take > 0)
             {
                 return filter == null ?
-                    await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.UserId).Skip(skip).Take(take).ToListAsync() :
-                    await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.UserId).Where(filter).Skip(skip).Take(take).ToListAsync();
+                    await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.Id).Skip(skip).Take(take).ToListAsync() :
+                    await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.Id).Where(filter).Skip(skip).Take(take).ToListAsync();
             }
             return filter == null ?
-                await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.UserId).ToListAsync() :
-                await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.UserId).Where(filter).ToListAsync();
+                await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.Id).ToListAsync() :
+                await Context.LogginLoggers.Include(x => x.User).OrderByDescending(x => x.Id).Where(filter).ToListAsync();
         }
 
         public async Task<List<LoginLogger>> GetLogginLoggerListByUserAsync(Expression<Func<LoginLogger, bool>> filter = null, int take = 0, int page = 1)

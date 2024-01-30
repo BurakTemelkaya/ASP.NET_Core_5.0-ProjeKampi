@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -9,7 +10,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -36,15 +36,16 @@ namespace BusinessLayer.Concrete
             try
             {
                 using var httpClient = new HttpClient();
-                using var request = new HttpRequestMessage(HttpMethod.Get, $"http://api.ipstack.com/{ip}?access_key={Configuration["IpStackApiKeys:key"]}\r\n");
+                string url = Configuration["IpApiValues:Url"];
+                using var request = new HttpRequestMessage(HttpMethod.Get, $"{url}{ip}\r\n");
                 using var response = await httpClient.SendAsync(request);
                 using var reader = new StreamReader(await response.Content.ReadAsStreamAsync());
-                var json = await reader.ReadToEndAsync();
+                string json = await reader.ReadToEndAsync();
                 var data = JObject.Parse(json);
-                string city = data["city"].ToString();
-                string country = data["country_name"].ToString();
-                if (city != string.Empty && country != string.Empty)
+                if (data["status"].ToString() == "success")
                 {
+                    string city = data["city"].ToString();
+                    string country = data["country"].ToString();
                     location = $"{city}, {country}";
                 }
             }
@@ -60,11 +61,11 @@ namespace BusinessLayer.Concrete
             var user = await _userService.GetByUserNameAsync(userName);
             if (!user.Success)
             {
-                return new ErrorResult();
+                return new ErrorResult(user.Message);
             }
 
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            var location = await GetLocationAsync(ip);
+            string location = await GetLocationAsync(ip);
 
             var logginLogger = new LoginLogger
             {
@@ -78,17 +79,24 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<LoginLogger>> GetAsync(int id)
+        public async Task<IDataResult<LoginLogger>> GetByUserAsync(int id)
         {
             var user = await _userService.GetByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
             if (!user.Success)
-                return new ErrorDataResult<LoginLogger>();
+                return new ErrorDataResult<LoginLogger>(user.Message);
 
             var data = await _loginLogger.GetByFilterAsync(x => x.Id == id && x.UserId == user.Data.Id);
-            return new SuccessDataResult<LoginLogger>(data);
+            if (data != null)
+            {
+                return new SuccessDataResult<LoginLogger>(data);
+            }
+            else
+            {
+                return new ErrorDataResult<LoginLogger>(Messages.EmptyLoginLoggerData);
+            }
         }
 
-        public async Task<IDataResult<List<LoginLogger>>> GetListAsync(int page = 0, int take = 0)
+        public async Task<IDataResult<List<LoginLogger>>> GetListByUserAsync(int page = 1, int take = 10)
         {
             var user = await _userService.GetByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
             if (!user.Success)
@@ -96,6 +104,31 @@ namespace BusinessLayer.Concrete
 
             var data = await _loginLogger.GetListAllByPagingAsync(x => x.UserId == user.Data.Id, take, page);
             return new SuccessDataResult<List<LoginLogger>>(data);
+        }
+
+        public async Task<IDataResult<LoginLogger>> GetAsync(int id)
+        {
+            var data = await _loginLogger.GetByFilterAsync(x => x.Id == id);
+            return new SuccessDataResult<LoginLogger>(data);
+        }
+
+        public async Task<IDataResult<List<LoginLogger>>> GetListAllAsync(int page = 1, int take = 10, string userName = null)
+        {
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var user = await _userService.GetByUserNameAsync(userName);
+                if (!user.Success)
+                {
+                    return new ErrorDataResult<List<LoginLogger>>(Messages.UserNotFound);
+                }
+                var data = await _loginLogger.GetLogginLoggerListByUserAsync(x => x.UserId == user.Data.Id, take, page);
+                return new SuccessDataResult<List<LoginLogger>>(data);
+            }
+            else
+            {
+                var data = await _loginLogger.GetLogginLoggerListByUserAsync(null, take, page);
+                return new SuccessDataResult<List<LoginLogger>>(data);
+            }
         }
     }
 }

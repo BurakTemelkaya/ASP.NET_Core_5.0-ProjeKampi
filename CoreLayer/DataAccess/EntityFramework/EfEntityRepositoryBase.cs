@@ -81,24 +81,32 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
     public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true)
     {
         var values = new List<TEntity>();
-
         var count = await GetCountAsync(filter);
+        int skip = count - (take * page);
 
-        int skip = count - take;  
-
-        if (page > 1)
+        if (skip >= count)
         {
-            skip = count - (take * page);           
-
-            values.AddRange(AddNullObject<TEntity>.GetNullValuesForBefore(page, take));
+            skip = 0;
+            page = 1;
         }
+
+        values.AddRange(AddNullObject<TEntity>.GetNullValuesForBefore(page, take));
+
+        int realTake = 0;
 
         if (skip < 0)
         {
+            realTake += take + skip;
             skip = 0;
         }
+        else
+        {
+            realTake = take;
+        }
 
-        var result = await GetListAllAsync(filter, take, skip, false);
+        var result = filter == null ?
+            await _context.Set<TEntity>().Skip(skip).Take(realTake).ToListAsync() :
+            await _context.Set<TEntity>().Where(filter).Skip(skip).Take(realTake).ToListAsync();
 
         if (sortInReverse)
         {
@@ -108,8 +116,6 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         values.AddRange(result);
 
         values.AddRange(AddNullObject<TEntity>.GetNullValuesForAfter(page, take, count));
-
-
 
         return values;
     }
