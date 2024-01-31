@@ -13,11 +13,13 @@ namespace CoreDemo.Controllers
     {
         private readonly IBusinessUserService _businessUserService;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ILoginLoggerService _loginLogger;
 
-        public ConfirmMailController(IBusinessUserService businessUserService, SignInManager<AppUser> signInManager)
+        public ConfirmMailController(IBusinessUserService businessUserService, SignInManager<AppUser> signInManager, ILoginLoggerService loginLogger)
         {
             _businessUserService = businessUserService;
             _signInManager = signInManager;
+            _loginLogger = loginLogger;
         }
 
         public async Task<IActionResult> Index(string email, string token)
@@ -35,6 +37,7 @@ namespace CoreDemo.Controllers
                 if (userResult.Success)
                 {
                     await _signInManager.SignInAsync(userResult.Data, false);
+                    await _loginLogger.AddAsync(userResult.Data.UserName);
                     return RedirectToAction("Index", "Dashboard");
                 }
             }

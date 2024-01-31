@@ -58,7 +58,7 @@ namespace CoreDemo.Controllers
             else if (result.IsNotAllowed)
             {
                 TempData["ErrorMessage"] = "Giriş yapabilmek için mail adresinize gelen linke tıklayarak doğrulamanızı yapınız.";
-                return View("Error");
+                return View(appUser);
             }
             else
             {

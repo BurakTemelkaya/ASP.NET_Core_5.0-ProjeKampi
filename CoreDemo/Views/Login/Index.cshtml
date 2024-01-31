@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 
-@section HeaderSection{
+@section HeaderSection {
     <meta property="og:title" content="Core Blog - Giriş Yap" />
 }
 
@@ -31,7 +31,13 @@
                     </div>
                     <button type="submit" class="btn btn-primary submit mb-4">Giriş Yap</button>
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <p class="text-danger">@TempData["ErrorMessage"]</p>
+                    @if (@TempData["ErrorMessage"] != null)
+                    {
+                        <div class="col-12">
+                            <p class="text-danger">@TempData["ErrorMessage"]</p>
+                        </div>
+                    }
+
                     <p><a href="/Register/Index"> Bir Hesabın Yok Mu?</a></p>
                     <p><a href="/ForgotPassword/Index"> Parolamı Unuttum</a></p>
                 </form>
@@ -41,6 +47,6 @@
     </div>
 </section>
 
-@section ScriptSection{
+@section ScriptSection {
     <script src="https://www.google.com/recaptcha/api.js"></script>
 }
