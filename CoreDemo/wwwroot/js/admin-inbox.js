@@ -163,19 +163,3 @@ $(document).ready(function () {
         })
     });
 });
-
-function GetMessageDraftListForMessageFolder() {
-    $(document).ready(function () {
-        let badgeHtml = '<i class="fa fa-file-text-o"> Taslaklar </i>';
-        $.ajax({
-            url: '/Message/GetDraftMessagesCount',
-            type: "GET",
-            success: function (data) {
-                if (data != '0') {
-                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
-                    $("#messageFolderDraftBadge").html(badgeHtml);
-                }
-            }
-        });
-    });
-};

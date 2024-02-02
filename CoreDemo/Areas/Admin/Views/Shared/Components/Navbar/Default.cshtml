@@ -1,4 +1,14 @@
-﻿<nav class="navbar-default navbar-static-side" role="navigation">
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextaccessor;
+@{
+    var thema = "";
+    if (httpContextaccessor.HttpContext.Request.Cookies["thema"] != null)
+    {
+        thema = httpContextaccessor.HttpContext.Request.Cookies["thema"].ToString();
+    }
+    bool check = thema == "dark";
+}
+<nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             @await Component.InvokeAsync("NavbarProfile")

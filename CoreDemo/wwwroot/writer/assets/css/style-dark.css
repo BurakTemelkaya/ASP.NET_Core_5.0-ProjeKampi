@@ -10208,7 +10208,8 @@ h4,
 h5,
 p,
 span {
-  text-shadow: none; }
+  text-shadow: none;
+}
 
 [type=button]:focus,
 a:active,

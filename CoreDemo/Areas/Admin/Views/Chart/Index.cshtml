@@ -1,12 +1,11 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Grafikler";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
 <div class="row">
     <div class="col-md-12">
-        <div id="chartDiv" style="width:800px; height:600px">
+        <div id="chartDiv" style="width:800px; height:600px;">
             <h2>Burası Chart Alanıdır</h2>
         </div>
     </div>
@@ -29,7 +28,7 @@
                     dataVirt.addColumn('string', 'categoryname');
                     dataVirt.addColumn('number', 'categorycount');
 
-                    for (var i = 0; i < Data.length; i++){
+                    for (var i = 0; i < Data.length; i++) {
                         dataVirt.addRow([Data[i].categoryname, Data[i].categorycount]);
                     }
                     var chart = new google.visualization.PieChart(document.getElementById('chartDiv'));
@@ -38,7 +37,10 @@
                         {
                             title: "Google Chart Core Projesi",
                             position: "top",
-                            fontsize:"16px"
+                            fontsize: "16px",
+                            backgroundColor: "transparent",
+                            color: "gray",
+                            is3D: true
                         });
                 }
             });

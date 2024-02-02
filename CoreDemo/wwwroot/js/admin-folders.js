@@ -47,15 +47,16 @@ function GetMessageListForMessageFolder() {
 
 function GetMessageDraftListForMessageFolder() {
     $(document).ready(function () {
+        let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
         $.ajax({
             url: '/Admin/AdminMessage/GetDraftMessagesCount',
             type: "GET",
             success: function (data) {
-                console.log(data)
-                let badgeHtml = '<i class="fa fa-file-text-o "></i> Taslaklar';
+                
                 if (data != 0) {
-                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';
+                    badgeHtml += '<span class="label label-danger float-right">' + data + '</span>';                
                 }
+                badgeHtml += '</i>';
                 $("#messageFolderDraftBadge").html(badgeHtml);
             }
         });
