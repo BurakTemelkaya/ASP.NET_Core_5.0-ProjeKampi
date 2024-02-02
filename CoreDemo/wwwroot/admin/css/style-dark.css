@@ -11497,6 +11497,8 @@ body.md-skin {
     .navbar-top-links .dropdown-tasks,
     .navbar-top-links .dropdown-alerts {
         margin-left: auto;
+        background-color: #676a6c;
+        color:#e1e1e1;
     }
 }
 
