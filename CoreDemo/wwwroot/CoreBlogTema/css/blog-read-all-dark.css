@@ -9,6 +9,7 @@ article ul {
 article table, th, td {
     border-color: #766e61 !important;
     color: #d1cdc7 !important;
+    background-color: #1e1d1c !important;
 }
 
 article pre {

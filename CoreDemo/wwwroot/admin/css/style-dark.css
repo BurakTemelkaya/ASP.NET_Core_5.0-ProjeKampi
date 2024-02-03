@@ -6041,7 +6041,7 @@ table.table-mail tr td {
 }
 
 .unread td {
-    background-color: #f9f8f8;
+    background-color: #575757;
 }
 
 .ibox-content {
@@ -11498,7 +11498,7 @@ body.md-skin {
     .navbar-top-links .dropdown-alerts {
         margin-left: auto;
         background-color: #676a6c;
-        color:#e1e1e1;
+        color: #e1e1e1;
     }
 }
 
@@ -11631,4 +11631,17 @@ body.md-skin {
     #page-wrapper {
         margin: 0;
     }
+}
+
+@-webkit-keyframes autofill {
+    0%,100% {
+        color: #666;
+        background: transparent;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-animation-delay: 1s; /* Safari support - any positive time runs instantly */
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
 }
