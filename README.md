@@ -109,6 +109,8 @@ Karanlık tema eklendi.
 
 Kayıt olurken onay epostası ile onaylama yapılıyor.
 
+Kullanıcı girişleri ip adresi, tarih ve tahmini konum şeklinde loglanıyor.
+
 #<h1>Resimler<h1/>
  
 ![image](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/26df79ae-5d6c-4e1d-a11d-4471a8c7be25)
