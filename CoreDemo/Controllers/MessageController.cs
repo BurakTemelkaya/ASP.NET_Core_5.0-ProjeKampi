@@ -65,9 +65,9 @@ namespace CoreDemo.Controllers
             if (id != 0)
             {
                 var value = await _messageDraftService.GetByIDAsync(id, User.Identity.Name);
-                if (value != null)
+                if (value.Success)
                 {
-                    var message = _mapper.Map<Message>(value);
+                    var message = _mapper.Map<Message>(value.Data);
                     return View(message);
                 }
             }
