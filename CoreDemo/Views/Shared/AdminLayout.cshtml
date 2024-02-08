@@ -24,18 +24,17 @@
     @if (thema == "dark")
     {
         <link href="~/admin/css/style-dark.css" rel="stylesheet">
-        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
+        <link href="~/writer/assets/css/SweetAlert2-dark.min.css" rel="stylesheet" />
     }
     else
     {
         <link href="~/admin/css/style.css" rel="stylesheet">
-        <link href="~/writer/assets/css/SweetAlert2.css" rel="stylesheet" />
+        <link href="~/writer/assets/css/SweetAlert2.min.css" rel="stylesheet" />
     }
 
     <link href="~/admin/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
-    <script src="~/writer/assets/js/SweetAlert2.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="~/coreblogtema/css/thema-toggle.css" rel="stylesheet" />
     <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
@@ -114,6 +113,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/admin-folders.js"></script>
     <script src="~/js/cookie.js"></script>
+    @if (thema == "dark")
+    {
+        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
+    }
+    else
+    {
+        <script src="~/writer/assets/js/SweetAlert2.js"></script>
+    }
     <script>
         $(document).ready(function () {
             $('.i-checks').iCheck({
