@@ -6,8 +6,20 @@
 
 article * {
     max-width: 100% !important;
+    overflow: scroll !important;
+}
+
+article img {
+    object-fit: scale-down;
+    width: auto !important;
+    height: auto !important;
 }
 
 .list-group-item {
     min-width: 100% !important;
+}
+
+article table span {
+    display: block !important;
+    overflow: scroll !important;
 }

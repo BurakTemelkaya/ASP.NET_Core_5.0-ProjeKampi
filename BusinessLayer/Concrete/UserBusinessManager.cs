@@ -14,6 +14,7 @@ using CoreLayer.Utilities.MailUtilities;
 using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,11 +29,13 @@ namespace BusinessLayer.Concrete
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMailService _mailService;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper, IMailService mailService) : base(mapper)
+        public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper, IMailService mailService, IHttpContextAccessor httpContext) : base(mapper)
         {
             _userManager = userManager;
             _mailService = mailService;
+            _httpContext = httpContext;
         }
 
         [CacheRemoveAspect("IBusinessUserService.Get")]
@@ -184,11 +187,11 @@ namespace BusinessLayer.Concrete
             {
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
                 _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
-                    MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate));
+                    MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl()));
                 return new SuccessDataResult<IdentityResult>(result);
             }
             else
-                return new ErrorDataResult<IdentityResult>(result);
+                return new ErrorDataResult<IdentityResult>(result, result.Errors.First().Description);
         }
 
         [CacheAspect]
@@ -399,6 +402,32 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<string>> CreateMailTokenAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ErrorDataResult<string>(message: "Kullanıcı bulunamadı.");
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return new ErrorDataResult<string>(message: "Kullanıcı e-maili zaten onaylı.");
+            }
+
+            if (user.MailVerifyCodeSendTime != null)
+            {
+                var dateRange = user.MailVerifyCodeSendTime - DateTime.Now;
+                if (dateRange.Value.Minutes < 5)
+                {
+                    return new ErrorDataResult<string>(message: Messages.UserConfirmationCodeCannotBeSubmittedAfterFiveMinutes);
+                }
+            }
+
+            user.MailVerifyCodeSendTime = DateTime.Now;
+            var updateTask = await _userManager.UpdateAsync(user);
+            if (!updateTask.Succeeded)
+            {
+                return new ErrorDataResult<string>(message: updateTask.Errors.First().Description);
+            }
+
             return new SuccessDataResult<string>(await _userManager.GenerateEmailConfirmationTokenAsync(user), "Başarılı");
         }
 
@@ -417,6 +446,11 @@ namespace BusinessLayer.Concrete
                 return new SuccessResult();
             }
             return new ErrorResult(result.Errors.First().Description);
+        }
+
+        private string GetBaseUrl()
+        {
+            return $"{_httpContext.HttpContext.Request.Scheme}://{_httpContext.HttpContext.Request.Host}{_httpContext.HttpContext.Request.PathBase}";
         }
     }
 }

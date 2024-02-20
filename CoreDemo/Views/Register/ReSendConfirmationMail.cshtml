@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Tekrar Doğrulama E-Maili Gönder";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+@model string
+
+<div class="container my-5 mb-5">
+    <form method="post">
+        <h2>Tekrar E-mail için Doğrulama E-postası Gönder</h2>
+        <br />
+        <input class="form-control" name="email" value="@Model" />
+        <br />
+        @if (ViewBag.ErrorMessage != null)
+        {            
+            <p class="text-danger">@ViewBag.ErrorMessage</p>
+            <br />
+        }
+        <div class="form-group">
+            <cache><div class="g-recaptcha" data-sitekey="@ViewBag.SiteKey"></div></cache>
+        </div>
+        <button class="btn btn-primary">Tekrar doğrula</button>
+    </form>
+</div>
+
+
+@section ScriptSection {
+    @if (ViewBag.IsSend == true)
+    {
+        <script>
+            Swal.fire({
+                title: "Başarılı!",
+                text: "Doğrulama maili gönderildi.",
+                icon: "success"
+            });
+        </script>
+    }
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+}
+

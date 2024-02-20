@@ -53,25 +53,25 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("Captcha", captchaMessage);
                 return View(userSignUpDto);
             }
+
             if (!userSignUpDto.IsAcceptTheContract)
             {
                 ModelState.AddModelError("IsAcceptTheContract",
                     "Sayfamıza kayıt olabilmek için gizlilik sözleşmesini kabul etmeniz gerekmektedir.");
                 return View(userSignUpDto);
             }
+
             var result = await _userService.RegisterUserAsync(userSignUpDto, userSignUpDto.Password);
             if (result.Success)
             {
-                var tokenResult = await _userService.CreateMailTokenAsync(userSignUpDto.Email);
+                var emailResult = await SendConfirmationUrl(userSignUpDto.Email);
 
-                string token = tokenResult.Data;
-
-                var confirmationLink = Url.Action("Index", "ConfirmMail", new { userSignUpDto.Email, token }, Request.Scheme);
-
-                _mailService.SendMail(userSignUpDto.Email, MailTemplates.ConfirmEmailSubject(), MailTemplates.ConfirmEmailMessage(confirmationLink));
-
-                ViewBag.SuccessMessage = "Kayıt işlemine devam etmek için lütfen mail adresinize gelen doğrulama bağlantısına tıklayınız, teşekkürler";
-                return View();
+                if (string.IsNullOrEmpty(emailResult))
+                {
+                    ViewBag.SuccessMessage = "Kayıt işlemine devam etmek için lütfen mail adresinize gelen doğrulama bağlantısına tıklayınız, teşekkürler";
+                    return View();
+                }
+                ModelState.AddModelError("Username", emailResult);
             }
             else if (result.Data != null)
             {
@@ -85,6 +85,54 @@ namespace CoreDemo.Controllers
                 ModelState.AddModelError("", result.Message);
             }
             return View(userSignUpDto);
+        }
+
+        private async Task<string> SendConfirmationUrl(string email)
+        {
+            var tokenResult = await _userService.CreateMailTokenAsync(email);
+
+            if (!tokenResult.Success)
+            {
+                return tokenResult.Message;
+            }
+
+            string token = tokenResult.Data;
+
+            var confirmationLink = Url.Action("Index", "ConfirmMail", new { email, token }, Request.Scheme);
+
+            _mailService.SendMail(email, MailTemplates.ConfirmEmailSubject(), MailTemplates.ConfirmEmailMessage(confirmationLink));
+
+            return string.Empty;
+        }
+
+        [HttpGet]
+        public IActionResult ReSendConfirmationMail()
+        {
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReSendConfirmationMail(string email)
+        {
+            string captchaMessage = await _captchaService.RecaptchaControl();
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
+
+            if (!string.IsNullOrEmpty(captchaMessage))
+            {
+                ModelState.AddModelError("Captcha", captchaMessage);
+                return View(email);
+            }
+
+            var emailResult = await SendConfirmationUrl(email);
+
+            if (string.IsNullOrEmpty(emailResult))
+            {
+                ViewBag.IsSend = true;
+                return View();
+            }
+            ViewBag.ErrorMessage = emailResult;
+            return View(model: email);
         }
     }
 }

@@ -35,6 +35,10 @@
                     {
                         <div class="col-12">
                             <p class="text-danger">@TempData["ErrorMessage"]</p>
+                            @if (ViewBag.Url != null)
+                            {
+                                <a href="@ViewBag.Url">Mail adresini tekrar doğrula.</a>
+                            }
                         </div>
                     }
 

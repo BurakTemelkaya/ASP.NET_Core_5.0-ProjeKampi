@@ -12,6 +12,7 @@ namespace EntityLayer.Concrete
         public string About { get; set; }
         public string City { get; set; }
         public DateTime RegistrationTime { get; set; }
+        public DateTime? MailVerifyCodeSendTime { get; set; }
         public virtual ICollection<Message> SenderUserInfo { get; set; }
         public virtual ICollection<Message> ReceiverUserInfo { get; set; }
     }

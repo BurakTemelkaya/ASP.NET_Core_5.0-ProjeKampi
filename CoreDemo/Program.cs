@@ -51,7 +51,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(
     });
 
 builder.Services.AddDbContext<Context>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer")), ServiceLifetime.Scoped);
+            options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer")));
 
 CultureInfo[] supportedCultures = new[] { new CultureInfo("tr"), };
 

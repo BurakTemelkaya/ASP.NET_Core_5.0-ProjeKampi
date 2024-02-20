@@ -27,6 +27,8 @@ namespace BusinessLayer.Constants
 
         public static string UserNotFound = "Kullanıcı bulunamadı.";
 
+        public static string UserConfirmationCodeCannotBeSubmittedAfterFiveMinutes = "Kullanıcının onay kodu beş dakika geçmeden tekrar gönderilemez.";
+
         public static string BlogImageNotEmpty = "Lütfen blog resminizin linkini giriniz veya yükleyin.";
 
         public static string BlogThumbnailNotEmpty = "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.";

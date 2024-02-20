@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -57,23 +58,24 @@ namespace CoreDemo.Controllers
             }
             else if (result.IsNotAllowed)
             {
-                TempData["ErrorMessage"] = "Giriş yapabilmek için mail adresinize gelen linke tıklayarak doğrulamanızı yapınız.";
-                return View(appUser);
+                TempData["ErrorMessage"] = "Giriş yapabilmek için mail adresinize gelen linke tıklayarak doğrulamanızı yapınız." +
+                    " Eğer mail gelmediyse tekrar doğrulama maili gönderme işlemini aşağıdaki adresten yapabilirsiniz.";
+                ViewBag.Url = Url.ActionLink("ReSendConfirmationMail", "Register", Request.Scheme);
             }
             else
             {
                 if (result.IsLockedOut)
                 {
                     var user = await _userService.GetByUserNameAsync(appUser.UserName);
-                    TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.Data.LockoutEnd.ToString()).ToLocalTime() + " tarihine kadar yasaklanmıştır.";
+                    TempData["ErrorMessage"] = "Hesabınız " + Convert.ToDateTime(user.Data.LockoutEnd.ToString()) + " tarihine kadar yasaklanmıştır.";
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
-                }
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
-                return View(appUser);
+                }            
             }
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
+            return View(appUser);
         }
         public async Task<IActionResult> Logout()
         {
