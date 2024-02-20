@@ -414,7 +414,7 @@ namespace BusinessLayer.Concrete
 
             if (user.MailVerifyCodeSendTime != null)
             {
-                var dateRange = user.MailVerifyCodeSendTime - DateTime.Now;
+                var dateRange = DateTime.Now - user.MailVerifyCodeSendTime;
                 if (dateRange.Value.Minutes < 5)
                 {
                     return new ErrorDataResult<string>(message: Messages.UserConfirmationCodeCannotBeSubmittedAfterFiveMinutes);
