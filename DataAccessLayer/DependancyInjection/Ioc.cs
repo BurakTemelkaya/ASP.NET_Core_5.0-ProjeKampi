@@ -1,21 +1,19 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Concrete.EntityFramework;
-using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace DataAccessLayer.DependancyInjection
 {
     public static class Ioc
     {
-        public static void IocDataAccessInstall(this IServiceCollection services)
+        public static void IocDataAccessInstall(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<Context>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("SQLServer")));
 
             services.AddScoped<ICategoryDal, EfCategoryRepository>();
 

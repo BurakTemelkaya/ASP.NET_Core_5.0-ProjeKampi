@@ -50,10 +50,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(
         builder.RegisterModule(new AutofacValidationModule());
     });
 
-builder.Services.AddDbContext<Context>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer")));
-
-CultureInfo[] supportedCultures = new[] { new CultureInfo("tr"), };
+CultureInfo[] supportedCultures = [new CultureInfo("tr")];
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -127,7 +124,7 @@ builder.Services.AddAutoMapper(typeof(BusinessImages));
 builder.Services.AddAutoMapper(typeof(UIImage));
 builder.Services.AddAutoMapper(typeof(DBOImages));
 
-builder.Services.IocDataAccessInstall();
+builder.Services.IocDataAccessInstall(builder.Configuration);
 
 builder.Services.IocBusinessInstall();
 

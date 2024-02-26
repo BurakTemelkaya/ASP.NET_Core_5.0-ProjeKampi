@@ -1,17 +1,9 @@
 ﻿using Autofac;
-using Autofac.Extras.DynamicProxy;
 using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
-using Castle.DynamicProxy;
-using CoreLayer.Utilities.Interceptors;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.DependencyResolvers
 {
