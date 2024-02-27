@@ -4,8 +4,10 @@ using BusinessLayer.Constants;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,13 +23,15 @@ namespace BusinessLayer.Concrete
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBusinessUserService _userService;
         private IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public LoginLoggerManager(ILoginLoggerDal loginLoggerDal, IMapper mapper, IHttpContextAccessor httpContextAccessor,
-            IBusinessUserService userService, IConfiguration configuration) : base(mapper)
+            IBusinessUserService userService, IConfiguration configuration,IWebHostEnvironment webHostEnvironment) : base(mapper)
         {
             _loginLogger = loginLoggerDal;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
             Configuration = configuration;
+            _webHostEnvironment= webHostEnvironment;
         }
 
         private async Task<string> GetLocationAsync(string ip)
@@ -58,6 +62,11 @@ namespace BusinessLayer.Concrete
 
         public async Task<IResultObject> AddAsync(string userName)
         {
+            if (!_webHostEnvironment.IsProduction())
+            {
+                return new SuccessResult();
+            }
+
             var user = await _userService.GetByUserNameAsync(userName);
             if (!user.Success)
             {
