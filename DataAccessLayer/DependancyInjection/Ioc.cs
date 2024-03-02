@@ -4,7 +4,6 @@ using DataAccessLayer.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace DataAccessLayer.DependancyInjection
 {
@@ -13,7 +12,7 @@ namespace DataAccessLayer.DependancyInjection
         public static void IocDataAccessInstall(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<Context>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("SQLServer")));
+                options.UseSqlServer(configuration.GetConnectionString("SQLServer")));
 
             services.AddScoped<ICategoryDal, EfCategoryRepository>();
 
