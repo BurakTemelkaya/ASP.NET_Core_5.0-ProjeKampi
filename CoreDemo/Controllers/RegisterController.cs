@@ -31,7 +31,7 @@ namespace CoreDemo.Controllers
             _mailService = mailService;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (User.Identity.Name != null)
             {

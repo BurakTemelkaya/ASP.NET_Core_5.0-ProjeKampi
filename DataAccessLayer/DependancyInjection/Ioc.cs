@@ -1,15 +1,15 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Concrete.EntityFramework;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccessLayer.DependancyInjection
 {
     public static class Ioc
     {
-        public static void IocDataAccessInstall(this IServiceCollection services, IConfiguration configuration)
+        public static void IocDataAccessInstall(this IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("SQLServer")));
