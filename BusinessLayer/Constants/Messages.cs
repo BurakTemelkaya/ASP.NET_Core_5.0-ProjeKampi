@@ -19,6 +19,8 @@ namespace BusinessLayer.Constants
 
         public static string BlogImageNotGetting = "Blog resmi, girdiğiniz linkten getirilemedi.";
 
+        public static string BlogDoesNotBelongToYouCannotBeUpdated = "Size ait olmayan blogları güncelleyemezsiniz.";
+
         public static string BlogImageNotUploading = "Blog resmi yüklenemedi.";
 
         public static string BlogThumbnailNotGetting = "Blog küçük resmi, girdiğiniz linkten getirilemedi.";

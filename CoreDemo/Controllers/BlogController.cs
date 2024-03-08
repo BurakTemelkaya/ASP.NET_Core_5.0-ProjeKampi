@@ -97,6 +97,12 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> EditBlog(int id)
         {
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
+
+            if(!blogValue.Success)
+            {
+                return RedirectToAction("BlogListByWriter");
+            }
+
             var categoryList = await _categoryService.GetCategorySelectedListItemAsync(true);
             ViewBag.CategoryList = categoryList.Data;
             return View(blogValue.Data);

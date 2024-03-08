@@ -17,7 +17,6 @@ using EntityLayer.DTO;
 using BusinessLayer.Constants;
 using CoreLayer.Aspects.AutoFac.Caching;
 using BusinessLayer.StaticTexts;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace BusinessLayer.Concrete
 {
@@ -26,12 +25,15 @@ namespace BusinessLayer.Concrete
         private readonly IBlogDal _blogDal;
         private readonly IBusinessUserService _userService;
         private readonly ICategoryService _categoryService;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, IMapper mapper, ICategoryService categoryService) : base(mapper)
+        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, IMapper mapper, ICategoryService categoryService
+            , IHttpContextAccessor contextAccessor) : base(mapper)
         {
             _blogDal = blogDal;
             _userService = userService;
             _categoryService = categoryService;
+            _contextAccessor = contextAccessor;
         }
 
         [CacheAspect]
@@ -109,11 +111,17 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id)
         {
-
             var value = await _blogDal.GetByIDAsync(id);
 
             if (value == null)
                 return new ErrorDataResult<Blog>(Messages.BlogNotFound);
+
+            var user = await _userService.GetByUserNameAsync(_contextAccessor.HttpContext.User.Identity.Name);
+
+            var isAdmin = _contextAccessor.HttpContext.User.IsInRole("Admin");
+
+            if (!isAdmin && user.Data.Id != value.WriterID)
+                return new ErrorDataResult<Blog>(Messages.BlogDoesNotBelongToYouCannotBeUpdated);
 
             value.BlogThumbnailImage = null;
             value.BlogImage = null;
@@ -231,7 +239,7 @@ namespace BusinessLayer.Concrete
             blog.BlogCreateDate = oldValue.BlogCreateDate;
 
             if (user == null || user.Data.Id != oldValue.WriterID)
-                return new ErrorDataResult<Blog>(blog);
+                return new ErrorDataResult<Blog>(blog, Messages.BlogDoesNotBelongToYouCannotBeUpdated);
 
             if (blog.BlogImage == null && blogImage == null)
             {
@@ -534,7 +542,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id)
         {
-            var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x=> x.BlogID == id);
+            var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x => x.BlogID == id);
             if (result != null)
             {
                 result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
