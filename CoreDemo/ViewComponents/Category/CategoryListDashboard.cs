@@ -25,6 +25,7 @@ namespace CoreDemo.ViewComponents.Category
                 var categoryandBlogCount = new CategoryandBlogPercent
                 {
                     CategoryName = category.CategoryName,
+                    CategoryDescription = category.CategoryDescription,
                     BlogPercent = Math.Round(decimal.Divide(category.NumberofBloginCategory, totalCount) * 100).ToString()
                 };
                 categoryandBlogCounts.Add(categoryandBlogCount);

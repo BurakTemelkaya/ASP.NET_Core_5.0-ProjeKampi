@@ -66,6 +66,12 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
+        public async Task<IDataResult<List<Category>>> GetListByPagingAsync(Expression<Func<Category, bool>> filter = null, int take = 0, int page = 0)
+        {
+            return new SuccessDataResult<List<Category>>(await _categoryDal.GetListAllByPagingAsync(filter, take, page));
+        }
+
+        [CacheAspect]
         public async Task<IDataResult<Category>> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null)
         {
             return new SuccessDataResult<Category>(await _categoryDal.GetByFilterAsync(filter));
@@ -117,7 +123,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<List<CategoryBlogandBlogCountDto>>> GetCategoryandBlogCountAsync()
         {
-            var values = await _categoryDal.GetListWithCategoryByBlog(x=> x.CategoryStatus && x.BlogStatus);
+            var values = await _categoryDal.GetListWithCategoryByBlog(x => x.CategoryStatus && x.BlogStatus);
             return new SuccessDataResult<List<CategoryBlogandBlogCountDto>>(values);
         }
     }

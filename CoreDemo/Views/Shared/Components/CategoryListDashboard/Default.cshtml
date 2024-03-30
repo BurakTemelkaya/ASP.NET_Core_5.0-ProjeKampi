@@ -3,23 +3,23 @@
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Kategorilerin Durumu</h4>
+                <h3 class="card-title text-center">Kategoriler</h3>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th> # </th>
-                                <th> Kategori Adı </th>
-                                <th> Durum </th>
-                                <th> Tüm Bloglara Oranı </th>
+                                <th scope="col"> Kategori Adı </th>
+                                <th scope="col"> Açıklaması </th>
+                                <th scope="col"> Durum </th>
+                                <th scope="col"> Tüm Bloglara Oranı </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td> @item.CategoryID </td>
                                     <td> @item.CategoryName </td>
+                                    <td>@item.CategoryDescription</td>
                                     <td>
                                         @if (!item.CategoryStatus)
                                         {

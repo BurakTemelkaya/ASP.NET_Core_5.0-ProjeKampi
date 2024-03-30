@@ -20,7 +20,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int page = 1)
         {
-            var categories = await _categoryService.GetListAsync();
+            var categories = await _categoryService.GetListByPagingAsync(take: 5, page: page);
             var values = await categories.Data.ToPagedListAsync(page, 5);
             return View(values);
         }

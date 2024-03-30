@@ -12,7 +12,7 @@ namespace BusinessLayer.Constants
                 "</h3><h4>Kullanıcı Adı: <b>" + model.Username +
                 "</b></h4></h3><h4>Ad Soyad: <b>" + model.NameSurname +
                 "</b></h4><h4>E-Posta: <b>" + model.Email +
-                "</b></h4><h3>Resim:</h3>  <img src=" + baseUrl + model.ImageUrl + " alt=\"Profil Photo" +
+                "</b></h4><h3>Resim:</h3>  <img src=" + baseUrl + "/writerImageFiles/" + model.ImageUrl + " alt=\"Profil Photo" +
                 "Hakkında: <b>" + model.About + "</b></h3>" +
                 "<h3>Şehir: <b>" + model.City + "</b></h3>";
         }
