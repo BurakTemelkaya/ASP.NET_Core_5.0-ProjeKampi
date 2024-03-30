@@ -12,9 +12,13 @@ namespace CoreDemo.Controllers
         public IActionResult Set(string data)
         {
             CookieOptions cookies = new();
-            cookies.Expires=DateTime.Now.AddMonths(1);
-            Response.Cookies.Append("thema", data, cookies);
-            return Ok();
+            cookies.Expires = DateTime.Now.AddMonths(1);
+            if(data != null)
+            {
+                Response.Cookies.Append("thema", data, cookies);
+                return Ok();
+            }
+            return BadRequest("Data is null");
         }
     }
 }

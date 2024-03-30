@@ -352,12 +352,20 @@ namespace BusinessLayer.Concrete
 
             foreach (var id in ids)
             {
-                var message = await GetByIdAsync(Convert.ToInt32(id));
-                if (message.Data.ReceiverUserId == user.Data.Id)
+                try
                 {
-                    DeleteFileManager.DeleteFile(message.Data.Details);
-                    messages.Add(message.Data);
+                    var message = await GetByIdAsync(Convert.ToInt32(id));
+                    if (message.Data.ReceiverUserId == user.Data.Id)
+                    {
+                        DeleteFileManager.DeleteFile(message.Data.Details);
+                        messages.Add(message.Data);
+                    }
                 }
+                catch
+                {
+                    continue;
+                }
+                
             }
 
             await _messageDal.DeleteRangeAsync(messages);
