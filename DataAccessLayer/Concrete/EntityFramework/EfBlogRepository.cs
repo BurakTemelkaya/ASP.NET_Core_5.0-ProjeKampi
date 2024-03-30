@@ -48,8 +48,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                 CategoryID = blog.Category.CategoryID,
                                 CategoryName = blog.Category.CategoryName,
                                 CategoryStatus = category.CategoryStatus,
-                                CommentCount = comment != null ? blog.Comments.Count : 0,
-                                CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                CommentCount = comment != null ? blog.Comments.Count(x => x.CommentStatus) : 0,
+                                CommentScore = comment != null ? blog.Comments.Where(x => x.CommentStatus).Average(x => x.BlogScore) : 0,
                                 CommentStatus = comment == null ? false : comment.CommentStatus
                             };
 
@@ -71,8 +71,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                  CategoryID = category.CategoryID,
                                  CategoryName = category.CategoryName,
                                  CategoryStatus = category.CategoryStatus,
-                                 CommentCount = comment != null ? blog.Comments.Count : 0,
-                                 CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                 CommentCount = comment != null ? blog.Comments.Count(x => x.CommentStatus == commentStatus) : 0,
+                                 CommentScore = comment != null ? blog.Comments.Where(x => x.CommentStatus == commentStatus).Average(x => x.BlogScore) : 0,
                                  CommentStatus = comment == null ? false : comment.CommentStatus
                              };
 
@@ -162,8 +162,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                     CategoryID = blog.Category.CategoryID,
                                     CategoryName = blog.Category.CategoryName,
                                     CategoryStatus = category.CategoryStatus,
-                                    CommentCount = comment != null ? blog.Comments.Count : 0,
-                                    CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                    CommentCount = comment != null ? blog.Comments.Count(x => x.CommentStatus == isCommentStatus) : 0,
+                                    CommentScore = comment != null ? blog.Comments.Where(x => x.CommentStatus == isCommentStatus).Average(x => x.BlogScore) : 0,
                                     CommentStatus = comment == null ? false : comment.CommentStatus,
                                     WriterID = writer.Id,
                                     WriterNameSurName = writer.NameSurname,
@@ -190,8 +190,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
                                      CategoryID = category.CategoryID,
                                      CategoryName = category.CategoryName,
                                      CategoryStatus = category.CategoryStatus,
-                                     CommentCount = comment != null ? blog.Comments.Count : 0,
-                                     CommentScore = comment != null ? blog.Comments.Average(x => x.BlogScore) : 0,
+                                     CommentCount = comment != null ? blog.Comments.Count(x => x.CommentStatus == isCommentStatus) : 0,
+                                     CommentScore = comment != null ? blog.Comments.Where(x => x.CommentStatus == isCommentStatus).Average(x => x.BlogScore) : 0,
                                      CommentStatus = comment == null ? false : comment.CommentStatus,
                                      WriterID = writer.Id,
                                      WriterNameSurName = writer.NameSurname,

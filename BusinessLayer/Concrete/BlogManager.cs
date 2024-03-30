@@ -17,6 +17,7 @@ using EntityLayer.DTO;
 using BusinessLayer.Constants;
 using CoreLayer.Aspects.AutoFac.Caching;
 using BusinessLayer.StaticTexts;
+using Core.Extensions;
 
 namespace BusinessLayer.Concrete
 {
@@ -543,12 +544,52 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id)
         {
             var result = await _blogDal.GetBlogWithCommentandWriterAsync(true, x => x.BlogID == id);
-            if (result != null)
+
+            var rule = BusinessRules.Run(BlogIsNotEmpty(result), await BlogReadAuthorizeCheck(result));
+            if (!rule.Success)
             {
-                result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
-                return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);
+                return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(rule.Message);
             }
-            return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(Messages.BlogNotFound);
+            result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
+            return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);
+        }
+
+        IResultObject BlogIsNotEmpty(Blog blog)
+        {
+            if (blog == null)
+            {
+                return new ErrorResult(Messages.BlogNotFound);
+            }
+            return new SuccessResult();
+        }
+
+        async Task<IResultObject> BlogReadAuthorizeCheck(Blog blog)
+        {
+            if (blog != null && !blog.BlogStatus)
+            {
+                var userRoles = _contextAccessor.HttpContext.User.ClaimRoles();
+                foreach (var role in userRoles)
+                {
+                    if (role == "Admin" || role == "Moderatör")
+                    {
+                        return new SuccessResult();
+                    }
+                }
+
+                var user = await _userService.GetByUserNameAsync(_contextAccessor.HttpContext.User.Identity.Name);
+
+                if (user == null)
+                {
+                    return new ErrorResult(user.Message);
+                }
+                else if (user.Data.Id == blog.WriterID)
+                {
+                    return new SuccessResult();
+                }
+
+                return new ErrorResult(Messages.BlogViewAuthorizeError);
+            }
+            return new SuccessResult();
         }
 
         IResultObject BlogImageNotEmpty(string blogImage)

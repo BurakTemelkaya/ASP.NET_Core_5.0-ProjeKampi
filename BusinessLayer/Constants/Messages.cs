@@ -34,6 +34,7 @@ namespace BusinessLayer.Constants
         public static string BlogImageNotEmpty = "Lütfen blog resminizin linkini giriniz veya yükleyin.";
 
         public static string BlogThumbnailNotEmpty = "Lütfen blog küçük resminizin linkini giriniz veya yükleyin.";
+        public static string BlogViewAuthorizeError = "Blog pasif halde iken görme yetkiniz bulunmamaktadır";
 
         public static string BlogCategoryIsPassiveNotAdded = "Aktif olmayan kategorilere adminler dışında blog eklenemez.";
 
