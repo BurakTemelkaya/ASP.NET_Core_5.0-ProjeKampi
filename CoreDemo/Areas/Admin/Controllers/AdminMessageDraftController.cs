@@ -26,7 +26,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetMessageDraftList()
         {
-            var values = await _messageDraftService.GetListAsync();
+            var values = await _messageDraftService.GetMessageDraftListByUserNameAsync(User.Identity.Name);
             var jsonValues = JsonConvert.SerializeObject(values.Data);
             return Json(jsonValues);
         }

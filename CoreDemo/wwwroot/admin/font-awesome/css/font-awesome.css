@@ -183,6 +183,9 @@
 .fa-glass:before {
   content: "\f000";
 }
+.fa-moon:before {
+    content: "\f186";
+}
 .fa-music:before {
   content: "\f001";
 }
@@ -1281,6 +1284,12 @@
 .fa-gittip:before,
 .fa-gratipay:before {
   content: "\f184";
+}
+.fa-moon:before {
+    content: "\f186";
+}
+.fa-sun:before {
+    content: "\f185";
 }
 .fa-sun-o:before {
   content: "\f185";

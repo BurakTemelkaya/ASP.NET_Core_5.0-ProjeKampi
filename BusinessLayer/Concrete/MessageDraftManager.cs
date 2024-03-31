@@ -183,7 +183,7 @@ namespace BusinessLayer.Concrete
             }
 
             var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Data.Id, x => x.MessageDraftID == id);
-            if (user.Data.Id == value.UserId)
+            if (value != null && user.Data.Id == value.UserId)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
                 return new SuccessDataResult<MessageDraft>(value);
@@ -218,7 +218,7 @@ namespace BusinessLayer.Concrete
                 t.UserId = user.Data.Id;
                 await _messageDraftDal.UpdateAsync(t);
 
-                
+
                 return new SuccessResult();
             }
 
