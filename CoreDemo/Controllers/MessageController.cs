@@ -81,7 +81,13 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message, string Receiver)
         {
-            await _messageService.AddMessageAsync(message, User.Identity.Name, Receiver);
+            var result = await _messageService.AddMessageAsync(message, User.Identity.Name, Receiver);
+            if (!result.Success)
+            {
+                ModelState.AddModelError("Receiver", result.Message);
+                ViewBag.ReceiverUser = Receiver;
+                return View(message);
+            }
             return RedirectToAction("Inbox");
         }
 

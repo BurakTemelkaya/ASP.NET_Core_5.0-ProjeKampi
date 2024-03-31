@@ -92,7 +92,7 @@ namespace BusinessLayer.Constants
 
         public static string MessageReceiverNotEmpty = "Mesajın alıcısı boş olamaz.";
 
-        public static string MessageReceiverNotFound = "Mesajın alıcısı boş olamaz.";
+        public static string MessageReceiverNotFound = "Mesajın alıcısı bulunamadı.";
 
         public static string MessageSenderNotEmpty = "Mesajın göndericisi boş olamaz.";
 
