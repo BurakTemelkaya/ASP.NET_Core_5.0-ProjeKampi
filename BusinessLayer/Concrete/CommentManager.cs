@@ -84,6 +84,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<Comment>(Messages.CommentNotFound);
         }
 
+        [CacheRemoveAspect("IBlogService.Get")]
         [CacheRemoveAspect("ICommentService.Get")]
         [ValidationAspect(typeof(CommentValidator))]
         public async Task<IResultObject> TUpdateAsync(Comment t)
