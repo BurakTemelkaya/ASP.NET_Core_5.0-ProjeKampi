@@ -16,10 +16,10 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Authorize(Roles = "Admin,Moderator")]
     public class AdminEditProfileController : Controller
     {
-        readonly IBusinessUserService _businessUserService;
+        readonly IUserBusinessService _businessUserService;
         readonly WriterCity _writerCity;
         readonly SignInManager<AppUser> _signInManager;
-        public AdminEditProfileController(IBusinessUserService businessUserService, WriterCity writerCity,
+        public AdminEditProfileController(IUserBusinessService businessUserService, WriterCity writerCity,
             SignInManager<AppUser> signInManager)
         {
             _businessUserService = businessUserService;

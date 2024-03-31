@@ -16,12 +16,12 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class ForgotPasswordController : Controller
     {
-        readonly IBusinessUserService _businessUserService;
+        readonly IUserBusinessService _businessUserService;
         readonly SignInManager<AppUser> _signInManager;
         readonly IMailService _mailService;
         readonly ICaptchaService _captchaService;
         protected IMapper Mapper { get; }
-        public ForgotPasswordController(IBusinessUserService businessUserService, SignInManager<AppUser> signInManager,
+        public ForgotPasswordController(IUserBusinessService businessUserService, SignInManager<AppUser> signInManager,
             IMapper mapper, IMailService mailService, ICaptchaService captchaService)
         {
             _businessUserService = businessUserService;

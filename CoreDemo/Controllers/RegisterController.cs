@@ -15,13 +15,13 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class RegisterController : Controller
     {
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly WriterCity _writerCity;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ICaptchaService _captchaService;
         private readonly IMailService _mailService;
 
-        public RegisterController(IBusinessUserService userService, WriterCity writerCity, SignInManager<AppUser> signInManager,
+        public RegisterController(IUserBusinessService userService, WriterCity writerCity, SignInManager<AppUser> signInManager,
             ICaptchaService captchaService, IMailService mailService)
         {
             _userService = userService;

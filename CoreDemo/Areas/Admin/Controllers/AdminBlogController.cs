@@ -18,8 +18,8 @@ namespace CoreDemo.Areas.Admin.Controllers
     {
         readonly IBlogService _blogService;
         readonly ICategoryService _categoryService;
-        readonly IBusinessUserService _businessUserService;
-        public AdminBlogController(IBlogService blogService, ICategoryService categoryService, IBusinessUserService businessUserService)
+        readonly IUserBusinessService _businessUserService;
+        public AdminBlogController(IBlogService blogService, ICategoryService categoryService, IUserBusinessService businessUserService)
         {
             _blogService = blogService;
             _categoryService = categoryService;

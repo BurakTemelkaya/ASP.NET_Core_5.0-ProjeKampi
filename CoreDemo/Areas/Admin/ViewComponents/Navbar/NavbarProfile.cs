@@ -9,8 +9,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
     [Authorize(Roles = "Admin,Moderator")]
     public class NavbarProfile : ViewComponent
     {
-        readonly IBusinessUserService _businessUserService;
-        public NavbarProfile(IBusinessUserService businessUserService)
+        readonly IUserBusinessService _businessUserService;
+        public NavbarProfile(IUserBusinessService businessUserService)
         {
             _businessUserService = businessUserService;
         }

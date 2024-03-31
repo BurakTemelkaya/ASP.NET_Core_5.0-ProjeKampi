@@ -13,11 +13,11 @@ namespace CoreDemo.Controllers
     public class MessageController : Controller
     {
         private readonly IMessageService _messageService;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly IMessageDraftService _messageDraftService;
         private readonly IMapper _mapper;
 
-        public MessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService, IMapper mapper)
+        public MessageController(IMessageService messageService, IUserBusinessService userService, IMessageDraftService messageDraftService, IMapper mapper)
         {
             _messageService = messageService;
             _userService = userService;

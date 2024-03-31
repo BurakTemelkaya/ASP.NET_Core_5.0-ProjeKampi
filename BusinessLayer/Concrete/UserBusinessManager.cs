@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class UserBusinessManager : ManagerBase, IBusinessUserService
+    public class UserBusinessManager : ManagerBase, IUserBusinessService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMailService _mailService;
@@ -38,7 +38,7 @@ namespace BusinessLayer.Concrete
             _httpContext = httpContext;
         }
 
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         [ValidationAspect(typeof(UserSignUpDtoValidator))]
         public async Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
         {
@@ -79,7 +79,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<IdentityResult>(result);
         }
 
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         public async Task<IResultObject> CastUserRole(AppUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
@@ -88,7 +88,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         public async Task<IResultObject> DeleteUserAsync(AppUser t)
         {
             await _userManager.DeleteAsync(t);
@@ -107,7 +107,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserAsync(UserDto user)
         {
@@ -166,7 +166,7 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         [ValidationAspect(typeof(UserDtoValidator))]
         public async Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user)
         {
@@ -194,7 +194,6 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<IdentityResult>(result, result.Errors.First().Description);
         }
 
-        [CacheAspect]
         public async Task<IDataResult<UserDto>> GetByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -295,37 +294,31 @@ namespace BusinessLayer.Concrete
         /// <returns></returns>
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         [LogAspect(typeof(DatabaseLogger))]
         public async Task<IResultObject> BannedUser(string id, DateTime expiration, string banMessageContent)
         {
             var user = await GetByIDAsync(id);
             var userData = user.Data;
             if (userData == null)
-                return new ErrorResult();
+                return new ErrorResult(user.Message);
 
-            var resultSetLockot = await _userManager.SetLockoutEnabledAsync(userData, true);
-            if (resultSetLockot.Succeeded)
+            if (expiration > DateTime.Now)
             {
-                if (expiration > DateTime.Now)
-                {
-                    var isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
-                    if (isExistUserRole)
-                        return new ErrorResult(Messages.AdminNotBanned);
+                var isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
+                if (isExistUserRole)
+                    return new ErrorResult(Messages.AdminNotBanned);
 
-                    var resultSetLockotEndDate = await _userManager.SetLockoutEndDateAsync(userData, expiration);
-                    if (resultSetLockotEndDate.Succeeded)
-                    {
-                        if (banMessageContent == "" || banMessageContent == null)
-                            banMessageContent = MailTemplates.BanMessageContent(expiration);
-                        _mailService.SendMail(userData.Email, MailTemplates.BanMessageSubject(), banMessageContent);
-                        return new SuccessResult();
-                    }
-                    return new ErrorResult(resultSetLockot.Errors.First().Description);
-                }
-                return new ErrorResult(Messages.BannedLaterThanTheCurrentDate);
+
+                if (banMessageContent == "" || banMessageContent == null)
+                    banMessageContent = MailTemplates.BanMessageContent(expiration);
+                _mailService.SendMail(userData.Email, MailTemplates.BanMessageSubject(), banMessageContent);
+                userData.LockoutEnd = expiration;
+                await _userManager.UpdateAsync(userData);
+                return new SuccessResult();
+
             }
-            return new ErrorResult(resultSetLockot.Errors.First().Description);
+            return new ErrorResult(Messages.BannedLaterThanTheCurrentDate);
         }
         /// <summary>
         /// Kullanıcının yasaklamasını açılmasını sağlayan mekanizma.
@@ -335,7 +328,7 @@ namespace BusinessLayer.Concrete
         /// <returns>İşlem başarılı ise true değil ise false döner.</returns>
         [CacheRemoveAspect("IMessageService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         public async Task<IResultObject> BanOpenUser(string id)
         {
             var user = await GetByIDAsync(id);
@@ -351,15 +344,13 @@ namespace BusinessLayer.Concrete
 
             var userData = user.Data;
 
-            var result = await _userManager.SetLockoutEndDateAsync(userData, DateTime.Now);
-            if (result.Succeeded)
-            {
-                _mailService.SendMail(userData.Email, MailTemplates.BanOpenUserSubjectTemplate(),
-                    MailTemplates.BanOpenUserContentTemplate());
-                return new SuccessResult();
-            }
+            _mailService.SendMail(userData.Email, MailTemplates.BanOpenUserSubjectTemplate(),
+                MailTemplates.BanOpenUserContentTemplate());
 
-            return new ErrorResult(result.Errors.First().Description);
+            userData.LockoutEnd = DateTime.UtcNow;
+            await _userManager.UpdateAsync(userData);
+
+            return new SuccessResult();
         }
 
         public async Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail)
@@ -379,7 +370,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<string>(result);
         }
 
-        [CacheRemoveAspect("IBusinessUserService.Get")]
+        [CacheRemoveAspect("IUserBusinessService.Get")]
         public async Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
@@ -446,6 +437,19 @@ namespace BusinessLayer.Concrete
                 return new SuccessResult();
             }
             return new ErrorResult(result.Errors.First().Description);
+        }
+
+        [CacheAspect]
+        public async Task<IDataResult<DateTimeOffset?>> GetBanDateAsync(string userName = null)
+        {
+            AppUser user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == userName);
+
+            if (user.LockoutEnd == null)
+            {
+                return new SuccessDataResult<DateTimeOffset?>();
+            }
+
+            return new SuccessDataResult<DateTimeOffset?>(user.LockoutEnd);
         }
 
         private string GetBaseUrl()

@@ -21,8 +21,8 @@ namespace BusinessLayer.Concrete
     public class MessageDraftManager : ManagerBase, IMessageDraftService
     {
         readonly IMessageDraftDal _messageDraftDal;
-        readonly IBusinessUserService _businessUserService;
-        public MessageDraftManager(IMessageDraftDal messageDraftDal, IBusinessUserService businessUserService, IMapper mapper) : base(mapper)
+        readonly IUserBusinessService _businessUserService;
+        public MessageDraftManager(IMessageDraftDal messageDraftDal, IUserBusinessService businessUserService, IMapper mapper) : base(mapper)
         {
             _messageDraftDal = messageDraftDal;
             _businessUserService = businessUserService;

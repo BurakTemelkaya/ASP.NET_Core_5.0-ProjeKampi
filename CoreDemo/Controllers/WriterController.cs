@@ -15,12 +15,12 @@ namespace CoreDemo.Controllers
     public class WriterController : Controller
     {
         private readonly WriterCity _writerCity;
-        private readonly IBusinessUserService _userManager;
+        private readonly IUserBusinessService _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         protected IMapper _mapper { get; }
 
         public WriterController(WriterCity writerCity
-        , IBusinessUserService userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        , IUserBusinessService userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _writerCity = writerCity;
             _userManager = userManager;

@@ -18,8 +18,8 @@ namespace BusinessLayer.Concrete
     public class CommentManager : ICommentService
     {
         private readonly ICommentDal _commentDal;
-        private readonly IBusinessUserService _userService;
-        public CommentManager(ICommentDal commentDal, IBusinessUserService userService)
+        private readonly IUserBusinessService _userService;
+        public CommentManager(ICommentDal commentDal, IUserBusinessService userService)
         {
             _commentDal = commentDal;
             _userService = userService;

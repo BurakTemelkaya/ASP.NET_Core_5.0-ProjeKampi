@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IBusinessUserService
+    public interface IUserBusinessService
     {
         Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password);
         Task<IResultObject> DeleteUserAsync(AppUser t);
@@ -32,6 +32,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail);
         Task<IDataResult<IdentityResult>> ResetPassword(ResetPasswordDto resetPasswordDto);
         Task<IDataResult<string>> CreateMailTokenAsync(string email);
-        Task<IResultObject> ConfirmMailAsync(string email,string token);
+        Task<IResultObject> ConfirmMailAsync(string email, string token);
+        Task<IDataResult<DateTimeOffset?>> GetBanDateAsync(string userName);
     }
 }

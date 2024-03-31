@@ -12,11 +12,11 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;
-        private readonly IBusinessUserService _businessUserService;
+        private readonly IUserBusinessService _businessUserService;
         private readonly ICategoryService _categoryService;
 
         public BlogController(IBlogService blogService,
-            IBusinessUserService businessUserService, ICategoryService categoryService)
+            IUserBusinessService businessUserService, ICategoryService categoryService)
         {
             _blogService = blogService;
             _businessUserService = businessUserService;

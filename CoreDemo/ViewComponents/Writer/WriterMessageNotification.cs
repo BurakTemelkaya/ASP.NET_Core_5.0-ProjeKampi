@@ -7,9 +7,9 @@ namespace CoreDemo.ViewComponents.Writer
     public class WriterMessageNotification : ViewComponent
     {
         private readonly IMessageService _messageService;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
 
-        public WriterMessageNotification(IMessageService messageService, IBusinessUserService userService)
+        public WriterMessageNotification(IMessageService messageService, IUserBusinessService userService)
         {
             _messageService = messageService;
             _userService = userService;

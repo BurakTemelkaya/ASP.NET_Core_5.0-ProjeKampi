@@ -10,9 +10,9 @@ namespace CoreDemo.ViewComponents.Writer
     
     public class WriterNavbarProfile : ViewComponent
     {
-       readonly IBusinessUserService _businessUserService;
+       readonly IUserBusinessService _businessUserService;
         readonly UserManager<AppUser> _userManager;
-        public WriterNavbarProfile(IBusinessUserService businessUserService, UserManager<AppUser> userManager)
+        public WriterNavbarProfile(IUserBusinessService businessUserService, UserManager<AppUser> userManager)
         {
             _businessUserService = businessUserService;
             _userManager = userManager;

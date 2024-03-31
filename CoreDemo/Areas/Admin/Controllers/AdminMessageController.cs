@@ -19,10 +19,10 @@ namespace CoreDemo.Areas.Admin.Controllers
     {
         private readonly IMessageService _messageService;
         private readonly IMessageDraftService _messageDraftService;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly IMapper _mapper;
 
-        public AdminMessageController(IMessageService messageService, IBusinessUserService userService, IMessageDraftService messageDraftService,
+        public AdminMessageController(IMessageService messageService, IUserBusinessService userService, IMessageDraftService messageDraftService,
             IMapper mapper)
         {
             _messageService = messageService;

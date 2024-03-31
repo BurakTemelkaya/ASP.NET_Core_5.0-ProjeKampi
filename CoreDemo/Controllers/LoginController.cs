@@ -15,11 +15,11 @@ namespace CoreDemo.Controllers
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly ICaptchaService _captchaService;
         private readonly ILoginLoggerService _loginLoggerService;
 
-        public LoginController(SignInManager<AppUser> signInManager, IBusinessUserService userService,
+        public LoginController(SignInManager<AppUser> signInManager, IUserBusinessService userService,
             ICaptchaService captchaService, ILoginLoggerService loginLoggerService)
         {
             _signInManager = signInManager;

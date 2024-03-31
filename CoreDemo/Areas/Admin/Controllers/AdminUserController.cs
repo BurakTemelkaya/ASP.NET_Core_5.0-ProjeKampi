@@ -20,10 +20,10 @@ namespace CoreDemo.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminUserController : Controller
     {
-        readonly IBusinessUserService _userService;
+        readonly IUserBusinessService _userService;
         readonly WriterCity _writerCity;
         readonly SignInManager<AppUser> _signInManager;
-        public AdminUserController(IBusinessUserService userService, IMapper mapper, WriterCity writerCity,
+        public AdminUserController(IUserBusinessService userService, IMapper mapper, WriterCity writerCity,
             SignInManager<AppUser> signInManager)
         {
             _userService = userService;

@@ -7,8 +7,8 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
     public class AdminDropdownMessage : ViewComponent
     {
         readonly IMessageService _messageService;
-        readonly IBusinessUserService _userService;
-        public AdminDropdownMessage(IMessageService messageService, IBusinessUserService userService)
+        readonly IUserBusinessService _userService;
+        public AdminDropdownMessage(IMessageService messageService, IUserBusinessService userService)
         {
             _messageService = messageService;
             _userService = userService;

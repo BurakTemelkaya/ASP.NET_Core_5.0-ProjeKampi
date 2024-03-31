@@ -6,9 +6,9 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterAboutOnDashboard : ViewComponent
     {
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
 
-        public WriterAboutOnDashboard(IBusinessUserService userService)
+        public WriterAboutOnDashboard(IUserBusinessService userService)
         {
             _userService = userService;
         }

@@ -18,7 +18,7 @@ namespace BusinessLayer.StaticTexts
         }
         public static string ModeratorRole()
         {
-            return "Moderator";
+            return "Moderatör";
         }
         public static string MemberRole()
         {

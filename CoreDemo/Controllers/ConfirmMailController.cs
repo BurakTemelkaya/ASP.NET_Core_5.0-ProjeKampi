@@ -11,11 +11,11 @@ namespace CoreDemo.Controllers
     [AllowAnonymous]
     public class ConfirmMailController : Controller
     {
-        private readonly IBusinessUserService _businessUserService;
+        private readonly IUserBusinessService _businessUserService;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILoginLoggerService _loginLogger;
 
-        public ConfirmMailController(IBusinessUserService businessUserService, SignInManager<AppUser> signInManager, ILoginLoggerService loginLogger)
+        public ConfirmMailController(IUserBusinessService businessUserService, SignInManager<AppUser> signInManager, ILoginLoggerService loginLogger)
         {
             _businessUserService = businessUserService;
             _signInManager = signInManager;

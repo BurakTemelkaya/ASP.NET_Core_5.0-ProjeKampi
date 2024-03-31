@@ -6,9 +6,9 @@ namespace CoreDemo.ViewComponents.Writer
 {
     public class WriterDropdownToggle:ViewComponent
     {
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
 
-        public WriterDropdownToggle(IBusinessUserService userService)
+        public WriterDropdownToggle(IUserBusinessService userService)
         {
             _userService = userService;
         }

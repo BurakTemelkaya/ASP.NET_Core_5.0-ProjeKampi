@@ -24,9 +24,9 @@ namespace BusinessLayer.Concrete
     public class MessageManager : ManagerBase, IMessageService
     {
         private readonly IMessageDal _messageDal;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
 
-        public MessageManager(IMessageDal message2Dal, IMapper mapper, IBusinessUserService userService) : base(mapper)
+        public MessageManager(IMessageDal message2Dal, IMapper mapper, IUserBusinessService userService) : base(mapper)
         {
             _messageDal = message2Dal;
             _userService = userService;

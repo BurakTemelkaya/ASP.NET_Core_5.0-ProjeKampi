@@ -31,7 +31,7 @@ namespace BusinessLayer.DependencyResolvers
 
             services.AddScoped<IBlogService, BlogManager>();
 
-            services.AddScoped<IBusinessUserService, UserBusinessManager>();
+            services.AddScoped<IUserBusinessService, UserBusinessManager>();
 
             services.AddScoped<ICategoryService, CategoryManager>();
 

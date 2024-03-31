@@ -1,8 +1,6 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Concrete.EntityFramework;
-using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +12,7 @@ namespace DataAccessLayer.DependancyInjection
         public static void IocDataAccessInstall(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<Context>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("SQLServer")));
+                options.UseSqlServer(configuration.GetConnectionString("SQLServer")), ServiceLifetime.Scoped);
 
             services.AddScoped<ICategoryDal, EfCategoryRepository>();
 

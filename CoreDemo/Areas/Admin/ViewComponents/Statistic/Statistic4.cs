@@ -7,13 +7,13 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 {
     public class Statistic4 : ViewComponent
     {
-        readonly IBusinessUserService _userService;
+        readonly IUserBusinessService _userService;
         readonly IContactService _contactService;
         readonly INotificationService _notificationService;
         readonly IBlogService _blogService;
         readonly IMessageService _messageService;
         readonly ICommentService _commentService;
-        public Statistic4(IBusinessUserService userService, IContactService contactService, INotificationService notificationService
+        public Statistic4(IUserBusinessService userService, IContactService contactService, INotificationService notificationService
             , IBlogService blogService, IMessageService messageService, ICommentService commentService)
         {
             _userService = userService;

@@ -8,9 +8,9 @@ namespace CoreDemo.Controllers
     {
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
 
-        public DashBoardController(IBlogService blogService, ICategoryService categoryService, IBusinessUserService userService)
+        public DashBoardController(IBlogService blogService, ICategoryService categoryService, IUserBusinessService userService)
         {
             _blogService = blogService;
             _categoryService = categoryService;

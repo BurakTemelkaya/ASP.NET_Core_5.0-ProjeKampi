@@ -24,11 +24,11 @@ namespace BusinessLayer.Concrete
     public class BlogManager : ManagerBase, IBlogService
     {
         private readonly IBlogDal _blogDal;
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly ICategoryService _categoryService;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public BlogManager(IBlogDal blogDal, IBusinessUserService userService, IMapper mapper, ICategoryService categoryService
+        public BlogManager(IBlogDal blogDal, IUserBusinessService userService, IMapper mapper, ICategoryService categoryService
             , IHttpContextAccessor contextAccessor) : base(mapper)
         {
             _blogDal = blogDal;

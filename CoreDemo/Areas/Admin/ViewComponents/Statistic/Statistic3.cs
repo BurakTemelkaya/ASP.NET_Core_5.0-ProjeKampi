@@ -15,12 +15,12 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 {
     public class Statistic3 : ViewComponent
     {
-        private readonly IBusinessUserService _userService;
+        private readonly IUserBusinessService _userService;
         private readonly INewsLetterService _newsLetterService;
         private readonly ICommentService _commentService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
-        public Statistic3(IBusinessUserService userService, INewsLetterService newsLetterService, ICommentService commentService,
+        public Statistic3(IUserBusinessService userService, INewsLetterService newsLetterService, ICommentService commentService,
             ICategoryService categoryService, ICurrencyService currencyService)
         {
             _userService = userService;
