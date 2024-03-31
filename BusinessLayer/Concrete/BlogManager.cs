@@ -549,7 +549,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(Messages.BlogNotFound);
             }
 
-            var rule = BusinessRules.Run(await BlogReadAuthorizeCheck(result));
+            var rule = BusinessRules.Run(await BlogReadAuthorizeCheck(result, result.CategoryStatus));
             if (!rule.Success)
             {
                 return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(rule.Message);
@@ -567,12 +567,25 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        async Task<IResultObject> BlogReadAuthorizeCheck(Blog blog)
+        async Task<IResultObject> BlogReadAuthorizeCheck(Blog blog, bool categoryStatus)
         {
-            if (blog != null || !blog.BlogStatus || !blog.Category.CategoryStatus)
+            var rule = BusinessRules.Run(BlogIsNotEmpty(blog));
+
+            if (!rule.Success)
             {
-                var userRoles = _contextAccessor.HttpContext.User.ClaimRoles();
-                foreach (var role in userRoles)
+                return rule;
+            }
+
+            if (!blog.BlogStatus || !categoryStatus)
+            {
+                var sessionUser = _contextAccessor.HttpContext.User;
+
+                if (sessionUser.Identity.Name == null)
+                {
+                    return new ErrorResult(Messages.UserNotFound);
+                }
+
+                foreach (var role in sessionUser.ClaimRoles())
                 {
                     if (role == "Admin" || role == "Moderatör")
                     {
@@ -580,7 +593,7 @@ namespace BusinessLayer.Concrete
                     }
                 }
 
-                var user = await _userService.GetByUserNameAsync(_contextAccessor.HttpContext.User.Identity.Name ?? string.Empty);
+                var user = await _userService.GetByUserNameAsync(_contextAccessor.HttpContext.User.Identity.Name);
 
                 if (!user.Success)
                 {
