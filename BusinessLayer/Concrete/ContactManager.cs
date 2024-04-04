@@ -137,9 +137,17 @@ namespace BusinessLayer.Concrete
 
             foreach (var id in ids)
             {
-                var message = await TGetByIDAsync(Convert.ToInt32(id));
-                contacts.Add(message.Data);
+                try
+                {
+                    var message = await TGetByIDAsync(Convert.ToInt32(id));
+                    contacts.Add(message.Data);
+                }
+                catch
+                {
+                    continue;
+                }               
             }
+
             await _contactDal.DeleteRangeAsync(contacts);
             return new SuccessResult();
         }
