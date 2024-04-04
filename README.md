@@ -2,6 +2,8 @@
 
 Sitenin linki: https://blog.buraktemelkaya.com/
 
+Video: https://www.youtube.com/watch?v=u2q8rYBx9WA
+
 # Sertifika
 
 ![BURAK TEMELKAYA](https://github.com/BurakTemelkaya/ASP.NET_Core_5.0-ProjeKampi/assets/70866473/b592f0be-757b-4232-b687-742e7fab4107)
