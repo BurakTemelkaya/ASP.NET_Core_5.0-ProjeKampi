@@ -134,6 +134,7 @@ namespace BusinessLayer.Concrete
                 {
                     var message = await GetByIDAsync(Convert.ToInt32(id), userName);
                     messageDrafts.Add(message.Data);
+                    message.Data.User = null;
                     DeleteFileManager.DeleteFile(message.Data.Details);
                 }
                 catch
