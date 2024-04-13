@@ -1,11 +1,7 @@
 ﻿using BusinessLayer.Abstract;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Message
 {

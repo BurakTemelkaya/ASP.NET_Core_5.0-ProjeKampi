@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.ViewComponents.Writer
 {
-    public class WriterDropdownToggle:ViewComponent
+    public class WriterDropdownToggle : ViewComponent
     {
         private readonly IUserBusinessService _userService;
 

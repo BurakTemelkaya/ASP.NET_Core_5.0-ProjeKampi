@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
 
 namespace CoreLayer.Utilities.MailUtilities
 {
@@ -14,7 +14,7 @@ namespace CoreLayer.Utilities.MailUtilities
         }
 
         public bool SendMail(string mail, string subject, string message)
-        {          
+        {
             try
             {
                 SmtpClient smtp = new();
@@ -52,11 +52,11 @@ namespace CoreLayer.Utilities.MailUtilities
                 }
                 catch
                 {
-                    
+
                 }
             }
             return true;
         }
-       
+
     }
 }

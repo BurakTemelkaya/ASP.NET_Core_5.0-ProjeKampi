@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CoreDemo.Models
+﻿namespace CoreDemo.Models
 {
     public class UserSignInViewModel
     {

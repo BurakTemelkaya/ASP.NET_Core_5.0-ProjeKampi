@@ -1,22 +1,15 @@
-﻿using Autofac;
-using Autofac.Core;
-using Autofac.Extras.DynamicProxy;
-using Castle.DynamicProxy;
+﻿using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.CrossCuttingConcerns.Caching.Microsoft;
-using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.Utilities.CaptchaUtilities;
-using CoreLayer.Utilities.Interceptors;
+using CoreLayer.Utilities.IoC;
 using CoreLayer.Utilities.MailUtilities;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using CoreLayer.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 
 namespace CoreLayer.DependancyResolvers
 {
-    public class CoreModule: ICoreModule
+    public class CoreModule : ICoreModule
     {
         public void Load(IServiceCollection serviceCollection)
         {

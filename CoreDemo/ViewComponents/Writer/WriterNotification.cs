@@ -1,8 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
-using X.PagedList;
 
 namespace CoreDemo.ViewComponents.Writer
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -54,7 +53,7 @@ namespace CoreDemo.Controllers
             var httpClient = new HttpClient();
             var jsonEmployee = JsonConvert.SerializeObject(p);
             var content = new StringContent(jsonEmployee, Encoding.UTF8, "application/json");
-            var responseMessage = await httpClient.PutAsync("https://localhost:44393/api/Default",content);
+            var responseMessage = await httpClient.PutAsync("https://localhost:44393/api/Default", content);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -69,7 +68,7 @@ namespace CoreDemo.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return View();           
+            return View();
         }
     }
 

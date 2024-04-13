@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using EntityLayer.DTO;
-using EntityLayer.Concrete;
 using BusinessLayer.Models;
+using EntityLayer.Concrete;
+using EntityLayer.DTO;
 
 namespace BusinessLayer.AutoMapper.Profiles
 {

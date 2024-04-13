@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -72,7 +71,7 @@ namespace CoreDemo.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
-                }            
+                }
             }
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View(appUser);

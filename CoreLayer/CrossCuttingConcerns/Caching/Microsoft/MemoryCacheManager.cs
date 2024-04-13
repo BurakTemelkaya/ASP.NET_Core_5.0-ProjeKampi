@@ -1,13 +1,12 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CoreLayer.Utilities.IoC;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.RegularExpressions;
-using System.Linq;
-using CoreLayer.Utilities.IoC;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
 {
@@ -15,7 +14,7 @@ namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
     /// //Adapter Pattern
     /// </summary>
     public class MemoryCacheManager : ICacheManager
-    {       
+    {
         private readonly IMemoryCache _memoryCache;
 
         public MemoryCacheManager()
@@ -26,7 +25,7 @@ namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
         public void Add(string key, object value, int duration)
         {
             _memoryCache.Set(key, value, TimeSpan.FromMinutes(duration));
-         } 
+        }
 
         public T Get<T>(string key)
         {

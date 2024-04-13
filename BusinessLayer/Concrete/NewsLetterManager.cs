@@ -1,5 +1,4 @@
-﻿using AutoMapper.Configuration;
-using BusinessLayer.Abstract;
+﻿using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
 using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
@@ -12,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete

@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Errors
 {
-    public class LocalizedIdentityErrorDescriber:IdentityErrorDescriber
+    public class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
     {
         public override IdentityError DuplicateEmail(string email)
         {

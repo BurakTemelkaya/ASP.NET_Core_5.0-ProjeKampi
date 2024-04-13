@@ -1,8 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +32,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Index(UserDto userDto)
-        {            
+        {
             var result = await _businessUserService.UpdateUserAsync(userDto);
             if (!result.Success)
             {

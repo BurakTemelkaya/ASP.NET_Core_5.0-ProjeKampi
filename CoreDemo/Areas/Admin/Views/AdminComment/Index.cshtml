@@ -82,7 +82,7 @@
                             <tr>
                                 <td class="col-2">@item.CommentUserName</td>
                                 <td class="col-2">@item.CommentTitle</td>
-                                <td class="col-2">@item.Blog.BlogTitle</td>
+                                <td class="col-2">@(item.Blog != null ? item.Blog.BlogTitle : "Blog Silindi")</td>
                                 <td class="col-3">
                                     @{
                                         if (item.CommentContent.Length > 50)

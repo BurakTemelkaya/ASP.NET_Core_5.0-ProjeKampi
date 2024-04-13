@@ -1,6 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 namespace CoreDemo.ViewComponents.Writer
 {

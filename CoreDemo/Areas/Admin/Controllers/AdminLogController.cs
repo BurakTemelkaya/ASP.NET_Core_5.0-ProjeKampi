@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using X.PagedList;
 

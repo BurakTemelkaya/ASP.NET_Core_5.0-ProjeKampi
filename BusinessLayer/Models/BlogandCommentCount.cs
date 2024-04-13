@@ -1,5 +1,4 @@
 ﻿using EntityLayer.Concrete;
-using System.Collections.Generic;
 
 namespace CoreDemo.Models
 {

@@ -25,13 +25,13 @@ namespace BusinessLayer.Concrete
         private IConfiguration Configuration { get; }
         private readonly IWebHostEnvironment _webHostEnvironment;
         public LoginLoggerManager(ILoginLoggerDal loginLoggerDal, IMapper mapper, IHttpContextAccessor httpContextAccessor,
-            IUserBusinessService userService, IConfiguration configuration,IWebHostEnvironment webHostEnvironment) : base(mapper)
+            IUserBusinessService userService, IConfiguration configuration, IWebHostEnvironment webHostEnvironment) : base(mapper)
         {
             _loginLogger = loginLoggerDal;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
             Configuration = configuration;
-            _webHostEnvironment= webHostEnvironment;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         private async Task<string> GetLocationAsync(string ip)

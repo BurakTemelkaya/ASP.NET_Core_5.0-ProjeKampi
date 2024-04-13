@@ -1,21 +1,13 @@
 ﻿using Autofac;
-using Autofac.Extras.DynamicProxy;
 using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
-using Castle.DynamicProxy;
-using CoreLayer.Utilities.Interceptors;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.DependencyResolvers
 {
-    public class AutofacValidationModule: Module
+    public class AutofacValidationModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -41,6 +33,6 @@ namespace BusinessLayer.DependencyResolvers
 
             builder.RegisterType<UserDtoValidator>().As<IValidator<UserDto>>().SingleInstance();
         }
-        
+
     }
 }

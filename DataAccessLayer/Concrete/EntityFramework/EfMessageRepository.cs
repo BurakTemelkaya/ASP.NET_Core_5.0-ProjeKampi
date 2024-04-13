@@ -39,7 +39,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                        MessageDate = x.MessageDate,
                        MessageStatus = x.MessageStatus,
                        SenderUserName = x.SenderUser.UserName,
-                       SenderNameSurname= x.SenderUser.NameSurname,
+                       SenderNameSurname = x.SenderUser.NameSurname,
                        SenderImageUrl = x.SenderUser.ImageUrl,
                        SenderUserId = x.SenderUserId,
                        ReceiverUserId = x.ReceiverUserId

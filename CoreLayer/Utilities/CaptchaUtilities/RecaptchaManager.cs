@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 
 namespace CoreLayer.Utilities.CaptchaUtilities
 {

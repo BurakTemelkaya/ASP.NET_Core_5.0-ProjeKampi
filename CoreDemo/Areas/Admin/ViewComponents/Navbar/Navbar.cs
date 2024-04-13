@@ -1,6 +1,4 @@
-﻿using BusinessLayer.Abstract;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
 {

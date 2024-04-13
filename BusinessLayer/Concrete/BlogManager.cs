@@ -1,23 +1,23 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
+using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
+using Core.Extensions;
+using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.Utilities.Business;
+using CoreLayer.Utilities.FileUtilities;
+using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreLayer.Utilities.FileUtilities;
-using CoreLayer.Utilities.Results;
-using CoreLayer.Utilities.Business;
-using AutoMapper;
-using EntityLayer.DTO;
-using BusinessLayer.Constants;
-using CoreLayer.Aspects.AutoFac.Caching;
-using BusinessLayer.StaticTexts;
-using Core.Extensions;
 
 namespace BusinessLayer.Concrete
 {

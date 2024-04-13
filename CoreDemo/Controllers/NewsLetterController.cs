@@ -30,7 +30,7 @@ namespace CoreDemo.Controllers
             if (result.Success)
             {
                 return Ok();
-            }           
+            }
 
             return BadRequest(result.Message);
         }

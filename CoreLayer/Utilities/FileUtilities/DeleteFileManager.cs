@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities
 {
@@ -16,7 +12,7 @@ namespace CoreLayer.Utilities.FileUtilities
                 var mainPath = "wwwroot";
                 File.Delete(Path.Combine(Directory.GetCurrentDirectory(), mainPath + fileLocation));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message.ToString());
             }

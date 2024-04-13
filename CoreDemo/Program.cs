@@ -3,16 +3,22 @@ using Autofac.Extensions.DependencyInjection;
 using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
 using BusinessLayer.Errors;
+using BusinessLayer.Extension;
+using Core.Extensions;
+using CoreDemo;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Utilities.IoC;
 using DataAccessLayer.Concrete;
+using DataAccessLayer.DependancyInjection;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -20,18 +26,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Core.Extensions;
-using DataAccessLayer.DependancyInjection;
-using BusinessLayer.Extension;
-using CoreDemo;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -153,7 +153,7 @@ app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 
 if (app.Environment.IsProduction())
 {
-    app.UseHsts();      
+    app.UseHsts();
     app.ConfigureCustomExceptionMiddleware();
 }
 else

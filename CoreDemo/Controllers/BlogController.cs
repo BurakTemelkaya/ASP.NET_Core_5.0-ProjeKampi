@@ -98,7 +98,7 @@ namespace CoreDemo.Controllers
         {
             var blogValue = await _blogService.GetBlogByIdForUpdate(id);
 
-            if(!blogValue.Success)
+            if (!blogValue.Success)
             {
                 return RedirectToAction("BlogListByWriter");
             }

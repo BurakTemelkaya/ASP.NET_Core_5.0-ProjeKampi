@@ -1,13 +1,6 @@
-﻿using DataAccessLayer.Abstract;
-using DataAccessLayer.Concrete;
+﻿using CoreLayer.DataAccess.EntityFramework;
+using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLayer.DataAccess.EntityFramework;
 
 namespace DataAccessLayer.Concrete.EntityFramework
 {

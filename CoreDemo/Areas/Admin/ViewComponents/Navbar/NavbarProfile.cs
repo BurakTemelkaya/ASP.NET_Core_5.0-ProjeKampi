@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
@@ -26,7 +25,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Navbar
                 foreach (var item in roles.Data)
                     role += item + ",";
                 role = role[..^1];
-                ViewBag.Role = role;                
+                ViewBag.Role = role;
             }
 
             return View(user.Data);

@@ -1,5 +1,3 @@
-using System;
-
 namespace CoreDemo.Models
 {
     public class ErrorViewModel

@@ -24,8 +24,8 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Index(About about, IFormFile aboutImage1, IFormFile aboutImage2)
-        {            
-            await _aboutService.UpdateAsync(about,aboutImage1,aboutImage2);
+        {
+            await _aboutService.UpdateAsync(about, aboutImage1, aboutImage2);
             return View(about);
         }
     }

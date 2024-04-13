@@ -1,9 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CoreLayer.Utilities.CaptchaUtilities;
-using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using System;
 
 namespace CoreDemo.ViewComponents.Comments
 {

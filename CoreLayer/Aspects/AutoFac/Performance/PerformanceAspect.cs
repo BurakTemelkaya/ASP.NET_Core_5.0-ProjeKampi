@@ -2,16 +2,11 @@
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLayer.Aspects.AutoFac.Performance
 {
-    public class PerformanceAspect: MethodInterception
+    public class PerformanceAspect : MethodInterception
     {
         private int _interval;
         private Stopwatch _stopwatch;

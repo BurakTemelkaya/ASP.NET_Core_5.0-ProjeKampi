@@ -28,15 +28,42 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
         public async Task<List<Comment>> GetListWithCommentByBlogAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int skip = 0)
         {
+            var query = from comment in Context.Comments
+                        join blog in Context.Blogs on comment.BlogID equals blog.BlogID into joinedBlog
+                        from subBlog in joinedBlog.DefaultIfEmpty()
+                        select new Comment
+                        {
+                            CommentID = comment.CommentID,
+                            CommentContent = comment.CommentContent,
+                            BlogID = comment.BlogID,
+                            BlogScore = comment.BlogScore,
+                            CommentDate = comment.CommentDate,
+                            CommentStatus = comment.CommentStatus,
+                            CommentTitle = comment.CommentTitle,
+                            CommentUserName = comment.CommentUserName,
+                            Blog = subBlog
+                        };
+
+            query = query.OrderByDescending(comment => comment.CommentID);
+
             if (take > 0)
-            {
-                return filter == null ?
-                    await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Skip(skip).Take(take).ToListAsync() :
-                    await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Where(filter).Skip(skip).Take(take).ToListAsync();
-            }
-            return filter == null ?
-                await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).ToListAsync() :
-                await Context.Comments.Include(x => x.Blog).OrderByDescending(x => x.CommentID).Where(filter).ToListAsync();
+                query = query.Skip(skip).Take(take);
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            return await query.ToListAsync();
+
+        }
+
+        public async Task<int> GetListWithCommentByBlogCountAsync(Expression<Func<Comment, bool>> filter = null)
+        {
+            var query = Context.Comments;
+
+            if (filter != null)
+                query.Where(filter);
+
+            return await query.CountAsync();
         }
 
         public async Task<List<Comment>> GetListWithCommentByBlogandPagingAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int page = 1)
@@ -47,7 +74,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 skip = take * (page - 1);
             }
 
-            int count = await GetCountAsync(filter);
+            int count = await GetListWithCommentByBlogCountAsync(filter);
 
             if (skip >= count)
             {

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.ViewComponents.Writer
 {
-    
+
     public class WriterNavbarProfile : ViewComponent
     {
-       readonly IUserBusinessService _businessUserService;
+        readonly IUserBusinessService _businessUserService;
         readonly UserManager<AppUser> _userManager;
         public WriterNavbarProfile(IUserBusinessService businessUserService, UserManager<AppUser> userManager)
         {

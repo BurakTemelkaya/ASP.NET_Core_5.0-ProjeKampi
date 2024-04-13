@@ -4,7 +4,6 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;

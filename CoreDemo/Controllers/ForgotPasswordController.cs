@@ -43,7 +43,7 @@ namespace CoreDemo.Controllers
             ViewBag.SiteKey = _captchaService.GetSiteKey();
             if (!string.IsNullOrEmpty(captchaMessage))
             {
-                ModelState.AddModelError("Captcha", captchaMessage);   
+                ModelState.AddModelError("Captcha", captchaMessage);
                 return View();
             }
             if (email != null)
@@ -55,19 +55,19 @@ namespace CoreDemo.Controllers
                     _mailService.SendMail(email, MailTemplates.ResetPasswordSubject(), MailTemplates.ResetPasswordContent(callBack));
                     TempData["OkMessage"] = "Parola sıfırlama maili gönderildi.";
                     return View();
-                }                
+                }
             }
             TempData["ErrorMessage"] = "Böyle bir mail adresine sahip hesap bulunamadı.";
             return View();
         }
         [HttpGet]
         public IActionResult ResetPassword(ForgotPasswordModel forgotPasswordModel)
-        {     
+        {
             if (forgotPasswordModel.Token == null || forgotPasswordModel.Email == null)
             {
                 @TempData["ErrorMessage"] = "Geçersiz link girdiniz.";
             }
-            
+
             var value = Mapper.Map<ResetPasswordDto>(forgotPasswordModel);
 
             TempData["SiteKey"] = _captchaService.GetSiteKey();
@@ -79,7 +79,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             TempData["SiteKey"] = _captchaService.GetSiteKey();
-            string captchaMessage = await _captchaService.RecaptchaControl();            
+            string captchaMessage = await _captchaService.RecaptchaControl();
             if (!string.IsNullOrEmpty(captchaMessage))
             {
                 ModelState.AddModelError("Captcha", captchaMessage);

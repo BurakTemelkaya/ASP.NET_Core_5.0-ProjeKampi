@@ -3,11 +3,7 @@ using BusinessLayer.Constants;
 using BusinessLayer.Models;
 using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Utilities.Results;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace BusinessLayer.Concrete

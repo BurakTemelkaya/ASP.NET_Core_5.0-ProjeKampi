@@ -1,11 +1,11 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
+using BusinessLayer.Models;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using X.PagedList;
 using System.Threading.Tasks;
-using BusinessLayer.Models;
-using AutoMapper;
+using X.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {

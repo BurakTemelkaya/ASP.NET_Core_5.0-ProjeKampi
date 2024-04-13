@@ -1,12 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
-using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -37,7 +34,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 if (value.Data.Count > 0)
                 {
                     blogs = value.Data;
-                    ViewBag.UserName = user.Data.UserName+ " kullanıcısına ait bloglar.";
+                    ViewBag.UserName = user.Data.UserName + " kullanıcısına ait bloglar.";
                 }
                 else
                 {
@@ -46,7 +43,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             }
             else
             {
-                var result = await _blogService.GetListWithCategoryByPaging(4,page);
+                var result = await _blogService.GetListWithCategoryByPaging(4, page);
                 blogs = result.Data;
             }
             var values = await blogs.ToPagedListAsync(page, 4);

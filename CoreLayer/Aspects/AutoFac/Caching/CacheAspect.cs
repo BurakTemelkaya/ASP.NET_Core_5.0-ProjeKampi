@@ -1,13 +1,9 @@
-﻿using CoreLayer.CrossCuttingConcerns.Caching;
+﻿using Castle.DynamicProxy;
+using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.IoC;
-using Castle.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLayer.Aspects.AutoFac.Caching
 {

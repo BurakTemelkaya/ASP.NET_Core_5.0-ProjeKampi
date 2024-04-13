@@ -40,7 +40,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             var value = await _newsLetterDraftServiceservice.TGetByIDAsync(id);
             if (value.Success)
             {
-                
+
                 return View(value.Data);
             }
 

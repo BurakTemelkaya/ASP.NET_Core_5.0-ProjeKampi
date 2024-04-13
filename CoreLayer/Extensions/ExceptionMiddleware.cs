@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
+﻿using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Core.Extensions
 {
@@ -51,7 +51,7 @@ namespace Core.Extensions
             }
 
             _lastException = exception;
-            
+
             IEnumerable<ValidationFailure> errors;
 
             if (exception.GetType() == typeof(ValidationException))

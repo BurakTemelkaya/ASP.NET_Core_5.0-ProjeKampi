@@ -13,7 +13,7 @@ namespace CoreDemo.Controllers
         {
             CookieOptions cookies = new();
             cookies.Expires = DateTime.Now.AddMonths(1);
-            if(data != null)
+            if (data != null)
             {
                 Response.Cookies.Append("thema", data, cookies);
                 return Ok();

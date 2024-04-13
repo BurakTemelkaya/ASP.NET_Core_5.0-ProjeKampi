@@ -1,13 +1,10 @@
 ﻿using Castle.DynamicProxy;
-using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.CrossCuttingConcerns.Logging;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.Utilities.Interceptors;
+using CoreLayer.Utilities.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLayer.Utilities.Messages;
 
 namespace CoreLayer.Aspects.AutoFac.Logging
 {
