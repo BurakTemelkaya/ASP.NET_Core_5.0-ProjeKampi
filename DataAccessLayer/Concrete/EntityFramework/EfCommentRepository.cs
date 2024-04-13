@@ -46,24 +46,14 @@ namespace DataAccessLayer.Concrete.EntityFramework
 
             query = query.OrderByDescending(comment => comment.CommentID);
 
-            if (take > 0)
-                query = query.Skip(skip).Take(take);
-
             if (filter != null)
                 query = query.Where(filter);
 
+            if (take > 0)
+                query = query.Skip(skip).Take(take);
+
             return await query.ToListAsync();
 
-        }
-
-        public async Task<int> GetListWithCommentByBlogCountAsync(Expression<Func<Comment, bool>> filter = null)
-        {
-            var query = Context.Comments;
-
-            if (filter != null)
-                query.Where(filter);
-
-            return await query.CountAsync();
         }
 
         public async Task<List<Comment>> GetListWithCommentByBlogandPagingAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int page = 1)
@@ -74,7 +64,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
                 skip = take * (page - 1);
             }
 
-            int count = await GetListWithCommentByBlogCountAsync(filter);
+            int count = await GetCountAsync(filter);
 
             if (skip >= count)
             {
