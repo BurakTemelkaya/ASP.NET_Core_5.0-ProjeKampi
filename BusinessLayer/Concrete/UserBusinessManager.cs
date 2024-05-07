@@ -247,12 +247,10 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetByUserCountAsync(Expression<Func<AppUser, bool>> filter = null)
+        public async Task<IDataResult<int>> GetByUserCountAsync()
         {
-            if (filter == null)
-                return new SuccessDataResult<int>(await _userManager.Users.CountAsync());
-            else
-                return new SuccessDataResult<int>(await _userManager.Users.CountAsync(filter));
+            return new SuccessDataResult<int>(await _userManager.Users.CountAsync());
+
         }
         /// <summary>
         /// Eğer verilirse filtreye göre verilmez bütün kullanıcı listesi Döner
@@ -260,12 +258,9 @@ namespace BusinessLayer.Concrete
         /// <param name="filter"></param>
         /// <returns>Kullanıcı listesi döner.</returns>
 
-        public async Task<IDataResult<List<AppUser>>> GetUserListAsync(Expression<Func<AppUser, bool>> filter = null)
+        public async Task<IDataResult<List<AppUser>>> GetUserListAsync()
         {
-            if (filter == null)
-                return new SuccessDataResult<List<AppUser>>(await _userManager.Users.ToListAsync());
-            else
-                return new SuccessDataResult<List<AppUser>>(await _userManager.Users.Where(filter).ToListAsync());
+            return new SuccessDataResult<List<AppUser>>(await _userManager.Users.ToListAsync());
         }
 
         [CacheAspect]

@@ -49,7 +49,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendNewsletter(NewsLetterSendMailsModel model)
         {
-            var result = await _newsLetterService.SendMailAsync(model, x => x.MailStatus);
+            var result = await _newsLetterService.SendMailAsync(model, true);
             if (!result.Success)
             {
                 ModelState.AddModelError("Subject", result.Message);

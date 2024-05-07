@@ -39,33 +39,6 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountAsync(int take = 0, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
-        {
-            var values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(filter, true, take);
-
-            foreach (var item in values)
-                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
-
-            return new SuccessDataResult<List<BlogCategoryandCommentCountDto>>(values);
-        }
-
-
-        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListWithCategoryandCommentCountByPagingAsync(int take, int page, Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null)
-        {
-            var values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(filter, true, take, page);
-
-            foreach (var item in values)
-            {
-                if (item != null)
-                {
-                    item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
-                }
-            }
-
-            return new SuccessDataResult<List<BlogCategoryandCommentCountDto>>(values);
-        }
-
-        [CacheAspect]
         public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWitchPagingAsync(string userName, int take, int page)
         {
             var user = await _userService.GetByUserNameAsync(userName);
@@ -82,15 +55,15 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetListWithCategory(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<Blog>>> GetListWithCategory(bool? status, int take = 0, int skip = 0)
         {
-            var values = await _blogDal.GetListBlogWithCategoryAsync(filter, take);
+            var values = await _blogDal.GetListBlogWithCategoryAsync(x => x.Category.CategoryStatus == status, take);
             return new SuccessDataResult<List<Blog>>(values);
         }
 
-        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1, Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1)
         {
-            var values = await _blogDal.GetListWithCategoryByPagingAsync(filter, take, page);
+            var values = await _blogDal.GetListWithCategoryByPagingAsync(null, take, page);
             foreach (var item in values)
             {
                 if (item != null)
@@ -397,9 +370,10 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Blog, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(bool? blogStatus)
         {
-            return new SuccessDataResult<int>(await _blogDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(blogStatus == null ? await _blogDal.GetCountAsync() 
+                : await _blogDal.GetCountAsync(x => x.BlogStatus == blogStatus));
         }
 
         [CacheAspect]
@@ -411,15 +385,6 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<int>(Messages.UserNotFound);
             }
             return new SuccessDataResult<int>(await _blogDal.GetCountAsync(x => x.WriterID == user.Data.Id));
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetListAsync(Expression<Func<Blog, bool>> filter = null, int take = 0)
-        {
-            var values = await _blogDal.GetListAllAsync(filter, take);
-            foreach (var item in values)
-                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
-            return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
         }
 
         [CacheAspect]
@@ -518,7 +483,7 @@ namespace BusinessLayer.Concrete
             {
                 message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
-                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus 
+                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus
                 && x.CategoryStatus, true, getBlogModel.Take, getBlogModel.Page);
             }
             else

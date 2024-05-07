@@ -35,29 +35,7 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(count.Data);
         }
 
-        public async Task<IDataResult<List<MessageDraft>>> GetListAsync(Expression<Func<MessageDraft, bool>> filter = null)
-        {
-            var values = await _messageDraftDal.GetListAllAsync(filter);
-            foreach (var item in values)
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
-            return new SuccessDataResult<List<MessageDraft>>(values);
-        }
-
-        public async Task<IDataResult<List<MessageDraft>>> GetMessageDraftListAsync(Expression<Func<MessageDraft, bool>> filter = null)
-        {
-            var values = await _messageDraftDal.GetMessageDraftListAsync(filter);
-
-            if (values.Count == 0)
-            {
-                return new ErrorDataResult<List<MessageDraft>>(Messages.MessageDraftNotFound);
-            }
-
-            foreach (var item in values)
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 30);
-            return new SuccessDataResult<List<MessageDraft>>(values);
-        }
-
-        public async Task<IDataResult<List<MessageDraft>>> GetMessageDraftListByUserNameAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null, int length = 30)
+        public async Task<IDataResult<List<MessageDraft>>> GetMessageDraftListByUserNameAsync(string userName, int length = 30)
         {
             var user = await _businessUserService.GetByUserNameAsync(userName);
 
@@ -66,7 +44,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<List<MessageDraft>>(user.Message);
             }
 
-            var values = await _messageDraftDal.GetMessageDraftListByUserIdAsync(user.Data.Id, filter);
+            var values = await _messageDraftDal.GetMessageDraftListByUserIdAsync(user.Data.Id);
             foreach (var item in values)
                 item.Details = await TextFileManager.ReadTextFileAsync(item.Details, length);
             return new SuccessDataResult<List<MessageDraft>>(values);
@@ -146,25 +124,6 @@ namespace BusinessLayer.Concrete
 
             await _messageDraftDal.DeleteRangeAsync(messageDrafts);
             return new SuccessResult();
-        }
-
-        public async Task<IDataResult<MessageDraft>> GetByFilterAsync(string userName, Expression<Func<MessageDraft, bool>> filter = null)
-        {
-            var user = await _businessUserService.GetByUserNameAsync(userName);
-
-            if (!user.Success)
-            {
-                return new ErrorDataResult<MessageDraft>(user.Message);
-            }
-
-            var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Data.Id, filter);
-            if (user.Data.Id == value.UserId)
-            {
-                value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-                return new SuccessDataResult<MessageDraft>(value);
-            }
-
-            return new ErrorDataResult<MessageDraft>(Messages.MessageDraftIsNotAuthors);
         }
 
         public async Task<IDataResult<MessageDraft>> GetByIDAsync(int id, string userName)

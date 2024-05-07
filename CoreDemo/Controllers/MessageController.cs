@@ -39,11 +39,11 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> MessageDetails(int id)
         {
-            var result = await _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id);
+            var result = await _messageService.GetReceivedMessageAsync(User.Identity.Name, id);
             var value = result.Data;
 
             if (value == null)
-                value = _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
+                value = _messageService.GetSendMessageAsync(User.Identity.Name, id).Result.Data;
 
             if (value == null)
                 return RedirectToAction("Inbox");

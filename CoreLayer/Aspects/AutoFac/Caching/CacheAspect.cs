@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using CoreLayer.Aspects.AutoFac.Performance;
 using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.IoC;
@@ -37,6 +38,5 @@ namespace CoreLayer.Aspects.AutoFac.Caching
             invocation.Proceed();
             _cacheManager.Add(key, invocation.ReturnValue, _duration);
         }
-
     }
 }

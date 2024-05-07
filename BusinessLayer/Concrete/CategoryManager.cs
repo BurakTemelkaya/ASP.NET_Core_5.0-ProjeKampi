@@ -58,27 +58,25 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<IDataResult<List<Category>>> GetListAsync(bool? categoryStatus = null)
         {
-            return new SuccessDataResult<List<Category>>(await _categoryDal.GetListAllAsync(filter));
+            return new SuccessDataResult<List<Category>>(categoryStatus == null ? await _categoryDal.GetListAllAsync()
+                : await _categoryDal.GetListAllAsync(x => x.CategoryStatus == categoryStatus));
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Category>>> GetListByPagingAsync(Expression<Func<Category, bool>> filter = null, int take = 0, int page = 0)
+        public async Task<IDataResult<List<Category>>> GetListByPagingAsync(bool? categoryStatus = null, int take = 0, int page = 0)
         {
-            return new SuccessDataResult<List<Category>>(await _categoryDal.GetListAllByPagingAsync(filter, take, page));
+            return new SuccessDataResult<List<Category>>(categoryStatus == null ? await _categoryDal.GetListAllByPagingAsync(null, take, page)
+                : await _categoryDal.GetListAllByPagingAsync(x => x.CategoryStatus == categoryStatus, take, page));
         }
 
-        [CacheAspect]
-        public async Task<IDataResult<Category>> TGetByFilterAsync(Expression<Func<Category, bool>> filter = null)
-        {
-            return new SuccessDataResult<Category>(await _categoryDal.GetByFilterAsync(filter));
-        }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(bool? categoryStatus = null)
         {
-            return new SuccessDataResult<int>(await _categoryDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(categoryStatus == null ? await _categoryDal.GetCountAsync()
+                : await _categoryDal.GetCountAsync(x => x.CategoryStatus == categoryStatus));
         }
 
         /// <summary>
@@ -91,7 +89,7 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync(bool? isActive = null)
         {
             var categoryList = isActive == null ? await GetListAsync()
-                : await GetListAsync(x => x.CategoryStatus == isActive);
+                : await GetListAsync(true);
 
             return new SuccessDataResult<List<SelectListItem>>((from x in categoryList.Data
                                                                 select new SelectListItem

@@ -30,14 +30,14 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Contact, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync()
         {
-            return new SuccessDataResult<int>(await _contactDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(await _contactDal.GetCountAsync());
         }
 
-        public async Task<IDataResult<List<Contact>>> GetListAsync(Expression<Func<Contact, bool>> filter = null)
+        public async Task<IDataResult<List<Contact>>> GetListAsync()
         {
-            return new SuccessDataResult<List<Contact>>(await _contactDal.GetListAllAsync(filter));
+            return new SuccessDataResult<List<Contact>>(await _contactDal.GetListAllAsync());
         }
 
         [ValidationAspect(typeof(ContactValidator))]

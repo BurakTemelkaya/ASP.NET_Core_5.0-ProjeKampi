@@ -14,9 +14,9 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var notifications = await _notificationService.GetListAsync(x => x.NotificationStatus, 3);
+            var notifications = await _notificationService.GetListAsync(true, 3);
 
-            ViewBag.NotificationCount = _notificationService.GetCountAsync(x => x.NotificationDate > DateTime.Now.AddDays(30)).Result.Data;
+            ViewBag.NotificationCount = _notificationService.GetCountAsync().Result.Data;
             return View(notifications.Data);
         }
     }

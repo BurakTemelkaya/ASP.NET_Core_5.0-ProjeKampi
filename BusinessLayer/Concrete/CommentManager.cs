@@ -35,21 +35,15 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Comment, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(int blogScore = 0)
         {
-            return new SuccessDataResult<int>(await _commentDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(blogScore > 0 ? await _commentDal.GetCountAsync(x=> x.BlogScore > blogScore) : await _commentDal.GetCountAsync());
         }
 
         [CacheAspect]
         public async Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id)
         {
             return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id && x.CommentStatus));
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Comment>>> GetListAsync(Expression<Func<Comment, bool>> filter = null)
-        {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(filter));
         }
 
         [CacheRemoveAspect("IBlogService.Get")]
@@ -63,12 +57,6 @@ namespace BusinessLayer.Concrete
 
             await _commentDal.DeleteAsync(t);
             return new SuccessResult();
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<Comment>> TGetByFilterAsync(Expression<Func<Comment, bool>> filter = null)
-        {
-            return new SuccessDataResult<Comment>(await _commentDal.GetByFilterAsync(filter));
         }
 
         [CacheAspect]

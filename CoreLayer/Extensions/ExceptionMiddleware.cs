@@ -65,7 +65,7 @@ namespace Core.Extensions
                     _fileLoggerServiceBase.Error(exceptionModel);
 
                     httpContext.Response.Redirect(httpContext.Request.Path.ToString());
-                }        
+                }       
             }
             else
             {

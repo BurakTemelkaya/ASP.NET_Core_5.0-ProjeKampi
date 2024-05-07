@@ -31,19 +31,19 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<NewsLetter>(await _newsLetterDal.GetByFilterAsync(x => x.Mail == mail));
         }
 
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync()
         {
-            return new SuccessDataResult<int>(await _newsLetterDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(await _newsLetterDal.GetCountAsync());
         }
 
-        public async Task<IDataResult<List<NewsLetter>>> GetListAsync(Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IDataResult<List<NewsLetter>>> GetListAsync()
         {
-            return new SuccessDataResult<List<NewsLetter>>(await _newsLetterDal.GetListAllAsync(filter));
+            return new SuccessDataResult<List<NewsLetter>>(await _newsLetterDal.GetListAllAsync());
         }
 
-        public async Task<IResultObject> SendMailAsync(NewsLetterSendMailsModel model, Expression<Func<NewsLetter, bool>> filter = null)
+        public async Task<IResultObject> SendMailAsync(NewsLetterSendMailsModel model, bool mailStatus)
         {
-            var value = await _newsLetterDal.GetListAllAsync(filter);
+            var value = await _newsLetterDal.GetListAllAsync(x => x.MailStatus == mailStatus);
             bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);
             if (isSend)
                 return new SuccessResult();

@@ -13,5 +13,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> MarksUsReadAsync(List<string> Ids);
         Task<IResultObject> MarkUsUnreadAsync(int contactId);
         Task<IResultObject> MarksUsUnreadAsync(List<string> Ids);
+        Task<IDataResult<List<Contact>>> GetListAsync();
+        Task<IDataResult<int>> GetCountAsync();
     }
 }

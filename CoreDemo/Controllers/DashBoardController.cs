@@ -19,10 +19,10 @@ namespace CoreDemo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var totalBlogCount = await _blogService.GetCountAsync(x => x.BlogStatus == true);
+            var totalBlogCount = await _blogService.GetCountAsync(true);
             ViewBag.ToplamBlogSayisi = totalBlogCount.Data;
             ViewBag.YazarinBlogSayisi = _blogService.GetBlogCountByWriterAsync(User.Identity.Name).Result.Data;
-            ViewBag.KategoriSayisi = _categoryService.GetCountAsync(x => x.CategoryStatus == true).Result.Data;
+            ViewBag.KategoriSayisi = _categoryService.GetCountAsync(true).Result.Data;
             return View();
         }
     }

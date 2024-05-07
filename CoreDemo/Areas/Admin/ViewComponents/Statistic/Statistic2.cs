@@ -21,7 +21,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic2
         {
             var lastBlog = await _blogService.GetLastBlogAsync(1);
 
-            var blogCount = await _blogService.GetCountAsync(x => x.BlogStatus);
+            var blogCount = await _blogService.GetCountAsync(true);
 
             ViewBag.v1 = lastBlog.Data.First().BlogTitle;
             ViewBag.v2 = blogCount.Data;

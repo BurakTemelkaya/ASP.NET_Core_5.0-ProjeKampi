@@ -15,7 +15,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Message
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null, null, 3);
+            var result = await _messageService.GetInboxWithMessageListAsync(User.Identity.Name, null, 3);
             if (result.Success)
             {
                 var values = result.Data;

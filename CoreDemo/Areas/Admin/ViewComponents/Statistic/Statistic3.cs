@@ -30,7 +30,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
         public IViewComponentResult Invoke()
         {
             ViewBag.UserCount = _userService.GetByUserCountAsync().Result.Data;
-            ViewBag.LikeCommentCount = _commentService.GetCountAsync(x => x.BlogScore > 2).Result.Data;
+            ViewBag.LikeCommentCount = _commentService.GetCountAsync(2).Result.Data;
             ViewBag.NewsLetterCount = _newsLetterService.GetCountAsync().Result.Data;
             ViewBag.CategoryCount = _categoryService.GetCountAsync().Result.Data;
 

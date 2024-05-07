@@ -52,7 +52,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (search != null)
             {
                 var result = await _messageService.GetSendBoxWithMessageListAsync(User.Identity.Name,
-                x => x.Subject.ToLower().Contains(search.ToLower()));
+                subject: search);
 
                 values = result.Data;
 
@@ -97,10 +97,10 @@ namespace CoreDemo.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Read(int id)
         {
-            var value = _messageService.GetReceivedMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
+            var value = _messageService.GetReceivedMessageAsync(User.Identity.Name, id).Result.Data;
 
             if (value == null)
-                value = _messageService.GetSendMessageAsync(User.Identity.Name, x => x.MessageID == id).Result.Data;
+                value = _messageService.GetSendMessageAsync(User.Identity.Name, id).Result.Data;
 
             if (value == null)
                 return RedirectToAction("Inbox");

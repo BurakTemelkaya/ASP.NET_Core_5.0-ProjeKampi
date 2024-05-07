@@ -10,6 +10,7 @@ using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -29,7 +30,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, int take = 0, int skip = 0)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -41,7 +42,7 @@ namespace BusinessLayer.Concrete
             var values = new List<MessageSenderUserDto>();
             if (search == null)
             {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, filter, take, skip);
+                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, null, take, skip);
             }
             else
             {
@@ -114,14 +115,6 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<Message>> GetByFilterAsync(Expression<Func<Message, bool>> filter = null)
-        {
-            var value = await _messageDal.GetByFilterAsync(filter);
-            value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            return new SuccessDataResult<Message>(value);
-        }
-
-        [CacheAspect]
         public async Task<IDataResult<Message>> GetByIdAsync(int id)
         {
             var value = await _messageDal.GetByIDAsync(id);
@@ -155,9 +148,10 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync(bool? messageStatus = null)
         {
-            return new SuccessDataResult<int>(await _messageDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(messageStatus == null ? await _messageDal.GetCountAsync()
+                : await _messageDal.GetCountAsync(x => x.MessageStatus == messageStatus));
         }
 
         [CacheAspect]
@@ -179,19 +173,21 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<int>(result.Message);
             }
 
-            var value = await GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
+            var value = await _messageDal.GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
 
-            if (!value.Success)
+            if (value == 0)
             {
-                return new ErrorDataResult<int>(value.Message);
+                return new ErrorDataResult<int>();
             }
 
-            return new SuccessDataResult<int>(value.Data);
+            return new SuccessDataResult<int>(value);
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<MessageReceiverUserDto>>> GetSendBoxWithMessageListAsync(string userName, Expression<Func<MessageReceiverUserDto, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<MessageReceiverUserDto>>> GetSendBoxWithMessageListAsync(string userName, string? subject = null, int take = 0, int skip = 0)
         {
+            Expression<Func<MessageReceiverUserDto, bool>> filter = subject == null ? null : x => x.Subject.ToLower().Contains(subject.ToLower());
+
             var user = await _userService.GetByUserNameAsync(userName);
             var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter, take, skip);
 
@@ -227,7 +223,7 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, int id)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -238,7 +234,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<Message>(result.Message);
             }
 
-            var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, filter);
+            var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, x => x.MessageID == id);
             if (value != null)
             {
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
@@ -253,7 +249,7 @@ namespace BusinessLayer.Concrete
             return new ErrorDataResult<Message>(Messages.MessageNotFound);
         }
 
-        public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, Expression<Func<Message, bool>> filter = null)
+        public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, int id)
         {
             var user = await _userService.GetByUserNameAsync(userName);
 
@@ -264,7 +260,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<Message>(result.Message);
             }
 
-            var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, filter);
+            var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, x => x.MessageID == id);
             if (value != null)
                 value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
             return new SuccessDataResult<Message>(value);

@@ -45,9 +45,9 @@ namespace BusinessLayer.Concrete
             return new SuccessDataResult<int>(await _newsLetterDraftDal.GetCountAsync(filter));
         }
 
-        public async Task<IDataResult<List<NewsLetterDraft>>> GetListAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
+        public async Task<IDataResult<List<NewsLetterDraft>>> GetListAsync()
         {
-            var values = await _newsLetterDraftDal.GetListAllAsync(filter);
+            var values = await _newsLetterDraftDal.GetListAllAsync();
             foreach (var item in values)
                 item.Content = await TextFileManager.ReadTextFileAsync(item.Content, 30);
             return new SuccessDataResult<List<NewsLetterDraft>>(values);

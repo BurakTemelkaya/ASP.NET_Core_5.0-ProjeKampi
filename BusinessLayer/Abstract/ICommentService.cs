@@ -15,13 +15,9 @@ namespace BusinessLayer.Abstract
 
         Task<IResultObject> TUpdateAsync(Comment t);
 
-        Task<IDataResult<List<Comment>>> GetListAsync(Expression<Func<Comment, bool>> filter = null);
-
         Task<IDataResult<Comment>> TGetByIDAsync(int id);
 
-        Task<IDataResult<Comment>> TGetByFilterAsync(Expression<Func<Comment, bool>> filter = null);
-
-        Task<IDataResult<int>> GetCountAsync(Expression<Func<Comment, bool>> filter = null);
+        Task<IDataResult<int>> GetCountAsync(int blogScore = 0);
 
         Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id);
 

@@ -20,20 +20,23 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<int>> GetCountAsync()
         {
-            return new SuccessDataResult<int>(await _notificationDal.GetCountAsync(filter));
+            return new SuccessDataResult<int>(await _notificationDal.GetCountAsync());
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Notification>>> GetListAsync(Expression<Func<Notification, bool>> filter = null, int take = 0, int skip = 0)
+        public async Task<IDataResult<List<Notification>>> GetListAsync(bool? status = null, int take = 0, int skip = 0)
         {
-            return new SuccessDataResult<List<Notification>>(await _notificationDal.GetListAllAsync(filter, take, skip));
+            return new SuccessDataResult<List<Notification>>(status == null ? await _notificationDal.GetListAllAsync(null, take, skip)
+                : await _notificationDal.GetListAllAsync(x => x.NotificationStatus == status, take, skip));
         }
 
-        public async Task<IDataResult<List<Notification>>> GetListByTakeAsync(int take, Expression<Func<Notification, bool>> filter = null)
+        public async Task<IDataResult<List<Notification>>> GetListByTakeAsync(int take, bool? status = null)
         {
-            return new SuccessDataResult<List<Notification>>(await _notificationDal.GetListAllAsync(filter, take));
+            return new SuccessDataResult<List<Notification>>(status == null
+                ? await _notificationDal.GetListAllAsync(null, take)
+                : await _notificationDal.GetListAllAsync(x => x.NotificationStatus == status, take));
         }
 
         [CacheRemoveAspect("INotificationService.Get")]
@@ -48,12 +51,6 @@ namespace BusinessLayer.Concrete
         {
             await _notificationDal.DeleteAsync(t);
             return new SuccessResult();
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<Notification>> TGetByFilterAsync(Expression<Func<Notification, bool>> filter = null)
-        {
-            return new SuccessDataResult<Notification>(await _notificationDal.GetByFilterAsync(filter));
         }
 
         [CacheAspect]
