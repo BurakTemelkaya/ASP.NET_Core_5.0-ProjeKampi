@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Models;
+using CoreDemo.Models;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,22 +26,22 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int id = 0, int page = 1, string search = null)
+        public async Task<IActionResult> Index(GetBlogModel getBlogModel)
         {
-            var values = await _blogService.GetBlogListByMainPage(id, page, 6, search);
+            var values = await _blogService.GetBlogListByMainPage(getBlogModel);
 
             ViewData["Title"] = "Ana Sayfa";
 
-            if (id > 0 || search != null)
+            if (getBlogModel.Id > 0 || getBlogModel.Search != null)
             {
                 ViewData["Title"] = values.Message;
                 ViewBag.Message = values.Message;
                 ViewBag.IsSuccess = values.Success;
-                ViewBag.Search = search;
-                ViewBag.Id = id;
+                ViewBag.Search = getBlogModel.Search;
+                ViewBag.Id = getBlogModel.Id;
             }
 
-            return View(await values.Data.ToPagedListAsync(page, 6));
+            return View(await values.Data.ToPagedListAsync(getBlogModel.Page, 6));
         }
 
         [Route("/Blog/BlogReadAll/{title}/{id:int}")]

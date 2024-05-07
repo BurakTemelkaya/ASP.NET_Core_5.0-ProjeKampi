@@ -38,20 +38,12 @@ namespace Core.Extensions
             }
             catch (Exception exception)
             {
-                HandleException(exception);
-                await _next(httpContext);
+                HandleException(exception, httpContext);
             }
         }
 
-        private void HandleException(Exception exception)
+        private void HandleException(Exception exception, HttpContext httpContext)
         {
-            if (exception == _lastException)
-            {
-                return;
-            }
-
-            _lastException = exception;
-
             IEnumerable<ValidationFailure> errors;
 
             if (exception.GetType() == typeof(ValidationException))
@@ -66,15 +58,27 @@ namespace Core.Extensions
                     ValidationErrors = errors
                 };
 
-                _databaseLoggerServiceBase.Error(exceptionModel);
+                if (_lastException == null || exception.Message != _lastException.Message)
+                {
+                    _databaseLoggerServiceBase.Error(exceptionModel);
 
-                _fileLoggerServiceBase.Error(exceptionModel);
+                    _fileLoggerServiceBase.Error(exceptionModel);
+
+                    httpContext.Response.Redirect(httpContext.Request.Path.ToString());
+                }        
             }
             else
             {
-                _databaseLoggerServiceBase.Error(exception);
-                _fileLoggerServiceBase.Error(exception);
+                if (_lastException == null || exception.Message != _lastException.Message)
+                {
+                    _databaseLoggerServiceBase.Error(exception);
+                    _fileLoggerServiceBase.Error(exception);
+
+                    httpContext.Response.Redirect("/ErrorPage/Error404");
+                }
             }
+
+            _lastException = exception;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
+using BusinessLayer.Models;
 using BusinessLayer.StaticTexts;
 using BusinessLayer.ValidationRules;
 using Core.Extensions;
@@ -496,8 +497,9 @@ namespace BusinessLayer.Concrete
         /// <param name="take">Page paramatresi 0'dan büyük ise sayfalama değil ise verilen sayı kadar veri gelmesini</param>
         /// <param name="search">Bloglar içinde başlığa göre filtreleme yapmak için gerekli parametre.</param>
         /// <returns></returns>
+        [ValidationAspect(typeof(GetBlogModelValidator))]
         [CacheAspect]
-        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(int id = 0, int page = 1, int take = 6, string search = null)
+        public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(GetBlogModel getBlogModel)
         {
             List<BlogCategoryandCommentCountDto> values = null;
 
@@ -507,27 +509,28 @@ namespace BusinessLayer.Concrete
 
             values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(
                         x => (x.BlogStatus == true && x.CategoryStatus == true)
-                        && (id < 1 || x.CategoryID == id)
-                        && (string.IsNullOrEmpty(search) || x.BlogTitle.ToLower().Contains(search.ToLower()))
-                        , true, take, page
+                        && (getBlogModel.Id < 1 || x.CategoryID == getBlogModel.Id)
+                        && (string.IsNullOrEmpty(getBlogModel.Search) || x.BlogTitle.ToLower().Contains(getBlogModel.Search.ToLower()))
+                        , true, getBlogModel.Take, getBlogModel.Page
                     );
 
             if (!values.Any())
             {
                 message = "Arama kriterlerinize uygun sonuç bulunamadı.";
                 isSuccess = false;
-                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus && x.CategoryStatus, true, take, page);
+                values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus 
+                && x.CategoryStatus, true, getBlogModel.Take, getBlogModel.Page);
             }
             else
             {
-                if (id > 0)
+                if (getBlogModel.Id > 0)
                 {
-                    var category = await _categoryService.TGetByIDAsync(Convert.ToInt32(id));
+                    var category = await _categoryService.TGetByIDAsync((int)getBlogModel.Id);
 
-                    message = category.Success ? category.Data.CategoryName + " kategorisindeki bloglar." : "";
+                    message = category.Success ? category.Data.CategoryName + " kategorisindeki bloglar. \n" : string.Empty;
                 }
 
-                message += search != null ? " Aranan kelime = " + search : "";
+                message += getBlogModel.Search != null ? " Aranan kelime = " + getBlogModel.Search : "";
             }
 
             foreach (var item in values)

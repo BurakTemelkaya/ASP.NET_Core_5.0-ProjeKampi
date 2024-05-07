@@ -1,4 +1,5 @@
-﻿using CoreLayer.Utilities.Results;
+﻿using BusinessLayer.Models;
+using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +34,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> ChangedBlogStatusByAdminAsync(int id);
         Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);
         Task<IDataResult<Blog>> GetFileNameContentBlogByIDAsync(int id);
-        Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(int id, int page = 1, int take = 6, string search = null);
+        Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(GetBlogModel getBlogModel);
         Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id);
     }
 }

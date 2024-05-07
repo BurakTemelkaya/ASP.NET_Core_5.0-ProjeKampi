@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,14 +10,12 @@ namespace CoreLayer.Utilities.CaptchaUtilities
 {
     public class RecaptchaManager : ICaptchaService
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private IConfiguration Configuration { get; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RecaptchaManager(IWebHostEnvironment webHostEnvironment, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public RecaptchaManager(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
-            _webHostEnvironment = webHostEnvironment;
             Configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }

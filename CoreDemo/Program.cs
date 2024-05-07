@@ -77,11 +77,14 @@ builder.Services.AddIdentity<AppUser, AppRole>(x =>
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
 
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromDays(30);
+    options.IdleTimeout = TimeSpan.FromDays(5);
     options.Cookie.IsEssential = true;
 });
 
@@ -110,6 +113,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.Cookie.IsEssential = true;
     options.LoginPath = "/Login/Index";
     options.LogoutPath = "/Login/Logout";
     options.AccessDeniedPath = new PathString("/Login/AccessDenied");
@@ -117,8 +121,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddSingleton(new WriterCity());
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddAutoMapper(typeof(BusinessImages));
 builder.Services.AddAutoMapper(typeof(UIImage));
@@ -136,29 +138,48 @@ builder.Services
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services
+if (builder.Environment.IsProduction())
+{
+    builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<Context>()
     .AddApplicationInsightsPublisher()
     .AddSqlServer(builder.Configuration.GetConnectionString("SQLServer"));
 
-builder.Services
-    .AddHealthChecksUI()
-    .AddInMemoryStorage()
-    .AddSqlServerStorage(builder.Configuration.GetConnectionString("SQLServer"));
+    builder.Services
+        .AddHealthChecksUI()
+        .AddInMemoryStorage()
+        .AddSqlServerStorage(builder.Configuration.GetConnectionString("SQLServer"));
+}
 
 var app = builder.Build();
 
-app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
-
 if (app.Environment.IsProduction())
 {
+    app.UseUserDestroyer();
     app.UseHsts();
     app.ConfigureCustomExceptionMiddleware();
+
+    app.MapHealthChecks("/health");
+
+    app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
+    app.UseHealthChecksUI(options =>
+    {
+        options.UIPath = "/healthchecks-ui";
+        options.ApiPath = "/health-ui-api";
+    });
+
+    app.UseHealthChecks("/healthcheck", new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+        AllowCachingResponses = true
+    });
 }
 else
 {
-    app.UseDeveloperExceptionPage();
+    app.ConfigureCustomExceptionMiddleware();
 }
 
 app.UseHttpsRedirection();
@@ -172,8 +193,6 @@ app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
-
-app.UseUserDestroyer();
 
 app.MapRazorPages();
 
@@ -189,21 +208,6 @@ app.MapControllerRoute(
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
 
-app.MapHealthChecks("/health");
-
-app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
-
-app.UseHealthChecksUI(options =>
-{
-    options.UIPath = "/healthchecks-ui";
-    options.ApiPath = "/health-ui-api";
-});
-
-app.UseHealthChecks("/healthcheck", new HealthCheckOptions
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-    AllowCachingResponses = true
-});
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 
 app.Run();

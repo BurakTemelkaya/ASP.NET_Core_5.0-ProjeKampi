@@ -8,8 +8,6 @@ namespace BusinessLayer.DependencyResolvers
     {
         public static void IocBusinessInstall(this IServiceCollection services)
         {
-            //services ioc
-
             services.AddScoped<IAboutService, AboutManager>();
 
             services.AddScoped<IBlogService, BlogManager>();

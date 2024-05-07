@@ -1,6 +1,8 @@
-﻿
+﻿@using FluentValidation
+@inject IHttpContextAccessor httpContextaccessor;
 @{
     Layout = null;
+    var validationExceptions = httpContextaccessor.HttpContext.Items["ValidationException"] as List<ValidationException>;
 }
 
 <!DOCTYPE html>
@@ -36,9 +38,22 @@
             <div class="wrapper">
                 <div class="errors-16-top">
                     <div class="errors-16-info">
-                        <h3>404 </h3>
+                        @if (validationExceptions != null && validationExceptions.Any())
+                        {
+                            <p>Bir Hata Oluştu</p>
+                            <ul style="margin-top:"15px">
+                                @foreach (var exception in validationExceptions)
+                                {
+                                    <li>@exception.Message</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <h3>404 </h3>
+                            <p>Oops! Sayfa Bulunamadı!</p>
+                        }
 
-                        <p>Oops! Sayfa Bulunamadı!</p>
                         <form action="#" method="post" class="d-flex error-page-form">
                             <input type="search" placeholder="Aradığınız Kelime..." required="required">
                             <button type="submit"><span class="fa fa-search" aria-hidden="true"></span></button>

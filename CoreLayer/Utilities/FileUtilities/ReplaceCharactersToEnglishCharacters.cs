@@ -4,9 +4,8 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class ReplaceCharactersToEnglishCharacters
     {
-        public static string ReplaceCharacters(object a)
+        public static string ReplaceCharacters(string s)
         {
-            string s = a.ToString();
             if (string.IsNullOrEmpty(s))
             {
                 return "";

@@ -15,6 +15,8 @@ namespace BusinessLayer.DependencyResolvers
 
             builder.RegisterType<BlogValidator>().As<IValidator<Blog>>().SingleInstance();
 
+            builder.RegisterType<GetBlogModelValidator>().As<IValidator<GetBlogModel>>().SingleInstance();
+
             builder.RegisterType<CategoryValidator>().As<IValidator<Category>>().SingleInstance();
 
             builder.RegisterType<CommentValidator>().As<IValidator<Comment>>().SingleInstance();

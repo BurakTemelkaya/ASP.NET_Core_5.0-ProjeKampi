@@ -3,6 +3,7 @@ using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System.Linq;
 
 namespace CoreLayer.Aspects.AutoFac.Caching
@@ -20,9 +21,10 @@ namespace CoreLayer.Aspects.AutoFac.Caching
 
         public override void Intercept(IInvocation invocation)
         {
-            var methodName = string.Format($"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}");
-            var arguments = invocation.Arguments.ToList();
-            var key = $"{methodName}({string.Join(",", arguments.Select(x => x?.ToString() ?? "<Null>"))})";
+            var methodName = $"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}";
+            var arguments = invocation.Arguments.Select(arg => arg != null && arg.GetType().IsClass ? JsonConvert.SerializeObject(arg) : arg?.ToString() ?? "<Null>").ToList();
+            var key = $"{methodName}({string.Join(",", arguments)})";
+
             if (_cacheManager.IsAdd(key))
             {
                 invocation.ReturnValue = _cacheManager.Get(key);

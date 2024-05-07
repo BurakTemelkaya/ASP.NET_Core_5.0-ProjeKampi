@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Http;
+﻿@using FluentValidation
+@using Microsoft.AspNetCore.Http;
+@using System.Text.Json
 @inject IHttpContextAccessor httpContextaccessor;
 @{
     Layout = null;
@@ -149,6 +151,41 @@
     {
         <script src="~/writer/assets/js/SweetAlert2.js"></script>
     }
+
+    @{
+        string json = httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions");
+
+        <script>
+            let validationErrors = @Html.Raw(json);
+
+            if (validationErrors && validationErrors.length > 0) {
+                // Eğer validationErrors bir dizi değilse, bir diziye dönüştür
+                if (!Array.isArray(validationErrors)) {
+                    validationErrors = JSON.parse(validationErrors);
+                }
+
+                let errorMessage = "<ul>";
+
+                validationErrors.forEach(function (exception) {
+                    errorMessage += "<li>" + exception + "</li>";
+                });
+
+                errorMessage += "</ul>";
+
+                Swal.fire({
+                    title: "Hatalar",
+                    html: errorMessage,
+                    icon: "error",
+                });
+            }
+        
+        </script>
+
+        {
+            httpContextaccessor.HttpContext.Session.SetString("ValidationExceptions", "");
+        }
+    }
+
 
     @RenderSection("ScriptSection",false)
     

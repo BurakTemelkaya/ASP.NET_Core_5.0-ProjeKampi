@@ -3,15 +3,15 @@
 @{
     Layout = "~/Views/Shared/UserLayout.cshtml";
     double BlogScore = 0;
-    string search = "";
-    int id = 0;
+    string Search = "";
+    int Id = 0;
     if (ViewBag.Search != null)
     {
-        search = ViewBag.Search;
+        Search = ViewBag.Search;
     }
     if (ViewBag.Id != null)
     {
-        id = ViewBag.Id;
+        Id = ViewBag.Id;
     }
     string blogTitle = "";
 
@@ -58,7 +58,7 @@
                         {
                             BlogScore = Math.Round(item.CommentScore, 1);
                         }
-                        <div class="col-lg-4 card">
+                        <div class="col-lg-4 card" title="@item.BlogTitle">
                             <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">
                                 <img src="@item.BlogThumbnailImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
                             </a>
@@ -116,7 +116,7 @@
             </div>
         </div>
 
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page , search , id } ),
+        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page , Search , Id } ),
         new PagedListRenderOptions
         {
         DisplayEllipsesWhenNotShowingAllPageNumbers=false,
