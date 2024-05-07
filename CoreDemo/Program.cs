@@ -28,6 +28,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -95,6 +96,9 @@ builder.Services.AddMvc(config =>
     .Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 
+}).AddNewtonsoftJson(opt =>
+{
+    opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 }).AddRazorRuntimeCompilation();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
@@ -179,7 +183,7 @@ if (app.Environment.IsProduction())
 }
 else
 {
-    app.ConfigureCustomExceptionMiddleware();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -207,7 +211,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
-
-app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 
 app.Run();

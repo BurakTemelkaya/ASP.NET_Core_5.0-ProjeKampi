@@ -22,7 +22,11 @@ namespace CoreLayer.Aspects.AutoFac.Caching
         public override void Intercept(IInvocation invocation)
         {
             var methodName = $"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}";
-            var arguments = invocation.Arguments.Select(arg => arg != null && arg.GetType().IsClass ? JsonConvert.SerializeObject(arg) : arg?.ToString() ?? "<Null>").ToList();
+
+            var arguments = invocation.Arguments.Select(arg => arg != null && arg.GetType().IsClass 
+            ? JsonConvert.SerializeObject(arg, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) 
+            : arg?.ToString() ?? "<Null>").ToList();
+
             var key = $"{methodName}({string.Join(",", arguments)})";
 
             if (_cacheManager.IsAdd(key))
@@ -33,5 +37,6 @@ namespace CoreLayer.Aspects.AutoFac.Caching
             invocation.Proceed();
             _cacheManager.Add(key, invocation.ReturnValue, _duration);
         }
+
     }
 }
