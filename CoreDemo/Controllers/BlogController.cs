@@ -1,6 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Models;
-using CoreDemo.Models;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,6 @@ using X.PagedList;
 
 namespace CoreDemo.Controllers
 {
-
     public class BlogController : Controller
     {
         private readonly IBlogService _blogService;

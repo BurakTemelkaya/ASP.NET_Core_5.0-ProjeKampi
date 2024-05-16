@@ -152,7 +152,6 @@ if (builder.Environment.IsProduction())
 
     builder.Services
         .AddHealthChecksUI()
-        .AddInMemoryStorage()
         .AddSqlServerStorage(builder.Configuration.GetConnectionString("SQLServer"));
 }
 
@@ -164,21 +163,16 @@ if (app.Environment.IsProduction())
     app.UseHsts();
     app.ConfigureCustomExceptionMiddleware();
 
-    app.MapHealthChecks("/health");
+    app.UseHealthChecks("/health", new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    });
 
     app.UseHealthChecksPrometheusExporter("/my-health-metrics", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
     app.UseHealthChecksUI(options =>
     {
-        options.UIPath = "/healthchecks-ui";
-        options.ApiPath = "/health-ui-api";
-    });
-
-    app.UseHealthChecks("/healthcheck", new HealthCheckOptions
-    {
-        Predicate = _ => true,
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-        AllowCachingResponses = true
+        options.UIPath = "/health-ui";
     });
 }
 else

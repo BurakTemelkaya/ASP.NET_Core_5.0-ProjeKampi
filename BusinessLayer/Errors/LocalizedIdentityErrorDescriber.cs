@@ -72,7 +72,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordMismatch),
-                Description = "Girilen parola hatalı"
+                Description = "Girilen parola hatalı."
             };
         }
 
@@ -81,7 +81,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresDigit),
-                Description = "Parolanız en az bir rakam içermelidir"
+                Description = "Parolanız en az bir rakam içermelidir."
             };
         }
 
@@ -108,7 +108,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUniqueChars),
-                Description = string.Format("Parolanız en az 1 {0} özel karekter içermelidir", uniqueChars)
+                Description = string.Format("Parolanız en az {0} özel karekter içermelidir", uniqueChars)
             };
         }
 
