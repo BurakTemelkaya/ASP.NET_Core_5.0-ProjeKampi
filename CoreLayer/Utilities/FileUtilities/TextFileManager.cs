@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -116,33 +114,70 @@ namespace CoreLayer.Utilities.FileUtilities
             var matches = _imageTagRegex.Matches(content);
             var imageInfos = new List<ImageInfoModel>();
 
+            int width = 0;
+            int height = 0;
+            
+
             foreach (Match match in matches)
             {
-                int width = 0;
-                int height = 0;
                 bool isBase64 = false;
                 string base64Data = string.Empty;
+                string widthValue = string.Empty;
 
-                string widthValue = match.Value.Substring(match.Value.IndexOf("width: ") + 7, match.Value.IndexOf("px;") - 19);
+                if (match.Value.IndexOf("width: ") != -1)
+                {
+                    widthValue = match.Value.Substring(match.Value.IndexOf("width: ") + 7, 5);
+                }
+                else if (match.Value.IndexOf("width=") != -1)
+                {
+                    int widthStartIndex = match.Value.IndexOf("width=");
+                    widthValue = match.Value.Substring(match.Value.IndexOf("width=") + 7, 4);
+                }
 
-                if (widthValue.IndexOf('.') != -1)
+                if (widthValue.Contains("px"))
+                {
+                    widthValue = widthValue.Substring(0, widthValue.IndexOf('p'));
+                }
+
+                if (widthValue.Contains('.'))
                 {
                     widthValue = widthValue.Substring(0, widthValue.IndexOf('.'));
+                }
+                else if (widthValue.Contains('"'))
+                {
+                    widthValue = widthValue.Substring(0, widthValue.IndexOf('"'));
                 }
 
                 int.TryParse(widthValue, out width);
 
-                if (match.Value.Contains("height"))
+                string heightValue = string.Empty;
+
+                if (match.Value.IndexOf("height: ") != -1)
                 {
-                    string heightValue = match.Value.Substring(match.Value.IndexOf("height: ") + 8, match.Value.IndexOf("px;") - 16);
-
-                    if (heightValue.IndexOf('.') != -1)
-                    {
-                        heightValue = heightValue.Substring(0, heightValue.IndexOf('.'));
-                    }
-
-                    int.TryParse(heightValue, out height);
+                    int startIndex = match.Value.IndexOf("height: ") + 8;
+                    heightValue = match.Value.Substring(startIndex, 6);
                 }
+                else if (match.Value.IndexOf("height=") != -1)
+                {
+                    int heightStartIndex = match.Value.IndexOf("height=");
+                    heightValue = match.Value.Substring(match.Value.IndexOf("height=") + 8, 4);
+                }
+
+                if (heightValue.Contains("px"))
+                {
+                    heightValue = heightValue.Substring(0, heightValue.IndexOf('p'));
+                }
+
+                if (heightValue.Contains('.'))
+                {
+                    heightValue = heightValue.Substring(0, heightValue.IndexOf('.'));
+                }
+                else if (heightValue.Contains('"'))
+                {
+                    heightValue = heightValue.Substring(0, heightValue.IndexOf('"'));
+                }
+
+                int.TryParse(heightValue, out height);
 
                 string url = match.Groups["url"].Value;
                 if (url.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
