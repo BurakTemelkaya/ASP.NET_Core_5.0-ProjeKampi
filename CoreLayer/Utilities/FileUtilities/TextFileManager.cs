@@ -12,7 +12,6 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class TextFileManager
     {
-
         public static async Task<string> TextFileAddAsync(string text, string folderLocation)
         {
             try
@@ -72,6 +71,11 @@ namespace CoreLayer.Utilities.FileUtilities
             var images = ExtractImageUrlsWithSizes(content);
             foreach (var image in images)
             {
+                if (image.Url.Contains("/BlogContentImages/"))
+                {
+                    continue;
+                }
+
                 IFormFile newImage = null;
 
                 if (image.IsBase64)
