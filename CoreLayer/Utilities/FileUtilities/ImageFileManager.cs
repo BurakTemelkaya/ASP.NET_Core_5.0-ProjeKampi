@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities
 {
@@ -31,7 +32,7 @@ namespace CoreLayer.Utilities.FileUtilities
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 81L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 85L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
@@ -103,11 +104,34 @@ namespace CoreLayer.Utilities.FileUtilities
                         }
                     }
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public async static Task<IFormFile> SaveBase64ImageAsync(string base64String, string extension)
+        {
+            try
+            {
+                var imageBytes = Convert.FromBase64String(base64String);
+                var fileName = Guid.NewGuid().ToString() + extension;
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "BlogContentImages");
+                var filePath = Path.Combine(folderPath, fileName);
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                var memoryStream = new MemoryStream(imageBytes);
+                return new FormFile(memoryStream, 0, imageBytes.Length, fileName, fileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving base64 image: {ex.Message}");
                 return null;
             }
         }

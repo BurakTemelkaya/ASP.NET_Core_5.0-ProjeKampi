@@ -84,7 +84,7 @@ namespace CoreDemo.Controllers
         }
         public async Task<IActionResult> DeleteBlog(int id)
         {
-            var blogValue = await _blogService.GetBlogByIDAsync(id);
+            var blogValue = await _blogService.GetFileNameContentBlogByIDAsync(id);
             await _blogService.DeleteBlogAsync(blogValue.Data, User.Identity.Name);
             return RedirectToAction("BlogListByWriter");
         }

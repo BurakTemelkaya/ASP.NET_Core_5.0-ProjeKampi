@@ -355,20 +355,6 @@ namespace BusinessLayer.Concrete
             return new SuccessResult();
         }
 
-        [CacheRemoveAspect("ICategoryService.Get")]
-        [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResultObject> DeleteBlogAsync(Blog blog, string userName)
-        {
-            var user = await _userService.GetByUserNameAsync(userName);
-            if (user.Data.Id == blog.WriterID)
-            {
-                await _blogDal.DeleteAsync(blog);
-                DeleteFileManager.DeleteFile(blog.BlogContent);
-                return new SuccessResult();
-            }
-            return new ErrorResult();
-        }
-
         [CacheAspect]
         public async Task<IDataResult<int>> GetCountAsync(bool? blogStatus)
         {
@@ -432,10 +418,32 @@ namespace BusinessLayer.Concrete
 
         [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
-        public async Task<IResultObject> DeleteBlogByAdminAsync(Blog blog)
+        public async Task<IResultObject> DeleteBlogAsync(Blog blog, string userName)
         {
+            var user = await _userService.GetByUserNameAsync(userName);
+            if (user.Data.Id == blog.WriterID)
+            {
+                await TextFileManager.DeleteContentImageFiles(blog.BlogContent);
+                DeleteFileManager.DeleteFile(blog.BlogContent);
+                DeleteFileManager.DeleteFile(blog.BlogThumbnailImage);
+                DeleteFileManager.DeleteFile(blog.BlogImage);
+
+                await _blogDal.DeleteAsync(blog);
+                return new SuccessResult();
+            }
+            return new ErrorResult();
+        }
+
+        [CacheRemoveAspect("ICategoryService.Get")]
+        [CacheRemoveAspect("IBlogService.Get")]
+        public async Task<IResultObject> DeleteBlogByAdminAsync(Blog blog)
+        {           
+            await TextFileManager.DeleteContentImageFiles(blog.BlogContent);
+            DeleteFileManager.DeleteFile(blog.BlogContent);           
+            DeleteFileManager.DeleteFile(blog.BlogThumbnailImage);           
+            DeleteFileManager.DeleteFile(blog.BlogImage);
+
             await _blogDal.DeleteAsync(blog);
-            DeleteFileManager.DeleteFile(blog.BlogContent);
             return new SuccessResult();
         }
 

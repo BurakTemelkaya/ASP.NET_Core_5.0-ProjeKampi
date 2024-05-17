@@ -1,6 +1,12 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -8,6 +14,7 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class TextFileManager
     {
+
         public static async Task<string> TextFileAddAsync(string text, string folderLocation)
         {
             try
@@ -16,17 +23,21 @@ namespace CoreLayer.Utilities.FileUtilities
                 var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newFileName);
                 using FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
                 using StreamWriter streamWriter = new(fileStream);
+
+                text = await ProcessContentAsync(text);
+
                 await streamWriter.WriteAsync(text);
                 await streamWriter.FlushAsync();
                 streamWriter.Close();
                 fileStream.Close();
+
+
                 return folderLocation + newFileName;
             }
             catch
             {
                 return null;
             }
-
         }
         public static async Task<string> ReadTextFileAsync(string folderLocation, int numberOfLetters = 0)
         {
@@ -56,6 +67,116 @@ namespace CoreLayer.Utilities.FileUtilities
                 return null;
             }
 
+        }
+
+        public static async Task<string> ProcessContentAsync(string content)
+        {
+            var images = ExtractImageUrlsWithSizes(content);
+            foreach (var image in images)
+            {
+                IFormFile newImage = null;
+
+                if (image.IsBase64)
+                {
+                    newImage = await ImageFileManager.SaveBase64ImageAsync(image.Base64, ".jpeg");
+                }
+                else
+                {
+                    newImage = ImageFileManager.DownloadImage(image.Url);
+                }
+
+                using var imageStream = Image.FromStream(newImage.OpenReadStream());
+
+                if (image.Width == 0)
+                {
+                    image.Width = imageStream.Width;
+                }
+                if (image.Height == 0)
+                {
+                    image.Height = imageStream.Height;
+                }
+
+                string fileName = ImageFileManager.ImageAdd(newImage, "/BlogContentImages/", new() { Height = image.Height, Width = image.Width });
+
+                content = content.Replace(image.Url, fileName);
+            }
+
+            var dataFilenamePattern = @"\s*data-filename\s*=\s*""[^""]*""";
+
+            var cleanedHtmlContent = Regex.Replace(content, dataFilenamePattern, string.Empty);
+
+            return cleanedHtmlContent;
+        }
+
+        private static Regex _imageTagRegex = new Regex(@"<img[^>]+?src=[""'](?<url>[^""']+)[""'][^>]*?(?:width:\s*(?<width>\d+)[^;]*;)?(?:height:\s*(?<height>\d+)[^;]*;)?[^>]*>", RegexOptions.IgnoreCase);
+        private static Regex _base64Regex = new Regex(@"^data:image\/[a-zA-Z]+;base64,(?<data>[^;]+)(?:;width:(?<width>\d+))?(?:;height:(?<height>\d+))?$", RegexOptions.IgnoreCase);
+
+        public static List<ImageInfoModel> ExtractImageUrlsWithSizes(string content)
+        {
+            var matches = _imageTagRegex.Matches(content);
+            var imageInfos = new List<ImageInfoModel>();
+
+            foreach (Match match in matches)
+            {
+                int width = 0;
+                int height = 0;
+                bool isBase64 = false;
+                string base64Data = string.Empty;
+
+                string widthValue = match.Value.Substring(match.Value.IndexOf("width: ") + 7, match.Value.IndexOf("px;") - 19);
+
+                if (widthValue.IndexOf('.') != -1)
+                {
+                    widthValue = widthValue.Substring(0, widthValue.IndexOf('.'));
+                }
+
+                int.TryParse(widthValue, out width);
+
+                if (match.Value.Contains("height"))
+                {
+                    string heightValue = match.Value.Substring(match.Value.IndexOf("height: ") + 8, match.Value.IndexOf("px;") - 16);
+
+                    if (heightValue.IndexOf('.') != -1)
+                    {
+                        heightValue = heightValue.Substring(0, heightValue.IndexOf('.'));
+                    }
+
+                    int.TryParse(heightValue, out height);
+                }
+
+                string url = match.Groups["url"].Value;
+                if (url.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
+                {
+                    isBase64 = true;
+                    var base64Match = _base64Regex.Match(url);
+                    base64Data = base64Match.Groups["data"].Value;
+                }
+
+                imageInfos.Add(new ImageInfoModel
+                {
+                    Url = url,
+                    Width = width,
+                    Height = height,
+                    IsBase64 = isBase64,
+                    Base64 = base64Data
+                });
+            }
+
+            return imageInfos;
+        }
+
+        public static async Task DeleteContentImageFiles(string fileLocation)
+        {
+            string content = await ReadTextFileAsync(fileLocation);
+
+            var matches = _imageTagRegex.Matches(content);
+
+            foreach (Match match in matches)
+            {
+                string url = match.Groups["url"].Value;
+
+                DeleteFileManager.DeleteFile(url);
+            }
         }
     }
 }
