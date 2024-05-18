@@ -10,19 +10,21 @@ namespace BusinessLayer.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IUserBusinessService _businessUserService;
-        public UserDestroyerMiddleware(RequestDelegate next, IUserBusinessService businessUserService)
+        private readonly string _redirectUrl;
+        public UserDestroyerMiddleware(RequestDelegate next, IUserBusinessService businessUserService, string redirectUrl)
         {
             _next = next;
             _businessUserService = businessUserService;
+            _redirectUrl = redirectUrl;
         }
         /// <summary>
         /// Kullanıcı yasaklı ise sistemden çıkış yapmasını sağlayan kontrol mekanizması.
         /// </summary>
-        public async Task InvokeAsync(HttpContext httpContext, SignInManager<AppUser> signInManager, string redirectUrl)
+        public async Task InvokeAsync(HttpContext httpContext, SignInManager<AppUser> signInManager)
         {
             if (await BanCheck(signInManager, httpContext))
             {
-                httpContext.Response.Redirect(redirectUrl);
+                httpContext.Response.Redirect(_redirectUrl);
             }
             else
             {
