@@ -77,7 +77,7 @@ namespace CoreLayer.Utilities.FileUtilities
             var images = ExtractImageUrlsWithSizes(content);
             foreach (var image in images)
             {
-                if (image.Url.Contains("/" + contentImageLocation + "/"))
+                if (image.Url.Contains(contentImageLocation))
                 {
                     continue;
                 }

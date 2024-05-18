@@ -169,8 +169,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseUserDestroyer("/Blog/Index");
-
 if (app.Environment.IsProduction())
 {
     app.UseUserDestroyer("/Blog/Index");
