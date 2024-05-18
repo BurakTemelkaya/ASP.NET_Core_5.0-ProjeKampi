@@ -10,28 +10,38 @@ namespace BusinessLayer.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IUserBusinessService _businessUserService;
-        private readonly IHttpContextAccessor _contextAccessor;
-        public UserDestroyerMiddleware(RequestDelegate next, IUserBusinessService businessUserService, IHttpContextAccessor httpContextAccessor)
+        public UserDestroyerMiddleware(RequestDelegate next, IUserBusinessService businessUserService)
         {
             _next = next;
             _businessUserService = businessUserService;
-            _contextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// Kullanıcı yasaklı ise sistemden çıkış yapmasını sağlayan kontrol mekanizması.
         /// </summary>
-        public async Task Invoke(HttpContext httpContext, SignInManager<AppUser> signInManager)
+        public async Task InvokeAsync(HttpContext httpContext, SignInManager<AppUser> signInManager)
+        {
+            if (await BanCheck(signInManager, httpContext))
+            {
+                httpContext.Response.Redirect("/Blog/Index");
+            }
+            else
+            {
+                await _next(httpContext);
+            }           
+        }
+
+        public async Task<bool> BanCheck(SignInManager<AppUser> signInManager, HttpContext httpContext)
         {
             if (!string.IsNullOrEmpty(httpContext.User.Identity.Name))
             {
-                var isBanned = await _businessUserService.GetBanDateAsync(_contextAccessor.HttpContext.User.Identity.Name);
+                var isBanned = await _businessUserService.GetBanDateAsync(httpContext.User.Identity.Name);
                 if (isBanned.Success && isBanned.Data > System.DateTimeOffset.Now)
                 {
                     await signInManager.SignOutAsync();
-                    httpContext.Response.Redirect("/Blog/Index");
+                    return true;
                 }
             }
-            await _next(httpContext);
+            return false;
         }
     }
 }

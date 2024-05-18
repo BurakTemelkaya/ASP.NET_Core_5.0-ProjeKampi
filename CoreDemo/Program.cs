@@ -157,6 +157,18 @@ if (builder.Environment.IsProduction())
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseAuthentication();
+
+app.UseSession();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
 if (app.Environment.IsProduction())
 {
     app.UseUserDestroyer();
@@ -179,18 +191,6 @@ else
 {
     app.UseDeveloperExceptionPage();
 }
-
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseAuthentication();
-
-app.UseSession();
-
-app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapRazorPages();
 
