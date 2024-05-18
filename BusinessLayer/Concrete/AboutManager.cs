@@ -64,7 +64,7 @@ namespace BusinessLayer.Concrete
             }
             else if (aboutImage1 != null)
             {
-                about.AboutImage1 = ImageFileManager.ImageAdd(aboutImage1, ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+                about.AboutImage1 = ImageFileManager.ImageAdd(aboutImage1, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (about.AboutImage1 == null)
                 {
                     return new ErrorResult(Messages.About1ImageNotUploaded);
@@ -73,7 +73,7 @@ namespace BusinessLayer.Concrete
             }
             else if (about.AboutImage1 != null)
             {
-                about.AboutImage1 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage1), ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+                about.AboutImage1 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage1), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (about.AboutImage1 == null)
                 {
                     return new ErrorResult(Messages.About1ImageNotUploaded);
@@ -87,7 +87,7 @@ namespace BusinessLayer.Concrete
             }
             else if (aboutImage2 != null)
             {
-                about.AboutImage2 = ImageFileManager.ImageAdd(aboutImage2, ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+                about.AboutImage2 = ImageFileManager.ImageAdd(aboutImage2, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (aboutImage2 == null)
                 {
                     return new ErrorResult(Messages.About2ImageNotUploaded);
@@ -96,7 +96,7 @@ namespace BusinessLayer.Concrete
             }
             else if (about.AboutImage2 != null)
             {
-                about.AboutImage2 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage2), ImageLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+                about.AboutImage2 = ImageFileManager.ImageAdd(ImageFileManager.DownloadImage(about.AboutImage2), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
                 if (aboutImage1 == null)
                 {
                     return new ErrorResult(Messages.About2ImageNotUploaded);

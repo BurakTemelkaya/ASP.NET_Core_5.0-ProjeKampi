@@ -52,12 +52,12 @@ namespace BusinessLayer.Concrete
                 {
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
-                user.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                user.ImageUrl = ImageFileManager.ImageAdd(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (userSignUpDto.ImageFile != null)
             {
                 user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
-                    ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                    ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
                 if (user.ImageUrl == null)
                 {
                     return new ErrorDataResult<IdentityResult>(Messages.UserProfileImageNotUploadError);
@@ -139,12 +139,12 @@ namespace BusinessLayer.Concrete
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (user.ProfileImageFile != null)
             {
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile, ImageLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else
             {

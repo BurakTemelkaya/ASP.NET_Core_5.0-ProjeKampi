@@ -57,7 +57,7 @@ namespace BusinessLayer.Concrete
         public async Task<IResultObject> TAddAsync(NewsLetterDraft t)
         {
             t.TimeToAdd = DateTime.Now;
-            t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation());
+            t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation(), ContentFileLocations.GetNewsLetterDraftImageContentFileLocation());
             await _newsLetterDraftDal.InsertAsync(t);
             return new SuccessResult();
         }
@@ -101,7 +101,7 @@ namespace BusinessLayer.Concrete
             if (await TextFileManager.ReadTextFileAsync(t.Content) != t.Content)
             {
                 DeleteFileManager.DeleteFile(t.Content);
-                t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation());
+                t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation(), ContentFileLocations.GetNewsLetterDraftImageContentFileLocation());
             }
             else
             {

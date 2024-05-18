@@ -91,7 +91,7 @@ namespace BusinessLayer.Concrete
             message.SenderUserId = senderUser.Data.Id;
 
             message.ReceiverUserId = receiverUser.Data.Id;
-            message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation());
+            message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
             message.MessageDate = DateTime.Now;
             await _messageDal.InsertAsync(message);
             return new SuccessResult();
@@ -136,7 +136,7 @@ namespace BusinessLayer.Concrete
 
             t.SenderUserId = user.Data.Id;
             DeleteFileManager.DeleteFile(t.Details);
-            t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation());
+            t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
 
             if (t.Details == null)
             {

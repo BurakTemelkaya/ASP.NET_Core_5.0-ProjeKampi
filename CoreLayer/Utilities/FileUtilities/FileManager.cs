@@ -17,14 +17,14 @@ namespace CoreLayer.Utilities.FileUtilities
                 if (isOldPathDelete)
                     File.Delete(oldPath);
 
-                await TextFileManager.TextFileAddAsync(oldPath + "moved by " + newPath + " and deleted.", "/ExceptionLogs");
+                await TextFileManager.TextFileAddAsync(oldPath + newPath, "/ExceptionLogs", "");
 
                 return true;
 
             }
             catch (Exception e)
             {
-                await TextFileManager.TextFileAddAsync(e.ToString(), "/ExceptionLogs");
+                await TextFileManager.TextFileAddAsync(e.ToString(), "/ExceptionLogs", "");
                 return false;
             }
         }

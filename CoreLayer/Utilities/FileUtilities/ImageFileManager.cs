@@ -21,10 +21,15 @@ namespace CoreLayer.Utilities.FileUtilities
                     {
                         return null;
                     }
+                    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
 
-                    var extension = Path.GetExtension(file.FileName);
+                    var extension = ".jpeg";
                     var newImageName = fileName == null ? Guid.NewGuid() + extension : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
-                    var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newImageName);
+                    var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
 
                     var myImageCodecInfo = GetTypeInfo("image/jpeg");
 
@@ -32,13 +37,13 @@ namespace CoreLayer.Utilities.FileUtilities
 
                     var myEncoderParameters = new EncoderParameters(1);
 
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 85L);
+                    var myEncoderParameter = new EncoderParameter(myEncoder, 82L);
 
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
                     image.Save(location, myImageCodecInfo, myEncoderParameters);
 
-                    return folderLocation + newImageName;
+                    return "/" + Path.Combine(folderLocation, newImageName);
                 }
             }
             catch
@@ -112,19 +117,14 @@ namespace CoreLayer.Utilities.FileUtilities
             }
         }
 
-        public async static Task<IFormFile> SaveBase64ImageAsync(string base64String, string extension)
+        public static IFormFile SaveBase64ImageAsync(string base64String, string extension, string contentImageLocation)
         {
             try
             {
                 var imageBytes = Convert.FromBase64String(base64String);
                 var fileName = Guid.NewGuid().ToString() + extension;
-                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "BlogContentImages");
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", contentImageLocation);
                 var filePath = Path.Combine(folderPath, fileName);
-
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
 
                 var memoryStream = new MemoryStream(imageBytes);
                 return new FormFile(memoryStream, 0, imageBytes.Length, fileName, fileName);

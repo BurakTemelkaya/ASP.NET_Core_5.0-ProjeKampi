@@ -5,9 +5,9 @@ namespace BusinessLayer.Extension
 {
     public static class UserDestroyerMiddlewareExtensions
     {
-        public static IApplicationBuilder UseUserDestroyer(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseUserDestroyer(this IApplicationBuilder builder, string redirectUrl)
         {
-            return builder.UseMiddleware<UserDestroyerMiddleware>();
+            return builder.UseMiddleware<UserDestroyerMiddleware>(redirectUrl);
         }
     }
 }

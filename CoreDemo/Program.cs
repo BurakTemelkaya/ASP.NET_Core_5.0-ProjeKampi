@@ -171,7 +171,7 @@ app.UseAuthorization();
 
 if (app.Environment.IsProduction())
 {
-    app.UseUserDestroyer();
+    app.UseUserDestroyer("/Blog/Index");
     app.UseHsts();
     app.ConfigureCustomExceptionMiddleware();
 

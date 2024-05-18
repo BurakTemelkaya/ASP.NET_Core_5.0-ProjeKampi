@@ -12,16 +12,22 @@ namespace CoreLayer.Utilities.FileUtilities
 {
     public class TextFileManager
     {
-        public static async Task<string> TextFileAddAsync(string text, string folderLocation)
+        public static async Task<string> TextFileAddAsync(string text, string folderLocation, string contentImageLocation)
         {
             try
             {
+                if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation)))
+                {
+                    Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation));
+                }
+
                 var newFileName = Guid.NewGuid() + ".txt";
-                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + folderLocation, newFileName);
+                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newFileName);
+
+                text = ProcessContentAsync(text, contentImageLocation);
+
                 using FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
                 using StreamWriter streamWriter = new(fileStream);
-
-                text = await ProcessContentAsync(text);
 
                 await streamWriter.WriteAsync(text);
                 await streamWriter.FlushAsync();
@@ -29,7 +35,7 @@ namespace CoreLayer.Utilities.FileUtilities
                 fileStream.Close();
 
 
-                return folderLocation + newFileName;
+                return "/" + Path.Combine(folderLocation, newFileName);
             }
             catch
             {
@@ -66,12 +72,12 @@ namespace CoreLayer.Utilities.FileUtilities
 
         }
 
-        public static async Task<string> ProcessContentAsync(string content)
+        public static string ProcessContentAsync(string content, string contentImageLocation)
         {
             var images = ExtractImageUrlsWithSizes(content);
             foreach (var image in images)
             {
-                if (image.Url.Contains("/BlogContentImages/"))
+                if (image.Url.Contains("/" + contentImageLocation + "/"))
                 {
                     continue;
                 }
@@ -80,25 +86,28 @@ namespace CoreLayer.Utilities.FileUtilities
 
                 if (image.IsBase64)
                 {
-                    newImage = await ImageFileManager.SaveBase64ImageAsync(image.Base64, ".jpeg");
+                    newImage = ImageFileManager.SaveBase64ImageAsync(image.Base64, ".jpeg", contentImageLocation);
                 }
                 else
                 {
                     newImage = ImageFileManager.DownloadImage(image.Url);
                 }
 
-                using var imageStream = Image.FromStream(newImage.OpenReadStream());
-
-                if (image.Width == 0)
+                if (image.Width == 0 || image.Height == 0)
                 {
-                    image.Width = imageStream.Width;
-                }
-                if (image.Height == 0)
-                {
-                    image.Height = imageStream.Height;
+                    using var imageStream = Image.FromStream(newImage.OpenReadStream());
+
+                    if (image.Width == 0)
+                    {
+                        image.Width = imageStream.Width;
+                    }
+                    if (image.Height == 0)
+                    {
+                        image.Height = imageStream.Height;
+                    }
                 }
 
-                string fileName = ImageFileManager.ImageAdd(newImage, "/BlogContentImages/", new() { Height = image.Height, Width = image.Width });
+                string fileName = ImageFileManager.ImageAdd(newImage, contentImageLocation, new() { Height = image.Height, Width = image.Width });
 
                 content = content.Replace(image.Url, fileName);
             }
@@ -120,7 +129,6 @@ namespace CoreLayer.Utilities.FileUtilities
 
             int width = 0;
             int height = 0;
-            
 
             foreach (Match match in matches)
             {

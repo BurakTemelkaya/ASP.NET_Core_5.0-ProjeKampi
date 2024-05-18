@@ -18,11 +18,11 @@ namespace BusinessLayer.Middleware
         /// <summary>
         /// Kullanıcı yasaklı ise sistemden çıkış yapmasını sağlayan kontrol mekanizması.
         /// </summary>
-        public async Task InvokeAsync(HttpContext httpContext, SignInManager<AppUser> signInManager)
+        public async Task InvokeAsync(HttpContext httpContext, SignInManager<AppUser> signInManager, string redirectUrl)
         {
             if (await BanCheck(signInManager, httpContext))
             {
-                httpContext.Response.Redirect("/Blog/Index");
+                httpContext.Response.Redirect(redirectUrl);
             }
             else
             {
