@@ -358,7 +358,7 @@ namespace BusinessLayer.Concrete
         [CacheAspect]
         public async Task<IDataResult<int>> GetCountAsync(bool? blogStatus)
         {
-            return new SuccessDataResult<int>(blogStatus == null ? await _blogDal.GetCountAsync() 
+            return new SuccessDataResult<int>(blogStatus == null ? await _blogDal.GetCountAsync()
                 : await _blogDal.GetCountAsync(x => x.BlogStatus == blogStatus));
         }
 
@@ -383,9 +383,9 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetListByReadAllLastBlogsAsync(int blogId, int writerID, int take = 0)
+        public async Task<IDataResult<List<Blog>>> GetListByReadAllLastBlogsAsync(int blogId, int writerID, int take = 0, bool isActive = true)
         {
-            var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID != writerID, take);
+            var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID != writerID && x.BlogStatus == isActive, take);
             foreach (var item in values)
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
             return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
@@ -437,10 +437,10 @@ namespace BusinessLayer.Concrete
         [CacheRemoveAspect("ICategoryService.Get")]
         [CacheRemoveAspect("IBlogService.Get")]
         public async Task<IResultObject> DeleteBlogByAdminAsync(Blog blog)
-        {           
+        {
             await TextFileManager.DeleteContentImageFiles(blog.BlogContent);
-            DeleteFileManager.DeleteFile(blog.BlogContent);           
-            DeleteFileManager.DeleteFile(blog.BlogThumbnailImage);           
+            DeleteFileManager.DeleteFile(blog.BlogContent);
+            DeleteFileManager.DeleteFile(blog.BlogThumbnailImage);
             DeleteFileManager.DeleteFile(blog.BlogImage);
 
             await _blogDal.DeleteAsync(blog);
