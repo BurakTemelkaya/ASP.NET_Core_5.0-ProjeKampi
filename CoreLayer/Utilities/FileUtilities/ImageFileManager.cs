@@ -1,49 +1,69 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities
 {
     public static class ImageFileManager
     {
-        public static string ImageAdd(IFormFile file, string folderLocation, Size size, string fileName = null)
+        public static async Task<string> ImageAddAsync(IFormFile file, string folderLocation, Size size, string fileName = null)
         {
             try
             {
-                using (var image = ResizeImage(file, size))
+                using (var stream = file.OpenReadStream())
                 {
+                    var image = await Image.LoadAsync<Rgba32>(stream);
                     if (image == null)
                     {
                         return null;
                     }
+
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Mode = ResizeMode.Max,
+                        Size = size
+                    }));
+
                     var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);
                     }
 
-                    var extension = ".jpeg";
-                    var newImageName = fileName == null ? Guid.NewGuid() + extension : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
+                    var extension = file.ContentType == "image/png" ? ".png" : ".jpeg";
+                    var newImageName = fileName == null
+                        ? Guid.NewGuid() + extension
+                        : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
 
-                    var myImageCodecInfo = GetTypeInfo("image/jpeg");
+                    using (var outputStream = new FileStream(location, FileMode.Create))
+                    {
+                        if (file.ContentType == "image/png")
+                        {
+                            var encoder = new PngEncoder
+                            {
+                                CompressionLevel = PngCompressionLevel.BestCompression
+                            };
+                            await image.SaveAsync(outputStream, encoder);
+                        }
+                        else
+                        {
+                            var encoder = new JpegEncoder
+                            {
+                                Quality = 75
+                            };
+                            await image.SaveAsync(outputStream, encoder);
+                        }
+                    }
 
-                    var myEncoder = Encoder.Compression;
-
-                    var myEncoderParameters = new EncoderParameters(1);
-
-                    var myEncoderParameter = new EncoderParameter(myEncoder, 82L);
-
-                    myEncoderParameters.Param[0] = myEncoderParameter;
-
-                    image.Save(location, myImageCodecInfo, myEncoderParameters);
-
-                    return "/" + Path.Combine(folderLocation, newImageName);
+                    return "/" + Path.Combine(folderLocation, newImageName).Replace("\\", "/");
                 }
             }
             catch
@@ -52,62 +72,21 @@ namespace CoreLayer.Utilities.FileUtilities
             }
         }
 
-        public static Image ResizeImage(IFormFile image, Size size)
+        public static Image<Rgba32> ResizeImage(IFormFile image, Size size)
         {
             try
             {
-                Image imgToResize = Image.FromStream(image.OpenReadStream(), true, true);
-
-                var destRect = new Rectangle(0, 0, size.Width, size.Height);
-                var destImage = new Bitmap(size.Width, size.Height);
-
-                destImage.SetResolution(imgToResize.HorizontalResolution, imgToResize.VerticalResolution);
-
-                using (var graphics = Graphics.FromImage(destImage))
+                using (var imageStream = image.OpenReadStream())
                 {
-                    graphics.CompositingMode = CompositingMode.SourceCopy;
-                    graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    var imgToResize = Image.Load<Rgba32>(imageStream);
 
-                    using (var wrapMode = new ImageAttributes())
+                    imgToResize.Mutate(x => x.Resize(new ResizeOptions
                     {
-                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                        graphics.DrawImage(imgToResize, destRect, 0, 0, imgToResize.Width, imgToResize.Height, GraphicsUnit.Pixel, wrapMode);
-                    }
-                }
+                        Mode = ResizeMode.Max,
+                        Size = size
+                    }));
 
-                return destImage;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-        }
-
-        public static IFormFile DownloadImage(string imageUrl)
-        {
-            try
-            {
-                var request = WebRequest.Create(imageUrl);
-                using (var response = request.GetResponse())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        using (Bitmap bitmap = new Bitmap(stream))
-                        {
-                            var resultStream = new MemoryStream();
-
-                            bitmap.Save(resultStream, ImageFormat.Jpeg);
-                            return new FormFile(resultStream, 0, resultStream.Length, "test.jpeg", "deneme.jpeg")//buradaki isim önemli değil zaten değişecek. Sadece sondaki uzantı önemli
-                            {
-                                Headers = new HeaderDictionary(),
-                                ContentType = "image/*"
-                            };
-                        }
-                    }
+                    return imgToResize;
                 }
             }
             catch (Exception e)
@@ -117,17 +96,94 @@ namespace CoreLayer.Utilities.FileUtilities
             }
         }
 
-        public static IFormFile SaveBase64ImageAsync(string base64String, string extension, string contentImageLocation)
+        public static async Task<IFormFile> DownloadImageAsync(string imageUrl)
+        {
+            try
+            {
+                using HttpClient client = new();
+                var response = await client.GetAsync(imageUrl);
+                response.EnsureSuccessStatusCode();
+                var responseStream = await response.Content.ReadAsStreamAsync();
+
+                var image = await Image.LoadAsync(responseStream);
+
+                var resultStream = new MemoryStream();
+                string contentType;
+                string fileExtension;
+                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png")
+                {
+                    var encoder = new PngEncoder
+                    {
+                        CompressionLevel = PngCompressionLevel.BestCompression
+                    };
+                    await image.SaveAsync(resultStream, encoder);
+                    contentType = "image/png";
+                    fileExtension = ".png";
+                }
+                else
+                {
+                    var encoder = new JpegEncoder
+                    {
+                        Quality = 75
+                    };
+                    await image.SaveAsync(resultStream, encoder);
+                    contentType = "image/jpeg";
+                    fileExtension = ".jpeg";
+                }
+
+                resultStream.Position = 0;
+
+                return new FormFile(resultStream, 0, resultStream.Length, "sample" + fileExtension, "test" + fileExtension)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = contentType
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public static async Task<IFormFile> GetBase64ImageAsync(string base64String, string contentImageLocation)
         {
             try
             {
                 var imageBytes = Convert.FromBase64String(base64String);
+                var memoryStream = new MemoryStream(imageBytes);
+                var image = await Image.LoadAsync(memoryStream);
+
+                memoryStream.Position = 0; // Stream'in başına dönüyoruz.
+
+                string extension;
+                string contentType;
+
+                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png")
+                {
+                    extension = ".png";
+                    contentType = "image/png";
+                }
+                else
+                {
+                    extension = ".jpeg";
+                    contentType = "image/jpeg";
+                }
+
                 var fileName = Guid.NewGuid().ToString() + extension;
                 var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", contentImageLocation);
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
                 var filePath = Path.Combine(folderPath, fileName);
 
-                var memoryStream = new MemoryStream(imageBytes);
-                return new FormFile(memoryStream, 0, imageBytes.Length, fileName, fileName);
+                return new FormFile(memoryStream, 0, imageBytes.Length, fileName, fileName)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = contentType
+                };
             }
             catch (Exception ex)
             {
@@ -135,19 +191,5 @@ namespace CoreLayer.Utilities.FileUtilities
                 return null;
             }
         }
-
-        private static ImageCodecInfo GetTypeInfo(String mimeType)
-        {
-            int j;
-            ImageCodecInfo[] encoders;
-            encoders = ImageCodecInfo.GetImageEncoders();
-            for (j = 0; j < encoders.Length; ++j)
-            {
-                if (encoders[j].MimeType == mimeType)
-                    return encoders[j];
-            }
-            return null;
-        }
-
     }
 }

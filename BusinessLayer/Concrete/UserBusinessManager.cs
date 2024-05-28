@@ -47,16 +47,16 @@ namespace BusinessLayer.Concrete
 
             if (userSignUpDto.ImageUrl != null)
             {
-                var image = ImageFileManager.DownloadImage(userSignUpDto.ImageUrl);
+                var image = await ImageFileManager.DownloadImageAsync(userSignUpDto.ImageUrl);
                 if (image == null)
                 {
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
-                user.ImageUrl = ImageFileManager.ImageAdd(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                user.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (userSignUpDto.ImageFile != null)
             {
-                user.ImageUrl = ImageFileManager.ImageAdd(userSignUpDto.ImageFile,
+                user.ImageUrl = await ImageFileManager.ImageAddAsync(userSignUpDto.ImageFile,
                     ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
                 if (user.ImageUrl == null)
                 {
@@ -133,18 +133,18 @@ namespace BusinessLayer.Concrete
 
             if (user.ImageUrl != null)
             {
-                var image = ImageFileManager.DownloadImage(user.ImageUrl);
+                var image = await ImageFileManager.DownloadImageAsync(user.ImageUrl);
                 if (image == null)
                 {
                     return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
                 }
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else if (user.ProfileImageFile != null)
             {
                 DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-                value.Data.ImageUrl = ImageFileManager.ImageAdd(user.ProfileImageFile, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
             }
             else
             {

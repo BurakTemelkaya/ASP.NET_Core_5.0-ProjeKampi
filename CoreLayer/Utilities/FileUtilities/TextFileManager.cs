@@ -1,9 +1,9 @@
 ﻿using HtmlAgilityPack;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace CoreLayer.Utilities.FileUtilities
                 var newFileName = Guid.NewGuid() + ".txt";
                 var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newFileName);
 
-                text = ProcessContentAsync(text, contentImageLocation);
+                text = await ProcessContentAsync(text, contentImageLocation);
 
                 using FileStream fileStream = new(location, FileMode.Create, FileAccess.Write);
                 using StreamWriter streamWriter = new(fileStream);
@@ -72,7 +72,7 @@ namespace CoreLayer.Utilities.FileUtilities
 
         }
 
-        public static string ProcessContentAsync(string content, string contentImageLocation)
+        public static async Task<string> ProcessContentAsync(string content, string contentImageLocation)
         {
             var images = ExtractImageUrlsWithSizes(content);
             foreach (var image in images)
@@ -86,28 +86,28 @@ namespace CoreLayer.Utilities.FileUtilities
 
                 if (image.IsBase64)
                 {
-                    newImage = ImageFileManager.SaveBase64ImageAsync(image.Base64, ".jpeg", contentImageLocation);
+                    newImage = await ImageFileManager.GetBase64ImageAsync(image.Base64, contentImageLocation);
                 }
                 else
                 {
-                    newImage = ImageFileManager.DownloadImage(image.Url);
+                    newImage = await ImageFileManager.DownloadImageAsync(image.Url);
                 }
 
                 if (image.Width == 0 || image.Height == 0)
                 {
-                    using var imageStream = Image.FromStream(newImage.OpenReadStream());
-
+                    using var imageStream = newImage.OpenReadStream();
+                    using var img = await Image.LoadAsync<Rgba32>(imageStream);
                     if (image.Width == 0)
                     {
-                        image.Width = imageStream.Width;
+                        image.Width = img.Width;
                     }
                     if (image.Height == 0)
                     {
-                        image.Height = imageStream.Height;
+                        image.Height = img.Height;
                     }
                 }
 
-                string fileName = ImageFileManager.ImageAdd(newImage, contentImageLocation, new() { Height = image.Height, Width = image.Width });
+                string fileName = await ImageFileManager.ImageAddAsync(newImage, contentImageLocation, new Size(image.Width, image.Height));
 
                 content = content.Replace(image.Url, fileName);
             }
