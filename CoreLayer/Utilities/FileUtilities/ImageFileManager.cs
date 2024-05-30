@@ -37,7 +37,10 @@ namespace CoreLayer.Utilities.FileUtilities
                         Directory.CreateDirectory(folderPath);
                     }
 
-                    var extension = file.ContentType == "image/png" ? ".png" : ".jpeg";
+                    bool isPng = file.ContentType == "image/png";
+                    bool hasTransparency = isPng && HasTransparency(image);
+
+                    var extension = (isPng && hasTransparency) ? ".png" : ".jpeg";
                     var newImageName = fileName == null
                         ? Guid.NewGuid() + extension
                         : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
@@ -45,7 +48,7 @@ namespace CoreLayer.Utilities.FileUtilities
 
                     using (var outputStream = new FileStream(location, FileMode.Create))
                     {
-                        if (file.ContentType == "image/png")
+                        if (isPng && hasTransparency)
                         {
                             var encoder = new PngEncoder
                             {
@@ -70,6 +73,21 @@ namespace CoreLayer.Utilities.FileUtilities
             {
                 return null;
             }
+        }
+
+        private static bool HasTransparency(Image<Rgba32> image)
+        {
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    if (image[x, y].A < 255)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public static Image<Rgba32> ResizeImage(IFormFile image, Size size)
@@ -105,12 +123,12 @@ namespace CoreLayer.Utilities.FileUtilities
                 response.EnsureSuccessStatusCode();
                 var responseStream = await response.Content.ReadAsStreamAsync();
 
-                var image = await Image.LoadAsync(responseStream);
+                var image = await Image.LoadAsync<Rgba32>(responseStream);
 
                 var resultStream = new MemoryStream();
                 string contentType;
                 string fileExtension;
-                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png")
+                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png" && HasTransparency(image))
                 {
                     var encoder = new PngEncoder
                     {
@@ -152,14 +170,14 @@ namespace CoreLayer.Utilities.FileUtilities
             {
                 var imageBytes = Convert.FromBase64String(base64String);
                 var memoryStream = new MemoryStream(imageBytes);
-                var image = await Image.LoadAsync(memoryStream);
+                var image = await Image.LoadAsync<Rgba32>(memoryStream);
 
-                memoryStream.Position = 0; // Stream'in başına dönüyoruz.
+                memoryStream.Position = 0;
 
                 string extension;
                 string contentType;
 
-                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png")
+                if (image.Metadata.DecodedImageFormat.DefaultMimeType == "image/png" && HasTransparency(image))
                 {
                     extension = ".png";
                     contentType = "image/png";
@@ -192,4 +210,6 @@ namespace CoreLayer.Utilities.FileUtilities
             }
         }
     }
+
+
 }
