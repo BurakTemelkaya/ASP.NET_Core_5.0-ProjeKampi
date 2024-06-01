@@ -13,5 +13,7 @@ namespace EntityLayer.DTO
         public int CommentCount { get; set; } = 0;
 
         public double CommentScore { get; set; } = 0;
+
+        public int BlogViewCount { get; set; }
     }
 }

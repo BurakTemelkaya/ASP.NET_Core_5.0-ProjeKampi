@@ -19,5 +19,6 @@ namespace EntityLayer.DTO
         public string WriterNameSurName { get; set; }
 
         public string WriterUserName { get; set; }
+        public int BlogViewCount { get; set; }
     }
 }

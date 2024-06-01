@@ -20,6 +20,8 @@ namespace DataAccessLayer.DependancyInjection
 
             services.AddScoped<IBlogDal, EfBlogRepository>();
 
+            services.AddScoped<IBlogViewDal, EfBlogViewRepository>();
+
             services.AddScoped<ICommentDal, EfCommentRepository>();
 
             services.AddScoped<IContactDal, EfContactRepository>();

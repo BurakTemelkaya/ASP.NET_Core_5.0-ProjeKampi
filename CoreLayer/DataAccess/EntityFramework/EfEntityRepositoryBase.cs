@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +79,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return result;
     }
 
-    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true)
+    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true
+                                                            ,Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
     {
         var values = new List<TEntity>();
         var count = await GetCountAsync(filter);
@@ -104,9 +106,13 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
             realTake = take;
         }
 
-        var result = filter == null ?
-            await _context.Set<TEntity>().Skip(skip).Take(realTake).ToListAsync() :
-            await _context.Set<TEntity>().Where(filter).Skip(skip).Take(realTake).ToListAsync();
+        var queryable = filter == null ?
+             _context.Set<TEntity>().Skip(skip).Take(realTake) :
+             _context.Set<TEntity>().Where(filter).Skip(skip).Take(realTake);
+
+        if (include != null) queryable = include(queryable);
+
+        var result = await queryable.ToListAsync();
 
         if (sortInReverse)
         {

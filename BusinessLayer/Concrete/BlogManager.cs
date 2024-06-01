@@ -14,6 +14,7 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +28,18 @@ namespace BusinessLayer.Concrete
         private readonly IUserBusinessService _userService;
         private readonly ICategoryService _categoryService;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IBlogViewService _blogViewService;
+        private readonly IServiceProvider _serviceProvider;
 
         public BlogManager(IBlogDal blogDal, IUserBusinessService userService, IMapper mapper, ICategoryService categoryService
-            , IHttpContextAccessor contextAccessor) : base(mapper)
+            , IHttpContextAccessor contextAccessor, IBlogViewService blogViewService, IServiceProvider serviceProvider) : base(mapper)
         {
             _blogDal = blogDal;
             _userService = userService;
             _categoryService = categoryService;
             _contextAccessor = contextAccessor;
+            _blogViewService = blogViewService;
+            _serviceProvider = serviceProvider;
         }
 
         [CacheAspect]
@@ -529,7 +534,18 @@ namespace BusinessLayer.Concrete
             {
                 return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(rule.Message);
             }
+
             result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
+
+            Task.Run(async () =>
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var blogViewService = scope.ServiceProvider.GetRequiredService<IBlogViewService>();
+                    await blogViewService.AddAsync(id);
+                }
+            });
+
             return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);
         }
 

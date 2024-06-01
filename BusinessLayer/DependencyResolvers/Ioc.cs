@@ -2,41 +2,42 @@
 using BusinessLayer.Concrete;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BusinessLayer.DependencyResolvers
+namespace BusinessLayer.DependencyResolvers;
+
+public static class Ioc
 {
-    public static class Ioc
+    public static void IocBusinessInstall(this IServiceCollection services)
     {
-        public static void IocBusinessInstall(this IServiceCollection services)
-        {
-            services.AddScoped<IAboutService, AboutManager>();
+        services.AddScoped<IAboutService, AboutManager>();
 
-            services.AddScoped<IBlogService, BlogManager>();
+        services.AddScoped<IBlogService, BlogManager>();
 
-            services.AddScoped<IUserBusinessService, UserBusinessManager>();
+        services.AddScoped<IBlogViewService, BlogViewManager>();
 
-            services.AddScoped<ICategoryService, CategoryManager>();
+        services.AddScoped<IUserBusinessService, UserBusinessManager>();
 
-            services.AddScoped<ICommentService, CommentManager>();
+        services.AddScoped<ICategoryService, CategoryManager>();
 
-            services.AddScoped<IContactService, ContactManager>();
+        services.AddScoped<ICommentService, CommentManager>();
 
-            services.AddScoped<IMessageService, MessageManager>();
+        services.AddScoped<IContactService, ContactManager>();
 
-            services.AddScoped<INewsLetterService, NewsLetterManager>();
+        services.AddScoped<IMessageService, MessageManager>();
 
-            services.AddScoped<INewsLetterDraftService, NewsLetterDraftManager>();
+        services.AddScoped<INewsLetterService, NewsLetterManager>();
 
-            services.AddScoped<INotificationService, NotificationManager>();
+        services.AddScoped<INewsLetterDraftService, NewsLetterDraftManager>();
 
-            services.AddScoped<IContactService, ContactManager>();
+        services.AddScoped<INotificationService, NotificationManager>();
 
-            services.AddScoped<IMessageDraftService, MessageDraftManager>();
+        services.AddScoped<IContactService, ContactManager>();
 
-            services.AddScoped<ILogService, LogManager>();
+        services.AddScoped<IMessageDraftService, MessageDraftManager>();
 
-            services.AddSingleton<ICurrencyService, CurrencyManager>();
+        services.AddScoped<ILogService, LogManager>();
 
-            services.AddScoped<ILoginLoggerService, LoginLoggerManager>();
-        }
+        services.AddSingleton<ICurrencyService, CurrencyManager>();
+
+        services.AddScoped<ILoginLoggerService, LoginLoggerManager>();
     }
 }

@@ -28,6 +28,7 @@ namespace DataAccessLayer.Concrete
         }
         public virtual DbSet<About> Abouts { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
+        public virtual DbSet<BlogView> BlogViews { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
