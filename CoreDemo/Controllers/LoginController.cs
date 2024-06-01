@@ -1,12 +1,10 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
 using CoreLayer.Utilities.CaptchaUtilities;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -19,16 +17,14 @@ namespace CoreDemo.Controllers
         private readonly IUserBusinessService _userService;
         private readonly ICaptchaService _captchaService;
         private readonly ILoginLoggerService _loginLoggerService;
-        private readonly IServiceProvider _serviceProvider;
 
         public LoginController(SignInManager<AppUser> signInManager, IUserBusinessService userService,
-            ICaptchaService captchaService, ILoginLoggerService loginLoggerService, IServiceProvider serviceProvider)
+            ICaptchaService captchaService, ILoginLoggerService loginLoggerService)
         {
             _signInManager = signInManager;
             _userService = userService;
             _captchaService = captchaService;
             _loginLoggerService = loginLoggerService;
-            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -54,15 +50,7 @@ namespace CoreDemo.Controllers
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
             if (result.Succeeded)
             {
-                Task.Run(async () =>
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var loginLoggerService = scope.ServiceProvider.GetRequiredService<ILoginLoggerService>();
-                        await loginLoggerService.AddAsync(appUser.UserName);
-                    }
-                });
-
+                await _loginLoggerService.AddAsync(appUser.UserName);
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 return RedirectToAction("Index", "Dashboard");

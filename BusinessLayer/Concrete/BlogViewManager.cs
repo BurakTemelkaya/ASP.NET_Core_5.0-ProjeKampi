@@ -2,7 +2,9 @@
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,15 +14,22 @@ public class BlogViewManager : IBlogViewService
 {
     private readonly IBlogViewDal _blogViewDal;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public BlogViewManager(IBlogViewDal blogViewDal,IHttpContextAccessor httpContextAccessor)
+    public BlogViewManager(IBlogViewDal blogViewDal,IHttpContextAccessor httpContextAccessor,IWebHostEnvironment webHostEnvironment)
     {
         _blogViewDal = blogViewDal;
         _httpContextAccessor = httpContextAccessor;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     public async Task<IResultObject> AddAsync(int blogId)
     {
+        if (!_webHostEnvironment.IsProduction())
+        {
+            return new SuccessResult();
+        }
+
         string ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
         var existData = await _blogViewDal.GetByFilterAsync(x => x.BlogId == blogId && x.IpAddress == ip);
