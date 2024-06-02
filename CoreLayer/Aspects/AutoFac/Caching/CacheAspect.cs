@@ -1,5 +1,4 @@
 ﻿using Castle.DynamicProxy;
-using CoreLayer.Aspects.AutoFac.Performance;
 using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.Utilities.Interceptors;
 using CoreLayer.Utilities.IoC;
@@ -14,7 +13,7 @@ namespace CoreLayer.Aspects.AutoFac.Caching
         private readonly int _duration;
         private readonly ICacheManager _cacheManager;
 
-        public CacheAspect(int duration = 3600)
+        public CacheAspect(int duration = 300)
         {
             _duration = duration;
             _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();

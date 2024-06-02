@@ -10,5 +10,6 @@ public class BlogView : IEntity
     public int ViewCount { get; set; }
     public Blog Blog { get; set; }
     public int BlogId { get; set; }
+    public string? RefererUrl { get; set; }
     public DateTime ViewingDate { get; set; }
 }

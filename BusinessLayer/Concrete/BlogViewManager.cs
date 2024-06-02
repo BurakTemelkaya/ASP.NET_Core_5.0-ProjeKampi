@@ -25,10 +25,10 @@ public class BlogViewManager : IBlogViewService
 
     public async Task<IResultObject> AddAsync(int blogId)
     {
-        if (!_webHostEnvironment.IsProduction())
-        {
-            return new SuccessResult();
-        }
+        //if (!_webHostEnvironment.IsProduction())
+        //{
+        //    return new SuccessResult();
+        //}
 
         string ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -46,7 +46,8 @@ public class BlogViewManager : IBlogViewService
                 BlogId = blogId,
                 IpAddress = ip,
                 ViewCount = 1,
-                ViewingDate = System.DateTime.Now
+                ViewingDate = System.DateTime.Now,
+                RefererUrl = _httpContextAccessor.HttpContext.Request.Headers["Referer"].ToString()
             };
 
             await _blogViewDal.InsertAsync(newData);
