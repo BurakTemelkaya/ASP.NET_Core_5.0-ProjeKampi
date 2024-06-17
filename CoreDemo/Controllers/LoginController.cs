@@ -41,10 +41,10 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(UserSignInViewModel appUser, string returnUrl)
         {
             string captchaMessage = await _captchaService.RecaptchaControl();
+            ViewBag.SiteKey = _captchaService.GetSiteKey();
             if (!string.IsNullOrEmpty(captchaMessage))
             {
-                ModelState.AddModelError("Captcha", captchaMessage);
-                ViewBag.SiteKey = _captchaService.GetSiteKey();
+                ModelState.AddModelError("Captcha", captchaMessage);               
                 return View();
             }
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
@@ -73,7 +73,6 @@ namespace CoreDemo.Controllers
                     TempData["ErrorMessage"] = "Kullanıcı adınız veya parolanız hatalı lütfen tekrar deneyiniz.";
                 }
             }
-            ViewBag.SiteKey = _captchaService.GetSiteKey();
             return View(appUser);
         }
         public async Task<IActionResult> Logout()

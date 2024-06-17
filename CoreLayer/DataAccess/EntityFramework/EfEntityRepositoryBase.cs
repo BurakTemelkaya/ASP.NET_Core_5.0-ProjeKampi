@@ -39,8 +39,10 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return result;
     }
 
-    public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0, bool sortInReverse = true)
+    public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0, bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
     {
+        var queryable = _context.Set<TEntity>().AsQueryable();
+
         if (take > 0)
         {
             if (sortInReverse)
@@ -60,16 +62,21 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
                     skip = 0;
                 }
             }
+
+            if (include != null) queryable = include(queryable);
+
             var filteredResult = filter == null ?
-            await _context.Set<TEntity>().Skip(skip).Take(take).ToListAsync() :
-            await _context.Set<TEntity>().Where(filter).Skip(skip).Take(take).ToListAsync();
+            await queryable.Skip(skip).Take(take).ToListAsync() :
+            await queryable.Where(filter).Skip(skip).Take(take).ToListAsync();
 
             return filteredResult;
         }
 
+        if (include != null) queryable = include(queryable);
+
         var result = filter == null ?
-            await _context.Set<TEntity>().ToListAsync() :
-            await _context.Set<TEntity>().Where(filter).ToListAsync();
+            await queryable.ToListAsync() :
+            await queryable.Where(filter).ToListAsync();
 
         if (sortInReverse)
         {
@@ -79,8 +86,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return result;
     }
 
-    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true
-                                                            ,Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
     {
         var values = new List<TEntity>();
         var count = await GetCountAsync(filter);
@@ -106,13 +112,13 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
             realTake = take;
         }
 
-        var queryable = filter == null ?
-             _context.Set<TEntity>().Skip(skip).Take(realTake) :
-             _context.Set<TEntity>().Where(filter).Skip(skip).Take(realTake);
+        var queryable = _context.Set<TEntity>().AsQueryable();
 
         if (include != null) queryable = include(queryable);
 
-        var result = await queryable.ToListAsync();
+        var result = filter == null ?
+            await queryable.Skip(skip).Take(realTake).ToListAsync() :
+            await queryable.Where(filter).Skip(skip).Take(realTake).ToListAsync();
 
         if (sortInReverse)
         {

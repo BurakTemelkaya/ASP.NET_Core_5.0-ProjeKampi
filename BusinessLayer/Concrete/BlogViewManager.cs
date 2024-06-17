@@ -4,6 +4,7 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ public class BlogViewManager : IBlogViewService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public BlogViewManager(IBlogViewDal blogViewDal,IHttpContextAccessor httpContextAccessor,IWebHostEnvironment webHostEnvironment)
+    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
     {
         _blogViewDal = blogViewDal;
         _httpContextAccessor = httpContextAccessor;
@@ -72,9 +73,16 @@ public class BlogViewManager : IBlogViewService
         return new SuccessDataResult<int>(await _blogViewDal.GetCountAsync(x => x.BlogId == blogId));
     }
 
-    public async Task<IDataResult<List<BlogView>>> GetListByPagingWriterIdAsync(int writerId, int take = 0, int page = 0)
+    public async Task<IDataResult<List<BlogView>>> GetListByPagingWriterNameAsync(string userName, int take = 0, int page = 0)
     {
-        var data = await _blogViewDal.GetListAllByPagingAsync(x => x.Blog.WriterID == writerId);
+        var data = await _blogViewDal.GetListAllByPagingAsync(x => x.Blog.Writer.UserName == userName, take, page, include: bw => bw.Include(bw => bw.Blog));
+
+        return new SuccessDataResult<List<BlogView>>(data);
+    }
+
+    public async Task<IDataResult<List<BlogView>>> GetListByPagingNameAsync(int take = 0, int page = 0)
+    {
+        var data = await _blogViewDal.GetListAllByPagingAsync(take: take, page: page, include: bw => bw.Include(bw => bw.Blog));
 
         return new SuccessDataResult<List<BlogView>>(data);
     }
