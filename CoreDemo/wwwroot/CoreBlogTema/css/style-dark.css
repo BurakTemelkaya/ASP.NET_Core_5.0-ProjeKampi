@@ -13,7 +13,7 @@ body {
     background: #181A1B;
 }
 
-    body a {
+    body a span {
         text-decoration: none;
         transition: 0.5s all;
         -webkit-transition: 0.5s all;
@@ -22,8 +22,12 @@ body {
         -ms-transition: 0.5s all;
     }
 
-a:hover {
-    text-decoration: none;
+    a:hover {
+        text-decoration: none;
+    }
+
+div span a {
+    color: #01cd74 !important;
 }
 
 ::-webkit-scrollbar {

@@ -14,10 +14,15 @@ body {
         -moz-transition: 0.5s all;
         -o-transition: 0.5s all;
         -ms-transition: 0.5s all;
+        color: #01cd74 !important;
     }
 
 a:hover {
     text-decoration: none;
+}
+
+div span a {
+    color: #01cd74 !important;
 }
 
 input[type="button"],
