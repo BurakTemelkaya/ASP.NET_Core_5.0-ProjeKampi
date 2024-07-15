@@ -6,85 +6,87 @@
     string twoStar = "";
     string oneStar = "";
 }
-
-<div class="comment-top" id="comment">
-    @if (Model.Count() > 0)
-    {
-        <h4>Yorumlar</h4>
-        @foreach (var item in Model)
+<div id="comment-top"></div>
+<div id="comments">
+    <div class="comment-top" id="comment">
+        @if (Model.Count() > 0)
         {
+            <h4>Yorumlar</h4>
+            @foreach (var item in Model)
+            {
 
-            <div class="media-comment">
-                <div class="media-body">
-                    <h5 class="mt-0">Ad: @item.CommentUserName</h5>
-                    <h5 class="mt-0">Başlık: @item.CommentTitle</h5>
-                    <p>
-                        @item.CommentContent
-                    </p>
-                    @{
-                        fiveStar = "";
-                        fourStar = "";
-                        threeStar = "";
-                        twoStar = "";
-                        oneStar = "";
+                <div class="media-comment">
+                    <div class="media-body">
+                        <h5 class="mt-0">Ad: @item.CommentUserName</h5>
+                        <h5 class="mt-0">Başlık: @item.CommentTitle</h5>
+                        <p>
+                            @item.CommentContent
+                        </p>
+                        @{
+                            fiveStar = "";
+                            fourStar = "";
+                            threeStar = "";
+                            twoStar = "";
+                            oneStar = "";
 
-                        if (item.BlogScore == 5)
-                        {
-                            fiveStar = "rating-color";
-                            fourStar = "rating-color";
-                            threeStar = "rating-color";
-                            twoStar = "rating-color";
-                            oneStar = "rating-color";
+                            if (item.BlogScore == 5)
+                            {
+                                fiveStar = "rating-color";
+                                fourStar = "rating-color";
+                                threeStar = "rating-color";
+                                twoStar = "rating-color";
+                                oneStar = "rating-color";
+                            }
+                            else if (item.BlogScore == 4)
+                            {
+                                fourStar = "rating-color";
+                                threeStar = "rating-color";
+                                twoStar = "rating-color";
+                                oneStar = "rating-color";
+                            }
+                            else if (item.BlogScore == 3)
+                            {
+                                threeStar = "rating-color";
+                                twoStar = "rating-color";
+                                oneStar = "rating-color";
+                            }
+                            else if (item.BlogScore == 2)
+                            {
+                                twoStar = "rating-color";
+                                oneStar = "rating-color";
+                            }
+                            else if (item.BlogScore == 1)
+                            {
+                                oneStar = "rating-color";
+                            }
                         }
-                        else if (item.BlogScore == 4)
-                        {
-                            fourStar = "rating-color";
-                            threeStar = "rating-color";
-                            twoStar = "rating-color";
-                            oneStar = "rating-color";
-                        }
-                        else if (item.BlogScore == 3)
-                        {
-                            threeStar = "rating-color";
-                            twoStar = "rating-color";
-                            oneStar = "rating-color";
-                        }
-                        else if (item.BlogScore == 2)
-                        {
-                            twoStar = "rating-color";
-                            oneStar = "rating-color";
-                        }
-                        else if (item.BlogScore == 1)
-                        {
-                            oneStar = "rating-color";
-                        }
-                    }
-                    <div class="d-flex float-left">
-                        <div class="d-flex justify-content-between">
-                            <p>@(((DateTime)item.CommentDate).ToString("dd.MM.yyyy"))</p>
-                        </div>
-                    </div>
-                    <div class="d-flex float-right">
-                        <div class="card">
+                        <div class="d-flex float-left">
                             <div class="d-flex justify-content-between">
-                                <div class="ratings">
-                                    <i class="fa fa-star @oneStar"></i>
-                                    <i class="fa fa-star @twoStar"></i>
-                                    <i class="fa fa-star @threeStar"></i>
-                                    <i class="fa fa-star @fourStar"></i>
-                                    <i class="fa fa-star @fiveStar"></i>
+                                <p>@(((DateTime)item.CommentDate).ToString("dd.MM.yyyy"))</p>
+                            </div>
+                        </div>
+                        <div class="d-flex float-right">
+                            <div class="card">
+                                <div class="d-flex justify-content-between">
+                                    <div class="ratings">
+                                        <i class="fa fa-star @oneStar"></i>
+                                        <i class="fa fa-star @twoStar"></i>
+                                        <i class="fa fa-star @threeStar"></i>
+                                        <i class="fa fa-star @fourStar"></i>
+                                        <i class="fa fa-star @fiveStar"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <br />
+                <br />
+            }
+            <h4>Bir Yorum Bırak</h4>
         }
-        <h4>Bir Yorum Bırak</h4>
-    }
-    else
-    {
-        <h4>Hiç Yorum Yapılmamış. İlk Yorumu Sen Yap</h4>
-    }
+        else
+        {
+            <h4>Hiç Yorum Yapılmamış. İlk Yorumu Sen Yap</h4>
+        }
+    </div>
 </div>

@@ -72,6 +72,8 @@ $("#btnSendComment").click(function () {
                     icon: 'success',
                     title: 'Başarılı !',
                     text: "Yorumunuz başarıyla gönderildi, teşekkürler.."
+                }).then(function () {
+                    ReloadEvents(blogId);
                 });
             },
             error: function (func) {
@@ -101,3 +103,13 @@ $("#btnSendComment").click(function () {
         $("#CommentContent").val("");
     }
 });
+
+function ReloadEvents(id) {
+    $.ajax({
+        url: `/Comment/RefreshCommentListByBlogComponent?id=${id}`,
+        success: function (data) {
+            $('#comments').html(data);
+            window.location.hash = '#comment-top';
+        }
+    })
+} 

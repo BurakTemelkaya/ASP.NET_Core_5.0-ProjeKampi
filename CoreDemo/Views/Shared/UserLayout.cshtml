@@ -153,7 +153,8 @@
     }
 
     @{
-        string json = httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions");
+        string json = httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions") == string.Empty ? "[]" 
+        : httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions");
 
         <script>
             let validationErrors = @Html.Raw(json);
