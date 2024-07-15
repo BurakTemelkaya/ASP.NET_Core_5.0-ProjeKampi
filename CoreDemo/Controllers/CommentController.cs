@@ -47,6 +47,7 @@ public class CommentController : Controller
         return PartialView(values.Data);
     }
 
+    [AllowAnonymous]
     public IActionResult RefreshCommentListByBlogComponent(int id)
     {
         return ViewComponent("CommentListByBlog", new { id });
