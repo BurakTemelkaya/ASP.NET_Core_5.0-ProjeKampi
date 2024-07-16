@@ -1,4 +1,4 @@
-# ASP.NET Core 5.0 ProjeKampi
+# ASP.NET Core ProjeKampi
 
 Sitenin linki: https://blog.buraktemelkaya.com/
 
