@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\admin-notification.js" />
+    <Content Remove="wwwroot\js\notification.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\notification.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Publisher.ApplicationInsights" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
@@ -41,6 +50,11 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="wwwroot\BlogContentImages\" />
     <Folder Include="wwwroot\writerImageFiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\admin-notification.js" />
+    <None Include="wwwroot\js\notification.js" />
   </ItemGroup>
 
 </Project>

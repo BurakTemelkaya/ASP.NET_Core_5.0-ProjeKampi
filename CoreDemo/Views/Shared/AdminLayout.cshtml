@@ -33,10 +33,11 @@
 
     <link href="~/admin/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 
-    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="~/coreblogtema/css/thema-toggle.css" rel="stylesheet" />
     <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         .pointer {
             cursor: pointer;
@@ -104,7 +105,7 @@
     <script src="~/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/admin/js/plugins/peity/jquery.peity.min.js"></script>
     <script src="~/admin/js/inspinia.js"></script>
-    <script src="~/admin/js/plugins/pace/pace.min.js"></script>
+    @* <script src="~/admin/js/plugins/pace/pace.min.js"></script> *@
     <script src="~/admin/js/plugins/iCheck/icheck.min.js"></script>
     <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
@@ -112,14 +113,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/admin-folders.js"></script>
     <script src="~/js/cookie.js"></script>
-    @if (thema == "dark")
-    {
-        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
-    }
-    else
-    {
-        <script src="~/writer/assets/js/SweetAlert2.js"></script>
-    }
     <script>
         $(document).ready(function () {
             $('.i-checks').iCheck({
@@ -128,7 +121,18 @@
             });
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/admin-notification.js"></script>
     @RenderSection("ScriptSection", false)
+    @if (thema == "dark")
+    {
+        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
+    }
+    else
+    {
+        <script src="~/writer/assets/js/SweetAlert2.js"></script>
+    }
 </body>
 </html>
 

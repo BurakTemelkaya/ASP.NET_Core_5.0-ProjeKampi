@@ -10,503 +10,503 @@ using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Concrete
+namespace BusinessLayer.Concrete;
+
+public class MessageManager : ManagerBase, IMessageService
 {
-    public class MessageManager : ManagerBase, IMessageService
+    private readonly IMessageDal _messageDal;
+    private readonly IUserBusinessService _userService;
+    private readonly INotificationHubService _notificationHubService;
+
+    public MessageManager(IMessageDal message2Dal, IMapper mapper, IUserBusinessService userService, INotificationHubService notificationHubService) : base(mapper)
     {
-        private readonly IMessageDal _messageDal;
-        private readonly IUserBusinessService _userService;
+        _messageDal = message2Dal;
+        _userService = userService;
+        _notificationHubService = notificationHubService;
+    }
 
-        public MessageManager(IMessageDal message2Dal, IMapper mapper, IUserBusinessService userService) : base(mapper)
+    
+    public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, int take = 0, int skip = 0)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+
+        if (!user.Success)
         {
-            _messageDal = message2Dal;
-            _userService = userService;
+            return new ErrorDataResult<List<MessageSenderUserDto>>(user.Message);
         }
 
-        [CacheAspect]
-        public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, int take = 0, int skip = 0)
+        var values = new List<MessageSenderUserDto>();
+        if (search == null)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-
-            if (!user.Success)
-            {
-                return new ErrorDataResult<List<MessageSenderUserDto>>(user.Message);
-            }
-
-            var values = new List<MessageSenderUserDto>();
-            if (search == null)
-            {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, null, take, skip);
-            }
-            else
-            {
-                values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()), take, skip);
-            }
-            foreach (var item in values)
-            {
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
-            }
-
-            return new SuccessDataResult<List<MessageSenderUserDto>>(values);
+            values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, null, take, skip);
+        }
+        else
+        {
+            values = await _messageDal.GetInboxWithMessageListAsync(user.Data.Id, x => x.Subject.ToLower().Contains(search.ToLower()) || x.Details.ToLower().Contains(search.ToLower()), take, skip);
+        }
+        foreach (var item in values)
+        {
+            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        [ValidationAspect(typeof(MessageValidator))]
-        public async Task<IResultObject> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
+        return new SuccessDataResult<List<MessageSenderUserDto>>(values);
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    [ValidationAspect(typeof(MessageValidator))]
+    public async Task<IResultObject> AddMessageAsync(Message message, string senderUserName, string receiverUserName)
+    {
+        if (senderUserName == string.Empty || senderUserName == null)
         {
-            if (senderUserName == string.Empty || senderUserName == null)
-            {
-                return new ErrorResult(Messages.MessageSenderNotEmpty);
-            }
-            if (receiverUserName == string.Empty || receiverUserName == null)
-            {
-                return new ErrorResult(Messages.MessageReceiverNotEmpty);
-            }
-
-            var senderUser = await _userService.GetByUserNameAsync(senderUserName);
-            if (!senderUser.Success)
-            {
-                return new ErrorResult(Messages.MessageSenderNotFound);
-            }
-
-            var receiverUser = await _userService.GetByUserNameAsync(receiverUserName);
-            if (!receiverUser.Success)
-            {
-                return new ErrorResult(Messages.MessageReceiverNotFound);
-            }
-
-            IResultObject result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
-
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            message.SenderUserId = senderUser.Data.Id;
-
-            message.ReceiverUserId = receiverUser.Data.Id;
-            message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
-            message.MessageDate = DateTime.Now;
-            await _messageDal.InsertAsync(message);
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageSenderNotEmpty);
+        }
+        if (receiverUserName == string.Empty || receiverUserName == null)
+        {
+            return new ErrorResult(Messages.MessageReceiverNotEmpty);
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> DeleteMessageAsync(int id, string userName)
+        var senderUser = await _userService.GetByUserNameAsync(senderUserName);
+        if (!senderUser.Success)
         {
-            var message = await GetByIdAsync(id);
-
-            IResultObject result = BusinessRules.Run(MessageNotEmpty(message));
-
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            DeleteFileManager.DeleteFile(message.Data.Details);
-            await _messageDal.DeleteAsync(message.Data);
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageSenderNotFound);
         }
 
-        [CacheAspect]
-        public async Task<IDataResult<Message>> GetByIdAsync(int id)
+        var receiverUser = await _userService.GetByUserNameAsync(receiverUserName);
+        if (!receiverUser.Success)
         {
-            var value = await _messageDal.GetByIDAsync(id);
+            return new ErrorResult(Messages.MessageReceiverNotFound);
+        }
+
+        IResultObject result = BusinessRules.Run(ReceiverUserNotEqualsSenderUser(senderUserName, receiverUserName), ReceiverUserNotEmpty(receiverUser), SenderUserNotEmpty(senderUser));
+
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        message.SenderUserId = senderUser.Data.Id;
+
+        message.ReceiverUserId = receiverUser.Data.Id;
+        message.MessageDate = DateTime.Now;
+        message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
+        await _messageDal.InsertAsync(message);
+        await _notificationHubService.SendNotification(receiverUser.Data.Id, $"{senderUserName}, size mesaj gönderdi.");
+        return new SuccessResult();
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> DeleteMessageAsync(int id, string userName)
+    {
+        var message = await GetByIdAsync(id);
+
+        IResultObject result = BusinessRules.Run(MessageNotEmpty(message));
+
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        DeleteFileManager.DeleteFile(message.Data.Details);
+        await _messageDal.DeleteAsync(message.Data);
+        return new SuccessResult();
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<Message>> GetByIdAsync(int id)
+    {
+        var value = await _messageDal.GetByIDAsync(id);
+        return new SuccessDataResult<Message>(value);
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> UpdateMessageAsync(Message t, string userName)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+
+        var result = BusinessRules.Run(ReceiverUserNotEmpty(user));
+
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        t.SenderUserId = user.Data.Id;
+        DeleteFileManager.DeleteFile(t.Details);
+        t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
+
+        if (t.Details == null)
+        {
+            return new ErrorResult(Messages.MessageNotUpdating);
+        }
+
+        await _messageDal.UpdateAsync(t);
+        return new SuccessResult();
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<int>> GetCountAsync(bool? messageStatus = null)
+    {
+        return new SuccessDataResult<int>(messageStatus == null ? await _messageDal.GetCountAsync()
+            : await _messageDal.GetCountAsync(x => x.MessageStatus == messageStatus));
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<int>> GetSendMessageCountAsync(string userName)
+    {
+        var sender = await _userService.GetByUserNameAsync(userName);
+        return new SuccessDataResult<int>(await _messageDal.GetCountAsync(x => x.SenderUserId == sender.Data.Id));
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
+    {
+        var receiverUser = await _userService.GetByUserNameAsync(userName);
+
+        IResultObject result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
+
+        if (!result.Success)
+        {
+            return new ErrorDataResult<int>(result.Message);
+        }
+
+        var value = await _messageDal.GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
+
+        if (value == 0)
+        {
+            return new ErrorDataResult<int>();
+        }
+
+        return new SuccessDataResult<int>(value);
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<List<MessageReceiverUserDto>>> GetSendBoxWithMessageListAsync(string userName, string? subject = null, int take = 0, int skip = 0)
+    {
+        Expression<Func<MessageReceiverUserDto, bool>> filter = subject == null ? null : x => x.Subject.ToLower().Contains(subject.ToLower());
+
+        var user = await _userService.GetByUserNameAsync(userName);
+        var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter, take, skip);
+
+        foreach (var item in values)
+            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
+        return new SuccessDataResult<List<MessageReceiverUserDto>>(values);
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> MarkChangedAsync(int messageId, string userName)
+    {
+        IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
+
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        var message = await GetByFilterFileName(x => x.MessageID == messageId);
+        var activeUser = await _userService.GetByUserNameAsync(userName);
+
+        if (activeUser.Data.UserName != userName)
+            return new ErrorResult();
+
+
+        if (message.Data.MessageStatus)
+            message.Data.MessageStatus = false;
+
+        else
+            message.Data.MessageStatus = true;
+
+        await _messageDal.UpdateAsync(message.Data);
+        return new SuccessResult();
+    }
+
+    public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+
+        IResultObject result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
+
+        if (!result.Success)
+        {
+            return new ErrorDataResult<Message>(result.Message);
+        }
+
+        var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, x => x.MessageID == id);
+        if (value != null)
+        {
             value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+            if (!value.MessageStatus)
+            {
+                await MarkUsReadAsync(value.MessageID, user.Data.UserName);
+            }
+
             return new SuccessDataResult<Message>(value);
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> UpdateMessageAsync(Message t, string userName)
+        return new ErrorDataResult<Message>(Messages.MessageNotFound);
+    }
+
+    public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+
+        IResultObject result = BusinessRules.Run(UserNotEmpty(user));
+
+        if (!result.Success)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-
-            var result = BusinessRules.Run(ReceiverUserNotEmpty(user));
-
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            t.SenderUserId = user.Data.Id;
-            DeleteFileManager.DeleteFile(t.Details);
-            t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
-
-            if (t.Details == null)
-            {
-                return new ErrorResult(Messages.MessageNotUpdating);
-            }
-
-            await _messageDal.UpdateAsync(t);
-            return new SuccessResult();
+            return new ErrorDataResult<Message>(result.Message);
         }
 
-        [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(bool? messageStatus = null)
+        var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, x => x.MessageID == id);
+        if (value != null)
+            value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+        return new SuccessDataResult<Message>(value);
+    }
+
+    public async Task<IDataResult<Message>> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
+    {
+        return new SuccessDataResult<Message>(await _messageDal.GetByFilterAsync(filter));
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> MarkUsReadAsync(int messageId, string userName)
+    {
+        var message = await GetByFilterFileName(x => x.MessageID == messageId);
+        var activeUser = await _userService.GetByUserNameAsync(userName);
+
+        IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+
+        if (!result.Success)
         {
-            return new SuccessDataResult<int>(messageStatus == null ? await _messageDal.GetCountAsync()
-                : await _messageDal.GetCountAsync(x => x.MessageStatus == messageStatus));
+            return new ErrorResult(result.Message);
         }
 
-        [CacheAspect]
-        public async Task<IDataResult<int>> GetSendMessageCountAsync(string userName)
+        if (!message.Data.MessageStatus)
         {
-            var sender = await _userService.GetByUserNameAsync(userName);
-            return new SuccessDataResult<int>(await _messageDal.GetCountAsync(x => x.SenderUserId == sender.Data.Id));
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<int>> GetUnreadMessagesCountByUserNameAsync(string userName)
-        {
-            var receiverUser = await _userService.GetByUserNameAsync(userName);
-
-            IResultObject result = BusinessRules.Run(ReceiverUserNotEmpty(receiverUser));
-
-            if (!result.Success)
-            {
-                return new ErrorDataResult<int>(result.Message);
-            }
-
-            var value = await _messageDal.GetCountAsync(x => x.ReceiverUserId == receiverUser.Data.Id && !x.MessageStatus);
-
-            if (value == 0)
-            {
-                return new ErrorDataResult<int>();
-            }
-
-            return new SuccessDataResult<int>(value);
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<MessageReceiverUserDto>>> GetSendBoxWithMessageListAsync(string userName, string? subject = null, int take = 0, int skip = 0)
-        {
-            Expression<Func<MessageReceiverUserDto, bool>> filter = subject == null ? null : x => x.Subject.ToLower().Contains(subject.ToLower());
-
-            var user = await _userService.GetByUserNameAsync(userName);
-            var values = await _messageDal.GetSendBoxWithMessageListAsync(user.Data.Id, filter, take, skip);
-
-            foreach (var item in values)
-                item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
-            return new SuccessDataResult<List<MessageReceiverUserDto>>(values);
-        }
-
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> MarkChangedAsync(int messageId, string userName)
-        {
-            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId));
-
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.GetByUserNameAsync(userName);
-
-            if (activeUser.Data.UserName != userName)
-                return new ErrorResult();
-
-
-            if (message.Data.MessageStatus)
-                message.Data.MessageStatus = false;
-
-            else
-                message.Data.MessageStatus = true;
+            message.Data.MessageStatus = true;
 
             await _messageDal.UpdateAsync(message.Data);
+
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<Message>> GetReceivedMessageAsync(string userName, int id)
+        else
         {
-            var user = await _userService.GetByUserNameAsync(userName);
+            return new ErrorResult(Messages.MessageAlreadyRead);
+        }
 
-            IResultObject result = BusinessRules.Run(UserNotEmpty(user), ReceiverUserNotEmpty(user));
+    }
 
-            if (!result.Success)
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> MarkUsUnreadAsync(int messageId, string userName)
+    {
+        var message = await GetByFilterFileName(x => x.MessageID == messageId);
+        var activeUser = await _userService.GetByUserNameAsync(userName);
+
+        IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
+
+        if (!result.Success)
+        {
+            return new ErrorResult(result.Message);
+        }
+
+        if (message.Data.MessageStatus)
+        {
+            message.Data.MessageStatus = false;
+
+            await _messageDal.UpdateAsync(message.Data);
+
+            return new SuccessResult();
+        }
+
+        else
+        {
+            return new ErrorResult(Messages.MessageAlreadyUnread);
+        }
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> DeleteMessagesAsync(List<string> ids, string userName)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+
+        var result = BusinessRules.Run(MessageIdsNotEmpty(ids), UserNotEmpty(user));
+
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        List<Message> messages = new();
+
+        foreach (var id in ids)
+        {
+            try
             {
-                return new ErrorDataResult<Message>(result.Message);
-            }
-
-            var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, x => x.MessageID == id);
-            if (value != null)
-            {
-                value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-                if (!value.MessageStatus)
+                var message = await GetByIdAsync(Convert.ToInt32(id));
+                if (message.Data.ReceiverUserId == user.Data.Id)
                 {
-                    await MarkUsReadAsync(value.MessageID, user.Data.UserName);
+                    DeleteFileManager.DeleteFile(message.Data.Details);
+                    messages.Add(message.Data);
                 }
-
-                return new SuccessDataResult<Message>(value);
             }
-
-            return new ErrorDataResult<Message>(Messages.MessageNotFound);
-        }
-
-        public async Task<IDataResult<Message>> GetSendMessageAsync(string userName, int id)
-        {
-            var user = await _userService.GetByUserNameAsync(userName);
-
-            IResultObject result = BusinessRules.Run(UserNotEmpty(user));
-
-            if (!result.Success)
+            catch
             {
-                return new ErrorDataResult<Message>(result.Message);
-            }
-
-            var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, x => x.MessageID == id);
-            if (value != null)
-                value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
-            return new SuccessDataResult<Message>(value);
-        }
-
-        public async Task<IDataResult<Message>> GetByFilterFileName(Expression<Func<Message, bool>> filter = null)
-        {
-            return new SuccessDataResult<Message>(await _messageDal.GetByFilterAsync(filter));
-        }
-
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> MarkUsReadAsync(int messageId, string userName)
-        {
-            var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.GetByUserNameAsync(userName);
-
-            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
-
-            if (!result.Success)
-            {
-                return new ErrorResult(result.Message);
-            }
-
-            if (!message.Data.MessageStatus)
-            {
-                message.Data.MessageStatus = true;
-
-                await _messageDal.UpdateAsync(message.Data);
-
-                return new SuccessResult();
-            }
-
-            else
-            {
-                return new ErrorResult(Messages.MessageAlreadyRead);
+                continue;
             }
 
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> MarkUsUnreadAsync(int messageId, string userName)
+        await _messageDal.DeleteRangeAsync(messages);
+
+        return new SuccessResult();
+    }
+
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> MarksUsReadAsync(List<string> messageIds, string userName)
+    {
+        List<Message> messages = new();
+
+        var activeUser = await _userService.GetByUserNameAsync(userName);
+
+        var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
+
+        if (!result.Success)
         {
-            var message = await GetByFilterFileName(x => x.MessageID == messageId);
-            var activeUser = await _userService.GetByUserNameAsync(userName);
-
-            IResultObject result = BusinessRules.Run(MessageIdNotEqualZero(messageId), UserNotEmpty(activeUser), ReceiverUserEqualActiveUser(userName, activeUser.Data.UserName));
-
-            if (!result.Success)
-            {
-                return new ErrorResult(result.Message);
-            }
-
-            if (message.Data.MessageStatus)
-            {
-                message.Data.MessageStatus = false;
-
-                await _messageDal.UpdateAsync(message.Data);
-
-                return new SuccessResult();
-            }
-
-            else
-            {
-                return new ErrorResult(Messages.MessageAlreadyUnread);
-            }
+            return result;
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> DeleteMessagesAsync(List<string> ids, string userName)
+        foreach (var id in messageIds)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-
-            var result = BusinessRules.Run(MessageIdsNotEmpty(ids), UserNotEmpty(user));
-
-            if (!result.Success)
+            try
             {
-                return result;
-            }
+                var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
 
-            List<Message> messages = new();
-
-            foreach (var id in ids)
-            {
-                try
+                if (activeUser.Data.Id == message.Data.ReceiverUserId)
                 {
-                    var message = await GetByIdAsync(Convert.ToInt32(id));
-                    if (message.Data.ReceiverUserId == user.Data.Id)
+                    if (!message.Data.MessageStatus)
                     {
-                        DeleteFileManager.DeleteFile(message.Data.Details);
+                        message.Data.MessageStatus = true;
+
                         messages.Add(message.Data);
                     }
                 }
-                catch
-                {
-                    continue;
-                }
-
             }
+            catch
+            {
+                continue;
+            }
+        }
+        await _messageDal.UpdateRangeAsync(messages);
+        return new SuccessResult();
+    }
 
-            await _messageDal.DeleteRangeAsync(messages);
+    [CacheRemoveAspect("IMessageService.Get")]
+    public async Task<IResultObject> MarksUsUnreadAsync(List<string> messageIds, string userName)
+    {
+        List<Message> messages = new();
 
-            return new SuccessResult();
+        var activeUser = await _userService.GetByUserNameAsync(userName);
+
+        var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
+
+        if (!result.Success)
+        {
+            return result;
         }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> MarksUsReadAsync(List<string> messageIds, string userName)
+        foreach (var id in messageIds)
         {
-            List<Message> messages = new();
-
-            var activeUser = await _userService.GetByUserNameAsync(userName);
-
-            var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
-
-            if (!result.Success)
+            try
             {
-                return result;
-            }
+                var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
 
-            foreach (var id in messageIds)
-            {
-                try
+                if (activeUser.Data.UserName == userName)
                 {
-                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-
-                    if (activeUser.Data.Id == message.Data.ReceiverUserId)
+                    if (message.Data.MessageStatus)
                     {
-                        if (!message.Data.MessageStatus)
-                        {
-                            message.Data.MessageStatus = true;
+                        message.Data.MessageStatus = false;
 
-                            messages.Add(message.Data);
-                        }
+                        messages.Add(message.Data);
                     }
                 }
-                catch
-                {
-                    continue;
-                }
             }
-            await _messageDal.UpdateRangeAsync(messages);
-            return new SuccessResult();
+            catch
+            {
+                continue;
+            }
         }
+        await _messageDal.UpdateRangeAsync(messages);
+        return new SuccessResult();
+    }
 
-        [CacheRemoveAspect("IMessageService.Get")]
-        public async Task<IResultObject> MarksUsUnreadAsync(List<string> messageIds, string userName)
+
+    //Business Rules
+
+    private IResultObject ReceiverUserNotEqualsSenderUser(string receiverUser, string senderUser)
+    {
+        if (receiverUser == senderUser)
         {
-            List<Message> messages = new();
-
-            var activeUser = await _userService.GetByUserNameAsync(userName);
-
-            var result = BusinessRules.Run(MessageIdsNotEmpty(messageIds), UserNotEmpty(activeUser));
-
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            foreach (var id in messageIds)
-            {
-                try
-                {
-                    var message = await GetByFilterFileName(x => x.MessageID == Convert.ToInt32(id));
-
-                    if (activeUser.Data.UserName == userName)
-                    {
-                        if (message.Data.MessageStatus)
-                        {
-                            message.Data.MessageStatus = false;
-
-                            messages.Add(message.Data);
-                        }
-                    }
-                }
-                catch
-                {
-                    continue;
-                }
-            }
-            await _messageDal.UpdateRangeAsync(messages);
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageReceiverNotEqualsSender);
         }
+        return new SuccessResult();
+    }
 
-
-        //Business Rules
-
-        private IResultObject ReceiverUserNotEqualsSenderUser(string receiverUser, string senderUser)
+    private IResultObject ReceiverUserNotEmpty(IDataResult<UserDto> receiverUser)
+    {
+        if (!receiverUser.Success)
         {
-            if (receiverUser == senderUser)
-            {
-                return new ErrorResult(Messages.MessageReceiverNotEqualsSender);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageReceiverNotEmpty);
         }
+        return new SuccessResult();
+    }
 
-        private IResultObject ReceiverUserNotEmpty(IDataResult<UserDto> receiverUser)
+    private IResultObject SenderUserNotEmpty(IDataResult<UserDto> senderUser)
+    {
+        if (!senderUser.Success)
         {
-            if (!receiverUser.Success)
-            {
-                return new ErrorResult(Messages.MessageReceiverNotEmpty);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageSenderNotEmpty);
         }
+        return new SuccessResult();
+    }
 
-        private IResultObject SenderUserNotEmpty(IDataResult<UserDto> senderUser)
+    private IResultObject MessageNotEmpty(IDataResult<Message> message)
+    {
+        if (message.Data == null)
         {
-            if (!senderUser.Success)
-            {
-                return new ErrorResult(Messages.MessageSenderNotEmpty);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageNotEmpty);
         }
+        return new SuccessResult();
+    }
 
-        private IResultObject MessageNotEmpty(IDataResult<Message> message)
+    private IResultObject MessageIdNotEqualZero(int id)
+    {
+        if (id == 0)
         {
-            if (message.Data == null)
-            {
-                return new ErrorResult(Messages.MessageNotEmpty);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageNotEmpty);
         }
+        return new SuccessResult();
+    }
 
-        private IResultObject MessageIdNotEqualZero(int id)
+    private IResultObject MessageIdsNotEmpty(List<string> Ids)
+    {
+        if (Ids == null)
         {
-            if (id == 0)
-            {
-                return new ErrorResult(Messages.MessageNotEmpty);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessagesNotEmpty);
         }
+        return new SuccessResult();
+    }
 
-        private IResultObject MessageIdsNotEmpty(List<string> Ids)
+    private IResultObject ReceiverUserEqualActiveUser(string receiverUserName, string activeUserName)
+    {
+        if (receiverUserName != activeUserName)
         {
-            if (Ids == null)
-            {
-                return new ErrorResult(Messages.MessagesNotEmpty);
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.MessageDoesNotBelongToTheUser);
         }
-
-        private IResultObject ReceiverUserEqualActiveUser(string receiverUserName, string activeUserName)
-        {
-            if (receiverUserName != activeUserName)
-            {
-                return new ErrorResult(Messages.MessageDoesNotBelongToTheUser);
-            }
-            return new SuccessResult();
-        }
+        return new SuccessResult();
     }
 }

@@ -9,6 +9,7 @@ using CoreDemo;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
 using CoreLayer.DependancyResolvers;
+using CoreLayer.Extensions;
 using CoreLayer.Utilities.IoC;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.DependancyInjection;
@@ -205,5 +206,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Blog}/{action=Index}/{id?}"
 );
+
+app.MapHub<SignalRHub>("/ReceiveNotification");
 
 app.Run();

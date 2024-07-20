@@ -39,5 +39,7 @@ public static class Ioc
         services.AddSingleton<ICurrencyService, CurrencyManager>();
 
         services.AddScoped<ILoginLoggerService, LoginLoggerManager>();
+
+        services.AddScoped<INotificationHubService, NotificationHubService>();
     }
 }
