@@ -25,7 +25,7 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            string tempCelcius = WeatherApi().Value;
+            string tempCelcius = WeatherApi() != null ? WeatherApi().Value : "Veri alınırken hata oluştu.";
 
             tempCelcius = tempCelcius.Length == 5 ? tempCelcius[..4] : tempCelcius[..3];
 
@@ -46,12 +46,19 @@ namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
             ViewBag.v3 = _commentService.GetCountAsync().Result.Data;
             return View(widgetModel);
         }
-        private XAttribute WeatherApi(string city = "istanbul")
+        private XAttribute? WeatherApi(string city = "istanbul")
         {
-            string apiKey = _configuration["OpenWeatherApiKeys:Key"];
-            string connection = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&mode=xml&appid=" + apiKey + "&units=metric";
-            XDocument document = XDocument.Load(connection);
-            return document.Descendants("temperature").ElementAt(0).Attribute("value");
+            try
+            {
+                string apiKey = _configuration["OpenWeatherApiKeys:Key"];
+                string connection = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&mode=xml&appid=" + apiKey + "&units=metric";
+                XDocument document = XDocument.Load(connection);
+                return document.Descendants("temperature").ElementAt(0).Attribute("value");
+            }
+            catch
+            {
+                return null;
+            }            
         }
     }
 }
