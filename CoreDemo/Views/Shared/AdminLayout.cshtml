@@ -19,7 +19,6 @@
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/admin/css/animate.css" rel="stylesheet">
-    <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
     @if (thema == "dark")
     {
         <link href="~/admin/css/style-dark.css" rel="stylesheet">
@@ -43,6 +42,7 @@
             cursor: pointer;
         }
     </style>
+    @RenderSection("HeaderSection",false)
 </head>
 <body>
 
@@ -105,14 +105,14 @@
     <script src="~/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/admin/js/plugins/peity/jquery.peity.min.js"></script>
     <script src="~/admin/js/inspinia.js"></script>
-    @* <script src="~/admin/js/plugins/pace/pace.min.js"></script> *@
-    <script src="~/admin/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/admin/js/plugins/pace/pace.min.js"></script>     
     <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="~/js/admin-folders.js"></script>
     <script src="~/js/cookie.js"></script>
+    <script src="~/admin/js/plugins/iCheck/icheck.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.i-checks').iCheck({

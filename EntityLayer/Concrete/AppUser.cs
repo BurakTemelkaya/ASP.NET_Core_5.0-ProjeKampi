@@ -3,17 +3,16 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 
-namespace EntityLayer.Concrete
+namespace EntityLayer.Concrete;
+
+public class AppUser : IdentityUser<int>, IEntity
 {
-    public class AppUser : IdentityUser<int>, IEntity
-    {
-        public string NameSurname { get; set; }
-        public string ImageUrl { get; set; }
-        public string About { get; set; }
-        public string City { get; set; }
-        public DateTime RegistrationTime { get; set; }
-        public DateTime? MailVerifyCodeSendTime { get; set; }
-        public virtual ICollection<Message> SenderUserInfo { get; set; }
-        public virtual ICollection<Message> ReceiverUserInfo { get; set; }
-    }
+    public string NameSurname { get; set; }
+    public string ImageUrl { get; set; }
+    public string About { get; set; }
+    public string City { get; set; }
+    public DateTime RegistrationTime { get; set; }
+    public DateTime? MailVerifyCodeSendTime { get; set; }
+    public virtual ICollection<Message> SenderUserInfo { get; set; }
+    public virtual ICollection<Message> ReceiverUserInfo { get; set; }
 }

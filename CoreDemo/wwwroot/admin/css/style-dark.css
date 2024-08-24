@@ -1211,6 +1211,8 @@ h5 {
     text-shadow: none;
     top: 100%;
     z-index: 1000;
+    background-color: #222529;
+    color: #fff;
 }
 
     .dropdown-menu > li > a {
@@ -2109,9 +2111,9 @@ button:focus {
         }
 
 .btn-default {
-    color: inherit;
-    background: white;
     border: 1px solid #e7eaec;
+    color: #fff !important;
+    background-color: #676a6c !important;
 }
 
     .btn-default:hover,

@@ -4,6 +4,11 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
+@section HeaderSection {
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+}
+
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="BlogID" />
     <div class="form-group row col-md-12">
@@ -69,7 +74,6 @@
     <br /><br />
 </form>
 
-@section ScriptSection{
-    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+@section ScriptSection {
     <script src="~/js/summernotesetup.js"></script>
 }
