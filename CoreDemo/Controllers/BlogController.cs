@@ -15,30 +15,18 @@ public class BlogController : Controller
     private readonly IBlogService _blogService;
     private readonly IUserBusinessService _businessUserService;
     private readonly ICategoryService _categoryService;
-    private readonly IMailService _mailService;
 
     public BlogController(IBlogService blogService,
-        IUserBusinessService businessUserService, ICategoryService categoryService,IMailService mailService)
+        IUserBusinessService businessUserService, ICategoryService categoryService)
     {
         _blogService = blogService;
         _businessUserService = businessUserService;
         _categoryService = categoryService;
-        _mailService = mailService;
     }
 
     [AllowAnonymous]
     public async Task<IActionResult> Index(GetBlogModel getBlogModel)
     {
-        await _mailService.SendEmailAsync(new()
-        {
-            ToList = new()
-            {
-                new MimeKit.MailboxAddress(name:"test",address:"temelkayaburak@gmail.com"),
-            },
-            Subject="HELLO",
-            HtmlBody="TEST TRY CATCH"
-        });
-
         var values = await _blogService.GetBlogListByMainPage(getBlogModel);
 
         ViewData["Title"] = "Ana Sayfa";
