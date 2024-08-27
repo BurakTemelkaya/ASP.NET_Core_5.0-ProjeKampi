@@ -1,19 +1,19 @@
 ﻿using CoreLayer.Utilities.IoC;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Extensions
-{
-    public static class ServiceCollectionExtensions
-    {
-        public static IServiceCollection AddDependencyResolvers
-            (this IServiceCollection serviceCollection, ICoreModule[] modules)
-        {
-            foreach (var module in modules)
-            {
-                module.Load(serviceCollection);
-            }
+namespace Core.Extensions;
 
-            return ServiceTool.Create(serviceCollection);
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddDependencyResolvers
+        (this IServiceCollection serviceCollection, IConfiguration configuration, ICoreModule[] modules)
+    {
+        foreach (var module in modules)
+        {
+            module.Load(serviceCollection, configuration);
         }
+
+        return ServiceTool.Create(serviceCollection);
     }
 }

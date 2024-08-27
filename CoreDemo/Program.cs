@@ -131,15 +131,16 @@ builder.Services.AddAutoMapper(typeof(BusinessImages));
 builder.Services.AddAutoMapper(typeof(UIImage));
 builder.Services.AddAutoMapper(typeof(DBOImages));
 
-builder.Services.IocDataAccessInstall(builder.Configuration);
-
-builder.Services.IocBusinessInstall();
-
 builder.Services
     .AddDependencyResolvers(
+            builder.Configuration,
             new ICoreModule[] {
                new CoreModule()
             });
+
+builder.Services.IocDataAccessInstall(builder.Configuration);
+
+builder.Services.IocBusinessInstall();
 
 builder.Services.AddHttpContextAccessor();
 

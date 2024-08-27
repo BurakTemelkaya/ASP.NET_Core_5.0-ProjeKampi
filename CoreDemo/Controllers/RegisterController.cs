@@ -8,6 +8,8 @@ using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -100,7 +102,12 @@ namespace CoreDemo.Controllers
 
             var confirmationLink = Url.Action("Index", "ConfirmMail", new { email, token }, Request.Scheme);
 
-            _mailService.SendMail(email, MailTemplates.ConfirmEmailSubject(), MailTemplates.ConfirmEmailMessage(confirmationLink));
+            await _mailService.SendEmailAsync(new Mail()
+            {
+                ToList = new List<MailboxAddress>() { new MailboxAddress(address: email, name: email) },
+                Subject = MailTemplates.ConfirmEmailSubject(),
+                HtmlBody = MailTemplates.ConfirmEmailMessage(confirmationLink)
+            });
 
             return string.Empty;
         }

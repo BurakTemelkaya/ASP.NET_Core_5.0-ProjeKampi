@@ -7,6 +7,8 @@ using CoreLayer.Utilities.MailUtilities;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTO;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +45,23 @@ namespace BusinessLayer.Concrete
 
         public async Task<IResultObject> SendMailAsync(NewsLetterSendMailsModel model, bool mailStatus)
         {
-            var value = await _newsLetterDal.GetListAllAsync(x => x.MailStatus == mailStatus);
-            bool isSend = _mailService.SendMails(value.Select(x => x.Mail).ToArray(), model.Subject, model.Content);
-            if (isSend)
-                return new SuccessResult();
-            else
-                return new ErrorResult(Messages.NewsLetterNotSending);
+            var newsLetters = await _newsLetterDal.GetListAllAsync(x => x.MailStatus == mailStatus);
+
+            List<MailboxAddress> mailboxAddresses = new();
+
+            foreach (var newsLetter in newsLetters)
+            {
+                mailboxAddresses.Add(new MailboxAddress(newsLetter.Mail, newsLetter.Mail));
+            }
+
+            await _mailService.SendEmailAsync(new Mail()
+            {
+                ToList = mailboxAddresses,
+                HtmlBody = MailTemplates.BanOpenUserContentTemplate(),
+                Subject = model.Subject,
+            });
+
+            return new SuccessResult();
         }
 
         [ValidationAspect(typeof(NewsLetterValidator))]

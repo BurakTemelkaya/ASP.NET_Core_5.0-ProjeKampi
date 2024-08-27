@@ -17,6 +17,7 @@ using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,8 +157,12 @@ namespace BusinessLayer.Concrete
             if (result.Succeeded)
             {
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(user);
-                _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
-                    MailTemplates.ChangedUserInformationMailTemplate(mailTemplate));
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
+                    Subject = MailTemplates.ChangedUserInformationMailSubject(),
+                    HtmlBody = MailTemplates.ChangedUserInformationMailTemplate(mailTemplate)
+                });
                 return new SuccessDataResult<IdentityResult>(result);
             }
             else
@@ -186,8 +191,13 @@ namespace BusinessLayer.Concrete
             if (result.Succeeded)
             {
                 var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
-                _mailService.SendMail(user.Email, MailTemplates.ChangedUserInformationMailSubject(),
-                    MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl()));
+
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
+                    Subject= MailTemplates.ChangedUserInformationMailSubject(),
+                    HtmlBody = MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl())
+                });
                 return new SuccessDataResult<IdentityResult>(result);
             }
             else
@@ -307,7 +317,14 @@ namespace BusinessLayer.Concrete
 
                 if (banMessageContent == "" || banMessageContent == null)
                     banMessageContent = MailTemplates.BanMessageContent(expiration);
-                _mailService.SendMail(userData.Email, MailTemplates.BanMessageSubject(), banMessageContent);
+
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new(address: userData.Email, name: userData.NameSurname) },
+                    Subject= MailTemplates.BanMessageSubject(),
+                    HtmlBody = banMessageContent
+                });
+
                 userData.LockoutEnd = expiration;
                 await _userManager.UpdateAsync(userData);
                 return new SuccessResult();
@@ -339,8 +356,13 @@ namespace BusinessLayer.Concrete
 
             var userData = user.Data;
 
-            _mailService.SendMail(userData.Email, MailTemplates.BanOpenUserSubjectTemplate(),
-                MailTemplates.BanOpenUserContentTemplate());
+            await _mailService.SendEmailAsync(new Mail()
+            {
+                ToList = new List<MailboxAddress>() { new MailboxAddress(address: userData.Email, name: userData.NameSurname) },
+                Subject = MailTemplates.BanOpenUserSubjectTemplate(),
+                HtmlBody = MailTemplates.BanOpenUserContentTemplate()
+                
+            });
 
             userData.LockoutEnd = DateTime.UtcNow;
             await _userManager.UpdateAsync(userData);
@@ -373,8 +395,13 @@ namespace BusinessLayer.Concrete
             var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
             if (result.Succeeded)
             {
-                _mailService.SendMail(user.Email, MailTemplates.ResetPasswordInformationSubject(),
-                MailTemplates.ResetPasswordInformationMessage());
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
+                    Subject= MailTemplates.ResetPasswordInformationSubject(),
+                    HtmlBody = MailTemplates.ResetPasswordInformationMessage()
+                });
+
                 return new SuccessDataResult<IdentityResult>(result);
             }
 

@@ -9,6 +9,8 @@ using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
@@ -52,7 +54,14 @@ namespace CoreDemo.Controllers
                 if (tokenResult.Success)
                 {
                     var callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token = tokenResult.Data, email }, Request.Scheme);
-                    _mailService.SendMail(email, MailTemplates.ResetPasswordSubject(), MailTemplates.ResetPasswordContent(callBack));
+
+                    await _mailService.SendEmailAsync(new Mail()
+                    {
+                        ToList = new List<MailboxAddress>() { new MailboxAddress(address: email, name: email) },
+                        Subject= MailTemplates.ResetPasswordSubject(),
+                        HtmlBody = MailTemplates.ResetPasswordContent(callBack)
+                    });
+
                     TempData["OkMessage"] = "Parola sıfırlama maili gönderildi.";
                     return View();
                 }
