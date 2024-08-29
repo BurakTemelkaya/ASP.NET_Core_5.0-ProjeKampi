@@ -17,6 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Core Blog Admin Paneli</title>
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet">
+    
     <link href="~/admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/admin/css/animate.css" rel="stylesheet">
     @if (thema == "dark")
@@ -31,8 +32,6 @@
     }
 
     <link href="~/admin/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="~/coreblogtema/css/thema-toggle.css" rel="stylesheet" />
     <link href="~/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
@@ -99,19 +98,35 @@
 
         </div>
     </div>
-    <script src="~/admin/js/popper.min.js"></script>
-    <script src="~/admin/js/bootstrap.js"></script>
+    <!-- Temel JS Kütüphaneleri -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <!-- JQuery UI -->
+    <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/admin/js/bootstrap.js"></script> 
+
+    <!-- Bootstrap Bağımlı Kütüphaneler -->
     <script src="~/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="~/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/admin/js/plugins/peity/jquery.peity.min.js"></script>
     <script src="~/admin/js/inspinia.js"></script>
-    <script src="~/admin/js/plugins/pace/pace.min.js"></script>     
-    <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/admin/js/plugins/pace/pace.min.js"></script>
+
+    <!-- JQuery Validate -->
     <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- Diğer JS Kütüphaneleri -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <!-- Uygulamaya Özgü JS Dosyaları -->
     <script src="~/js/admin-folders.js"></script>
     <script src="~/js/cookie.js"></script>
+
+    <!-- iCheck Bağımlı Kütüphane -->
     <script src="~/admin/js/plugins/iCheck/icheck.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -121,9 +136,14 @@
             });
         });
     </script>
+
+    <!-- Diğer Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Admin Bildirimleri -->
     <script src="~/js/admin-notification.js"></script>
+
     @RenderSection("ScriptSection", false)
     @if (thema == "dark")
     {

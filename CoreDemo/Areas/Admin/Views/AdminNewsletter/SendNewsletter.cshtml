@@ -4,6 +4,9 @@
     ViewData["Title"] = "Haber Bülteni Gönder";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
+@section HeaderSection {
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+}
 
 <form method="post">
     <div class="col-lg-10 col-md-12">
@@ -36,7 +39,7 @@
     <br /><br />
 </form>
 @section ScriptSection{
-    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#Content').summernote({

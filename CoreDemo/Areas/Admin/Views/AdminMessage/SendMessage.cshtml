@@ -12,6 +12,10 @@
         receiver = ViewBag.ReceiverUser;
     }
 }
+@section HeaderSection {
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+}
+
 <div class="wrapper wrapper-content">
     <div class="row">
         @await Component.InvokeAsync("MessageFolders")
@@ -62,7 +66,8 @@
     </div>
 </div>
 @section ScriptSection{
-    <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="~/js/summernotesetup.js"></script>
     <script src="~/js/admin-send-message.js"></script>
 }
 
