@@ -43,7 +43,7 @@ namespace BusinessLayer.Concrete
         }
 
         [CacheAspect]
-        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWitchPagingAsync(string userName, int take, int page)
+        public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWithPagingAsync(string userName, int take, int page)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             var values = await _blogDal.GetListWithCategoryByPagingAsync(

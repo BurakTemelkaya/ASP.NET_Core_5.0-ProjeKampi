@@ -14,7 +14,7 @@ namespace BusinessLayer.Abstract
         Task<IDataResult<Blog>> GetBlogByIdForUpdate(int id);
         Task<IDataResult<List<Blog>>> GetListWithCategory(bool? status = null, int take = 0, int skip = 0);
         Task<IDataResult<List<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1);
-        Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWitchPagingAsync(string userName, int take, int page);
+        Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWithPagingAsync(string userName, int take, int page);
         Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id);
         Task<IDataResult<List<Blog>>> GetLastBlogAsync(int count, int skip = 0, bool sortInReserver = true);
         Task<IResultObject> BlogAddAsync(Blog blog, string userName, IFormFile blogImage = null, IFormFile blogThumbnailImage = null);

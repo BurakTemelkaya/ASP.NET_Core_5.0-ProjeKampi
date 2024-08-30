@@ -60,7 +60,7 @@ public class BlogController : Controller
     }
     public async Task<IActionResult> BlogListByWriter(int page = 1)
     {
-        var values = await _blogService.GetListWithCategoryByWriterWitchPagingAsync(User.Identity.Name, 5, page);
+        var values = await _blogService.GetListWithCategoryByWriterWithPagingAsync(User.Identity.Name, 5, page);
         return View(await values.Data.ToPagedListAsync(page, 5));
     }
     [HttpGet]

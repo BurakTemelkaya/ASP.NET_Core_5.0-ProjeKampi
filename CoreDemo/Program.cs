@@ -114,17 +114,19 @@ builder.Services.AddAuthentication(
     }
 );
 
+builder.Services.AddOptions<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme)
+        .Configure<ITicketStore>((options, store) => {
+            options.SessionStore = store;
+        });
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
-    options.Cookie.IsEssential = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.SlidingExpiration = true;
     options.LoginPath = "/Login/Index";
     options.LogoutPath = "/Login/Logout";
-    options.AccessDeniedPath = new PathString("/Login/AccessDenied");    
+    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
 });
 
 builder.Services.AddSingleton(new WriterCity());

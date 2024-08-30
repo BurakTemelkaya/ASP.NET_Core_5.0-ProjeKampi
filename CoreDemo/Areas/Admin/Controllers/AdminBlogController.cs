@@ -30,7 +30,7 @@ namespace CoreDemo.Areas.Admin.Controllers
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
-                var value = await _blogService.GetListWithCategoryByWriterWitchPagingAsync(user.Data.UserName, 4, page);
+                var value = await _blogService.GetListWithCategoryByWriterWithPagingAsync(user.Data.UserName, 4, page);
                 if (value.Data.Count > 0)
                 {
                     blogs = value.Data;
