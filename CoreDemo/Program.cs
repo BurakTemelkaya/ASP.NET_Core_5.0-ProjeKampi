@@ -114,21 +114,6 @@ builder.Services.AddAuthentication(
     }
 );
 
-builder.Services.AddOptions<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme)
-        .Configure<ITicketStore>((options, store) => {
-            options.SessionStore = store;
-        });
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-    options.SlidingExpiration = true;
-    options.LoginPath = "/Login/Index";
-    options.LogoutPath = "/Login/Logout";
-    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
-});
-
 builder.Services.AddSingleton(new WriterCity());
 
 builder.Services.AddAutoMapper(typeof(BusinessImages));
@@ -145,6 +130,21 @@ builder.Services
 builder.Services.IocDataAccessInstall(builder.Configuration);
 
 builder.Services.IocBusinessInstall();
+
+builder.Services.AddOptions<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme)
+        .Configure<ITicketStore>((options, store) => {
+            options.SessionStore = store;
+        });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Login/Index";
+    options.LogoutPath = "/Login/Logout";
+    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
+});
 
 builder.Services.AddHttpContextAccessor();
 
