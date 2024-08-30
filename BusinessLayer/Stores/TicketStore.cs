@@ -5,19 +5,16 @@ using System;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using DataAccessLayer.Abstract;
-using CoreLayer.CrossCuttingConcerns.Caching;
 
 namespace BusinessLayer.Stores;
 
 public class TicketStore : ITicketStore
 {
     private readonly IUserSessionDal _userSessionDal;
-    private readonly ICacheManager _cacheManager;
 
-    public TicketStore(IUserSessionDal userSessionDal, ICacheManager cacheManager)
+    public TicketStore(IUserSessionDal userSessionDal)
     {
         _userSessionDal = userSessionDal;
-        _cacheManager = cacheManager;
     }
 
     public async Task<string> StoreAsync(AuthenticationTicket ticket)
@@ -38,18 +35,12 @@ public class TicketStore : ITicketStore
 
         await _userSessionDal.InsertAsync(userSession);
 
-        _cacheManager.Add(key, userSession, 3600);
-
         return key;
     }
 
     public async Task RenewAsync(string key, AuthenticationTicket ticket)
     {
-        UserSession session;
-
-        session = _cacheManager.Get<UserSession>(key);
-
-        session ??= await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
+        UserSession session = await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
 
         if (session != null)
         {
@@ -67,28 +58,17 @@ public class TicketStore : ITicketStore
 
             session.Value = SerializeTicket(ticket);
 
-            await _userSessionDal.UpdateAsync(session);
-
-            _cacheManager.Add(key, session, 3600);
+            await _userSessionDal.SaveChangesAsync();
         }
     }
 
     public async Task<AuthenticationTicket> RetrieveAsync(string key)
     {
-        UserSession session;
-
-        session = _cacheManager.Get<UserSession>(key);
-
-        session ??= await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
+        UserSession session = await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
 
         if (session == null || session.ExpiresAtTime <= DateTimeOffset.UtcNow)
         {
             return null;
-        }
-
-        if (!_cacheManager.IsAdd(key))
-        {
-            _cacheManager.Add(key, session, 3600);
         }
 
         return DeserializeTicket(session.Value);
@@ -96,16 +76,11 @@ public class TicketStore : ITicketStore
 
     public async Task RemoveAsync(string key)
     {
-        UserSession session;
-
-        session = _cacheManager.Get<UserSession>(key);
-
-        session ??= await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
+        UserSession session = await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
 
         if (session != null)
         {
             await _userSessionDal.DeleteAsync(session);
-            _cacheManager.Remove(key);
         }
     }
 

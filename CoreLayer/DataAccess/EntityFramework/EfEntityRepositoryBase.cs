@@ -23,6 +23,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
     public async Task DeleteAsync(TEntity t)
     {
+        _context.Entry(t).State = EntityState.Detached;
         _context.Remove(t);
         await _context.SaveChangesAsync();
     }
@@ -33,13 +34,20 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         await _context.SaveChangesAsync();
     }
 
-    public async Task<TEntity> GetByIDAsync(int id)
+    public async Task<TEntity> GetByIDAsync(int id, bool enableTracking = false)
     {
         var result = await _context.Set<TEntity>().FindAsync(id);
+
+        if (result != null && !enableTracking)
+        {
+            _context.Entry(result).State = EntityState.Detached;
+        }
+
         return result;
     }
 
-    public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0, bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+    public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0
+        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, bool enableTracking = false)
     {
         var queryable = _context.Set<TEntity>().AsQueryable();
 
@@ -65,6 +73,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
             if (include != null) queryable = include(queryable);
 
+            if (!enableTracking) queryable = queryable.AsNoTracking();
+
             var filteredResult = filter == null ?
             await queryable.Skip(skip).Take(take).ToListAsync() :
             await queryable.Where(filter).Skip(skip).Take(take).ToListAsync();
@@ -86,7 +96,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return result;
     }
 
-    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1, bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+    public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1
+        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, bool enableTracking = false)
     {
         var values = new List<TEntity>();
         var count = await GetCountAsync(filter);
@@ -116,6 +127,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
         if (include != null) queryable = include(queryable);
 
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+
         var result = filter == null ?
             await queryable.Skip(skip).Take(realTake).ToListAsync() :
             await queryable.Where(filter).Skip(skip).Take(realTake).ToListAsync();
@@ -144,12 +157,15 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         await _context.SaveChangesAsync();
     }
 
-    public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null)
+    public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
     {
-        if (filter == null)
-            return await _context.Set<TEntity>().FirstOrDefaultAsync();
-        else
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
+        var queryable = _context.Set<TEntity>().AsQueryable();
+
+        if (filter != null) queryable = queryable.Where(filter);
+
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+
+        return await queryable.FirstOrDefaultAsync();
     }
 
     public async Task UpdateAsync(TEntity t)
@@ -164,11 +180,19 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         await _context.SaveChangesAsync();
     }
 
-    public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
+    public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
     {
-        if (filter == null)
-            return await _context.Set<TEntity>().CountAsync();
-        else
-            return await _context.Set<TEntity>().Where(filter).CountAsync();
+        var queryable = _context.Set<TEntity>().AsQueryable();
+
+        if (filter != null) queryable = queryable.Where(filter);
+
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+
+        return await queryable.CountAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }
