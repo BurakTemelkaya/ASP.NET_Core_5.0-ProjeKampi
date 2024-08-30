@@ -23,7 +23,6 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
     public async Task DeleteAsync(TEntity t)
     {
-        _context.Entry(t).State = EntityState.Detached;
         _context.Remove(t);
         await _context.SaveChangesAsync();
     }

@@ -19,6 +19,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -65,6 +66,9 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         new CookieRequestCultureProvider()
     };
 });
+
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<Context>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(x =>
 {
