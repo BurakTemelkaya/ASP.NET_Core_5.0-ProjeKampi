@@ -75,21 +75,21 @@ public class TicketStore : ITicketStore
 
     public async Task<AuthenticationTicket> RetrieveAsync(string key)
     {
-        var cacheData = _cacheManager.Get<UserSession>(key);
+        UserSession session;
 
-        if (cacheData != null)
-        {
-            return DeserializeTicket(cacheData.Value);
-        }
+        session = _cacheManager.Get<UserSession>(key);
 
-        UserSession session = await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
+        session ??= await _userSessionDal.GetByFilterAsync(s => s.SessionKey == key);
 
         if (session == null || session.ExpiresAtTime <= DateTimeOffset.UtcNow)
         {
             return null;
         }
 
-        _cacheManager.Add(key, session, 3600);
+        if (!_cacheManager.IsAdd(key))
+        {
+            _cacheManager.Add(key, session, 3600);
+        }
 
         return DeserializeTicket(session.Value);
     }
