@@ -39,7 +39,5 @@ public static class Ioc
         services.AddScoped<ILogDal, EfLogRepository>();
 
         services.AddScoped<ILoginLoggerDal, EfLoginLoggerRepository>();
-
-        services.AddScoped<IUserSessionDal, EfUserSessionRepository>();
     }
 }

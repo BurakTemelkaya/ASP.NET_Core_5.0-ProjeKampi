@@ -135,11 +135,6 @@ builder.Services.IocDataAccessInstall(builder.Configuration);
 
 builder.Services.IocBusinessInstall();
 
-builder.Services.AddOptions<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme)
-        .Configure<ITicketStore>((options, store) => {
-            options.SessionStore = store;
-        });
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;

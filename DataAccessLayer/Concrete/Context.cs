@@ -41,6 +41,5 @@ public class Context : IdentityDbContext<AppUser, AppRole, int>, IDataProtection
     public virtual DbSet<NewsLetterDraft> NewsLetterDrafts { get; set; }
     public virtual DbSet<Log> Logs { get; set; }
     public virtual DbSet<LoginLogger> LogginLoggers { get; set; }
-    public virtual DbSet<UserSession> UserSessions { get; set; }
     public virtual DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 }

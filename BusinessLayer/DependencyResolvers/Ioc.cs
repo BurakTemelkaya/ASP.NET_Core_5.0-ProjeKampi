@@ -1,7 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
-using BusinessLayer.Stores;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BusinessLayer.DependencyResolvers;
@@ -43,7 +41,5 @@ public static class Ioc
         services.AddScoped<ILoginLoggerService, LoginLoggerManager>();
 
         services.AddScoped<INotificationHubService, NotificationHubService>();
-
-        services.AddScoped<ITicketStore, TicketStore>();
     }
 }
