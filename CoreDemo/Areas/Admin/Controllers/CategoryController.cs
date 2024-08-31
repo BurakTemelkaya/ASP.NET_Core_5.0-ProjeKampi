@@ -3,7 +3,7 @@ using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -21,7 +21,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var categories = await _categoryService.GetListByPagingAsync(take: 5, page: page);
-            var values = await categories.Data.ToPagedListAsync(page, 5);
+            var values = categories.Data.ToPagedList(page, 5);
             return View(values);
         }
         [HttpGet]

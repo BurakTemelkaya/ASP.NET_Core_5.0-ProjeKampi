@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Controllers
 {
@@ -17,7 +18,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var result = await _commentService.GetCommentListByWriterandPaging(User.Identity.Name, 5, page);
-            return View(await result.Data.ToPagedListAsync(page, 5));
+            return View(result.Data.ToPagedList(page, 5));
         }
 
         public async Task<IActionResult> ChangeStatusComment(int id)

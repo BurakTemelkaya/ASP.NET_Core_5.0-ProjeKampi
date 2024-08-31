@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Controllers;
 
@@ -40,7 +41,7 @@ public class BlogController : Controller
             ViewBag.Id = getBlogModel.Id;
         }
 
-        return View(await values.Data.ToPagedListAsync(getBlogModel.Page, 6));
+        return View(values.Data.ToPagedList(getBlogModel.Page, 6));
     }
 
     [Route("/Blog/BlogReadAll/{title}/{id:int}")]
@@ -61,7 +62,7 @@ public class BlogController : Controller
     public async Task<IActionResult> BlogListByWriter(int page = 1)
     {
         var values = await _blogService.GetListWithCategoryByWriterWithPagingAsync(User.Identity.Name, 5, page);
-        return View(await values.Data.ToPagedListAsync(page, 5));
+        return View(values.Data.ToPagedList(page, 5));
     }
     [HttpGet]
     public async Task<IActionResult> BlogAdd()

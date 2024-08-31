@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -46,7 +47,7 @@ namespace CoreDemo.Areas.Admin.Controllers
                 var result = await _blogService.GetListWithCategoryByPaging(4, page);
                 blogs = result.Data;
             }
-            var values = await blogs.ToPagedListAsync(page, 4);
+            var values = blogs.ToPagedList(page, 4);
             return View(values);
         }
 

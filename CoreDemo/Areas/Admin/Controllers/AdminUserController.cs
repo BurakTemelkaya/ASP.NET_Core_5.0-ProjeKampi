@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using X.PagedList;
+using X.PagedList.Extensions;
+using X.Web.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -32,7 +33,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var users = await _userService.GetUserListAsync();
-            var values = await users.Data.ToPagedListAsync(page, 10);
+            var values = users.Data.ToPagedList(page, 10);
             return View(values);
         }
         [HttpGet]

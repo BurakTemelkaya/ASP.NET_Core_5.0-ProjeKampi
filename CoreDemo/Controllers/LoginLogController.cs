@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Controllers
 {
@@ -15,7 +16,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var logs = await _loginLoggerService.GetListByUserAsync(page, 10);
-            return View(await logs.Data.ToPagedListAsync(page, 10));
+            return View(logs.Data.ToPagedList(page, 10));
         }
 
         public async Task<IActionResult> Detail(int id)

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {
@@ -25,7 +26,7 @@ namespace CoreDemo.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var newsletter = await _newsLetterService.GetListAsync();
-            var value = await newsletter.Data.ToPagedListAsync(page, 5);
+            var value = newsletter.Data.ToPagedList(page, 5);
             return View(value);
         }
 
