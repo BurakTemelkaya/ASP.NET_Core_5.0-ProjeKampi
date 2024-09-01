@@ -8,6 +8,7 @@ using Core.Extensions;
 using CoreDemo;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
+using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Extensions;
 using CoreLayer.Utilities.IoC;
@@ -35,14 +36,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHostedService<Worker>();
 
 builder.Services.AddRazorPages();
-
-Host.CreateDefaultBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -67,18 +67,32 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
-builder.Services.AddDataProtection()
-    .PersistKeysToDbContext<Context>();
 
-builder.Services.AddIdentity<AppUser, AppRole>(x =>
+builder.Services.AddSession(options =>
 {
-    x.User.RequireUniqueEmail = true;
-    x.Password.RequireUppercase = true;
-    x.Password.RequireNonAlphanumeric = true;
-    x.Password.RequireDigit = true;
-    x.Password.RequireLowercase = true;
-    x.Password.RequireNonAlphanumeric = true;
-    x.SignIn.RequireConfirmedEmail = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+});
+
+builder.Services.AddDistributedSqlServerCache(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString("SQLServer");
+    options.SchemaName = "dbo";
+    options.TableName = "SessionData";
+    options.ExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
+});
+
+//builder.Services.AddDataProtection().PersistKeysToDbContext<Context>()
+//            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.SignIn.RequireConfirmedEmail = true;
 }).AddEntityFrameworkStores<Context>()
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
@@ -87,12 +101,6 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromDays(5);
-    options.Cookie.IsEssential = true;
-});
 
 builder.Services.AddMvc(config =>
 {
@@ -133,17 +141,37 @@ builder.Services.IocDataAccessInstall(builder.Configuration);
 
 builder.Services.IocBusinessInstall();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.Path = "/";
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
     options.LoginPath = "/Login/Index";
     options.LogoutPath = "/Login/Logout";
     options.AccessDeniedPath = new PathString("/Login/AccessDenied");
+    options.Cookie.Domain = builder.Configuration["Domain"];
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<LoggerServiceBase>();
+
+            if (context.Request.Path != options.LoginPath)
+            {
+                logger.Info($"Kullanýcýnýn oturumu, kimlik doðrulama yenilemesi baþarýsýz olduðu için sona erdi: {context.HttpContext.User.Identity?.Name} - {DateTime.Now}");
+            }
+
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        }
+    };
 });
 
-builder.Services.AddHttpContextAccessor();
 
 if (builder.Environment.IsProduction())
 {
@@ -164,11 +192,11 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseAuthentication();
+app.UseRouting();
 
 app.UseSession();
 
-app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
