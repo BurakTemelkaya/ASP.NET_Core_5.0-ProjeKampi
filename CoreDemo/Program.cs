@@ -73,16 +73,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 
-builder.Services.AddDistributedSqlServerCache(options =>
-{
-    options.ConnectionString = builder.Configuration.GetConnectionString("SQLServer");
-    options.SchemaName = "dbo";
-    options.TableName = "SessionData";
-    options.ExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
-});
-
-//builder.Services.AddDataProtection().PersistKeysToDbContext<Context>()
-//            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<Context>()
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
