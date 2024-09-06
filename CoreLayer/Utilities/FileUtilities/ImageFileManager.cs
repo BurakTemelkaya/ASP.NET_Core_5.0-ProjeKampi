@@ -15,64 +15,58 @@ namespace CoreLayer.Utilities.FileUtilities
     {
         public static async Task<string> ImageAddAsync(IFormFile file, string folderLocation, Size size, string fileName = null)
         {
-            try
+            using (var stream = file.OpenReadStream())
             {
-                using (var stream = file.OpenReadStream())
+                var image = await Image.LoadAsync<Rgba32>(stream);
+                if (image == null)
                 {
-                    var image = await Image.LoadAsync<Rgba32>(stream);
-                    if (image == null)
-                    {
-                        return null;
-                    }
-
-                    image.Mutate(x => x.Resize(new ResizeOptions
-                    {
-                        Mode = ResizeMode.Max,
-                        Size = size
-                    }));
-
-                    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-
-                    bool isPng = file.ContentType == "image/png";
-                    bool hasTransparency = isPng && HasTransparency(image);
-
-                    var extension = (isPng && hasTransparency) ? ".png" : ".jpeg";
-                    var newImageName = fileName == null
-                        ? Guid.NewGuid() + extension
-                        : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
-                    var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
-
-                    using (var outputStream = new FileStream(location, FileMode.Create))
-                    {
-                        if (isPng && hasTransparency)
-                        {
-                            var encoder = new PngEncoder
-                            {
-                                CompressionLevel = PngCompressionLevel.BestCompression
-                            };
-                            await image.SaveAsync(outputStream, encoder);
-                        }
-                        else
-                        {
-                            var encoder = new JpegEncoder
-                            {
-                                Quality = 75
-                            };
-                            await image.SaveAsync(outputStream, encoder);
-                        }
-                    }
-
-                    return "/" + Path.Combine(folderLocation, newImageName).Replace("\\", "/");
+                    return null;
                 }
+
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Mode = ResizeMode.Max,
+                    Size = size
+                }));
+
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                bool isPng = file.ContentType == "image/png";
+                bool hasTransparency = isPng && HasTransparency(image);
+
+                var extension = (isPng && hasTransparency) ? ".png" : ".jpeg";
+                var newImageName = fileName == null
+                    ? Guid.NewGuid() + extension
+                    : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
+                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
+
+                using (var outputStream = new FileStream(location, FileMode.Create))
+                {
+                    if (isPng && hasTransparency)
+                    {
+                        var encoder = new PngEncoder
+                        {
+                            CompressionLevel = PngCompressionLevel.BestCompression
+                        };
+                        await image.SaveAsync(outputStream, encoder);
+                    }
+                    else
+                    {
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 75
+                        };
+                        await image.SaveAsync(outputStream, encoder);
+                    }
+                }
+
+                return "/" + Path.Combine(folderLocation, newImageName).Replace("\\", "/");
             }
-            catch
-            {
-                return null;
-            }
+
         }
 
         private static bool HasTransparency(Image<Rgba32> image)

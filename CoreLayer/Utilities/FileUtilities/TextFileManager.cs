@@ -192,6 +192,12 @@ namespace CoreLayer.Utilities.FileUtilities
                 int.TryParse(heightValue, out height);
 
                 string url = match.Groups["url"].Value;
+
+                if (url.StartsWith("data:image/svg+xml"))
+                {
+                    continue;
+                }
+
                 if (url.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
                 {
                     isBase64 = true;
