@@ -148,21 +148,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Login/Logout";
     options.AccessDeniedPath = new PathString("/Login/AccessDenied");
     options.Cookie.Domain = builder.Configuration["Domain"];
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<LoggerServiceBase>();
-
-            if (context.Request.Path != options.LoginPath)
-            {
-                logger.Info($"Kullanýcýnýn oturumu, kimlik doðrulama yenilemesi baþarýsýz olduðu için sona erdi: {context.HttpContext.User.Identity?.Name} - {DateTime.Now}");
-            }
-
-            context.Response.Redirect(context.RedirectUri);
-            return Task.CompletedTask;
-        }
-    };
 });
 
 
