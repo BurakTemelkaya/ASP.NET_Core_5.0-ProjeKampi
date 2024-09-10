@@ -28,44 +28,32 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
         }
     }
 
-    public async Task<List<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null, bool commentStatus = true, int take = 0, int skip = 0)
+    public async Task<List<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(
+    Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null,
+    bool commentStatus = true,
+    int take = 0,
+    int skip = 0)
     {
-        var query = from blog in Context.Blogs
-                    join category in Context.Categories on blog.CategoryID equals category.CategoryID
-                    join comment in Context.Comments.Where(x => x.CommentStatus == commentStatus) on blog.BlogID equals comment.BlogID into commentGroup
-                    from subComment in commentGroup.DefaultIfEmpty()
-                    join blogView in Context.BlogViews on blog.BlogID equals blogView.BlogId into blogViewGroup
-                    from subBlogView in blogViewGroup.DefaultIfEmpty()
-                    group new { blog, category, subComment, subBlogView } by new
-                    {
-                        blog.BlogID,
-                        blog.BlogContent,
-                        blog.BlogImage,
-                        blog.BlogThumbnailImage,
-                        blog.BlogTitle,
-                        blog.BlogCreateDate,
-                        blog.BlogStatus,
-                        category.CategoryID,
-                        category.CategoryName,
-                        category.CategoryStatus
-                    } into g
-                    select new BlogCategoryandCommentCountDto
-                    {
-                        BlogID = g.Key.BlogID,
-                        BlogContent = g.Key.BlogContent,
-                        BlogImage = g.Key.BlogImage,
-                        BlogThumbnailImage = g.Key.BlogThumbnailImage,
-                        BlogTitle = g.Key.BlogTitle,
-                        BlogCreateDate = g.Key.BlogCreateDate,
-                        BlogStatus = g.Key.BlogStatus,
-                        CategoryID = g.Key.CategoryID,
-                        CategoryName = g.Key.CategoryName,
-                        CategoryStatus = g.Key.CategoryStatus,
-                        CommentCount = g.Count(x => x.subComment != null),
-                        CommentScore = g.Where(x => x.subComment != null).Average(x => x.subComment != null ? (double?)x.subComment.BlogScore : 0) ?? 0,
-                        BlogViewCount = g.Count(x => x.subBlogView != null),
-                        CommentStatus = g.Any(x => x.subComment != null)
-                    };
+        var query = Context.Blogs
+            .Include(b => b.Category)
+            .Include(b => b.Comments.Where(c => c.CommentStatus == commentStatus))
+            .Include(b => b.BlogViews)
+            .Select(blog => new BlogCategoryandCommentCountDto
+            {
+                BlogID = blog.BlogID,
+                BlogContent = blog.BlogContent,
+                BlogImage = blog.BlogImage,
+                BlogThumbnailImage = blog.BlogThumbnailImage,
+                BlogTitle = blog.BlogTitle,
+                BlogCreateDate = blog.BlogCreateDate,
+                BlogStatus = blog.BlogStatus,
+                CategoryID = blog.Category.CategoryID,
+                CategoryName = blog.Category.CategoryName,
+                CategoryStatus = blog.Category.CategoryStatus,
+                CommentCount = blog.Comments.Count(),
+                CommentScore = blog.Comments.Average(c => (double?)c.BlogScore) ?? 0,
+                BlogViewCount = blog.BlogViews.Count()
+            });
 
         query = query.OrderByDescending(x => x.BlogID);
 
@@ -79,8 +67,12 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
             query = query.Skip(skip).Take(take);
         }
 
-        return await query.ToListAsync();
+        var result = await query.ToListAsync();
+
+        return result;
     }
+
+
 
     public async Task<List<BlogCategoryandCommentCountDto>> GetListWithCategoryandCommentCountByPagingAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null, bool commentStatus = true, int take = 0, int page = 1)
     {
