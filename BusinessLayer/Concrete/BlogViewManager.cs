@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete;
@@ -26,18 +28,28 @@ public class BlogViewManager : IBlogViewService
 
     public async Task<IResultObject> AddAsync(int blogId)
     {
-        //if (!_webHostEnvironment.IsProduction())
-        //{
-        //    return new SuccessResult();
-        //}
+        if (!_webHostEnvironment.IsProduction())
+        {
+            return new SuccessResult();
+        }
 
-        string ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        string ip = _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (string.IsNullOrEmpty(ip))
+        {
+            ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
+        }
+
+        string refererUrl = _httpContextAccessor.HttpContext.Request.Headers["Referer"].ToString();
+        if (string.IsNullOrEmpty(refererUrl))
+        {
+            refererUrl = null;
+        }
 
         var existData = await _blogViewDal.GetByFilterAsync(x => x.BlogId == blogId && x.IpAddress == ip);
 
         if (existData != null)
         {
-            existData.ViewCount = existData.ViewCount += 1;
+            existData.ViewCount += 1;
             await _blogViewDal.UpdateAsync(existData);
         }
         else
@@ -47,8 +59,8 @@ public class BlogViewManager : IBlogViewService
                 BlogId = blogId,
                 IpAddress = ip,
                 ViewCount = 1,
-                ViewingDate = System.DateTime.Now,
-                RefererUrl = _httpContextAccessor.HttpContext.Request.Headers["Referer"].ToString()
+                ViewingDate = DateTime.Now,
+                RefererUrl = refererUrl
             };
 
             await _blogViewDal.InsertAsync(newData);
@@ -56,6 +68,7 @@ public class BlogViewManager : IBlogViewService
 
         return new SuccessResult();
     }
+
 
     public async Task<IResultObject> DeleteAsync(BlogView blogView)
     {

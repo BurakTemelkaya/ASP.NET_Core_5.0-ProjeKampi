@@ -144,16 +144,20 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return values;
     }
 
-    public async Task InsertAsync(TEntity t)
+    public async Task<TEntity> InsertAsync(TEntity t)
     {
         await _context.AddAsync(t);
         await _context.SaveChangesAsync();
+
+        return t;
     }
 
-    public async Task InsertRangeAsync(List<TEntity> t)
+    public async Task<List<TEntity>> InsertRangeAsync(List<TEntity> t)
     {
         await _context.AddRangeAsync(t);
         await _context.SaveChangesAsync();
+
+        return t;
     }
 
     public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
@@ -167,16 +171,20 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return await queryable.FirstOrDefaultAsync();
     }
 
-    public async Task UpdateAsync(TEntity t)
+    public async Task<TEntity> UpdateAsync(TEntity t)
     {
         _context.Update(t);
         await _context.SaveChangesAsync();
+
+        return t;
     }
 
-    public async Task UpdateRangeAsync(List<TEntity> t)
+    public async Task<List<TEntity>> UpdateRangeAsync(List<TEntity> t)
     {
         _context.UpdateRange(t);
         await _context.SaveChangesAsync();
+
+        return t;
     }
 
     public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
@@ -190,8 +198,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return await queryable.CountAsync();
     }
 
-    public async Task SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync();
     }
 }
