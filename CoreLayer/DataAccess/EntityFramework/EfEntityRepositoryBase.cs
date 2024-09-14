@@ -1,7 +1,10 @@
-﻿using CoreLayer.Entities;
+﻿
+
+using CoreLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -202,4 +205,61 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
     {
         return await _context.SaveChangesAsync();
     }
+
+    public async Task<Dictionary<DateTime, int>> GetChartDataAsync(
+    string dateSelector,
+    TimeUnit timeUnit, // Enum parametre
+    DateTime? startDate = null,
+    DateTime? endDate = null,
+    Expression<Func<TEntity, bool>> predicate = null)
+    {
+        var query = _context.Set<TEntity>().AsQueryable();
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        if (startDate.HasValue)
+        {
+            query = query.Where(e => EF.Property<DateTime>(e, dateSelector) >= startDate.Value);
+        }
+
+        if (endDate.HasValue)
+        {
+            query = query.Where(e => EF.Property<DateTime>(e, dateSelector) <= endDate.Value);
+        }
+
+        IQueryable<IGrouping<DateTime, TEntity>> groupedQuery;
+
+        switch (timeUnit)
+        {
+            case TimeUnit.Hour:
+                groupedQuery = query.GroupBy(e => new DateTime(
+                    EF.Property<DateTime>(e, dateSelector).Year,
+                    EF.Property<DateTime>(e, dateSelector).Month,
+                    EF.Property<DateTime>(e, dateSelector).Day,
+                    EF.Property<DateTime>(e, dateSelector).Hour, 0, 0));
+                break;
+
+            case TimeUnit.Day:
+                groupedQuery = query.GroupBy(e => EF.Property<DateTime>(e, dateSelector).Date);
+                break;
+
+            default:
+                throw new ArgumentException("Invalid time unit.");
+        }
+
+        // Veritabanında gruplama ve sayma işlemi
+        var groupedData = await groupedQuery
+            .Select(g => new
+            {
+                DateTime = g.Key,
+                Count = g.Count()
+            })
+            .ToDictionaryAsync(g => g.DateTime, g => g.Count);
+
+        return groupedData;
+    }
+
 }

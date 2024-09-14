@@ -3,8 +3,27 @@
     ViewData["Title"] = "Bloglarım";
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
+@section HeaderSection {
+    <style>
+        .chart-container {
+            position: relative;
+            width: 90%;
+            max-width: 90%;
+            height: 200px;
+            margin: auto;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+}
 <h1>Blogların</h1>
 <br />
+<div class="chart-container">
+    <canvas id="myChart" height="50"></canvas>
+</div>
 <table class="table table-bordered table-hover table-responsive">
     <thead>
         <tr>
@@ -76,78 +95,99 @@
 
 <a href="/Blog/BlogAdd" class="btn btn-primary">Yeni Blog Oluştur</a>
 
-<script>
-    $('.Sil').click(function (e) {
-        e.preventDefault();
-        var linkURL = $(this).attr("href");
-        Swal.fire({
-            title: 'UYARI!',
-            text: "Blog yazısını silmek istediğinize emin misiniz?",
-            icon: 'warning',
-            showCancelButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#5CBA6C',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Evet',
-            cancelButtonText: 'Hayır'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = linkURL;
-                Swal.fire(
-                    'Başarılı!',
-                    'Seçilen Blog Silindi .',
-                    'success'
-                )
-            }
-        })
-    });
+@section ScriptSection{
+    <script>
+        $('.Sil').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: "Blog yazısını silmek istediğinize emin misiniz?",
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        'Seçilen Blog Silindi .',
+                        'success'
+                    )
+                }
+            })
+        });
 
-    $('.DurumAktif').click(function (e) {
-        e.preventDefault();
-        var linkURL = $(this).attr("href");
-        Swal.fire({
-            title: 'UYARI!',
-            text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
-            icon: 'warning',
-            showCancelButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#5CBA6C',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Evet',
-            cancelButtonText: 'Hayır'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = linkURL;
-                Swal.fire(
-                    'Başarılı!',
-                    onayMesaji,
-                    'success'
-                )
-            }
-        })
-    });
-    $('.DurumPasif').click(function (e) {
-        e.preventDefault();
-        var linkURL = $(this).attr("href");
-        Swal.fire({
-            title: 'UYARI!',
-            text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
-            icon: 'warning',
-            showCancelButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#5CBA6C',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Evet',
-            cancelButtonText: 'Hayır'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = linkURL;
-                Swal.fire(
-                    'Başarılı!',
-                    onayMesaji,
-                    'success'
-                )
-            }
-        })
-    });
-</script>
+        $('.DurumAktif').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: 'Blog Yazısını Aktif Hale Getirmek İstediğinizden Emin Misiniz ?',
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        onayMesaji,
+                        'success'
+                    )
+                }
+            })
+        });
+        $('.DurumPasif').click(function (e) {
+            e.preventDefault();
+            var linkURL = $(this).attr("href");
+            Swal.fire({
+                title: 'UYARI!',
+                text: 'Blog Yazısını Pasif Hale Getirmek İstediğinizden Emin Misiniz ?',
+                icon: 'warning',
+                showCancelButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#5CBA6C',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = linkURL;
+                    Swal.fire(
+                        'Başarılı!',
+                        onayMesaji,
+                        'success'
+                    )
+                }
+            })
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script src="~/js/chart.js"></script>
+    <script>
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/BlogView/GetChartData",
+                    success: function (response) {
+                        createChart('myChart', "görüntülenme sayısı", response, 'line', 'hour');
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+    </script>
+}
+

@@ -537,7 +537,7 @@ namespace BusinessLayer.Concrete
 
             result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
 
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {

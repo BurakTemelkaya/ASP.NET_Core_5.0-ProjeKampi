@@ -3,12 +3,34 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
+@section HeaderSection{
+    <style>
+        .chart-container {
+            position: relative; 
+            width: 90%;
+            max-width: 90%;
+            height: 200px;
+            margin: auto;
+            background-color: #222529;
+        }
 
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="col-lg-12">
-        <div class="ibox ">
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="ibox mt-2">
             <div class="ibox-title">
                 <h5>Blog Görüntülemeleri</h5>
+                <a href="/Admin/BlogView" class="btn btn-primary ml-5">Hepsini Göster</a>
+                <a href="/Admin/BlogView?IsRedirect=true" class="btn btn-primary">Yönlendirilenleri Göster</a>
+                <a href="/Admin/BlogView?IsRedirect=false" class="btn btn-primary">Yönlendirilmeyenleri Göster</a>              
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -73,5 +95,27 @@
 <div class="mx-auto">
     
 </div>
+
+@section ScriptSection{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script src="~/js/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Admin/BlogView/GetBlogViewChartData",
+                success: function (response) {
+                    createChart('myChart',"görüntülenme sayısı", response, 'line', 'hour');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+    </script>
+}
 
 

@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using CoreLayer.Entities;
+using CoreLayer.Extensions;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -6,9 +8,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using MimeKit.Tnef;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete;
@@ -18,12 +23,14 @@ public class BlogViewManager : IBlogViewService
     private readonly IBlogViewDal _blogViewDal;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly UserHelper _userHelper;
 
-    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, UserHelper userHelper)
     {
         _blogViewDal = blogViewDal;
         _httpContextAccessor = httpContextAccessor;
         _webHostEnvironment = webHostEnvironment;
+        _userHelper = userHelper;
     }
 
     public async Task<IResultObject> AddAsync(int blogId)
@@ -93,9 +100,20 @@ public class BlogViewManager : IBlogViewService
         return new SuccessDataResult<List<BlogView>>(data);
     }
 
-    public async Task<IDataResult<List<BlogView>>> GetListByPagingNameAsync(int take = 0, int page = 0)
+    public async Task<IDataResult<List<BlogView>>> GetListByPagingNameAsync(int take = 0, int page = 0, bool? isRedirect = null)
     {
-        var data = await _blogViewDal.GetListAllByPagingAsync(take: take, page: page, include: bw => bw.Include(bw => bw.Blog));
+        Expression<Func<BlogView, bool>> predicate = null;
+
+        if (isRedirect == true)
+        {
+            predicate = x => x.RefererUrl != null;
+        }
+        else if (isRedirect == false)
+        {
+            predicate = x => x.RefererUrl == null;
+        }
+
+        var data = await _blogViewDal.GetListAllByPagingAsync(predicate, take: take, page: page, include: bw => bw.Include(bw => bw.Blog));
 
         return new SuccessDataResult<List<BlogView>>(data);
     }
@@ -104,5 +122,40 @@ public class BlogViewManager : IBlogViewService
     {
         await _blogViewDal.UpdateAsync(blogView);
         return new SuccessResult();
+    }
+
+    public async Task<Dictionary<DateTime, int>> GetChartDataByWriterAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null)
+    {
+        int userId = _userHelper.GetUserId();
+        return await GetChartDataAsync(interval, startDate, endDate, userId);
+    }
+
+    public async Task<Dictionary<DateTime, int>> GetChartDataByAdminAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null)
+    {
+        return await GetChartDataAsync(interval, startDate, endDate);
+    }
+
+    private async Task<Dictionary<DateTime, int>> GetChartDataAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null, int? writerId = null)
+    {
+        Expression<Func<BlogView, bool>> predicate = null;
+
+        if (writerId.HasValue)
+        {
+            predicate = x => x.Blog.WriterID == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
+
+        interval ??= TimeSpan.FromHours(1);
+        startDate ??= DateTime.Now.AddDays(-1);
+        endDate ??= DateTime.Now;
+
+        var result = await _blogViewDal.GetChartDataAsync(
+            nameof(BlogView.ViewingDate),
+            TimeUnit.Hour,
+            startDate,
+            endDate,
+            predicate
+        );
+
+        return result;
     }
 }

@@ -22,5 +22,11 @@ namespace CoreLayer.DataAccess
         Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false);
         Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false);
         Task<int> SaveChangesAsync();
+        Task<Dictionary<DateTime, int>> GetChartDataAsync(
+            string dateSelector,
+            TimeUnit timeUnit,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            Expression<Func<TEntity, bool>> predicate = null);
     }
 }

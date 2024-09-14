@@ -34,4 +34,6 @@ public class UserHelper
         var userEmailClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email);
         return userEmailClaim?.Value ?? throw new Exception("User email claim is not found.");
     }
+
+
 }
