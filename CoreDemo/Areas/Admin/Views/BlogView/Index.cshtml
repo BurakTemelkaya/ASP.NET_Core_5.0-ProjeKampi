@@ -77,7 +77,7 @@
             </div>
 
         </div>
-        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, isRedirect=ViewBag.IsRedirect }),
                  new PagedListRenderOptions
         {
             LinkToFirstPageFormat = "<<İlk",
