@@ -1,4 +1,4 @@
-﻿function createChart(divId, label, chartData, chartType = 'line', timeUnit = 'hour', borderColor = 'rgba(75, 192, 192, 1)', backgroundColor = 'rgba(75, 192, 192, 0.2)') {
+﻿function createChart(divId, label, chartData, chartType = 'line', timeUnit = 'hour', borderColor = 'rgba(75, 192, 192, 1)', backgroundColor = 'rgb(0, 219, 155)') {
     const labels = Object.keys(chartData);  // Tarih etiketleri
     const data = Object.values(chartData);  // İzlenme sayıları
 
@@ -19,7 +19,8 @@
                 borderColor: borderColor,  // Kenar rengi
                 backgroundColor: backgroundColor,  // Arka plan rengi
                 fill: true,
-                tension: 0.4  // Çizginin eğriliği
+                tension: 0.3,  // Çizginin eğriliği (yumuşatma)
+                spanGaps: true  // Boşluklar arasında çizgi çiz
             }]
         },
         options: {
@@ -33,7 +34,12 @@
                         displayFormats: {
                             hour: 'MMM D, HH:mm',  // Saat formatı
                             day: 'MMM D'  // Gün formatı
-                        }
+                        },
+                        tooltipFormat: 'MMM D, HH:mm'  // Tooltip formatı
+                    },
+                    ticks: {
+                        autoSkip: true,  // Fazla olan etiketleri atla
+                        maxTicksLimit: 10  // Maksimum etiket sayısını sınırla
                     }
                 },
                 y: {

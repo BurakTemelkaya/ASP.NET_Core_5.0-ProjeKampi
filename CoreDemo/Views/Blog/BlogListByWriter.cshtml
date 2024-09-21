@@ -181,7 +181,7 @@
                     type: "GET",
                     url: "/BlogView/GetChartData",
                     success: function (response) {
-                        createChart('myChart', "görüntülenme sayısı", response, 'line', 'hour');
+                        createChart('myChart', "görüntülenme sayısı", response, 'bar', 'hour');
                     },
                     error: function (err) {
                         console.log(err);
