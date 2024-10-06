@@ -27,7 +27,8 @@
     <meta property="og:type" content="website" />
     <meta name="language" content="Turkish" />
     <meta property="keywords" content="Core Blog, Core 5.0 Blog, Teknoloji Blogları, Yazılım Blogları,Tiyatro Blogları,Fİlm & Dizi Blogları, Oyun Blogları, Spor Blogları,Seyehat Blogları, Donanım Blogları" />
-    <script>
+    <link rel="shortcut icon" href="~/writer/assets/images/favicon.ico" />
+    <script async>
         addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
         }, false);
@@ -36,23 +37,36 @@
             window.scrollTo(0, 1);
         }
     </script>
+    <link href="~/CoreBlogTema/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800" rel="stylesheet">
     <link href="~/coreblogtema/css/bootstrap.min.css" rel="stylesheet" />
+
     @if (thema == "dark")
     {
-        <link href="~/coreblogtema/css/single-dark.min.css" rel="stylesheet" />
-        <link href="~/coreblogtema/css/style-dark.min.css" rel="stylesheet" />
-        <link href="~/writer/assets/css/SweetAlert2-dark.min.css" rel="stylesheet" />
+        <link rel="preload" href="~/coreblogtema/css/single-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/coreblogtema/css/single-dark.min.css" /></noscript>
+
+        <link rel="preload" href="~/coreblogtema/css/style-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/coreblogtema/css/style-dark.min.css" /></noscript>
+
+        <link rel="preload" href="~/writer/assets/css/SweetAlert2-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/writer/assets/css/SweetAlert2-dark.min.css" /></noscript>
     }
     else
     {
-        <link href="~/coreblogtema/css/single-light.min.css" rel="stylesheet" />
-        <link href="~/coreblogtema/css/style-light.min.css" rel="stylesheet" />
-        <link href="~/writer/assets/css/SweetAlert2.min.css" rel="stylesheet" />
+        <link rel="preload" href="~/coreblogtema/css/single-light.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/coreblogtema/css/single-light.min.css" /></noscript>
+
+        <link rel="preload" href="~/coreblogtema/css/style-light.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/coreblogtema/css/style-light.min.css" /></noscript>
+
+        <link rel="preload" href="~/writer/assets/css/SweetAlert2.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="~/writer/assets/css/SweetAlert2.min.css" /></noscript>
     }
-    <link rel="shortcut icon" href="~/writer/assets/images/favicon.ico" />
-    <link href="~/CoreBlogTema/css/fontawesome-all.min.css" rel="stylesheet">
-    <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800" rel="stylesheet">
-    <link href="~/coreblogtema/css/thema-toggle.css" rel="stylesheet" />
+
+    <link rel="preload" href="~/coreblogtema/css/thema-toggle.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="~/coreblogtema/css/thema-toggle.css" /></noscript>
+
 
     @RenderSection("HeaderSection",false)
 </head>
@@ -110,11 +124,10 @@
 
     @await Html.PartialAsync("Partial3")
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
-    <script src="~/js/cookie.js"></script>
-    <script src="~/CoreBlogTema/js/move-top.js"></script>
-    <script src="~/CoreBlogTema/js/easing.js"></script>
-    <script>
-        jQuery(document).ready(function () {
+    <script src="~/CoreBlogTema/js/move-top.js" defer></script>
+    <script src="~/CoreBlogTema/js/easing.js" defer></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function (event) {
             var defaults = {
                 containerID: 'toTop',
                 containerHoverID: 'toTopHover',
@@ -129,11 +142,14 @@
     <a href="#home" class="scroll" id="toTop" style="display: block;">
         <span id="toTopHover" style="opacity: 1;"> </span>
     </a>
-    <script src="~/admin/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery-validate/jquery.validate.min.js"></script>
-    <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/newsletter-subscribe.js"></script>
-    <script src="~/js/blog-search.js"></script>
+
+    <script src="~/admin/js/bootstrap.min.js" defer></script>   
+    
+    <script src="~/js/newsletter-subscribe.js" defer></script>
+    <script src="~/js/blog-search.js" defer></script>
+    <script src="~/js/cookie.js" async></script>
+    <script src="~/js/jquery-validate/jquery.validate.min.js" defer></script>
+    <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
 
     @if (thema == "dark")
     {
@@ -145,18 +161,19 @@
                 }
             });
         </script>
-        <script src="~/writer/assets/js/SweetAlert2-dark.js"></script>
+        <script src="~/writer/assets/js/SweetAlert2-dark.js" defer></script>
     }
     else
     {
-        <script src="~/writer/assets/js/SweetAlert2.js"></script>
+        <script src="~/writer/assets/js/SweetAlert2.js" defer></script>
     }
+
 
     @{
         string json = httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions") == string.Empty ? "[]" 
         : httpContextaccessor.HttpContext.Session.GetString("ValidationExceptions");
 
-        <script>
+        <script async>
             let validationErrors = @Html.Raw(json);
 
             if (validationErrors && validationErrors.length > 0) {

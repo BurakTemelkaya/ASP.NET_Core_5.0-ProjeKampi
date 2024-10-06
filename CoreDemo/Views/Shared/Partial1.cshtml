@@ -40,18 +40,17 @@
                     </li>
                 }
                 <li class="nav-item">
-                    <input type="checkbox" class="thema-toggle-checkbox" id="thema-toggle" onclick="SetThema()" checked="@check">
+                    <input type="checkbox" class="thema-toggle-checkbox" id="thema-toggle" onclick="SetThema()" checked="@check" aria-label="Tema Değiştir">
                     <label for="thema-toggle" class="thema-toggle-checkbox-label">
-                        <i class="fas fa-moon w-10"></i>
-                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon w-10" aria-hidden="true"></i>
+                        <i class="fas fa-sun" aria-hidden="true"></i>
                         <span class="ball"></span>
                     </label>
                 </li>
-                
             </ul>
             <div class="form-inline my-2 my-lg-0 header-search">
                 <input class="form-control mr-sm-2" type="search" placeholder="Blog Ara.." id="txt-search" required>
-                <button class="btn btn1 my-2 my-sm-0" id="search-btn" type="submit" name="search">
+                <button class="btn btn1 my-2 my-sm-0" id="search-btn" type="submit" name="search" arial-label="Ara">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
