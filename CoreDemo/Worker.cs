@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,17 +15,14 @@ public class Worker : BackgroundService
         {
             try
             {
-                string url = "https://buraktemelkaya.com";
+                string[] urls = new[] { "https://buraktemelkaya.com" };
 
-                using (HttpClient client = new())
+                using HttpClient client = new();
+                for (int i = 0; i < urls.Length; i++)
                 {
-                    using (HttpResponseMessage response = await client.GetAsync(url, cancellationToken))
-                    {
-                        using (HttpContent content = response.Content)
-                        {
-                            string result = await content.ReadAsStringAsync(cancellationToken);
-                        }
-                    }
+                    using HttpResponseMessage response = await client.GetAsync(urls[i], cancellationToken);
+                    using HttpContent content = response.Content;
+                    string result = await content.ReadAsStringAsync(cancellationToken);
                 }
             }
             catch (Exception ex)

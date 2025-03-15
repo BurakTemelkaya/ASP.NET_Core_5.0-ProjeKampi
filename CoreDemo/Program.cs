@@ -8,7 +8,6 @@ using Core.Extensions;
 using CoreDemo;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
-using CoreLayer.CrossCuttingConcerns.Logging.Log4Net;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Extensions;
 using CoreLayer.Utilities.IoC;
@@ -36,7 +35,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
-using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 

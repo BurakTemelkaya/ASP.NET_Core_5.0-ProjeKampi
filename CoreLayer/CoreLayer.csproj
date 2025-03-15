@@ -1,26 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>7f355d76-7e5d-423a-bf54-00a41e809eea</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="7.1.0" />
+    <PackageReference Include="Autofac" Version="8.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
-    <PackageReference Include="log4net" Version="3.0.3" />
-    <PackageReference Include="MailKit" Version="4.7.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageReference Include="MimeKit" Version="4.7.1" />
+    <PackageReference Include="log4net" Version="3.0.4" />
+    <PackageReference Include="MailKit" Version="4.11.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+    <PackageReference Include="MimeKit" Version="4.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
+    <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
