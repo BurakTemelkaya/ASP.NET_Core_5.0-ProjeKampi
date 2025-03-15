@@ -49,13 +49,13 @@ namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
 
         public void RemoveByPattern(string pattern)
         {
-            var coherentState = typeof(MemoryCache).GetField("_coherentState", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo coherentState = typeof(MemoryCache).GetField("_coherentState", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var coherentStateValue = coherentState.GetValue(_memoryCache);
+            object coherentStateValue = coherentState.GetValue(_memoryCache);
 
-            var entriesCollection = coherentStateValue.GetType().GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+            PropertyInfo entriesCollection = coherentStateValue.GetType().GetProperty("StringEntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var entriesCollectionValue = entriesCollection.GetValue(coherentStateValue) as ICollection;
+            ICollection entriesCollectionValue = entriesCollection.GetValue(coherentStateValue) as ICollection;
 
             List<ICacheEntry> cacheCollectionValues = new();
 
@@ -65,8 +65,8 @@ namespace CoreLayer.CrossCuttingConcerns.Caching.Microsoft
                 cacheCollectionValues.Add(cacheItemValue);
             }
 
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var keysToRemove = cacheCollectionValues.Where(d => regex.IsMatch(d.Key.ToString())).Select(d => d.Key).ToList();
+            Regex regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            HashSet<object> keysToRemove = [.. cacheCollectionValues.Where(d => regex.IsMatch(d.Key.ToString())).Select(d => d.Key)];
 
             foreach (var key in keysToRemove)
             {

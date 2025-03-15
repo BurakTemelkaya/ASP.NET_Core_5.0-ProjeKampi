@@ -145,7 +145,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Login/Index";
     options.LogoutPath = "/Login/Logout";
     options.AccessDeniedPath = new PathString("/Login/AccessDenied");
-    options.Cookie.Domain = builder.Configuration["Domain"];
 });
 
 
