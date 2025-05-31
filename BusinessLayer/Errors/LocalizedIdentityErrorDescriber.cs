@@ -144,7 +144,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(UserNotInRole),
-                Description = "Kullanıcının {0} rolü yoktur."
+                Description = string.Format("Kullanıcının {0} rolü yoktur.", role)
             };
         }
 
@@ -153,7 +153,7 @@ namespace BusinessLayer.Errors
             return new IdentityError
             {
                 Code = nameof(UserLockoutNotEnabled),
-                Description = "Hesabınız yasaklanmıştır"
+                Description = "Hesap kilitlemesi aktif değildir."
             };
         }
     }

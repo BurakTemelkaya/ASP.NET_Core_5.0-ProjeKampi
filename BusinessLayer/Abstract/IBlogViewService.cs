@@ -17,4 +17,5 @@ public interface IBlogViewService
     Task<IDataResult<int>> GetCountByBlogIdAsync(int blogId);
     Task<Dictionary<DateTime, int>> GetChartDataByWriterAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null);
     Task<Dictionary<DateTime, int>> GetChartDataByAdminAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null);
+    Task<Dictionary<DateTime, int>> GetChartDataByBlogId(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null, int? blogId = null);
 }

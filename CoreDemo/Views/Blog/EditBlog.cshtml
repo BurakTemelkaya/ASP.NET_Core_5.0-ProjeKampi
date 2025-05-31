@@ -7,9 +7,28 @@
 
 @section HeaderSection{
     <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+    <style>
+        .chart-container {
+            position: relative;
+            width: 90%;
+            max-width: 90%;
+            height: 200px;
+            margin: auto;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
 }
 
 <h1>Blog Düzenleme Sayfası</h1>
+<br />
+<div class="chart-container">
+    <canvas id="myChart" height="50"></canvas>
+</div>
+<br />
 <form class="form-group" method="post" enctype="multipart/form-data">
     @Html.HiddenFor(x=> x.BlogID)
     @Html.Label("Blog Başlığı")
@@ -53,4 +72,22 @@
 @section ScriptSection{
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
     <script src="~/js/summernotesetup.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script src="~/js/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/BlogView/GetChartDataByBlog?BlogId=@Model.BlogID",
+                success: function (response) {
+                    createChart('myChart', "görüntülenme sayısı", response, 'bar', 'hour');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+    </script>
 }

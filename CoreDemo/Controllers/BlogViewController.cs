@@ -18,4 +18,10 @@ public class BlogViewController : Controller
         var data = await _blogViewService.GetChartDataByWriterAsync();
         return Ok(data);
     }
+
+    public async Task<IActionResult> GetChartDataByBlog(int blogId)
+    {
+        var data = await _blogViewService.GetChartDataByBlogId(blogId:blogId);
+        return Ok(data);
+    }
 }

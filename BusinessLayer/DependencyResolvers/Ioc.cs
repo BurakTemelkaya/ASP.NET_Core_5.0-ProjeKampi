@@ -1,5 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BusinessLayer.DependencyResolvers;
@@ -8,6 +10,8 @@ public static class Ioc
 {
     public static void IocBusinessInstall(this IServiceCollection services)
     {
+        services.AddValidatorsFromAssemblyContaining<AboutValidator>(); // Tüm validator'ları tarar
+
         services.AddScoped<IAboutService, AboutManager>();
 
         services.AddScoped<IBlogService, BlogManager>();

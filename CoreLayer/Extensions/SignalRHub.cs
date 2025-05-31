@@ -37,6 +37,6 @@ public class SignalRHub : Hub
 
     public static List<string> GetConnectionId(int userId)
     {
-       return _userConnections.Where(x => x.Key == userId).Select(x=> x.Value).ToList();
+       return [.. _userConnections.Where(x => x.Key == userId).Select(x=> x.Value)];
     }
 }

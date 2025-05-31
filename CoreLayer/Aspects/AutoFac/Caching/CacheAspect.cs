@@ -6,36 +6,35 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Linq;
 
-namespace CoreLayer.Aspects.AutoFac.Caching
+namespace CoreLayer.Aspects.AutoFac.Caching;
+
+public class CacheAspect : MethodInterception
 {
-    public class CacheAspect : MethodInterception
+    private readonly int _duration;
+    private readonly ICacheManager _cacheManager;
+
+    public CacheAspect(int duration = 300)
     {
-        private readonly int _duration;
-        private readonly ICacheManager _cacheManager;
+        _duration = duration;
+        _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();
+    }
 
-        public CacheAspect(int duration = 300)
+    public override void Intercept(IInvocation invocation)
+    {
+        var methodName = $"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}";
+
+        var arguments = invocation.Arguments.Select(arg => arg != null && arg.GetType().IsClass 
+        ? JsonConvert.SerializeObject(arg, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) 
+        : arg?.ToString() ?? "<Null>").ToList();
+
+        var key = $"{methodName}({string.Join(",", arguments)})";
+
+        if (_cacheManager.IsAdd(key))
         {
-            _duration = duration;
-            _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();
+            invocation.ReturnValue = _cacheManager.Get(key);
+            return;
         }
-
-        public override void Intercept(IInvocation invocation)
-        {
-            var methodName = $"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}";
-
-            var arguments = invocation.Arguments.Select(arg => arg != null && arg.GetType().IsClass 
-            ? JsonConvert.SerializeObject(arg, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) 
-            : arg?.ToString() ?? "<Null>").ToList();
-
-            var key = $"{methodName}({string.Join(",", arguments)})";
-
-            if (_cacheManager.IsAdd(key))
-            {
-                invocation.ReturnValue = _cacheManager.Get(key);
-                return;
-            }
-            invocation.Proceed();
-            _cacheManager.Add(key, invocation.ReturnValue, _duration);
-        }
+        invocation.Proceed();
+        _cacheManager.Add(key, invocation.ReturnValue, _duration);
     }
 }

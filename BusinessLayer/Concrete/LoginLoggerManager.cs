@@ -23,9 +23,9 @@ namespace BusinessLayer.Concrete
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserBusinessService _userService;
         private IConfiguration Configuration { get; }
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEnvironmentService _webHostEnvironment;
         public LoginLoggerManager(ILoginLoggerDal loginLoggerDal, IMapper mapper, IHttpContextAccessor httpContextAccessor,
-            IUserBusinessService userService, IConfiguration configuration, IWebHostEnvironment webHostEnvironment) : base(mapper)
+            IUserBusinessService userService, IConfiguration configuration, IEnvironmentService webHostEnvironment) : base(mapper)
         {
             _loginLogger = loginLoggerDal;
             _httpContextAccessor = httpContextAccessor;

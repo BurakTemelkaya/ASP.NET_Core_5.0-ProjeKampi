@@ -8,6 +8,7 @@ using CoreLayer.Utilities.MailUtilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
 namespace CoreLayer.DependancyResolvers;
@@ -22,16 +23,12 @@ public class CoreModule : ICoreModule
 
         serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
 
-        MailSettings mailSettings = configuration.GetSection("MailSettings").Get<MailSettings>();
-
-        serviceCollection.AddSingleton<IMailService, MailKitMailService>(_ => new MailKitMailService(mailSettings));
+        serviceCollection.AddSingleton<IMailService, MailKitMailService>(p => new MailKitMailService(p.GetRequiredService<IOptions<MailSettings>>().Value));
 
         serviceCollection.AddSingleton<ICaptchaService, RecaptchaManager>();
 
         serviceCollection.AddSingleton<Stopwatch>();
 
         serviceCollection.AddSingleton<UserHelper>();
-
-        serviceCollection.AddSignalR();
     }
 }

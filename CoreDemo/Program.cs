@@ -1,5 +1,6 @@
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BusinessLayer.Abstract;
 using BusinessLayer.AutoMapper.Profiles;
 using BusinessLayer.DependencyResolvers;
 using BusinessLayer.Errors;
@@ -8,13 +9,14 @@ using Core.Extensions;
 using CoreDemo;
 using CoreDemo.AutoMapper.Profiles;
 using CoreDemo.Models;
+using CoreDemo.Services;
 using CoreLayer.DependancyResolvers;
 using CoreLayer.Extensions;
 using CoreLayer.Utilities.IoC;
+using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.DependancyInjection;
 using EntityLayer.Concrete;
-using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -65,7 +67,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
@@ -88,10 +89,15 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("RedisSettings"));
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<IEnvironmentService, EnvironmentService>();
 
 builder.Services.AddMvc(config =>
 {
@@ -106,7 +112,7 @@ builder.Services.AddMvc(config =>
 }).AddRazorRuntimeCompilation();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
-opt.TokenLifespan = TimeSpan.FromMinutes(30)
+opt.TokenLifespan = TimeSpan.FromMinutes(5)
 );
 
 builder.Services.AddAuthentication(

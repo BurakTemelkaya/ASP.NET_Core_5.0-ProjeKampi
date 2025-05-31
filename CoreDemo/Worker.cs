@@ -15,7 +15,7 @@ public class Worker : BackgroundService
         {
             try
             {
-                string[] urls = new[] { "https://buraktemelkaya.com" };
+                string[] urls = new[] { "https://buraktemelkaya.com", "https://drive.buraktemelkaya.com/" };
 
                 using HttpClient client = new();
                 for (int i = 0; i < urls.Length; i++)

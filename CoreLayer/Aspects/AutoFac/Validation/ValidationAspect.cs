@@ -50,7 +50,7 @@ namespace CoreLayer.Aspects.AutoFac.Validation
 
                 var messagesJSON = JsonSerializer.Serialize(messages);
 
-                _contextAccessor.HttpContext.Session.SetString("ValidationExceptions", JsonSerializer.Serialize(messagesJSON));
+                _contextAccessor.HttpContext.Session.Set("ValidationExceptions", System.Text.Encoding.UTF8.GetBytes(messagesJSON));
 
                 throw new ValidationException(messagesJSON);
             }               

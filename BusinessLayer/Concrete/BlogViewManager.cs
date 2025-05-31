@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CoreLayer.Entities;
 using CoreLayer.Extensions;
+using CoreLayer.Helpers;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using MimeKit.Tnef;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,20 +22,20 @@ public class BlogViewManager : IBlogViewService
 {
     private readonly IBlogViewDal _blogViewDal;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IEnvironmentService _environmentService;
     private readonly UserHelper _userHelper;
 
-    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, UserHelper userHelper)
+    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IEnvironmentService environmentService, UserHelper userHelper)
     {
         _blogViewDal = blogViewDal;
         _httpContextAccessor = httpContextAccessor;
-        _webHostEnvironment = webHostEnvironment;
+        _environmentService = environmentService;
         _userHelper = userHelper;
     }
 
     public async Task<IResultObject> AddAsync(int blogId)
     {
-        if (!_webHostEnvironment.IsProduction())
+        if (!_environmentService.IsProduction())
         {
             return new SuccessResult();
         }
@@ -135,13 +135,23 @@ public class BlogViewManager : IBlogViewService
         return await GetChartDataAsync(interval, startDate, endDate);
     }
 
-    private async Task<Dictionary<DateTime, int>> GetChartDataAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null, int? writerId = null)
+    public async Task<Dictionary<DateTime, int>> GetChartDataByBlogId(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null, int? blogId = null)
+    {
+        return await GetChartDataAsync(interval, startDate, endDate, blogId: blogId);
+    }
+
+    private async Task<Dictionary<DateTime, int>> GetChartDataAsync(TimeSpan? interval = null, DateTime? startDate = null, DateTime? endDate = null, int? writerId = null, int? blogId = null)
     {
         Expression<Func<BlogView, bool>> predicate = null;
 
         if (writerId.HasValue)
         {
             predicate = x => x.Blog.WriterID == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
+
+        if (blogId.HasValue)
+        {
+            predicate = predicate.And(x => x.BlogId == blogId);
         }
 
         interval ??= TimeSpan.FromHours(1);
