@@ -90,7 +90,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
 
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("RedisSettings"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddSignalR();
 
