@@ -17,6 +17,7 @@ using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.DependancyInjection;
 using EntityLayer.Concrete;
+using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -110,6 +111,8 @@ builder.Services.AddMvc(config =>
 {
     opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 }).AddRazorRuntimeCompilation();
+
+builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan = TimeSpan.FromMinutes(5)
