@@ -17,7 +17,6 @@ using CoreLayer.Utilities.MailUtilities;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.DependancyInjection;
 using EntityLayer.Concrete;
-using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -99,8 +98,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<IEnvironmentService, EnvironmentService>();
-
-builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddMvc(config =>
 {

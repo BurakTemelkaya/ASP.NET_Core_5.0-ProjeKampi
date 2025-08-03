@@ -2,7 +2,6 @@
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BusinessLayer.DependencyResolvers;

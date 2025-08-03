@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using X.PagedList.Extensions;
-using X.Web.PagedList;
 
 namespace CoreDemo.Areas.Admin.Controllers
 {

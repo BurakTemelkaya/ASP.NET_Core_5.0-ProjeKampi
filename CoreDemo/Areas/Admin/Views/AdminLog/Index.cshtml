@@ -44,7 +44,7 @@
 </table>
 <br />
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page , ViewBag.Search }),
-new X.Web.PagedList.PagedListRenderOptions
+new X.PagedList.Mvc.Core.PagedListRenderOptions
 {
     LinkToFirstPageFormat="<<İlk",
     LinkToLastPageFormat="Son>>",
