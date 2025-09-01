@@ -106,13 +106,26 @@
     <script src="~/admin/js/plugins/jquery-ui/jquery-ui.min.js"></script>
 
     <!-- Bootstrap -->
-    <script src="~/admin/js/bootstrap.js"></script> 
+    <script src="~/admin/js/bootstrap.js"></script>
 
     <!-- Bootstrap Bağımlı Kütüphaneler -->
     <script src="~/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="~/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/admin/js/plugins/peity/jquery.peity.min.js"></script>
     <script src="~/admin/js/inspinia.js"></script>
+    <script>
+        // Pace.js'in kendisinden HEMEN ÖNCE bu kodun olduğundan emin olun!
+        window.paceOptions = {
+            // Pace'in AJAX isteklerine hiç karışmamasını söyle.
+            ajax: false,
+            // Diğer olayları (event loop gibi) da izlemesini engelle.
+            eventLag: false,
+            // Sadece sayfa yükleme (document) olayını izle.
+            restartOnRequestAfter: false
+        };
+    </script>
+
+    <!-- SORUNLU KÜTÜPHANE -->
     <script src="~/admin/js/plugins/pace/pace.min.js"></script>
 
     <!-- JQuery Validate -->
@@ -123,7 +136,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
     <!-- Uygulamaya Özgü JS Dosyaları -->
-    <script src="~/js/admin-folders.js"></script>
+
     <script src="~/js/cookie.js"></script>
 
     <!-- iCheck Bağımlı Kütüphane -->
@@ -138,11 +151,13 @@
     </script>
 
     <!-- Diğer Kütüphaneler -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.17/signalr.min.js" integrity="sha512-85w7H/gNoFZdG67JR2Ab1lvcG2gRNQGVJzKixMX5ii0/4TWVbmraeXorpdBlk+/Zhuc4BqkFcbTw5IB7HU4FRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/admin-notification.js"></script>
+    <script src="~/js/admin-folders.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <!-- Admin Bildirimleri -->
-    <script src="~/js/admin-notification.js"></script>
 
     @RenderSection("ScriptSection", false)
     @if (thema == "dark")

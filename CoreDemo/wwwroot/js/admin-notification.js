@@ -2,6 +2,7 @@
 
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(`/ReceiveNotification`)
+        .withAutomaticReconnect()
         .build();
 
     connection.on("ReceiveNotification", function (message) {
