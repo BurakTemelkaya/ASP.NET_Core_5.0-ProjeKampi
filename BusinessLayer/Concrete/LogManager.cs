@@ -3,8 +3,8 @@ using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusinessLayer.Concrete;
 
@@ -36,11 +36,10 @@ public class LogManager : ILogService
         return new SuccessDataResult<Log>(await _logDal.GetByIDAsync(id));
     }
 
-    public async Task<IDataResult<List<Log>>> GetLogListAsync(int take, int page, string search = null)
+    public async Task<IDataResult<IPagedList<Log>>> GetLogListAsync(int take, int page, string search = null)
     {
-        var data = await _logDal.GetListAllByPagingAsync(
-         x => (search == null || (x.Details.ToLower().Contains(search.ToLower()))), take, page);
+        var data = await _logDal.GetPagedListAsync(page,take,x => search == null || x.Details.ToLower().Contains(search.ToLower()));
 
-        return new SuccessDataResult<List<Log>>(data);
+        return new SuccessDataResult<IPagedList<Log>>(data);
     }
 }

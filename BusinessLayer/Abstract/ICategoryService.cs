@@ -4,6 +4,7 @@ using EntityLayer.DTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusinessLayer.Abstract;
 
@@ -13,7 +14,7 @@ public interface ICategoryService
     Task<IResultObject> TDeleteAsync(Category t);
     Task<IResultObject> TUpdateAsync(Category t);
     Task<IDataResult<List<Category>>> GetListAsync(bool? categoryStatus=null);
-    Task<IDataResult<List<Category>>> GetListByPagingAsync(bool? categoryStatus=null, int take = 0, int page = 0);
+    Task<IDataResult<IPagedList<Category>>> GetListByPagingAsync(bool? categoryStatus=null, int take = 0, int page = 0);
     Task<IDataResult<Category>> TGetByIDAsync(int id);
     Task<IDataResult<int>> GetCountAsync(bool? categoryStatus=null);
     Task<IDataResult<List<SelectListItem>>> GetCategorySelectedListItemAsync(bool? isActive = null);

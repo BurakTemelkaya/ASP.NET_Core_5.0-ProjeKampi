@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
+using X.PagedList.EF;
 
 namespace BusinessLayer.Concrete;
 
@@ -194,7 +196,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             await _mailService.SendEmailAsync(new Mail()
             {
                 ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
-                Subject= MailTemplates.ChangedUserInformationMailSubject(),
+                Subject = MailTemplates.ChangedUserInformationMailSubject(),
                 HtmlBody = MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl())
             });
             return new SuccessDataResult<IdentityResult>(result);
@@ -267,9 +269,9 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
     /// <param name="filter"></param>
     /// <returns>Kullanıcı listesi döner.</returns>
 
-    public async Task<IDataResult<List<AppUser>>> GetUserListAsync()
+    public async Task<IDataResult<IPagedList<AppUser>>> GetUserListAsync(int pageNumber = 1, int pageSize = 10)
     {
-        return new SuccessDataResult<List<AppUser>>(await _userManager.Users.ToListAsync());
+        return new SuccessDataResult<IPagedList<AppUser>>(await _userManager.Users.ToPagedListAsync(pageNumber, pageSize));
     }
 
     [CacheAspect]
@@ -320,7 +322,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             await _mailService.SendEmailAsync(new Mail()
             {
                 ToList = new List<MailboxAddress>() { new(address: userData.Email, name: userData.NameSurname) },
-                Subject= MailTemplates.BanMessageSubject(),
+                Subject = MailTemplates.BanMessageSubject(),
                 HtmlBody = banMessageContent
             });
 
@@ -360,7 +362,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             ToList = new List<MailboxAddress>() { new MailboxAddress(address: userData.Email, name: userData.NameSurname) },
             Subject = MailTemplates.BanOpenUserSubjectTemplate(),
             HtmlBody = MailTemplates.BanOpenUserContentTemplate()
-            
+
         });
 
         userData.LockoutEnd = DateTime.UtcNow;
@@ -397,7 +399,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             await _mailService.SendEmailAsync(new Mail()
             {
                 ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
-                Subject= MailTemplates.ResetPasswordInformationSubject(),
+                Subject = MailTemplates.ResetPasswordInformationSubject(),
                 HtmlBody = MailTemplates.ResetPasswordInformationMessage()
             });
 

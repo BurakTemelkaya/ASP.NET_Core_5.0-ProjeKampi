@@ -1,5 +1,4 @@
-﻿using CoreLayer.DataAccess;
-using CoreLayer.DataAccess.EntityFramework;
+﻿using CoreLayer.DataAccess.EntityFramework;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
@@ -10,6 +9,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using X.PagedList;
+using X.PagedList.EF;
 
 namespace DataAccessLayer.Concrete.EntityFramework;
 
@@ -28,11 +29,11 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
         }
     }
 
-    public async Task<List<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(
+    public async Task<IPagedList<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(
     Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null,
     bool commentStatus = true,
-    int take = 0,
-    int skip = 0)
+    int pageNumber = 0,
+    int pageSize = 0)
     {
         var query = Context.Blogs
             .Include(b => b.Category)
@@ -62,38 +63,12 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
             query = query.Where(filter);
         }
 
-        if (take > 0)
-        {
-            query = query.Skip(skip).Take(take);
-        }
-
-        var result = await query.ToListAsync();
+        var result = await query.ToPagedListAsync(pageNumber, pageSize);
 
         return result;
     }
 
-
-
-    public async Task<List<BlogCategoryandCommentCountDto>> GetListWithCategoryandCommentCountByPagingAsync(Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null, bool commentStatus = true, int take = 0, int page = 1)
-    {
-        int skip = 0;
-        if (page > 1)
-        {
-            skip = take * (page - 1);
-        }
-
-        int count = await GetCountByBlogCategoryandCommentCountAsync(filter);
-
-        if (skip >= count)
-        {
-            skip = 0;
-            page = 1;
-        }
-
-        return AddNullObject<BlogCategoryandCommentCountDto>.GetListByPaging(await GetBlogListWithCategoryandCommentCountAsync(filter, commentStatus, take, skip), take, page, count);
-    }
-
-    public async Task<List<Blog>> GetListBlogWithCategoryAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int skip = 0)
+    public async Task<IPagedList<Blog>> GetListBlogWithCategoryAsync(Expression<Func<Blog, bool>> filter = null, int pageNumber = 1, int pageSize = 10)
     {
         var query = Context.Blogs.Include(x => x.Category).AsQueryable();
 
@@ -101,30 +76,9 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
             query.Where(filter)
             : query;
 
-        query = query.OrderByDescending(x => x.BlogID)
-                .Skip(skip)
-                .Take(take);
+        query = query.OrderByDescending(x => x.BlogID);
 
-        return await query.ToListAsync();
-    }
-
-    public async Task<List<Blog>> GetListWithCategoryByPagingAsync(Expression<Func<Blog, bool>> filter = null, int take = 0, int page = 1)
-    {
-        int skip = 0;
-        if (page > 1)
-        {
-            skip = take * (page - 1);
-        }
-
-        int count = await GetCountAsync(filter);
-
-        if (skip >= count)
-        {
-            skip = 0;
-            page = 1;
-        }
-
-        return AddNullObject<Blog>.GetListByPaging(await GetListBlogWithCategoryAsync(filter, take, skip), take, page, count);
+        return await query.ToPagedListAsync(pageNumber, pageSize);
     }
 
     public async Task<BlogCategoryandCommentCountandWriterDto> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<BlogCategoryandCommentCountandWriterDto, bool>> filter)

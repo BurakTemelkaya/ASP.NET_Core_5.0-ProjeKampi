@@ -8,239 +8,237 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Concrete
+namespace BusinessLayer.Concrete;
+
+public class CommentManager : ICommentService
 {
-    public class CommentManager : ICommentService
+    private readonly ICommentDal _commentDal;
+    private readonly IUserBusinessService _userService;
+    public CommentManager(ICommentDal commentDal, IUserBusinessService userService)
     {
-        private readonly ICommentDal _commentDal;
-        private readonly IUserBusinessService _userService;
-        public CommentManager(ICommentDal commentDal, IUserBusinessService userService)
+        _commentDal = commentDal;
+        _userService = userService;
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    [ValidationAspect(typeof(CommentValidator))]
+    public async Task<IResultObject> TAddAsync(Comment comment)
+    {
+        comment.CommentDate = DateTime.Now;
+        comment.CommentStatus = true;
+        await _commentDal.InsertAsync(comment);
+        return new SuccessResult();
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<int>> GetCountAsync(int blogScore = 0)
+    {
+        return new SuccessDataResult<int>(blogScore > 0 ? await _commentDal.GetCountAsync(x=> x.BlogScore > blogScore) : await _commentDal.GetCountAsync());
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id)
+    {
+        return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id && x.CommentStatus));
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> TDeleteAsync(Comment t)
+    {
+        if (t == null)
         {
-            _commentDal = commentDal;
-            _userService = userService;
+            return new ErrorResult(Messages.CommentNotEmpty);
         }
 
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        [ValidationAspect(typeof(CommentValidator))]
-        public async Task<IResultObject> TAddAsync(Comment comment)
+        await _commentDal.DeleteAsync(t);
+        return new SuccessResult();
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<Comment>> TGetByIDAsync(int id)
+    {
+        var values = await _commentDal.GetByIDAsync(id);
+        if (values != null)
         {
-            comment.CommentDate = DateTime.Now;
+            return new SuccessDataResult<Comment>(values);
+        }
+        return new ErrorDataResult<Comment>(Messages.CommentNotFound);
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    [ValidationAspect(typeof(CommentValidator))]
+    public async Task<IResultObject> TUpdateAsync(Comment t)
+    {
+        var oldValueRaw = await TGetByIDAsync(t.CommentID);
+        var oldValue = oldValueRaw.Data;
+        if (oldValue != null)
+        {
+            t.BlogScore = oldValue.BlogScore;
+            t.CommentDate = oldValue.CommentDate;
+            t.BlogID = oldValue.BlogID;
+            await _commentDal.UpdateAsync(t);
+            return new SuccessResult();
+        }
+        return new ErrorResult(Messages.CommentNotFound);
+
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<List<Comment>>> GetBlogListWithCommentAsync()
+    {
+        return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogAsync());
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<List<Comment>>> GetCommentListWithBlogByPagingAsync(int take = 0, int page = 1)
+    {
+        return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(null, take, page));
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<List<Comment>>> GetCommentListByWriterandPaging(string userName, int take, int page)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        var data = await _commentDal.GetListWithCommentByBlogandPagingAsync(x => x.Blog.WriterID == user.Data.Id, take, page);
+        if (data != null)
+        {
+            return new SuccessDataResult<List<Comment>>(data);
+        }
+        return new ErrorDataResult<List<Comment>>(Messages.CommentNotFound);
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> DeleteCommentByWriter(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment.Blog.WriterID == user.Data.Id)
+        {
+            var result = await TDeleteAsync(comment);
+            if (result.Success)
+            {
+                return new SuccessResult(Messages.CommentDeleted);
+            }
+            return new ErrorResult(Messages.CommentNotDeleted);
+        }
+        return new ErrorResult(Messages.CommentIsNotAuthors);
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> DisabledCommentByWriter(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment.Blog.WriterID == user.Data.Id)
+        {
+            if (!comment.CommentStatus)
+            {
+                return new SuccessResult(Messages.CommentAlreadyPassive);
+            }
+            comment.CommentStatus = false;
+            var result = await TUpdateAsync(comment);
+            if (result.Success)
+            {
+                return new SuccessResult(Messages.CommentHasBeenPassive);
+            }
+            return new ErrorResult(result.Message);
+        }
+        return new ErrorResult(Messages.CommentIsNotAuthors);
+    }
+
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> EnabledCommentByWriter(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment.Blog.WriterID == user.Data.Id)
+        {
+            if (comment.CommentStatus)
+            {
+                return new SuccessResult(Messages.CommentAlreadyActive);
+            }
             comment.CommentStatus = true;
-            await _commentDal.InsertAsync(comment);
-            return new SuccessResult();
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<int>> GetCountAsync(int blogScore = 0)
-        {
-            return new SuccessDataResult<int>(blogScore > 0 ? await _commentDal.GetCountAsync(x=> x.BlogScore > blogScore) : await _commentDal.GetCountAsync());
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Comment>>> GetListByBlogIdAsync(int id)
-        {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListAllAsync(x => x.BlogID == id && x.CommentStatus));
-        }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> TDeleteAsync(Comment t)
-        {
-            if (t == null)
+            var result = await TUpdateAsync(comment);
+            if (result.Success)
             {
-                return new ErrorResult(Messages.CommentNotEmpty);
+                return new SuccessResult(Messages.CommentHasBeenActive);
             }
-
-            await _commentDal.DeleteAsync(t);
-            return new SuccessResult();
+            return new ErrorResult(result.Message);
         }
+        return new ErrorResult(Messages.CommentIsNotAuthors);
+    }
 
-        [CacheAspect]
-        public async Task<IDataResult<Comment>> TGetByIDAsync(int id)
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> ChangeStatusCommentByWriter(string userName, int id)
+    {
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment == null)
         {
-            var values = await _commentDal.GetByIDAsync(id);
-            if (values != null)
-            {
-                return new SuccessDataResult<Comment>(values);
-            }
-            return new ErrorDataResult<Comment>(Messages.CommentNotFound);
-        }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        [ValidationAspect(typeof(CommentValidator))]
-        public async Task<IResultObject> TUpdateAsync(Comment t)
-        {
-            var oldValueRaw = await TGetByIDAsync(t.CommentID);
-            var oldValue = oldValueRaw.Data;
-            if (oldValue != null)
-            {
-                t.BlogScore = oldValue.BlogScore;
-                t.CommentDate = oldValue.CommentDate;
-                t.BlogID = oldValue.BlogID;
-                await _commentDal.UpdateAsync(t);
-                return new SuccessResult();
-            }
             return new ErrorResult(Messages.CommentNotFound);
-
         }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Comment>>> GetBlogListWithCommentAsync()
+        if (comment.CommentStatus)
         {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogAsync());
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Comment>>> GetCommentListWithBlogByPagingAsync(int take = 0, int page = 1)
-        {
-            return new SuccessDataResult<List<Comment>>(await _commentDal.GetListWithCommentByBlogandPagingAsync(null, take, page));
-        }
-
-        [CacheAspect]
-        public async Task<IDataResult<List<Comment>>> GetCommentListByWriterandPaging(string userName, int take, int page)
-        {
-            var user = await _userService.GetByUserNameAsync(userName);
-            var data = await _commentDal.GetListWithCommentByBlogandPagingAsync(x => x.Blog.WriterID == user.Data.Id, take, page);
-            if (data != null)
+            var result = await DisabledCommentByWriter(userName, id);
+            if (!result.Success)
             {
-                return new SuccessDataResult<List<Comment>>(data);
-            }
-            return new ErrorDataResult<List<Comment>>(Messages.CommentNotFound);
-        }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> DeleteCommentByWriter(string userName, int id)
-        {
-            var user = await _userService.GetByUserNameAsync(userName);
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment.Blog.WriterID == user.Data.Id)
-            {
-                var result = await TDeleteAsync(comment);
-                if (result.Success)
-                {
-                    return new SuccessResult(Messages.CommentDeleted);
-                }
-                return new ErrorResult(Messages.CommentNotDeleted);
-            }
-            return new ErrorResult(Messages.CommentIsNotAuthors);
-        }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> DisabledCommentByWriter(string userName, int id)
-        {
-            var user = await _userService.GetByUserNameAsync(userName);
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment.Blog.WriterID == user.Data.Id)
-            {
-                if (!comment.CommentStatus)
-                {
-                    return new SuccessResult(Messages.CommentAlreadyPassive);
-                }
-                comment.CommentStatus = false;
-                var result = await TUpdateAsync(comment);
-                if (result.Success)
-                {
-                    return new SuccessResult(Messages.CommentHasBeenPassive);
-                }
                 return new ErrorResult(result.Message);
             }
-            return new ErrorResult(Messages.CommentIsNotAuthors);
         }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> EnabledCommentByWriter(string userName, int id)
+        else
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment.Blog.WriterID == user.Data.Id)
+            var result = await EnabledCommentByWriter(userName, id);
+            if (!result.Success)
             {
-                if (comment.CommentStatus)
-                {
-                    return new SuccessResult(Messages.CommentAlreadyActive);
-                }
-                comment.CommentStatus = true;
-                var result = await TUpdateAsync(comment);
-                if (result.Success)
-                {
-                    return new SuccessResult(Messages.CommentHasBeenActive);
-                }
                 return new ErrorResult(result.Message);
             }
-            return new ErrorResult(Messages.CommentIsNotAuthors);
         }
+        return new SuccessResult();
+    }
 
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> ChangeStatusCommentByWriter(string userName, int id)
+    [CacheRemoveAspect("IBlogService.Get")]
+    [CacheRemoveAspect("ICommentService.Get")]
+    public async Task<IResultObject> ChangeStatusCommentByAdmin(int id)
+    {
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment == null)
         {
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment == null)
-            {
-                return new ErrorResult(Messages.CommentNotFound);
-            }
-            if (comment.CommentStatus)
-            {
-                var result = await DisabledCommentByWriter(userName, id);
-                if (!result.Success)
-                {
-                    return new ErrorResult(result.Message);
-                }
-            }
-            else
-            {
-                var result = await EnabledCommentByWriter(userName, id);
-                if (!result.Success)
-                {
-                    return new ErrorResult(result.Message);
-                }
-            }
-            return new SuccessResult();
+            return new ErrorResult(Messages.CommentNotFound);
         }
-
-        [CacheRemoveAspect("IBlogService.Get")]
-        [CacheRemoveAspect("ICommentService.Get")]
-        public async Task<IResultObject> ChangeStatusCommentByAdmin(int id)
+        if (comment.CommentStatus)
         {
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment == null)
-            {
-                return new ErrorResult(Messages.CommentNotFound);
-            }
-            if (comment.CommentStatus)
-            {
-                comment.CommentStatus = false;
-            }
-            else
-            {
-                comment.CommentStatus = true;
-            }
-            await _commentDal.UpdateAsync(comment);
-            return new SuccessResult();
+            comment.CommentStatus = false;
         }
-
-        [CacheAspect]
-        public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
+        else
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
-            if (comment != null)
-            {
-                if (comment.Blog.WriterID == user.Data.Id)
-                {
-                    return new SuccessDataResult<Comment>(comment);
-                }
-                return new ErrorDataResult<Comment>(Messages.CommentIsNotAuthors);
-            }
-
-            return new ErrorDataResult<Comment>(Messages.CommentNotFound);
+            comment.CommentStatus = true;
         }
+        await _commentDal.UpdateAsync(comment);
+        return new SuccessResult();
+    }
+
+    [CacheAspect]
+    public async Task<IDataResult<Comment>> GetByIdandWriterAsync(string userName, int id)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        var comment = await _commentDal.GetCommentByBlog(x => x.CommentID == id);
+        if (comment != null)
+        {
+            if (comment.Blog.WriterID == user.Data.Id)
+            {
+                return new SuccessDataResult<Comment>(comment);
+            }
+            return new ErrorDataResult<Comment>(Messages.CommentIsNotAuthors);
+        }
+
+        return new ErrorDataResult<Comment>(Messages.CommentNotFound);
     }
 }

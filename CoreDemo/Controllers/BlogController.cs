@@ -41,7 +41,7 @@ public class BlogController : Controller
             ViewBag.Id = getBlogModel.Id;
         }
 
-        return View(values.Data.ToPagedList(getBlogModel.Page, 6));
+        return View(values.Data);
     }
 
     [Route("/Blog/BlogReadAll/{title}/{id:int}")]
@@ -62,7 +62,7 @@ public class BlogController : Controller
     public async Task<IActionResult> BlogListByWriter(int page = 1)
     {
         var values = await _blogService.GetListWithCategoryByWriterWithPagingAsync(User.Identity.Name, 5, page);
-        return View(values.Data.ToPagedList(page, 5));
+        return View(values.Data);
     }
     [HttpGet]
     public async Task<IActionResult> BlogAdd()

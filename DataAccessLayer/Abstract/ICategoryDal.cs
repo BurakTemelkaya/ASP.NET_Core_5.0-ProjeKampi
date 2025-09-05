@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Abstract
+namespace DataAccessLayer.Abstract;
+
+public interface ICategoryDal : IEntityRepository<Category>
 {
-    public interface ICategoryDal : IEntityRepository<Category>
-    {
-        Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null);
-    }
+    Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null);
 }

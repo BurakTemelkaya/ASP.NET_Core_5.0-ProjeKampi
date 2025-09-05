@@ -26,29 +26,27 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int id = 0, int page = 1)
         {
-            var blogs = new List<Blog>();
 
             if (id != 0)
             {
                 var user = await _businessUserService.GetByIDAsync(id.ToString());
-                var value = await _blogService.GetListWithCategoryByWriterWithPagingAsync(user.Data.UserName, 4, page);
+                var value = await _blogService.GetListWithCategoryByWriterWithPagingAsync(user.Data.UserName, page, 4);
                 if (value.Data.Count > 0)
                 {
-                    blogs = value.Data;
                     ViewBag.UserName = user.Data.UserName + " kullanıcısına ait bloglar.";
                 }
                 else
                 {
                     ViewBag.UserName = user.Data.UserName + " kullanıcısına ait blog bulunamadı.";
                 }
+                var result = await _blogService.GetListWithCategoryByPaging(page, 4);
+                return View(value.Data);
             }
             else
             {
-                var result = await _blogService.GetListWithCategoryByPaging(4, page);
-                blogs = result.Data;
+                var result = await _blogService.GetListWithCategoryByPaging(page, 4);
+                return View(result.Data);
             }
-            var values = blogs.ToPagedList(page, 4);
-            return View(values);
         }
 
         [HttpGet]

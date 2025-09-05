@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="X.PagedList.EF" Version="10.5.7" />
   </ItemGroup>
 
   <ItemGroup>

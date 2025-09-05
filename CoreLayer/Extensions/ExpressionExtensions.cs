@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace CoreLayer.Helpers;
+namespace CoreLayer.Extensions;
 
 public static class ExpressionExtensions
 {

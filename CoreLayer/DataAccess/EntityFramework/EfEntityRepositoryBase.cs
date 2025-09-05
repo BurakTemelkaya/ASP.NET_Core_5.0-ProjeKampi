@@ -3,12 +3,16 @@
 using CoreLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
+using X.PagedList;
+using X.PagedList.EF;
 
 namespace CoreLayer.DataAccess.EntityFramework;
 
@@ -262,4 +266,37 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return groupedData;
     }
 
+
+    public async Task<IPagedList<TEntity>> GetPagedListAsync(
+    int pageNumber,
+    int pageSize,
+    Expression<Func<TEntity, bool>>? predicate = null,
+    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+    bool enableTracking = false)
+    {
+        IQueryable<TEntity> query = _context.Set<TEntity>();
+
+        if (!enableTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        if (include != null)
+        {
+            query = include(query);
+        }
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
+        }
+
+        return await query.ToPagedListAsync(pageNumber, pageSize);
+    }
 }

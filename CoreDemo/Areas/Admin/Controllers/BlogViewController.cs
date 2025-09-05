@@ -21,8 +21,8 @@ public class BlogViewController : Controller
     public async Task<IActionResult> Index(int page = 1, bool? isRedirect = null)
     {
         ViewBag.IsRedirect = isRedirect;
-        var result = await _blogViewService.GetListByPagingNameAsync(15, page, isRedirect);
-        return View(result.Data.ToPagedList(page, 15));
+        var result = await _blogViewService.GetListByPagingNameAsync(page, 15, isRedirect);
+        return View(result.Data);
     }
 
     public async Task<IActionResult> GetBlogViewChartData(TimeSpan? interval, DateTime? startDate, DateTime? endDate)

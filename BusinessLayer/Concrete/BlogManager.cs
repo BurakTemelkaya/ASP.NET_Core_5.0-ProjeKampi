@@ -14,11 +14,13 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusinessLayer.Concrete;
 
@@ -41,11 +43,11 @@ public class BlogManager : ManagerBase, IBlogService
     }
 
     [CacheAspect]
-    public async Task<IDataResult<List<Blog>>> GetListWithCategoryByWriterWithPagingAsync(string userName, int take, int page)
+    public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByWriterWithPagingAsync(string userName, int take, int page)
     {
         var user = await _userService.GetByUserNameAsync(userName);
-        var values = await _blogDal.GetListWithCategoryByPagingAsync(
-            x => x.WriterID == user.Data.Id, take, page);
+        var values = await _blogDal.GetPagedListAsync(
+            take, page, x => x.WriterID == user.Data.Id);
         foreach (var item in values)
         {
             if (item != null)
@@ -53,19 +55,19 @@ public class BlogManager : ManagerBase, IBlogService
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
             }
         }
-        return new SuccessDataResult<List<Blog>>(values);
+        return new SuccessDataResult<IPagedList<Blog>>(values);
     }
 
     [CacheAspect]
-    public async Task<IDataResult<List<Blog>>> GetListWithCategory(bool? status, int take = 0, int skip = 0)
+    public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryAsync(bool? status, int take = 0, int skip = 0)
     {
-        var values = await _blogDal.GetListBlogWithCategoryAsync(x => x.Category.CategoryStatus == status, take);
-        return new SuccessDataResult<List<Blog>>(values);
+        var values = await _blogDal.GetPagedListAsync(take,skip, x => x.Category.CategoryStatus == status,x=> x.Include(b=> b.Category));
+        return new SuccessDataResult<IPagedList<Blog>>(values);
     }
 
-    public async Task<IDataResult<List<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1)
+    public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1)
     {
-        var values = await _blogDal.GetListWithCategoryByPagingAsync(null, take, page);
+        var values = await _blogDal.GetPagedListAsync(take, page);
         foreach (var item in values)
         {
             if (item != null)
@@ -73,7 +75,7 @@ public class BlogManager : ManagerBase, IBlogService
                 item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
             }
         }
-        return new SuccessDataResult<List<Blog>>(values);
+        return new SuccessDataResult<IPagedList<Blog>>(values);
     }
 
     public async Task<IDataResult<Blog>> GetBlogByIDAsync(int id)
@@ -118,16 +120,6 @@ public class BlogManager : ManagerBase, IBlogService
         }
 
         return new SuccessDataResult<List<Blog>>(value);
-    }
-
-    [CacheAspect]
-    public async Task<IDataResult<List<Blog>>> GetBlogListByWriterAsync(int id)
-    {
-        if (id == 0)
-        {
-            return new ErrorDataResult<List<Blog>>(Messages.BlogNotFound);
-        }
-        return new SuccessDataResult<List<Blog>>(await _blogDal.GetListAllAsync(x => x.WriterID == id));
     }
 
     [CacheRemoveAspect("IBlogService.Get")]
@@ -249,7 +241,7 @@ public class BlogManager : ManagerBase, IBlogService
         }
         else if (blog.BlogThumbnailImage != null)
         {
-            var image =  await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage);
+            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotGetting);
@@ -474,27 +466,27 @@ public class BlogManager : ManagerBase, IBlogService
     /// <returns></returns>
     [ValidationAspect(typeof(GetBlogModelValidator))]
     [CacheAspect]
-    public async Task<IDataResult<List<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(GetBlogModel getBlogModel)
+    public async Task<IDataResult<IPagedList<BlogCategoryandCommentCountDto>>> GetBlogListByMainPage(GetBlogModel getBlogModel)
     {
-        List<BlogCategoryandCommentCountDto> values = null;
+        IPagedList<BlogCategoryandCommentCountDto> values = null;
 
         bool isSuccess = true;
 
         string message = string.Empty;
 
-        values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(
+        values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(
                     x => (x.BlogStatus == true && x.CategoryStatus == true)
                     && (getBlogModel.Id < 1 || x.CategoryID == getBlogModel.Id)
                     && (string.IsNullOrEmpty(getBlogModel.Search) || x.BlogTitle.ToLower().Contains(getBlogModel.Search.ToLower()))
-                    , true, getBlogModel.Take, getBlogModel.Page
-                );
+                    , true, getBlogModel.Page, getBlogModel.Take
+                ); 
 
         if (!values.Any())
         {
             message = "Arama kriterlerinize uygun sonuç bulunamadı.";
             isSuccess = false;
-            values = await _blogDal.GetListWithCategoryandCommentCountByPagingAsync(x => x.BlogStatus
-            && x.CategoryStatus, true, getBlogModel.Take, getBlogModel.Page);
+            values = await _blogDal.GetBlogListWithCategoryandCommentCountAsync(x => x.BlogStatus
+            && x.CategoryStatus, true, getBlogModel.Page, getBlogModel.Take);
         }
         else
         {
@@ -516,7 +508,7 @@ public class BlogManager : ManagerBase, IBlogService
             }
         }
 
-        return new DataResult<List<BlogCategoryandCommentCountDto>>(values, isSuccess, message);
+        return new DataResult<IPagedList<BlogCategoryandCommentCountDto>>(values, isSuccess, message);
     }
 
     public async Task<IDataResult<BlogCategoryandCommentCountandWriterDto>> GetBlogByIdWithCommentAsync(int id)

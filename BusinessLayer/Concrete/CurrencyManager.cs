@@ -6,33 +6,32 @@ using CoreLayer.Utilities.Results;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace BusinessLayer.Concrete
+namespace BusinessLayer.Concrete;
+
+public class CurrencyManager : ICurrencyService
 {
-    internal class CurrencyManager : ICurrencyService
+    [CacheAspect(60)]
+    public IDataResult<List<CurrencysModel>> GetCurrencys(params string[] currencys)
     {
-        [CacheAspect(60)]
-        public IDataResult<List<CurrencysModel>> GetCurrencys(params string[] currencys)
+        try
         {
-            try
+            string exchangeRate = "https://www.tcmb.gov.tr/kurlar/today.xml";
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(exchangeRate);
+            var model = new List<CurrencysModel>();
+            foreach (var currency in currencys)
             {
-                string exchangeRate = "https://www.tcmb.gov.tr/kurlar/today.xml";
-                var xmlDoc = new XmlDocument();
-                xmlDoc.Load(exchangeRate);
-                var model = new List<CurrencysModel>();
-                foreach (var currency in currencys)
+                model.Add(new CurrencysModel
                 {
-                    model.Add(new CurrencysModel
-                    {
-                        Code = currency,
-                        Value = xmlDoc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{currency}']/BanknoteSelling").InnerXml[..5].ToString()
-                    });
-                }
-                return new SuccessDataResult<List<CurrencysModel>>(model);
+                    Code = currency,
+                    Value = xmlDoc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{currency}']/BanknoteSelling").InnerXml[..5].ToString()
+                });
             }
-            catch
-            {
-                return new ErrorDataResult<List<CurrencysModel>>(Messages.ErrorFetchingCurrencyData);
-            }
+            return new SuccessDataResult<List<CurrencysModel>>(model);
+        }
+        catch
+        {
+            return new ErrorDataResult<List<CurrencysModel>>(Messages.ErrorFetchingCurrencyData);
         }
     }
 }

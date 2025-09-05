@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusinessLayer.Abstract
 {
@@ -22,7 +23,7 @@ namespace BusinessLayer.Abstract
         Task<IResultObject> CastUserRole(AppUser user, string role);
         Task<IDataResult<List<string>>> GetUserRoleListAsync(AppUser user);
         Task<IDataResult<int>> GetByUserCountAsync();
-        Task<IDataResult<List<AppUser>>> GetUserListAsync();
+        Task<IDataResult<IPagedList<AppUser>>> GetUserListAsync(int pageNumber = 1, int pageSize = 10);
         Task<IDataResult<List<AppUser>>> GetUserListByUserNameAsync(string userName);
         Task<IResultObject> BannedUser(string id, DateTime expiration, string banMessageContent);
         Task<IResultObject> BanOpenUser(string id);

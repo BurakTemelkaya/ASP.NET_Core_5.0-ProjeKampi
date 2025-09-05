@@ -36,7 +36,7 @@ public class NewsLetterManager : INewsLetterService
         return new SuccessDataResult<int>(await _newsLetterDal.GetCountAsync());
     }
 
-    public async Task<IDataResult<List<NewsLetter>>> GetListAsync()
+    public async Task<IDataResult<List<NewsLetter>>>  GetListAsync()
     {
         return new SuccessDataResult<List<NewsLetter>>(await _newsLetterDal.GetListAllAsync());
     }

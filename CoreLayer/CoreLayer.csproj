@@ -25,6 +25,11 @@
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
     <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="X.PagedList.EF" Version="10.5.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Expression\" />
   </ItemGroup>
 
 </Project>

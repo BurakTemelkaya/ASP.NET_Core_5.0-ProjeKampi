@@ -1,20 +1,18 @@
 ﻿using BusinessLayer.Abstract;
 using CoreLayer.Entities;
 using CoreLayer.Extensions;
-using CoreLayer.Helpers;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusinessLayer.Concrete;
 
@@ -93,14 +91,16 @@ public class BlogViewManager : IBlogViewService
         return new SuccessDataResult<int>(await _blogViewDal.GetCountAsync(x => x.BlogId == blogId));
     }
 
-    public async Task<IDataResult<List<BlogView>>> GetListByPagingWriterNameAsync(string userName, int take = 0, int page = 0)
+    public async Task<IDataResult<IPagedList<BlogView>>> GetListByPagingWriterNameAsync(string userName, int pageNumber
+        = 1, int pageSize = 15)
     {
-        var data = await _blogViewDal.GetListAllByPagingAsync(x => x.Blog.Writer.UserName == userName, take, page, include: bw => bw.Include(bw => bw.Blog));
+        IPagedList<BlogView> data = await _blogViewDal.GetPagedListAsync(pageNumber, pageSize, x => x.Blog.Writer.UserName == userName, include: bw => bw.Include(bw => bw.Blog));
 
-        return new SuccessDataResult<List<BlogView>>(data);
+        return new SuccessDataResult<IPagedList<BlogView>>(data);
     }
 
-    public async Task<IDataResult<List<BlogView>>> GetListByPagingNameAsync(int take = 0, int page = 0, bool? isRedirect = null)
+
+    public async Task<IDataResult<IPagedList<BlogView>>> GetListByPagingNameAsync(int pageNumber = 1, int pageSize = 15, bool? isRedirect = null)
     {
         Expression<Func<BlogView, bool>> predicate = null;
 
@@ -113,9 +113,9 @@ public class BlogViewManager : IBlogViewService
             predicate = x => x.RefererUrl == null;
         }
 
-        var data = await _blogViewDal.GetListAllByPagingAsync(predicate, take: take, page: page, include: bw => bw.Include(bw => bw.Blog));
+        var data = await _blogViewDal.GetPagedListAsync(pageNumber, pageSize, predicate, include: bw => bw.Include(bw => bw.Blog));
 
-        return new SuccessDataResult<List<BlogView>>(data);
+        return new SuccessDataResult<IPagedList<BlogView>>(data);
     }
 
     public async Task<IResultObject> UpdateAsync(BlogView blogView)
@@ -151,7 +151,7 @@ public class BlogViewManager : IBlogViewService
 
         if (blogId.HasValue)
         {
-            predicate = predicate.And(x => x.BlogId == blogId);
+            predicate = predicate.And(x => x.BlogId == blogId.Value);
         }
 
         interval ??= TimeSpan.FromHours(1);
