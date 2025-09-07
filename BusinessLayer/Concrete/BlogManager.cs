@@ -61,13 +61,13 @@ public class BlogManager : ManagerBase, IBlogService
     [CacheAspect]
     public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryAsync(bool? status, int take = 0, int skip = 0)
     {
-        var values = await _blogDal.GetPagedListAsync(take,skip, x => x.Category.CategoryStatus == status,x=> x.Include(b=> b.Category));
+        var values = await _blogDal.GetPagedListAsync(take, skip, x => x.Category.CategoryStatus == status, x => x.Include(b => b.Category));
         return new SuccessDataResult<IPagedList<Blog>>(values);
     }
 
-    public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByPaging(int take = 0, int page = 1)
+    public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByPaging(int pageNumber = 1, int pageSize = 10)
     {
-        var values = await _blogDal.GetPagedListAsync(take, page);
+        var values = await _blogDal.GetPagedListAsync(pageNumber, pageSize, include: x => x.Include(b => b.Category));
         foreach (var item in values)
         {
             if (item != null)
@@ -479,7 +479,7 @@ public class BlogManager : ManagerBase, IBlogService
                     && (getBlogModel.Id < 1 || x.CategoryID == getBlogModel.Id)
                     && (string.IsNullOrEmpty(getBlogModel.Search) || x.BlogTitle.ToLower().Contains(getBlogModel.Search.ToLower()))
                     , true, getBlogModel.Page, getBlogModel.Take
-                ); 
+                );
 
         if (!values.Any())
         {
