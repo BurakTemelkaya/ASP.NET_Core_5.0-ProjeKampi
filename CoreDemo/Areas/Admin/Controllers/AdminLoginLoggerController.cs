@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using X.PagedList.Extensions;
 
 namespace CoreDemo.Areas.Admin.Controllers;
 
@@ -23,7 +22,7 @@ public class AdminLoginLoggerController : Controller
             ViewBag.UserName = userName;
         }
         var datas = await _loginLoggerService.GetListAllAsync(page, 10, userName);
-        var values = datas.Data.ToPagedList(page, 10);
+        var values = datas.Data;
         return View(values);
     }
 }

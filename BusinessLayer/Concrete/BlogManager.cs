@@ -47,7 +47,7 @@ public class BlogManager : ManagerBase, IBlogService
     {
         var user = await _userService.GetByUserNameAsync(userName);
         var values = await _blogDal.GetPagedListAsync(
-            take, page, x => x.WriterID == user.Data.Id);
+            take, page, x => x.WriterID == user.Data.Id,orderBy:x=> x.OrderByDescending(b=> b.BlogID));
         foreach (var item in values)
         {
             if (item != null)
@@ -61,13 +61,13 @@ public class BlogManager : ManagerBase, IBlogService
     [CacheAspect]
     public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryAsync(bool? status, int take = 0, int skip = 0)
     {
-        var values = await _blogDal.GetPagedListAsync(take, skip, x => x.Category.CategoryStatus == status, x => x.Include(b => b.Category));
+        var values = await _blogDal.GetPagedListAsync(take, skip, x => x.Category.CategoryStatus == status, x => x.Include(b => b.Category), x => x.OrderByDescending(b => b.BlogID));
         return new SuccessDataResult<IPagedList<Blog>>(values);
     }
 
     public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByPaging(int pageNumber = 1, int pageSize = 10)
     {
-        var values = await _blogDal.GetPagedListAsync(pageNumber, pageSize, include: x => x.Include(b => b.Category));
+        var values = await _blogDal.GetPagedListAsync(pageNumber, pageSize, include: x => x.Include(b => b.Category), orderBy: x => x.OrderByDescending(b => b.BlogID));
         foreach (var item in values)
         {
             if (item != null)

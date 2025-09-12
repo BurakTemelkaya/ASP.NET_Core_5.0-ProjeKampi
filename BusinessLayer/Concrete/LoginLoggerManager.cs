@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using X.PagedList;
@@ -110,7 +111,7 @@ public class LoginLoggerManager : ManagerBase, ILoginLoggerService
         if (!user.Success)
             return new ErrorDataResult<IPagedList<LoginLogger>>();
 
-        IPagedList<LoginLogger> data = await _loginLogger.GetPagedListAsync(page, take, x => x.UserId == user.Data.Id);
+        IPagedList<LoginLogger> data = await _loginLogger.GetPagedListAsync(page, take, x => x.UserId == user.Data.Id, orderBy: x => x.OrderByDescending(ll => ll.Id));
         return new SuccessDataResult<IPagedList<LoginLogger>>(data);
     }
 
@@ -129,12 +130,12 @@ public class LoginLoggerManager : ManagerBase, ILoginLoggerService
             {
                 return new ErrorDataResult<IPagedList<LoginLogger>>(Messages.UserNotFound);
             }
-            IPagedList<LoginLogger> data = await _loginLogger.GetPagedListAsync(page, take, x => x.UserId == user.Data.Id);
+            IPagedList<LoginLogger> data = await _loginLogger.GetPagedListAsync(page, take, x => x.UserId == user.Data.Id, orderBy: x => x.OrderByDescending(ll => ll.Id));
             return new SuccessDataResult<IPagedList<LoginLogger>>(data);
         }
         else
         {
-            var data = await _loginLogger.GetPagedListAsync(page,page,include:x=> x.Include(i=> i.User));
+            var data = await _loginLogger.GetPagedListAsync(page, take, include: x => x.Include(i => i.User), orderBy: x => x.OrderByDescending(ll => ll.Id));
             return new SuccessDataResult<IPagedList<LoginLogger>>(data);
         }
     }

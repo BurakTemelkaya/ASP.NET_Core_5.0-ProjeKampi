@@ -16,7 +16,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var logs = await _loginLoggerService.GetListByUserAsync(page, 10);
-            return View(logs.Data.ToPagedList(page, 10));
+            return View(logs.Data);
         }
 
         public async Task<IActionResult> Detail(int id)

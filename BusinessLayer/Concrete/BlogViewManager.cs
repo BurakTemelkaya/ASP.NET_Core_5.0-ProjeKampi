@@ -113,7 +113,7 @@ public class BlogViewManager : IBlogViewService
             predicate = x => x.RefererUrl == null;
         }
 
-        var data = await _blogViewDal.GetPagedListAsync(pageNumber, pageSize, predicate, include: bw => bw.Include(bw => bw.Blog));
+        IPagedList<BlogView> data = await _blogViewDal.GetPagedListAsync(pageNumber, pageSize, predicate, include: bw => bw.Include(bw => bw.Blog), o => o.OrderByDescending(x => x.Id));
 
         return new SuccessDataResult<IPagedList<BlogView>>(data);
     }
