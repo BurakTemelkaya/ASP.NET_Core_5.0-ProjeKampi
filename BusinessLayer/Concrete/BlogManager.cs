@@ -47,7 +47,8 @@ public class BlogManager : ManagerBase, IBlogService
     {
         var user = await _userService.GetByUserNameAsync(userName);
         var values = await _blogDal.GetPagedListAsync(
-            take, page, x => x.WriterID == user.Data.Id,orderBy:x=> x.OrderByDescending(b=> b.BlogID));
+            page, take, x => x.WriterID == user.Data.Id, include: x => x.Include(b => b.Category), orderBy: x => x.OrderByDescending(b => b.BlogID));
+
         foreach (var item in values)
         {
             if (item != null)

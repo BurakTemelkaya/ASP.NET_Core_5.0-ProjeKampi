@@ -26,7 +26,7 @@ public class AdminLogController : Controller
         var result = await _logService.GetLogListAsync(4, page, search);
         if (result.Success)
         {
-            return View(result.Data.ToPagedList(page, 4));
+            return View(result.Data);
         }
         return RedirectToAction("Index", "Dashboard");
     }
