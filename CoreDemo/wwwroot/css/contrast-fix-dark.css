@@ -1,0 +1,158 @@
+/* Dark mode kontrast düzeltmeleri */
+.navbar-light {
+    background-color: #1a1a1a !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #00a65a !important;
+}
+
+/* Genel link renkleri - Karanlık tema */
+a {
+    color: #4dd599 !important; /* Okunabilir parlak yeşil */
+}
+
+a:hover {
+    color: #66ffb3 !important; /* Daha parlak yeşil */
+}
+
+/* Kategori linkleri */
+.categoryLink {
+    color: #00d475 !important;
+    font-weight: 500;
+}
+
+.categoryLink:hover {
+    color: #00a65a !important;
+}
+
+/* Badge */
+.badge-primary {
+    background-color: #0056b3 !important;
+    color: #ffffff !important;
+}
+
+/* Başlık ve metin */
+.card-text {
+    color: #ffffff !important;
+}
+
+/* Blog kartlarındaki başlıklar - Karanlık tema */
+.card-title a {
+    color: #e0e0e0 !important; /* Yumuşak beyaz - göz almıyor ama okunuyor */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-title a:hover {
+    color: #00d475 !important;
+}
+
+/* Genel başlık kontrast düzeltmesi - Karanlık tema */
+h3,
+h4 {
+    color: #ffffff !important; /* Tam beyaz - kontrast 14:1 */
+    font-weight: 700;
+}
+
+/* BlogReadAll paragrafları */
+.blog-single p {
+    color: #f0f0f0 !important; /* Çok açık gri - kontrast 12:1 */
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+/* Footer - Karanlık tema */
+footer {
+    background-color: #1a1a1a !important;
+}
+
+footer a {
+    color: #4dd599 !important; /* Parlak yeşil */
+    font-weight: 500;
+}
+
+footer a:hover {
+    color: #66ffb3 !important;
+}
+
+footer p,
+footer span,
+footer li {
+    color: #f5f5f5 !important; /* Çok açık - kontrast 13:1 */
+    font-weight: 400;
+}
+
+footer h3,
+footer h4,
+footer h5 {
+    color: #ffffff !important; /* Tam beyaz - kontrast 14:1 */
+    font-weight: 700;
+}
+
+/* Sosyal medya ikonları */
+.social_list1 a {
+    color: #ffffff !important;
+}
+
+.social_list1 a:hover {
+    color: #00d475 !important;
+}
+
+/* Footer sosyal medya linkleri ve span'ları - Karanlık tema */
+footer .footer-social a,
+footer .footer-social span {
+    color: #ffffff !important; /* Tam beyaz - kontrast 14:1 */
+    font-weight: 500;
+}
+
+footer .footer-social a:hover,
+footer .footer-social a:hover span {
+    color: #00ff7f !important; /* Parlak yeşil - kontrast 8.3:1 */
+}
+
+/* Header üst çubuk */
+.top-bar_sub_w3layouts {
+    background-color: #1a1a1a !important;
+}
+
+/* Hoşgeldin mesajı için kontrast - Karanlık tema */
+.welcome-text {
+    color: #d1d1d1 !important;
+    font-weight: 500;
+}
+
+/* Giriş/Kayıt linkleri - Yeşil renk - Karanlık tema */
+.top-bar_sub_w3layouts .auth-link {
+    color: #00d475 !important;
+    font-weight: 500;
+}
+
+.top-bar_sub_w3layouts .auth-link:hover {
+    color: #66ffb3 !important;
+}
+
+/* Yeşil butonlar için kontrast düzeltmesi - Karanlık tema */
+.btn-primary,
+.btn-primary.read-m,
+#btnFooterSubscribe,
+#btnSubscribe {
+    background-color: #1a1a1a !important; /* Siyah arka plan */
+    border: 2px solid #00ff7f !important; /* Parlak yeşil border */
+    color: #00ff7f !important; /* Parlak yeşil yazı - kontrast 8.3:1 */
+    font-weight: 700 !important;
+}
+
+.btn-primary:hover,
+.btn-primary.read-m:hover,
+#btnFooterSubscribe:hover,
+#btnSubscribe:hover {
+    background-color: #00ff7f !important;
+    border-color: #00ff7f !important;
+    color: #1a1a1a !important;
+}

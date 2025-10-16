@@ -1,0 +1,155 @@
+/* Navbar ve bağlantılar için yüksek kontrast renkleri */
+.navbar-light {
+    background-color: #f8f9fa !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #2d2d2d !important;
+    font-weight: 500;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #006837 !important;
+}
+
+/* Genel link renkleri - Aydınlık tema */
+a {
+    color: #00a854 !important; /* Okunabilir koyu yeşil */
+}
+
+a:hover {
+    color: #006837 !important; /* Daha koyu yeşil */
+}
+
+/* Kategori linkleri için kontrast iyileştirmesi */
+.categoryLink {
+    color: #01cd74 !important; /* Normal yeşil */
+    font-weight: 500;
+}
+
+.categoryLink:hover {
+    color: #004d29 !important;
+}
+
+/* Badge için kontrast iyileştirmesi */
+.badge-primary {
+    background-color: #0056b3 !important;
+    color: #ffffff !important;
+}
+
+/* Başlık ve metin renkleri için kontrast iyileştirmesi */
+.card-text {
+    color: #2d2d2d !important;
+}
+
+/* Blog kartlarındaki başlıklar - Aydınlık tema */
+.card-title a {
+    color: #1a1a1a !important; /* Çok koyu siyah - güneş altında bile okunur */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-title a:hover {
+    color: #01cd74 !important;
+}
+
+/* Genel başlık kontrast düzeltmesi - Aydınlık tema */
+h3,
+h4 {
+    color: #1a1a1a !important; /* Çok koyu siyah */
+    font-weight: 700;
+}
+
+/* Tarih ve sayı bağlantıları için kontrast iyileştirmesi */
+a[href^="/Blog/Index"] {
+    color: #01cd74 !important;
+}
+
+/* Footer bağlantıları için kontrast iyileştirmesi - Aydınlık tema */
+/* Footer arka planı siyah olduğu için yazılar açık renk olmalı */
+footer a {
+    color: #4dd599 !important; /* Parlak yeşil - siyah üzerinde okunur */
+    font-weight: 500;
+}
+
+footer a:hover {
+    color: #66ffb3 !important;
+}
+
+footer p,
+footer span,
+footer li {
+    color: #e0e0e0 !important; /* Açık gri - siyah arka planda okunur */
+    font-weight: 400;
+}
+
+footer h3,
+footer h4,
+footer h5 {
+    color: #f0f0f0 !important; /* Başlıklar için beyazımsı */
+    font-weight: 600;
+}
+
+/* Sosyal medya ikonları için kontrast iyileştirmesi */
+.social_list1 a {
+    color: #2d2d2d !important;
+}
+
+.social_list1 a:hover {
+    color: #01cd74 !important;
+}
+
+/* Footer sosyal medya linkleri ve span'ları */
+footer .footer-social a,
+footer .footer-social span {
+    color: #e0e0e0 !important; /* Açık gri - siyah footer'da okunur */
+    font-weight: 500;
+}
+
+footer .footer-social a:hover,
+footer .footer-social a:hover span {
+    color: #4dd599 !important; /* Parlak yeşil */
+}
+
+/* Header üst çubuk için kontrast iyileştirmesi */
+.top-bar_sub_w3layouts {
+    background-color: #f8f9fa !important;
+}
+
+/* Hoşgeldin mesajı için kontrast - Aydınlık tema */
+.welcome-text {
+    color: #5a5a5a !important;
+    font-weight: 500;
+}
+
+/* Giriş/Kayıt linkleri - Yeşil renk - Aydınlık tema */
+.top-bar_sub_w3layouts .auth-link {
+    color: #01cd74 !important;
+    font-weight: 500;
+}
+
+.top-bar_sub_w3layouts .auth-link:hover {
+    color: #006837 !important;
+}
+
+/* Yeşil butonlar için kontrast düzeltmesi - Aydınlık tema */
+.btn-primary,
+.btn-primary.read-m,
+#btnFooterSubscribe,
+#btnSubscribe {
+    background-color: #00a854 !important; /* Daha koyu yeşil */
+    border-color: #00a854 !important;
+    color: #ffffff !important; /* Beyaz yazı */
+    font-weight: 600 !important;
+}
+
+.btn-primary:hover,
+.btn-primary.read-m:hover,
+#btnFooterSubscribe:hover,
+#btnSubscribe:hover {
+    background-color: #006837 !important;
+    border-color: #006837 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode stilleri style-dark.min.css ve single-dark.min.css dosyalarında */

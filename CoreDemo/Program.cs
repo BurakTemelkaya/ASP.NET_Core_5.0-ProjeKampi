@@ -174,7 +174,16 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+// Statik dosyalar için cache ayarları
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // 1 yıl cache (31536000 saniye)
+        const int durationInSeconds = 31536000;
+        ctx.Context.Response.Headers["Cache-Control"] = $"public,max-age={durationInSeconds},immutable";
+    }
+});
 
 app.UseRouting();
 

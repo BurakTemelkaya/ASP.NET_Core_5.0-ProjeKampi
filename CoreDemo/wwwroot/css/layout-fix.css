@@ -1,0 +1,38 @@
+/* Layout shift önleyici stiller */
+.blog_info_left_grid {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    margin-bottom: 1rem;
+}
+
+.blog_info_left_grid img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Sosyal medya ikonları için minimum alan */
+.social_list1 {
+    min-height: 2.5rem;
+}
+
+/* Font display is handled in Google Fonts link */
+
+/* Sticky sidebar için */
+.right-blog-info:last-child {
+    position: sticky;
+    top: 1rem;
+}
+
+/* Blog bilgi alanı için minimum boşluk */
+.blog-info-middle ul {
+    margin: 0;
+    padding: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}

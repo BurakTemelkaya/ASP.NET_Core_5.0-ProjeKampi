@@ -5,7 +5,7 @@
         @foreach (var item in Model)
         {
             <li class="list-group-item justify-content-center col-6 mx-auto" title="@item.CategoryDescription">
-                <a class="categoryLink" href="/Blog/Index/?id=@item.CategoryID" name="@item.CategoryID" style="color:#01cd74;">
+                <a class="categoryLink" href="/Blog/Index/?id=@item.CategoryID" name="@item.CategoryID">
                     @item.CategoryName
                     <span class="badge badge-primary badge-pill">@item.NumberofBloginCategory</span>
                 </a>

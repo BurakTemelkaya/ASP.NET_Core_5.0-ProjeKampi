@@ -3,23 +3,23 @@
 
     @if (User.Identity.Name == null)
     {
-        <span>Sitemize Hoşgeldin!</span>
+        <span class="welcome-text">Sitemize Hoşgeldin!</span>
         <span class="mx-lg-4 mx-md-2  mx-1">
-            <a href="/Login/Index/">
+            <a href="/Login/Index/" class="auth-link">
                 <i class="fas fa-lock"></i> Giriş Yap
             </a>
         </span>
         <span>
-            <a href="/Register/Index/">
+            <a href="/Register/Index/" class="auth-link">
                 <i class="far fa-user"></i> Kayıt Ol
             </a>
         </span>
     }
     else
     {
-        <span>Tekrar Hoşgeldin @User.Identity.Name</span>
+        <span class="welcome-text">Tekrar Hoşgeldin @User.Identity.Name</span>
         <span class="mx-lg-4 mx-md-2  mx-1">
-            <a href="/Login/LogOut/">
+            <a href="/Login/LogOut/" class="auth-link">
                 <i class="far fa-user"></i> Çıkış Yap
             </a>
         </span>

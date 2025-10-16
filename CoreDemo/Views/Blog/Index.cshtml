@@ -25,6 +25,7 @@
 
 <section class="center">
     <div class="container">
+        <h1 class="main-heading text-center mb-4">Blog Yazıları</h1>
 
         @if (ViewBag.Message != null)
         {
@@ -40,11 +41,10 @@
             }
         }
 
-
         <div class="inner-sec">
             <!--left-->
             <div class="left-blog-info-w3layouts-agileits text-left">
-                <div class="row">
+                <div class="row blog-grid">
                     @foreach (var item in Model)
                     {
                         string seoTitle = ReplaceCharactersToEnglishCharacters.ReplaceCharacters(item.BlogTitle);
@@ -60,7 +60,7 @@
                         }
                         <div class="col-lg-4 card" title="@item.BlogTitle">
                             <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">
-                                <img width="640" height="360" src="@item.BlogThumbnailImage" class="card-img-top img-fluid" alt="@item.BlogTitle">
+                                <img width="640" height="360" src="@item.BlogThumbnailImage" class="card-img-top img-fluid" alt="@item.BlogTitle" loading="lazy">
                             </a>
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
@@ -91,10 +91,9 @@
                                     </li>
                                 </ul>
 
-                                <h5 class="card-title">
+                                <h2 class="card-title h5">
                                     <a href="/Blog/BlogReadAll/@seoTitle/@item.BlogID">@blogTitle</a>
-                                </h5>
-
+                                </h2>
 
                                 <p class="card-text mb-3">
                                     @if (item.BlogContent != null && item.BlogContent.Length > 100)

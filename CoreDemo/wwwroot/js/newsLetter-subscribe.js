@@ -1,13 +1,14 @@
 ﻿
-function validateEmail($email) {
-    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    return emailReg.test($email);
-}
+jQuery(document).ready(function($) {
+    function validateEmail($email) {
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        return emailReg.test($email);
+    }
 
-$("#btnSubscribe").click(function () {
-    let mail = {
-        Mail: $("#txtEmail").val()
-    };
+    $("#btnSubscribe").click(function () {
+        let mail = {
+            Mail: $("#txtEmail").val()
+        };
     var errorMessage = "";
     if (mail.Mail == "") {
         errorMessage = "Lütfen mail alanını boş bırakmayınız.";
@@ -87,4 +88,5 @@ $("#btnFooterSubscribe").click(function () {
             }
         });
     }
-});  
+    });
+});

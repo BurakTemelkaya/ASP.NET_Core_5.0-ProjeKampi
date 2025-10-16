@@ -1,0 +1,33 @@
+/* Poppins Font - Self Hosted */
+/* Regular 400 */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Poppins Regular'), local('Poppins-Regular'),
+         url('/fonts/poppins-v20-latin-regular.woff2') format('woff2'),
+         url('/fonts/poppins-v20-latin-regular.woff') format('woff');
+}
+
+/* Medium 500 */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: local('Poppins Medium'), local('Poppins-Medium'),
+         url('/fonts/poppins-v20-latin-500.woff2') format('woff2'),
+         url('/fonts/poppins-v20-latin-500.woff') format('woff');
+}
+
+/* Semi Bold 600 */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: local('Poppins SemiBold'), local('Poppins-SemiBold'),
+         url('/fonts/poppins-v20-latin-600.woff2') format('woff2'),
+         url('/fonts/poppins-v20-latin-600.woff') format('woff');
+}

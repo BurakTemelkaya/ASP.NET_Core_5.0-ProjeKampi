@@ -35,12 +35,13 @@
         <div class="row">
             <!--left-->
             <div class="col-lg-8 left-blog-info-w3layouts-agileits text-left">
-                <div class="blog-grid-top">
+                <article class="blog-grid-top">
+                    <h1 class="blog-title mb-4">@Model.BlogTitle</h1>
                     <div class="b-grid-top">
                         <div class="blog_info_left_grid">
-                            <img src="@Model.BlogImage" class="img-fluid" alt="@Model.BlogTitle">
+                            <img src="@Model.BlogImage" class="img-fluid" alt="@Model.BlogTitle için kapak görseli" width="800" height="450" style="aspect-ratio: 16/9;">
                         </div>
-                        <div class="blog-info-middle">
+                        <div class="blog-info-middle" style="min-height: 50px;">
                             <ul>
                                 <li>
                                     <a href="#">
@@ -77,13 +78,12 @@
                         @Html.Raw(Model.BlogContent)
                     </article>
 
-
                     <br />
                     <p>
                         Yazar Adı : <b>@Model.WriterNameSurName</b>
                     </p>
                     <a href="/Blog/Index" class="btn btn-primary read-m">Blog Listesi</a>
-                </div>
+                </article>
 
                 @await Component.InvokeAsync("CommentListByBlog", new { id = ViewBag.i })
 
@@ -95,8 +95,7 @@
             <!--right-->
             <aside class="col-lg-4 agileits-w3ls-right-blog-con text-right">
                 <div class="right-blog-info text-left">
-
-                    <h4>Mail Bültenine Abone Olun</h4>
+                    
                     @await Html.PartialAsync("~/Views/NewsLetter/SubscribeMail.cshtml")
 
                     @await Component.InvokeAsync("CategoryList")
@@ -125,6 +124,19 @@
     <script src="~/js/blog-comment-add.js"></script>
     <script>
         blogId = @Model.BlogID;
+        
+        // Font yükleme kontrolü
+        if ('fonts' in document) {
+            Promise.all([
+                document.fonts.load('1em Poppins'),
+                document.fonts.load('1em "Font Awesome 5 Free"'),
+                document.fonts.load('1em "Font Awesome 5 Brands"')
+            ]).then(() => {
+                document.documentElement.classList.add('fonts-loaded');
+            });
+        } else {
+            document.documentElement.classList.add('fonts-loaded');
+        }
     </script>
 }
 

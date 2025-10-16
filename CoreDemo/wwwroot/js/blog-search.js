@@ -1,21 +1,23 @@
-﻿$('#search-btn').click(function (e) {
-    var search = $("#txt-search").val();
-    if (search != '') {
-        const params = GetURLSearchParams();
-        const id = params.id;
-        var query = '/Blog/Index?Search=' + search;
-        if (id != null) {
-            query = `/Blog/Index/?id=${id}&Search=` + search;
+﻿jQuery(document).ready(function($) {
+    $('#search-btn').click(function (e) {
+        var search = $("#txt-search").val();
+        if (search != '') {
+            const params = GetURLSearchParams();
+            const id = params.id;
+            var query = '/Blog/Index?Search=' + encodeURIComponent(search);
+            if (id != null) {
+                query = `/Blog/Index/?id=${id}&Search=` + encodeURIComponent(search);
+            }
+            window.location = query;
         }
-        window.location = query;
-    }
-    else {
-        Swal.fire(
-            'Hata!',
-            'Lütfen aranacak kelimeyi giriniz.',
-            'error'
-        )
-    }
+        else {
+            Swal.fire(
+                'Hata!',
+                'Lütfen aranacak kelimeyi giriniz.',
+                'error'
+            )
+        }
+    });
 });
 
 $("#txt-search").keyup(function (event) {
