@@ -1,6 +1,5 @@
-﻿namespace CoreLayer.Entities
+﻿namespace CoreLayer.Entities;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-    }
 }

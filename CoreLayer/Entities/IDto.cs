@@ -1,6 +1,5 @@
-﻿namespace CoreLayer.Entities
+﻿namespace CoreLayer.Entities;
+
+public interface IDto
 {
-    public interface IDto
-    {
-    }
 }

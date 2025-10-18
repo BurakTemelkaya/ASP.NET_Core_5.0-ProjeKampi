@@ -7,6 +7,7 @@ using BusinessLayer.ValidationRules;
 using Core.Extensions;
 using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.BackgroundTasks;
 using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.Results;
@@ -31,15 +32,17 @@ public class BlogManager : ManagerBase, IBlogService
     private readonly ICategoryService _categoryService;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 
     public BlogManager(IBlogDal blogDal, IUserBusinessService userService, IMapper mapper, ICategoryService categoryService
-        , IHttpContextAccessor contextAccessor, IServiceProvider serviceProvider) : base(mapper)
+        , IHttpContextAccessor contextAccessor, IServiceProvider serviceProvider, IBackgroundTaskQueue backgroundTaskQueue) : base(mapper)
     {
         _blogDal = blogDal;
         _userService = userService;
         _categoryService = categoryService;
         _contextAccessor = contextAccessor;
         _serviceProvider = serviceProvider;
+        _backgroundTaskQueue = backgroundTaskQueue;
     }
 
     [CacheAspect]
@@ -528,13 +531,11 @@ public class BlogManager : ManagerBase, IBlogService
 
         result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
 
-        _ = Task.Run(async () =>
+        await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var blogViewService = scope.ServiceProvider.GetRequiredService<IBlogViewService>();
-                await blogViewService.AddAsync(id);
-            }
+            using var scope = _serviceProvider.CreateScope();
+            IBlogViewService blogViewService = scope.ServiceProvider.GetRequiredService<IBlogViewService>();
+            await blogViewService.AddAsync(id);
         });
 
         return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);
@@ -551,7 +552,7 @@ public class BlogManager : ManagerBase, IBlogService
 
     async Task<IResultObject> BlogReadAuthorizeCheck(Blog blog, bool categoryStatus)
     {
-        var rule = BusinessRules.Run(BlogIsNotEmpty(blog));
+        IResultObject rule = BusinessRules.Run(BlogIsNotEmpty(blog));
 
         if (!rule.Success)
         {
@@ -671,7 +672,7 @@ public class BlogManager : ManagerBase, IBlogService
             }
             catch
             {
-
+                continue;
             }
         }
 

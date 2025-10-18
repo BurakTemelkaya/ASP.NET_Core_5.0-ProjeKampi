@@ -1,4 +1,5 @@
 ﻿
+using CoreLayer.BackgroundTasks;
 using CoreLayer.CrossCuttingConcerns.Caching;
 using CoreLayer.CrossCuttingConcerns.Caching.Microsoft;
 using CoreLayer.Extensions;
@@ -30,5 +31,8 @@ public class CoreModule : ICoreModule
         serviceCollection.AddSingleton<Stopwatch>();
 
         serviceCollection.AddSingleton<UserHelper>();
+
+        serviceCollection.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+        serviceCollection.AddHostedService<QueuedHostedService>();
     }
 }

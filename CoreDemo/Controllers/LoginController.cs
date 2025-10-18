@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo.Models;
+using CoreLayer.BackgroundTasks;
 using CoreLayer.Utilities.CaptchaUtilities;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
@@ -17,14 +18,16 @@ namespace CoreDemo.Controllers
         private readonly IUserBusinessService _userService;
         private readonly ICaptchaService _captchaService;
         private readonly ILoginLoggerService _loginLoggerService;
+        private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 
         public LoginController(SignInManager<AppUser> signInManager, IUserBusinessService userService,
-            ICaptchaService captchaService, ILoginLoggerService loginLoggerService)
+            ICaptchaService captchaService, ILoginLoggerService loginLoggerService,IBackgroundTaskQueue backgroundTaskQueue)
         {
             _signInManager = signInManager;
             _userService = userService;
             _captchaService = captchaService;
             _loginLoggerService = loginLoggerService;
+            _backgroundTaskQueue = backgroundTaskQueue;
         }
 
         [HttpGet]
@@ -50,7 +53,11 @@ namespace CoreDemo.Controllers
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
             if (result.Succeeded)
             {
-                await _loginLoggerService.AddAsync(appUser.UserName);
+                await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
+                {
+                    await _loginLoggerService.AddAsync(appUser.UserName);
+                });
+
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 return RedirectToAction("Index", "Dashboard");

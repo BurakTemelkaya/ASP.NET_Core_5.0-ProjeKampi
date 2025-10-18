@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
 using CoreDemo.Models;
+using CoreLayer.BackgroundTasks;
 using CoreLayer.Utilities.CaptchaUtilities;
 using CoreLayer.Utilities.MailUtilities;
 using EntityLayer.Concrete;
@@ -22,15 +23,17 @@ namespace CoreDemo.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ICaptchaService _captchaService;
         private readonly IMailService _mailService;
+        private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 
         public RegisterController(IUserBusinessService userService, WriterCity writerCity, SignInManager<AppUser> signInManager,
-            ICaptchaService captchaService, IMailService mailService)
+            ICaptchaService captchaService, IMailService mailService,IBackgroundTaskQueue backgroundTaskQueue)
         {
             _userService = userService;
             _writerCity = writerCity;
             _signInManager = signInManager;
             _captchaService = captchaService;
             _mailService = mailService;
+            _backgroundTaskQueue = backgroundTaskQueue;
         }
         [HttpGet]
         public IActionResult Index()
@@ -102,12 +105,15 @@ namespace CoreDemo.Controllers
 
             var confirmationLink = Url.Action("Index", "ConfirmMail", new { email, token }, Request.Scheme);
 
-            await _mailService.SendEmailAsync(new Mail()
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async cancellationToken =>
             {
-                ToList = new List<MailboxAddress>() { new MailboxAddress(address: email, name: email) },
-                Subject = MailTemplates.ConfirmEmailSubject(),
-                HtmlBody = MailTemplates.ConfirmEmailMessage(confirmationLink)
-            });
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: email, name: email) },
+                    Subject = MailTemplates.ConfirmEmailSubject(),
+                    HtmlBody = MailTemplates.ConfirmEmailMessage(confirmationLink)
+                }, cancellationToken);
+            });           
 
             return string.Empty;
         }

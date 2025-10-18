@@ -7,6 +7,7 @@ using BusinessLayer.ValidationRules;
 using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Aspects.AutoFac.Logging;
 using CoreLayer.Aspects.AutoFac.Validation;
+using CoreLayer.BackgroundTasks;
 using CoreLayer.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using CoreLayer.Utilities.Business;
 using CoreLayer.Utilities.FileUtilities;
@@ -32,12 +33,14 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
     private readonly UserManager<AppUser> _userManager;
     private readonly IMailService _mailService;
     private readonly IHttpContextAccessor _httpContext;
+    private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 
-    public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper, IMailService mailService, IHttpContextAccessor httpContext) : base(mapper)
+    public UserBusinessManager(UserManager<AppUser> userManager, IMapper mapper, IMailService mailService, IHttpContextAccessor httpContext, IBackgroundTaskQueue backgroundTaskQueue) : base(mapper)
     {
         _userManager = userManager;
         _mailService = mailService;
         _httpContext = httpContext;
+        _backgroundTaskQueue = backgroundTaskQueue;
     }
 
     [CacheRemoveAspect("IUserBusinessService.Get")]
@@ -153,17 +156,22 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             user.ImageUrl = value.Data.ImageUrl;
         }
 
+        IdentityResult result = await _userManager.UpdateAsync(value.Data);
 
-        var result = await _userManager.UpdateAsync(value.Data);
         if (result.Succeeded)
         {
-            var mailTemplate = Mapper.Map<ChangedUserInformationModel>(user);
-            await _mailService.SendEmailAsync(new Mail()
+            ChangedUserInformationModel mailTemplate = Mapper.Map<ChangedUserInformationModel>(user);
+
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
             {
-                ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
-                Subject = MailTemplates.ChangedUserInformationMailSubject(),
-                HtmlBody = MailTemplates.ChangedUserInformationMailTemplate(mailTemplate)
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
+                    Subject = MailTemplates.ChangedUserInformationMailSubject(),
+                    HtmlBody = MailTemplates.ChangedUserInformationMailTemplate(mailTemplate)
+                }, token);
             });
+
             return new SuccessDataResult<IdentityResult>(result);
         }
         else
@@ -176,8 +184,8 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
     [ValidationAspect(typeof(UserDtoValidator))]
     public async Task<IDataResult<IdentityResult>> UpdateUserForAdminAsync(UserDto user)
     {
-        var rawValue = await GetByIDAsync(user.Id.ToString());
-        var value = rawValue.Data;
+        IDataResult<AppUser> rawValue = await GetByIDAsync(user.Id.ToString());
+        AppUser value = rawValue.Data;
 
         value.NameSurname = user.NameSurname;
         value.Email = user.Email;
@@ -187,20 +195,27 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
         user.ImageUrl = value.ImageUrl;
         value.EmailConfirmed = user.EmailConfirmed;
 
-        var result = await _userManager.UpdateAsync(value);
+        IdentityResult result = await _userManager.UpdateAsync(value);
 
         if (result.Succeeded)
         {
             var mailTemplate = Mapper.Map<ChangedUserInformationModel>(value);
 
-            await _mailService.SendEmailAsync(new Mail()
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
             {
-                ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
-                Subject = MailTemplates.ChangedUserInformationMailSubject(),
-                HtmlBody = MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl())
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
+                    Subject = MailTemplates.ChangedUserInformationMailSubject(),
+                    HtmlBody = MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl())
+                }, token);
             });
+
+
+
             return new SuccessDataResult<IdentityResult>(result);
         }
+
         else
             return new ErrorDataResult<IdentityResult>(result, result.Errors.First().Description);
     }
@@ -319,11 +334,14 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             if (banMessageContent == "" || banMessageContent == null)
                 banMessageContent = MailTemplates.BanMessageContent(expiration);
 
-            await _mailService.SendEmailAsync(new Mail()
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
             {
-                ToList = new List<MailboxAddress>() { new(address: userData.Email, name: userData.NameSurname) },
-                Subject = MailTemplates.BanMessageSubject(),
-                HtmlBody = banMessageContent
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = new List<MailboxAddress>() { new(userData.Email, userData.NameSurname) },
+                    Subject = MailTemplates.BanMessageSubject(),
+                    HtmlBody = banMessageContent
+                }, token);
             });
 
             userData.LockoutEnd = expiration;
@@ -355,14 +373,16 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
             return businessRulesResult;
         }
 
-        var userData = user.Data;
+        AppUser userData = user.Data;
 
-        await _mailService.SendEmailAsync(new Mail()
+        await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
         {
-            ToList = new List<MailboxAddress>() { new MailboxAddress(address: userData.Email, name: userData.NameSurname) },
-            Subject = MailTemplates.BanOpenUserSubjectTemplate(),
-            HtmlBody = MailTemplates.BanOpenUserContentTemplate()
-
+            await _mailService.SendEmailAsync(new Mail()
+            {
+                ToList = new List<MailboxAddress>() { new MailboxAddress(address: userData.Email, name: userData.NameSurname) },
+                Subject = MailTemplates.BanOpenUserSubjectTemplate(),
+                HtmlBody = MailTemplates.BanOpenUserContentTemplate()
+            }, token);
         });
 
         userData.LockoutEnd = DateTime.UtcNow;
@@ -373,13 +393,13 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
 
     public async Task<IDataResult<string>> GetPasswordResetTokenAsync(string mail)
     {
-        var user = await GetByMailAsync(mail);
+        IDataResult<UserDto> user = await GetByMailAsync(mail);
         if (!user.Success)
         {
             return new ErrorDataResult<string>(user.Message);
         }
 
-        var result = await _userManager.GeneratePasswordResetTokenAsync(user.Data);
+        string result = await _userManager.GeneratePasswordResetTokenAsync(user.Data);
         if (result != null)
         {
             return new SuccessDataResult<string>(result, null);
@@ -396,11 +416,14 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
         var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
         if (result.Succeeded)
         {
-            await _mailService.SendEmailAsync(new Mail()
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
             {
-                ToList = new List<MailboxAddress>() { new MailboxAddress(address: user.Email, name: user.NameSurname) },
-                Subject = MailTemplates.ResetPasswordInformationSubject(),
-                HtmlBody = MailTemplates.ResetPasswordInformationMessage()
+                await _mailService.SendEmailAsync(new Mail()
+                {
+                    ToList = [new MailboxAddress(address: user.Email, name: user.NameSurname)],
+                    Subject = MailTemplates.ResetPasswordInformationSubject(),
+                    HtmlBody = MailTemplates.ResetPasswordInformationMessage()
+                }, token);
             });
 
             return new SuccessDataResult<IdentityResult>(result);
@@ -415,7 +438,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
 
     public async Task<IDataResult<string>> CreateMailTokenAsync(string email)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        AppUser user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
             return new ErrorDataResult<string>(message: "Kullanıcı bulunamadı.");
@@ -436,7 +459,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
         }
 
         user.MailVerifyCodeSendTime = DateTime.Now;
-        var updateTask = await _userManager.UpdateAsync(user);
+        IdentityResult updateTask = await _userManager.UpdateAsync(user);
         if (!updateTask.Succeeded)
         {
             return new ErrorDataResult<string>(message: updateTask.Errors.First().Description);
@@ -447,14 +470,14 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
 
     public async Task<IResultObject> ConfirmMailAsync(string email, string token)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        AppUser user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
         {
             return new ErrorResult(Messages.UserNotFound);
         }
 
-        var result = await _userManager.ConfirmEmailAsync(user, token);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
         if (result.Succeeded)
         {
             return new SuccessResult();
