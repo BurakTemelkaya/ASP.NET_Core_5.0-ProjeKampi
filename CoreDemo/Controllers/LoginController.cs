@@ -4,6 +4,7 @@ using CoreLayer.BackgroundTasks;
 using CoreLayer.Utilities.CaptchaUtilities;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -53,9 +54,11 @@ namespace CoreDemo.Controllers
             var result = await _signInManager.PasswordSignInAsync(appUser.UserName, appUser.Password, appUser.IsPersistent, true);
             if (result.Succeeded)
             {
+                HttpContext httpContext = HttpContext;
+
                 await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
                 {
-                    await _loginLoggerService.AddAsync(appUser.UserName);
+                    await _loginLoggerService.AddAsync(appUser.UserName, httpContext);
                 });
 
                 if (!string.IsNullOrEmpty(returnUrl))

@@ -5,6 +5,7 @@ using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -44,9 +45,11 @@ public class ConfirmMailController : Controller
             {
                 await _signInManager.SignInAsync(userResult.Data, false);
 
+                HttpContext httpContext = HttpContext;
+
                 await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
                 {
-                    await _loginLogger.AddAsync(userResult.Data.UserName);
+                    await _loginLogger.AddAsync(userResult.Data.UserName, httpContext);
                 });
 
                 return RedirectToAction("Index", "Dashboard");

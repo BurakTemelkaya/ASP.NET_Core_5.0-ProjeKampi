@@ -57,7 +57,7 @@ public class ForgotPasswordController : Controller
             IDataResult<string> tokenResult = await _businessUserService.GetPasswordResetTokenAsync(email);
             if (tokenResult.Success)
             {
-                var callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token = tokenResult.Data, email }, Request.Scheme);
+                string callBack = Url.Action(nameof(ResetPassword), "ForgotPassword", new { token = tokenResult.Data, email }, Request.Scheme);
 
                 await _taskQueue.QueueBackgroundWorkItemAsync(async token =>
                 {

@@ -31,14 +31,7 @@ public class QueuedHostedService : BackgroundService
         {
             var workItem = await TaskQueue.DequeueAsync(stoppingToken);
 
-            try
-            {
-                await workItem(stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred executing background work item.");
-            }
+            await workItem(stoppingToken);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BusinessLayer.Abstract;
 
 public interface IBlogViewService
 {
-    Task<IResultObject> AddAsync(int blogId);
+    Task<IResultObject> AddAsync(int blogId, HttpContext httpContext);
     Task<IResultObject> DeleteAsync(BlogView blogView);
     Task<IResultObject> UpdateAsync(BlogView blogView);
     Task<IDataResult<IPagedList<BlogView>>> GetListByPagingWriterNameAsync(string userName, int pageSize = 0, int pageNumber = 0);

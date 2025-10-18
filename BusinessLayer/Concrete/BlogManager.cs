@@ -33,9 +33,10 @@ public class BlogManager : ManagerBase, IBlogService
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IServiceProvider _serviceProvider;
     private readonly IBackgroundTaskQueue _backgroundTaskQueue;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public BlogManager(IBlogDal blogDal, IUserBusinessService userService, IMapper mapper, ICategoryService categoryService
-        , IHttpContextAccessor contextAccessor, IServiceProvider serviceProvider, IBackgroundTaskQueue backgroundTaskQueue) : base(mapper)
+        , IHttpContextAccessor contextAccessor, IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor, IBackgroundTaskQueue backgroundTaskQueue) : base(mapper)
     {
         _blogDal = blogDal;
         _userService = userService;
@@ -43,6 +44,7 @@ public class BlogManager : ManagerBase, IBlogService
         _contextAccessor = contextAccessor;
         _serviceProvider = serviceProvider;
         _backgroundTaskQueue = backgroundTaskQueue;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [CacheAspect]
@@ -531,11 +533,13 @@ public class BlogManager : ManagerBase, IBlogService
 
         result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
 
+        HttpContext httpContext = _httpContextAccessor.HttpContext;
+
         await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async token =>
         {
             using var scope = _serviceProvider.CreateScope();
             IBlogViewService blogViewService = scope.ServiceProvider.GetRequiredService<IBlogViewService>();
-            await blogViewService.AddAsync(id);
+            await blogViewService.AddAsync(id, httpContext);
         });
 
         return new SuccessDataResult<BlogCategoryandCommentCountandWriterDto>(result);

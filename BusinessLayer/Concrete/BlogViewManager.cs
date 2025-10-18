@@ -19,38 +19,38 @@ namespace BusinessLayer.Concrete;
 public class BlogViewManager : IBlogViewService
 {
     private readonly IBlogViewDal _blogViewDal;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEnvironmentService _environmentService;
     private readonly UserHelper _userHelper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public BlogViewManager(IBlogViewDal blogViewDal, IHttpContextAccessor httpContextAccessor, IEnvironmentService environmentService, UserHelper userHelper)
+    public BlogViewManager(IBlogViewDal blogViewDal, IEnvironmentService environmentService, UserHelper userHelper, IHttpContextAccessor httpContextAccessor)
     {
         _blogViewDal = blogViewDal;
-        _httpContextAccessor = httpContextAccessor;
         _environmentService = environmentService;
         _userHelper = userHelper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<IResultObject> AddAsync(int blogId)
+    public async Task<IResultObject> AddAsync(int blogId, HttpContext httpContext)
     {
         if (!_environmentService.IsProduction())
         {
             return new SuccessResult();
         }
 
-        string ip = _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        string ip = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
         if (string.IsNullOrEmpty(ip))
         {
-            ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            ip = httpContext.Connection.RemoteIpAddress?.ToString();
         }
 
-        string refererUrl = _httpContextAccessor.HttpContext.Request.Headers["Referer"].ToString();
+        string refererUrl = httpContext.Request.Headers["Referer"].ToString();
         if (string.IsNullOrEmpty(refererUrl))
         {
             refererUrl = null;
         }
 
-        var existData = await _blogViewDal.GetByFilterAsync(x => x.BlogId == blogId && x.IpAddress == ip);
+        BlogView existData = await _blogViewDal.GetByFilterAsync(x => x.BlogId == blogId && x.IpAddress == ip);
 
         if (existData != null)
         {

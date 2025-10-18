@@ -60,7 +60,7 @@ public class LoginLoggerManager : ManagerBase, ILoginLoggerService
         return location;
     }
 
-    public async Task<IResultObject> AddAsync(string userName)
+    public async Task<IResultObject> AddAsync(string userName,HttpContext httpContext)
     {
         if (!_webHostEnvironment.IsProduction())
         {
@@ -73,7 +73,7 @@ public class LoginLoggerManager : ManagerBase, ILoginLoggerService
             return new ErrorResult(user.Message);
         }
 
-        var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        var ip = httpContext.Connection.RemoteIpAddress.ToString();
         string location = await GetLocationAsync(ip);
 
         var logginLogger = new LoginLogger

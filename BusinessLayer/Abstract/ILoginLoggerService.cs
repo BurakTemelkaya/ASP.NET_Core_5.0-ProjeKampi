@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Utilities.Results;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -7,7 +8,7 @@ namespace BusinessLayer.Abstract;
 
 public interface ILoginLoggerService
 {
-    Task<IResultObject> AddAsync(string userName);
+    Task<IResultObject> AddAsync(string userName, HttpContext httpContext);
     Task<IDataResult<LoginLogger>> GetByUserAsync(int id);
     Task<IDataResult<IPagedList<LoginLogger>>> GetListByUserAsync(int page = 1, int take = 10);
     Task<IDataResult<LoginLogger>> GetAsync(int id);
