@@ -222,6 +222,11 @@ namespace CoreLayer.Utilities.FileUtilities
         {
             string content = await ReadTextFileAsync(fileLocation);
 
+            if (string.IsNullOrEmpty(content))
+            {
+                return;
+            }
+
             var matches = _imageTagRegex.Matches(content);
 
             foreach (Match match in matches)
