@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.CaptchaUtilities;
@@ -19,6 +20,9 @@ public class RecaptchaManager : ICaptchaService
         Configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
     }
+
+    private CancellationToken CancellationToken
+        => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task<bool> CheckCaptchaValidate(string captcharesponse = null)
     {
@@ -38,9 +42,9 @@ public class RecaptchaManager : ICaptchaService
         };
 
         var client = new HttpClient();
-        var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(postData));
+        var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(postData), CancellationToken);
 
-        var o = (JObject)JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+        var o = (JObject)JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync(CancellationToken));
 
         return (bool)o["success"];
     }

@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -47,6 +48,9 @@ public class BlogManager : ManagerBase, IBlogService
         _httpContextAccessor = httpContextAccessor;
     }
 
+    private CancellationToken CancellationToken => _contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+
     [CacheAspect]
     public async Task<IDataResult<IPagedList<Blog>>> GetListWithCategoryByWriterWithPagingAsync(string userName, int take, int page)
     {
@@ -58,7 +62,7 @@ public class BlogManager : ManagerBase, IBlogService
         {
             if (item != null)
             {
-                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50, CancellationToken);
             }
         }
         return new SuccessDataResult<IPagedList<Blog>>(values);
@@ -149,11 +153,11 @@ public class BlogManager : ManagerBase, IBlogService
             {
                 return new ErrorResult(Messages.BlogImageNotGetting);
             }
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
         else if (blogImage != null)
         {
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
 
         if (blog.BlogImage == null)
@@ -163,16 +167,16 @@ public class BlogManager : ManagerBase, IBlogService
 
         if (blog.BlogThumbnailImage != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage);
+            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage, cancellationToken: CancellationToken);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotGetting);
             }
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken);
         }
         else if (blogThumbnailImage != null)
         {
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken);
         }
 
         if (blog.BlogThumbnailImage == null)
@@ -187,7 +191,7 @@ public class BlogManager : ManagerBase, IBlogService
             return result;
         }
 
-        blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation());
+        blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation(), cancellationToken: CancellationToken);
         blog.WriterID = user.Data.Id;
         blog.BlogCreateDate = DateTime.Now;
         await _blogDal.InsertAsync(blog);
@@ -222,17 +226,17 @@ public class BlogManager : ManagerBase, IBlogService
         }
         else if (blog.BlogImage != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(blog.BlogImage);
+            var image = await ImageFileManager.DownloadImageAsync(blog.BlogImage, cancellationToken: CancellationToken);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogImageNotGetting);
             }
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
         else if (blogImage != null)
         {
             DeleteFileManager.DeleteFile(oldValue.BlogImage);
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
 
         if (blog.BlogImage == null)
@@ -247,17 +251,17 @@ public class BlogManager : ManagerBase, IBlogService
         }
         else if (blog.BlogThumbnailImage != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage);
+            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage, cancellationToken: CancellationToken);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotGetting);
             }
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken);
             DeleteFileManager.DeleteFile(oldValue.BlogContent);
         }
         else if (blogThumbnailImage != null)
         {
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken);
             if (blog.BlogThumbnailImage == null)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotGetting);
@@ -274,7 +278,7 @@ public class BlogManager : ManagerBase, IBlogService
         var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
         if (blog.BlogContent != oldValue.BlogContent)
         {
-            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation());
+            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation(), cancellationToken: CancellationToken);
         }
         else
             blog.BlogContent = oldBlogValue.Data.BlogContent;
@@ -287,8 +291,8 @@ public class BlogManager : ManagerBase, IBlogService
     [ValidationAspect(typeof(BlogValidator))]
     public async Task<IResultObject> BlogAdminUpdateAsync(Blog blog, IFormFile blogImage = null, IFormFile blogThumbnailImage = null)
     {
-        var OldValueRaw = await GetBlogByIDAsync(blog.BlogID);
-        var oldValue = OldValueRaw.Data;
+        IDataResult<Blog> OldValueRaw = await GetBlogByIDAsync(blog.BlogID);
+        Blog oldValue = OldValueRaw.Data;
 
         blog.WriterID = oldValue.WriterID;
         blog.BlogCreateDate = oldValue.BlogCreateDate;
@@ -299,17 +303,17 @@ public class BlogManager : ManagerBase, IBlogService
         }
         else if (blog.BlogImage != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(blog.BlogImage);
+            IFormFile image = await ImageFileManager.DownloadImageAsync(blog.BlogImage, cancellationToken: CancellationToken);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogImageNotGetting);
             }
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
         else if (blogImage != null)
         {
             DeleteFileManager.DeleteFile(oldValue.BlogImage);
-            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution());
+            blog.BlogImage = await ImageFileManager.ImageAddAsync(blogImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogImageResolution(), cancellationToken: CancellationToken);
         }
 
         if (blog.BlogImage == null)
@@ -323,17 +327,19 @@ public class BlogManager : ManagerBase, IBlogService
         }
         else if (blog.BlogThumbnailImage != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage);
+            IFormFile image = await ImageFileManager.DownloadImageAsync(blog.BlogThumbnailImage, cancellationToken: CancellationToken);
             if (image == null)
             {
                 return new ErrorResult(Messages.BlogThumbnailNotGetting);
             }
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken);
+
             DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
         }
         else if (blogThumbnailImage != null)
         {
-            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution());
+            blog.BlogThumbnailImage = await ImageFileManager.ImageAddAsync(blogThumbnailImage, ContentFileLocations.StaticBlogImageLocation(), ImageResulotions.GetBlogThumbnailResolution(), cancellationToken: CancellationToken
+                );
             DeleteFileManager.DeleteFile(oldValue.BlogThumbnailImage);
         }
 
@@ -346,7 +352,7 @@ public class BlogManager : ManagerBase, IBlogService
         var oldBlogValue = await GetFileNameContentBlogByIDAsync(blog.BlogID);
         if (blog.BlogContent != oldValue.BlogContent)
         {
-            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation());
+            blog.BlogContent = await TextFileManager.TextFileAddAsync(blog.BlogContent, ContentFileLocations.GetBlogContentFileLocation(), ContentFileLocations.GetBlogContentImagesFileLocation(), cancellationToken: CancellationToken);
         }
         else
             blog.BlogContent = oldBlogValue.Data.BlogContent;
@@ -378,7 +384,7 @@ public class BlogManager : ManagerBase, IBlogService
     {
         var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID == writerID, take);
         foreach (var item in values)
-            item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50, cancellationToken: CancellationToken);
         return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
     }
 
@@ -387,7 +393,7 @@ public class BlogManager : ManagerBase, IBlogService
     {
         var values = await _blogDal.GetListAllAsync(x => x.BlogID != blogId && x.WriterID != writerID && x.BlogStatus == isActive, take);
         foreach (var item in values)
-            item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+            item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50, cancellationToken: CancellationToken);
         return new SuccessDataResult<List<Blog>>(values.OrderByDescending(x => x.BlogID).ToList());
     }
 
@@ -510,7 +516,7 @@ public class BlogManager : ManagerBase, IBlogService
         {
             if (item != null)
             {
-                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50);
+                item.BlogContent = await TextFileManager.ReadTextFileAsync(item.BlogContent, 50, cancellationToken: CancellationToken);
             }
         }
 
@@ -531,7 +537,7 @@ public class BlogManager : ManagerBase, IBlogService
             return new ErrorDataResult<BlogCategoryandCommentCountandWriterDto>(rule.Message);
         }
 
-        result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent);
+        result.BlogContent = await TextFileManager.ReadTextFileAsync(result.BlogContent, cancellationToken: CancellationToken);
 
         HttpContext httpContext = _httpContextAccessor.HttpContext;
 
@@ -669,7 +675,7 @@ public class BlogManager : ManagerBase, IBlogService
 
                 string newNameThumbnail = blog.BlogThumbnailImage.Substring(indexThumbnail + 1);
 
-                bool isMoveThumbnail = await FileManager.FileMoveAsync(oldNameThumbnail, newNameThumbnail);
+                bool isMoveThumbnail = await FileManager.FileMoveAsync(oldNameThumbnail, newNameThumbnail, cancellationToken: CancellationToken);
 
                 if (isMoveThumbnail)
                     blog.BlogThumbnailImage = newNameThumbnail;

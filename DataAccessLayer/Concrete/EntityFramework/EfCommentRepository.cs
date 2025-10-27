@@ -2,29 +2,30 @@
 using CoreLayer.DataAccess.EntityFramework;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Concrete.EntityFramework
 {
     public class EfCommentRepository : EfEntityRepositoryBase<Comment>, ICommentDal
     {
-        public EfCommentRepository(Context context) : base(context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public EfCommentRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
         {
             Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        private Context Context
-        {
-            get
-            {
-                return _context as Context;
-            }
-        }
+        private Context Context => _context as Context;
+
+        private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public async Task<List<Comment>> GetListWithCommentByBlogAsync(Expression<Func<Comment, bool>> filter = null, int take = 0, int skip = 0)
         {
@@ -52,7 +53,7 @@ namespace DataAccessLayer.Concrete.EntityFramework
             if (take > 0)
                 query = query.Skip(skip).Take(take);
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(CancellationToken);
 
         }
 
@@ -78,8 +79,8 @@ namespace DataAccessLayer.Concrete.EntityFramework
         public async Task<Comment> GetCommentByBlog(Expression<Func<Comment, bool>> filter = null)
         {
             return filter == null ?
-                await Context.Comments.Include(x => x.Blog).FirstAsync() :
-                await Context.Comments.Include(x => x.Blog).FirstAsync(filter);
+                await Context.Comments.Include(x => x.Blog).FirstAsync(CancellationToken) :
+                await Context.Comments.Include(x => x.Blog).FirstAsync(filter, CancellationToken);
         }
     }
 }

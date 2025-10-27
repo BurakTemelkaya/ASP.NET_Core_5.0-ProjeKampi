@@ -10,9 +10,11 @@ using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete;
@@ -22,15 +24,18 @@ public class MessageManager : ManagerBase, IMessageService
     private readonly IMessageDal _messageDal;
     private readonly IUserBusinessService _userService;
     private readonly INotificationHubService _notificationHubService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public MessageManager(IMessageDal message2Dal, IMapper mapper, IUserBusinessService userService, INotificationHubService notificationHubService) : base(mapper)
+    public MessageManager(IMessageDal message2Dal, IMapper mapper, IUserBusinessService userService, INotificationHubService notificationHubService, IHttpContextAccessor httpContextAccessor) : base(mapper)
     {
         _messageDal = message2Dal;
         _userService = userService;
         _notificationHubService = notificationHubService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
     public async Task<IDataResult<List<MessageSenderUserDto>>> GetInboxWithMessageListAsync(string userName, string search = null, int take = 0, int skip = 0)
     {
         var user = await _userService.GetByUserNameAsync(userName);
@@ -51,7 +56,7 @@ public class MessageManager : ManagerBase, IMessageService
         }
         foreach (var item in values)
         {
-            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50);
+            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, 50, CancellationToken);
         }
 
         return new SuccessDataResult<List<MessageSenderUserDto>>(values);
@@ -93,7 +98,9 @@ public class MessageManager : ManagerBase, IMessageService
 
         message.ReceiverUserId = receiverUser.Data.Id;
         message.MessageDate = DateTime.Now;
-        message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
+
+        message.Details = await TextFileManager.TextFileAddAsync(message.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation(), CancellationToken);
+
         await _messageDal.InsertAsync(message);
         await _notificationHubService.SendNotification(receiverUser.Data.Id, $"{senderUserName}, size mesaj gönderdi.");
         return new SuccessResult();
@@ -136,8 +143,10 @@ public class MessageManager : ManagerBase, IMessageService
         }
 
         t.SenderUserId = user.Data.Id;
+
         DeleteFileManager.DeleteFile(t.Details);
-        t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation());
+
+        t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageContentFileLocation(), ContentFileLocations.GetMessageImageContentFileLocation(), CancellationToken);
 
         if (t.Details == null)
         {
@@ -238,7 +247,7 @@ public class MessageManager : ManagerBase, IMessageService
         var value = await _messageDal.GetReceivedMessageAsync(user.Data.Id, x => x.MessageID == id);
         if (value != null)
         {
-            value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+            value.Details = await TextFileManager.ReadTextFileAsync(value.Details, cancellationToken: CancellationToken);
             if (!value.MessageStatus)
             {
                 await MarkUsReadAsync(value.MessageID, user.Data.UserName);
@@ -263,7 +272,7 @@ public class MessageManager : ManagerBase, IMessageService
 
         var value = await _messageDal.GetSendedMessageAsync(user.Data.Id, x => x.MessageID == id);
         if (value != null)
-            value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+            value.Details = await TextFileManager.ReadTextFileAsync(value.Details, cancellationToken: CancellationToken);
         return new SuccessDataResult<Message>(value);
     }
 

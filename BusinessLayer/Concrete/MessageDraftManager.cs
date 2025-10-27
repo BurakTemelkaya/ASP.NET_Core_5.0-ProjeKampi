@@ -6,9 +6,11 @@ using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete;
@@ -17,11 +19,18 @@ public class MessageDraftManager : ManagerBase, IMessageDraftService
 {
     readonly IMessageDraftDal _messageDraftDal;
     readonly IUserBusinessService _businessUserService;
-    public MessageDraftManager(IMessageDraftDal messageDraftDal, IUserBusinessService businessUserService, IMapper mapper) : base(mapper)
+    readonly IHttpContextAccessor _httpContextAccessor;
+
+
+    public MessageDraftManager(IMessageDraftDal messageDraftDal, IUserBusinessService businessUserService, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(mapper)
     {
         _messageDraftDal = messageDraftDal;
         _businessUserService = businessUserService;
+        _httpContextAccessor = httpContextAccessor;
     }
+
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
 
     public async Task<IDataResult<int>> GetCountAsync(Expression<Func<MessageDraft, bool>> filter = null)
     {
@@ -46,7 +55,7 @@ public class MessageDraftManager : ManagerBase, IMessageDraftService
 
         var values = await _messageDraftDal.GetMessageDraftListByUserIdAsync(user.Data.Id);
         foreach (var item in values)
-            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, length);
+            item.Details = await TextFileManager.ReadTextFileAsync(item.Details, length, CancellationToken);
         return new SuccessDataResult<List<MessageDraft>>(values);
 
     }
@@ -62,7 +71,7 @@ public class MessageDraftManager : ManagerBase, IMessageDraftService
         }
 
         t.UserId = user.Data.Id;
-        t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation(), ContentFileLocations.GetMessageDraftContentFileLocation());
+        t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation(), ContentFileLocations.GetMessageDraftContentFileLocation(), CancellationToken);
         await _messageDraftDal.InsertAsync(t);
         return new SuccessResult();
     }
@@ -140,7 +149,7 @@ public class MessageDraftManager : ManagerBase, IMessageDraftService
         var value = await _messageDraftDal.GetMessageDraftByUserIdAsync(user.Data.Id, x => x.MessageDraftID == id);
         if (value != null && user.Data.Id == value.UserId)
         {
-            value.Details = await TextFileManager.ReadTextFileAsync(value.Details);
+            value.Details = await TextFileManager.ReadTextFileAsync(value.Details, cancellationToken: CancellationToken);
             return new SuccessDataResult<MessageDraft>(value);
         }
         return null;
@@ -164,7 +173,7 @@ public class MessageDraftManager : ManagerBase, IMessageDraftService
             if (await TextFileManager.ReadTextFileAsync(value.Details) != t.Details)
             {
                 DeleteFileManager.DeleteFile(t.Details);
-                t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation(), ContentFileLocations.GetMessageDraftImageContentFileLocation());
+                t.Details = await TextFileManager.TextFileAddAsync(t.Details, ContentFileLocations.GetMessageDraftContentFileLocation(), ContentFileLocations.GetMessageDraftImageContentFileLocation(), CancellationToken);
             }
             else
             {

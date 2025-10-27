@@ -8,66 +8,66 @@ using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreLayer.Utilities.FileUtilities;
 
 public static class ImageFileManager
 {
-    public static async Task<string> ImageAddAsync(IFormFile file, string folderLocation, Size size, string fileName = null)
+    public static async Task<string> ImageAddAsync(IFormFile file, string folderLocation, Size size, string fileName = null, CancellationToken cancellationToken = default)
     {
-        using (var stream = file.OpenReadStream())
+        using var stream = file.OpenReadStream();
+
+        Image<Rgba32> image = await Image.LoadAsync<Rgba32>(stream, cancellationToken);
+        if (image == null)
         {
-            var image = await Image.LoadAsync<Rgba32>(stream);
-            if (image == null)
-            {
-                return null;
-            }
-
-            image.Mutate(x => x.Resize(new ResizeOptions
-            {
-                Mode = ResizeMode.Max,
-                Size = size
-            }));
-
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            bool isPng = file.ContentType == "image/png";
-            bool hasTransparency = isPng && HasTransparency(image);
-
-            var extension = (isPng && hasTransparency) ? ".png" : ".jpeg";
-            var newImageName = fileName == null
-                ? Guid.NewGuid() + extension
-                : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
-            var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
-
-            using (var outputStream = new FileStream(location, FileMode.Create))
-            {
-                if (isPng && hasTransparency)
-                {
-                    PngEncoder encoder = new()
-                    {
-                        CompressionLevel = PngCompressionLevel.BestCompression
-                    };
-
-                    await image.SaveAsync(outputStream, encoder);
-                }
-                else
-                {
-                    JpegEncoder encoder = new()
-                    {
-                        Quality = 75
-                    };
-                    await image.SaveAsync(outputStream, encoder);
-                }
-            }
-
-            return "/" + Path.Combine(folderLocation, newImageName).Replace("\\", "/");
+            return null;
         }
+
+        image.Mutate(x => x.Resize(new ResizeOptions
+        {
+            Mode = ResizeMode.Max,
+            Size = size
+        }));
+
+        string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation);
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        bool isPng = file.ContentType == "image/png";
+        bool hasTransparency = isPng && HasTransparency(image);
+
+        var extension = (isPng && hasTransparency) ? ".png" : ".jpeg";
+        var newImageName = fileName == null
+            ? Guid.NewGuid() + extension
+            : ReplaceCharactersToEnglishCharacters.ReplaceCharacters(fileName) + "-" + Guid.NewGuid() + extension;
+        var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderLocation, newImageName);
+
+        using (var outputStream = new FileStream(location, FileMode.Create))
+        {
+            if (isPng && hasTransparency)
+            {
+                PngEncoder encoder = new()
+                {
+                    CompressionLevel = PngCompressionLevel.BestCompression
+                };
+
+                await image.SaveAsync(outputStream, encoder, cancellationToken);
+            }
+            else
+            {
+                JpegEncoder encoder = new()
+                {
+                    Quality = 75
+                };
+                await image.SaveAsync(outputStream, encoder, cancellationToken);
+            }
+        }
+
+        return "/" + Path.Combine(folderLocation, newImageName).Replace("\\", "/");
 
     }
 
@@ -86,22 +86,20 @@ public static class ImageFileManager
         return false;
     }
 
-    public static Image<Rgba32> ResizeImage(IFormFile image, Size size)
+    public static async Task<Image<Rgba32>> ResizeImage(IFormFile image, Size size, CancellationToken cancellationToken = default)
     {
         try
         {
-            using (var imageStream = image.OpenReadStream())
+            using var imageStream = image.OpenReadStream();
+            Image<Rgba32> imgToResize = await Image.LoadAsync<Rgba32>(imageStream, cancellationToken);
+
+            imgToResize.Mutate(x => x.Resize(new ResizeOptions
             {
-                var imgToResize = Image.Load<Rgba32>(imageStream);
+                Mode = ResizeMode.Max,
+                Size = size
+            }));
 
-                imgToResize.Mutate(x => x.Resize(new ResizeOptions
-                {
-                    Mode = ResizeMode.Max,
-                    Size = size
-                }));
-
-                return imgToResize;
-            }
+            return imgToResize;
         }
         catch (Exception e)
         {
@@ -110,16 +108,16 @@ public static class ImageFileManager
         }
     }
 
-    public static async Task<IFormFile> DownloadImageAsync(string imageUrl)
+    public static async Task<IFormFile> DownloadImageAsync(string imageUrl, CancellationToken cancellationToken = default)
     {
         try
         {
             using HttpClient client = new();
-            var response = await client.GetAsync(imageUrl);
+            var response = await client.GetAsync(imageUrl, cancellationToken);
             response.EnsureSuccessStatusCode();
-            var responseStream = await response.Content.ReadAsStreamAsync();
+            var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
-            var image = await Image.LoadAsync<Rgba32>(responseStream);
+            var image = await Image.LoadAsync<Rgba32>(responseStream, cancellationToken);
 
             var resultStream = new MemoryStream();
             string contentType;
@@ -130,7 +128,7 @@ public static class ImageFileManager
                 {
                     CompressionLevel = PngCompressionLevel.BestCompression
                 };
-                await image.SaveAsync(resultStream, encoder);
+                await image.SaveAsync(resultStream, encoder, cancellationToken);
                 contentType = "image/png";
                 fileExtension = ".png";
             }
@@ -140,7 +138,7 @@ public static class ImageFileManager
                 {
                     Quality = 75
                 };
-                await image.SaveAsync(resultStream, encoder);
+                await image.SaveAsync(resultStream, encoder, cancellationToken);
                 contentType = "image/jpeg";
                 fileExtension = ".jpeg";
             }
@@ -155,18 +153,18 @@ public static class ImageFileManager
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine(e.Message, cancellationToken);
             return null;
         }
     }
 
-    public static async Task<IFormFile> GetBase64ImageAsync(string base64String, string contentImageLocation)
+    public static async Task<IFormFile> GetBase64ImageAsync(string base64String, string contentImageLocation, CancellationToken cancellationToken = default)
     {
         try
         {
             var imageBytes = Convert.FromBase64String(base64String);
             var memoryStream = new MemoryStream(imageBytes);
-            var image = await Image.LoadAsync<Rgba32>(memoryStream);
+            var image = await Image.LoadAsync<Rgba32>(memoryStream, cancellationToken);
 
             memoryStream.Position = 0;
 
@@ -201,7 +199,7 @@ public static class ImageFileManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving base64 image: {ex.Message}");
+            Console.WriteLine($"Error saving base64 image: {ex.Message}", cancellationToken);
             return null;
         }
     }

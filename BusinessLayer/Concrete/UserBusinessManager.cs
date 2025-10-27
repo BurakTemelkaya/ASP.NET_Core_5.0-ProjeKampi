@@ -22,6 +22,7 @@ using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using X.PagedList;
 using X.PagedList.EF;
@@ -43,6 +44,9 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
         _backgroundTaskQueue = backgroundTaskQueue;
     }
 
+    private CancellationToken CancellationToken => _httpContext.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+
     [CacheRemoveAspect("IUserBusinessService.Get")]
     [ValidationAspect(typeof(UserSignUpDtoValidator))]
     public async Task<IDataResult<IdentityResult>> RegisterUserAsync(UserSignUpDto userSignUpDto, string password)
@@ -52,17 +56,17 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
 
         if (userSignUpDto.ImageUrl != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(userSignUpDto.ImageUrl);
+            var image = await ImageFileManager.DownloadImageAsync(userSignUpDto.ImageUrl, CancellationToken);
             if (image == null)
             {
                 return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
             }
-            user.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+            user.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution(), cancellationToken: CancellationToken);
         }
         else if (userSignUpDto.ImageFile != null)
         {
             user.ImageUrl = await ImageFileManager.ImageAddAsync(userSignUpDto.ImageFile,
-                ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+                ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution(), cancellationToken: CancellationToken);
             if (user.ImageUrl == null)
             {
                 return new ErrorDataResult<IdentityResult>(Messages.UserProfileImageNotUploadError);
@@ -132,24 +136,29 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
         if (user.Password != null && user.Password == user.PasswordAgain)
         {
             bool checkPassword = await _userManager.CheckPasswordAsync(value.Data, user.OldPassword);
+
             if (checkPassword)
                 value.Data.PasswordHash = _userManager.PasswordHasher.HashPassword(value.Data, user.Password);
         }
 
         if (user.ImageUrl != null)
         {
-            var image = await ImageFileManager.DownloadImageAsync(user.ImageUrl);
+            var image = await ImageFileManager.DownloadImageAsync(user.ImageUrl, CancellationToken);
+
             if (image == null)
             {
                 return new ErrorDataResult<IdentityResult>("Profil resminiz, girdiğiniz linkten getirilemedi.");
             }
+
             DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-            value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+
+            value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(image, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution(), cancellationToken: CancellationToken);
         }
         else if (user.ProfileImageFile != null)
         {
             DeleteFileManager.DeleteFile(value.Data.ImageUrl);
-            value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution());
+
+            value.Data.ImageUrl = await ImageFileManager.ImageAddAsync(user.ProfileImageFile, ContentFileLocations.StaticProfileImageLocation(), ImageResulotions.GetProfileImageResolution(), cancellationToken: CancellationToken);
         }
         else
         {
@@ -210,8 +219,6 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
                     HtmlBody = MailTemplates.ChangedUserInformationByAdminMailTemplate(mailTemplate, GetBaseUrl())
                 }, token);
             });
-
-
 
             return new SuccessDataResult<IdentityResult>(result);
         }
@@ -286,7 +293,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
 
     public async Task<IDataResult<IPagedList<AppUser>>> GetUserListAsync(int pageNumber = 1, int pageSize = 10)
     {
-        return new SuccessDataResult<IPagedList<AppUser>>(await _userManager.Users.ToPagedListAsync(pageNumber, pageSize));
+        return new SuccessDataResult<IPagedList<AppUser>>(await _userManager.Users.ToPagedListAsync(pageNumber, pageSize, null, cancellationToken: CancellationToken));
     }
 
     [CacheAspect]
@@ -294,7 +301,7 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
     {
         if (userName != null)
         {
-            var data = await _userManager.Users.Where(x => x.UserName.ToLower().Contains(userName.ToLower())).ToListAsync();
+            List<AppUser> data = await _userManager.Users.Where(x => x.UserName.ToLower().Contains(userName.ToLower())).ToListAsync(CancellationToken);
             if (data != null)
             {
                 return new SuccessDataResult<List<AppUser>>(data);
@@ -319,14 +326,14 @@ public class UserBusinessManager : ManagerBase, IUserBusinessService
     [LogAspect(typeof(DatabaseLogger))]
     public async Task<IResultObject> BannedUser(string id, DateTime expiration, string banMessageContent)
     {
-        var user = await GetByIDAsync(id);
-        var userData = user.Data;
+        IDataResult<AppUser> user = await GetByIDAsync(id);
+        AppUser userData = user.Data;
         if (userData == null)
             return new ErrorResult(user.Message);
 
         if (expiration > DateTime.Now)
         {
-            var isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
+            bool isExistUserRole = await _userManager.IsInRoleAsync(userData, RolesTexts.AdminRole());
             if (isExistUserRole)
                 return new ErrorResult(Messages.AdminNotBanned);
 

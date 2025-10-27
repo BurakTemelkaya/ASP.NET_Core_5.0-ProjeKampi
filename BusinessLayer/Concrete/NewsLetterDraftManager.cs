@@ -5,20 +5,27 @@ using CoreLayer.Utilities.FileUtilities;
 using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
     public class NewsLetterDraftManager : INewsLetterDraftService
     {
-        readonly INewsLetterDraftDal _newsLetterDraftDal;
-        public NewsLetterDraftManager(INewsLetterDraftDal newsLetterDraftDal)
+        private readonly INewsLetterDraftDal _newsLetterDraftDal;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public NewsLetterDraftManager(INewsLetterDraftDal newsLetterDraftDal, IHttpContextAccessor httpContextAccessor)
         {
             _newsLetterDraftDal = newsLetterDraftDal;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public async Task<IResultObject> DeleteById(int id)
         {
@@ -49,7 +56,7 @@ namespace BusinessLayer.Concrete
         {
             var values = await _newsLetterDraftDal.GetListAllAsync();
             foreach (var item in values)
-                item.Content = await TextFileManager.ReadTextFileAsync(item.Content, 30);
+                item.Content = await TextFileManager.ReadTextFileAsync(item.Content, 30, cancellationToken: CancellationToken);
             return new SuccessDataResult<List<NewsLetterDraft>>(values);
         }
 
@@ -57,7 +64,9 @@ namespace BusinessLayer.Concrete
         public async Task<IResultObject> TAddAsync(NewsLetterDraft t)
         {
             t.TimeToAdd = DateTime.Now;
+
             t.Content = await TextFileManager.TextFileAddAsync(t.Content, ContentFileLocations.GetNewsLetterDraftContentFileLocation(), ContentFileLocations.GetNewsLetterDraftImageContentFileLocation());
+
             await _newsLetterDraftDal.InsertAsync(t);
             return new SuccessResult();
         }
@@ -72,7 +81,7 @@ namespace BusinessLayer.Concrete
         public async Task<IDataResult<NewsLetterDraft>> TGetByFilterAsync(Expression<Func<NewsLetterDraft, bool>> filter = null)
         {
             var value = await _newsLetterDraftDal.GetByFilterAsync(filter);
-            value.Content = await TextFileManager.ReadTextFileAsync(value.Content);
+            value.Content = await TextFileManager.ReadTextFileAsync(value.Content, cancellationToken: CancellationToken);
             return new SuccessDataResult<NewsLetterDraft>(value);
         }
 
@@ -85,7 +94,7 @@ namespace BusinessLayer.Concrete
                 return new ErrorDataResult<NewsLetterDraft>(Messages.NewsLetterDraftNotFound);
             }
 
-            value.Content = await TextFileManager.ReadTextFileAsync(value.Content);
+            value.Content = await TextFileManager.ReadTextFileAsync(value.Content, cancellationToken: CancellationToken);
             return new SuccessDataResult<NewsLetterDraft>(value);
         }
 

@@ -1,6 +1,7 @@
 ﻿
 
 using CoreLayer.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -19,28 +20,37 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 {
 
     protected readonly DbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public EfEntityRepositoryBase(DbContext context,IHttpContextAccessor httpContextAccessor)
+    {
+        _context = context;
+        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
     public EfEntityRepositoryBase(DbContext context)
     {
         _context = context;
-        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    public async Task DeleteAsync(TEntity t, CancellationToken cancellationToken = default)
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+    public async Task DeleteAsync(TEntity t)
     {
         _context.Remove(t);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
     }
 
-    public async Task DeleteRangeAsync(List<TEntity> t, CancellationToken cancellationToken = default)
+    public async Task DeleteRangeAsync(List<TEntity> t)
     {
         _context.RemoveRange(t);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
     }
 
-    public async Task<TEntity> GetByIDAsync(int id, bool enableTracking = false, CancellationToken cancellationToken = default)
+    public async Task<TEntity> GetByIDAsync(int id, bool enableTracking = false)
     {
-        TEntity result = await _context.Set<TEntity>().FindAsync(id, cancellationToken);
+        TEntity result = await _context.Set<TEntity>().FindAsync(id, CancellationToken);
 
         if (result != null && !enableTracking)
         {
@@ -51,7 +61,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
     }
 
     public async Task<List<TEntity>> GetListAllAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int skip = 0
-        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool enableTracking = false)
     {
         var queryable = _context.Set<TEntity>().AsQueryable();
 
@@ -59,7 +69,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         {
             if (sortInReverse)
             {
-                var count = await GetCountAsync(filter, cancellationToken: cancellationToken);
+                var count = await GetCountAsync(filter);
                 if (skip == 0)
                 {
                     skip = count - take;
@@ -80,8 +90,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
             if (!enableTracking) queryable = queryable.AsNoTracking();
 
             var filteredResult = filter == null ?
-            await queryable.Skip(skip).Take(take).ToListAsync(cancellationToken) :
-            await queryable.Where(filter).Skip(skip).Take(take).ToListAsync(cancellationToken);
+            await queryable.Skip(skip).Take(take).ToListAsync(CancellationToken) :
+            await queryable.Where(filter).Skip(skip).Take(take).ToListAsync(CancellationToken);
 
             return filteredResult;
         }
@@ -89,8 +99,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         if (include != null) queryable = include(queryable);
 
         var result = filter == null ?
-            await queryable.ToListAsync(cancellationToken) :
-            await queryable.Where(filter).ToListAsync(cancellationToken);
+            await queryable.ToListAsync(CancellationToken) :
+            await queryable.Where(filter).ToListAsync(CancellationToken);
 
         if (sortInReverse)
         {
@@ -100,11 +110,12 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return result;
     }
 
+    [ObsoleteAttribute(message:"Yerini X.Paged.List kütüphanesi metodları aldı.")]
     public async Task<List<TEntity>> GetListAllByPagingAsync(Expression<Func<TEntity, bool>> filter = null, int take = 0, int page = 1
-        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        , bool sortInReverse = true, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool enableTracking = false)
     {
         List<TEntity> values = new List<TEntity>();
-        int count = await GetCountAsync(filter, cancellationToken: cancellationToken);
+        int count = await GetCountAsync(filter);
         int skip = count - (take * page);
 
         if (skip >= count)
@@ -134,8 +145,8 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         if (!enableTracking) queryable = queryable.AsNoTracking();
 
         List<TEntity> result = filter == null ?
-            await queryable.Skip(skip).Take(realTake).ToListAsync(cancellationToken) :
-            await queryable.Where(filter).Skip(skip).Take(realTake).ToListAsync(cancellationToken);
+            await queryable.Skip(skip).Take(realTake).ToListAsync(CancellationToken) :
+            await queryable.Where(filter).Skip(skip).Take(realTake).ToListAsync(CancellationToken);
 
         if (sortInReverse)
         {
@@ -149,23 +160,23 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         return values;
     }
 
-    public async Task<TEntity> InsertAsync(TEntity t, CancellationToken cancellationToken)
+    public async Task<TEntity> InsertAsync(TEntity t)
     {
-        await _context.AddAsync(t, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.AddAsync(t, CancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
 
         return t;
     }
 
-    public async Task<List<TEntity>> InsertRangeAsync(List<TEntity> t, CancellationToken cancellationToken = default)
+    public async Task<List<TEntity>> InsertRangeAsync(List<TEntity> t)
     {
-        await _context.AddRangeAsync(t, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.AddRangeAsync(t, CancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
 
         return t;
     }
 
-    public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+    public async Task<TEntity> GetByFilterAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
     {
         IQueryable<TEntity> queryable = _context.Set<TEntity>().AsQueryable();
 
@@ -173,26 +184,26 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
         if (!enableTracking) queryable = queryable.AsNoTracking();
 
-        return await queryable.FirstOrDefaultAsync(cancellationToken);
+        return await queryable.FirstOrDefaultAsync(CancellationToken);
     }
 
-    public async Task<TEntity> UpdateAsync(TEntity t, CancellationToken cancellationToken)
+    public async Task<TEntity> UpdateAsync(TEntity t)
     {
         _context.Update(t);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
 
         return t;
     }
 
-    public async Task<List<TEntity>> UpdateRangeAsync(List<TEntity> t, CancellationToken cancellationToken = default)
+    public async Task<List<TEntity>> UpdateRangeAsync(List<TEntity> t)
     {
         _context.UpdateRange(t);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(CancellationToken);
 
         return t;
     }
 
-    public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+    public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null, bool enableTracking = false)
     {
         var queryable = _context.Set<TEntity>().AsQueryable();
 
@@ -200,12 +211,12 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 
         if (!enableTracking) queryable = queryable.AsNoTracking();
 
-        return await queryable.CountAsync(cancellationToken);
+        return await queryable.CountAsync(CancellationToken);
     }
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync()
     {
-        return await _context.SaveChangesAsync(cancellationToken);
+        return await _context.SaveChangesAsync(CancellationToken);
     }
 
     public async Task<Dictionary<DateTime, int>> GetChartDataAsync(
@@ -213,7 +224,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
     TimeUnit timeUnit, // Enum parametre
     DateTime? startDate = null,
     DateTime? endDate = null,
-    Expression<Func<TEntity, bool>> predicate = null, CancellationToken cancellationToken = default)
+    Expression<Func<TEntity, bool>> predicate = null)
     {
         var query = _context.Set<TEntity>().AsQueryable();
 
@@ -259,7 +270,7 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
                 DateTime = g.Key,
                 Count = g.Count()
             })
-            .ToDictionaryAsync(g => g.DateTime, g => g.Count, cancellationToken);
+            .ToDictionaryAsync(g => g.DateTime, g => g.Count, CancellationToken);
 
         return groupedData;
     }
@@ -268,10 +279,10 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
     public async Task<IPagedList<TEntity>> GetPagedListAsync(
     int pageNumber,
     int pageSize,
-    Expression<Func<TEntity, bool>>? predicate = null,
-    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
-    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-    bool enableTracking = false, CancellationToken cancellationToken = default)
+    Expression<Func<TEntity, bool>> predicate = null,
+    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+    bool enableTracking = false)
     {
         IQueryable<TEntity> query = _context.Set<TEntity>();
 
@@ -295,6 +306,6 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
             query = orderBy(query);
         }
 
-        return await query.ToPagedListAsync(pageNumber, pageSize, null, cancellationToken);
+        return await query.ToPagedListAsync(pageNumber, pageSize, null);
     }
 }

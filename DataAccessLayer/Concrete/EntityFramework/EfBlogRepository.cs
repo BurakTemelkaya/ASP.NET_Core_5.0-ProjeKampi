@@ -2,12 +2,13 @@
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using X.PagedList;
 using X.PagedList.EF;
@@ -16,18 +17,17 @@ namespace DataAccessLayer.Concrete.EntityFramework;
 
 public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
 {
-    public EfBlogRepository(Context context) : base(context)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public EfBlogRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
     {
         Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    private Context Context
-    {
-        get
-        {
-            return _context as Context;
-        }
-    }
+    private Context Context => _context as Context;
+
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task<IPagedList<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(
     Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null,
@@ -63,7 +63,7 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
             query = query.Where(filter);
         }
 
-        var result = await query.ToPagedListAsync(pageNumber, pageSize);
+        var result = await query.ToPagedListAsync(pageNumber, pageSize, null, CancellationToken);
 
         return result;
     }
@@ -78,14 +78,12 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
 
         query = query.OrderByDescending(x => x.BlogID);
 
-        return await query.ToPagedListAsync(pageNumber, pageSize);
+        return await query.ToPagedListAsync(pageNumber, pageSize,null, CancellationToken);
     }
 
     public async Task<BlogCategoryandCommentCountandWriterDto> GetBlogWithCommentandWriterAsync(bool isCommentStatus, Expression<Func<BlogCategoryandCommentCountandWriterDto, bool>> filter)
     {
-        var stopWatch = Stopwatch.StartNew();
-
-        var query = from blog in Context.Blogs
+        IQueryable<BlogCategoryandCommentCountandWriterDto> query = from blog in Context.Blogs
                     join category in Context.Categories
                         on blog.CategoryID equals category.CategoryID
                     join writer in Context.Users
@@ -116,11 +114,7 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
                         BlogViewCount = blog.BlogViews.Count()
                     };
 
-        var data = await query.Where(filter).FirstOrDefaultAsync();
-
-        stopWatch.Stop();
-
-        var time = stopWatch.ElapsedMilliseconds;
+        var data = await query.Where(filter).FirstOrDefaultAsync(CancellationToken);
 
         return data;
     }
@@ -144,6 +138,6 @@ public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
 
         query = filter != null ? query.Where(filter) : query;
 
-        return await query.CountAsync();
+        return await query.CountAsync(CancellationToken);
     }
 }

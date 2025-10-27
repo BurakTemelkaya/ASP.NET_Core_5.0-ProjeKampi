@@ -8,6 +8,7 @@ using CoreLayer.Utilities.Results;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete;
@@ -15,11 +16,15 @@ namespace BusinessLayer.Concrete;
 public class AboutManager : IAboutService
 {
     private readonly IAboutDal _aboutDal;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AboutManager(IAboutDal aboutDal)
+    public AboutManager(IAboutDal aboutDal, IHttpContextAccessor httpContextAccessor)
     {
         _aboutDal = aboutDal;
+        _httpContextAccessor = httpContextAccessor;
     }
+
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     [CacheAspect]
     public async Task<IDataResult<About>> GetAboutAsync()
@@ -64,7 +69,7 @@ public class AboutManager : IAboutService
         }
         else if (aboutImage1 != null)
         {
-            about.AboutImage1 = await ImageFileManager.ImageAddAsync(aboutImage1, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+            about.AboutImage1 = await ImageFileManager.ImageAddAsync(aboutImage1, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution(), cancellationToken: CancellationToken);
             if (about.AboutImage1 == null)
             {
                 return new ErrorResult(Messages.About1ImageNotUploaded);
@@ -73,7 +78,7 @@ public class AboutManager : IAboutService
         }
         else if (about.AboutImage1 != null)
         {
-            about.AboutImage1 = await ImageFileManager.ImageAddAsync(await ImageFileManager.DownloadImageAsync(about.AboutImage1), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+            about.AboutImage1 = await ImageFileManager.ImageAddAsync(await ImageFileManager.DownloadImageAsync(about.AboutImage1), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution(), cancellationToken: CancellationToken);
             if (about.AboutImage1 == null)
             {
                 return new ErrorResult(Messages.About1ImageNotUploaded);
@@ -87,7 +92,7 @@ public class AboutManager : IAboutService
         }
         else if (aboutImage2 != null)
         {
-            about.AboutImage2 = await ImageFileManager.ImageAddAsync(aboutImage2, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+            about.AboutImage2 = await ImageFileManager.ImageAddAsync(aboutImage2, ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution(), cancellationToken: CancellationToken);
             if (aboutImage2 == null)
             {
                 return new ErrorResult(Messages.About2ImageNotUploaded);
@@ -96,7 +101,7 @@ public class AboutManager : IAboutService
         }
         else if (about.AboutImage2 != null)
         {
-            about.AboutImage2 = await ImageFileManager.ImageAddAsync(await ImageFileManager.DownloadImageAsync(about.AboutImage2), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution());
+            about.AboutImage2 = await ImageFileManager.ImageAddAsync(await ImageFileManager.DownloadImageAsync(about.AboutImage2), ContentFileLocations.StaticAboutImageLocation(), ImageResulotions.GetAboutImageResolution(), cancellationToken: CancellationToken);
             if (aboutImage1 == null)
             {
                 return new ErrorResult(Messages.About2ImageNotUploaded);

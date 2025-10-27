@@ -1,32 +1,32 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreLayer.Utilities.FileUtilities
+namespace CoreLayer.Utilities.FileUtilities;
+
+public static class FileManager
 {
-    public static class FileManager
+    public async static Task<bool> FileMoveAsync(string oldPath, string newPath, bool isOldPathDelete = true, CancellationToken cancellationToken = default)
     {
-        public async static Task<bool> FileMoveAsync(string oldPath, string newPath, bool isOldPathDelete = true)
+        try
         {
-            try
-            {
-                oldPath = @"wwwroot/" + oldPath;
+            oldPath = @"wwwroot/" + oldPath;
 
-                File.Move(oldPath, @"wwwroot/" + newPath);
+            File.Move(oldPath, @"wwwroot/" + newPath);
 
-                if (isOldPathDelete)
-                    File.Delete(oldPath);
+            if (isOldPathDelete)
+                File.Delete(oldPath);
 
-                await TextFileManager.TextFileAddAsync(oldPath + newPath, "/ExceptionLogs", "");
+            await TextFileManager.TextFileAddAsync(oldPath + newPath, "/ExceptionLogs", string.Empty, cancellationToken);
 
-                return true;
+            return true;
 
-            }
-            catch (Exception e)
-            {
-                await TextFileManager.TextFileAddAsync(e.ToString(), "/ExceptionLogs", "");
-                return false;
-            }
+        }
+        catch (Exception e)
+        {
+            await TextFileManager.TextFileAddAsync(e.ToString(), "/ExceptionLogs", string.Empty, cancellationToken);
+            return false;
         }
     }
 }

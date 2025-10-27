@@ -2,102 +2,102 @@
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Concrete.EntityFramework
+namespace DataAccessLayer.Concrete.EntityFramework;
+
+public class EfMessageRepository : EfEntityRepositoryBase<Message>, IMessageDal
 {
-    public class EfMessageRepository : EfEntityRepositoryBase<Message>, IMessageDal
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public EfMessageRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
     {
-        public EfMessageRepository(Context context) : base(context)
-        {
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        }
+        Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        private Context Context
-        {
-            get
-            {
-                return _context as Context;
-            }
-        }
+    private Context Context => _context as Context;
 
-        public async Task<List<MessageSenderUserDto>> GetInboxWithMessageListAsync(int id, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
-        {
-            var query = Context.Messages
-               .Include(x => x.SenderUser)
-                   .Where(x => x.ReceiverUserId == id)
-                   .Select(x => new MessageSenderUserDto
-                   {
-                       MessageID = x.MessageID,
-                       Subject = x.Subject,
-                       Details = x.Details,
-                       MessageDate = x.MessageDate,
-                       MessageStatus = x.MessageStatus,
-                       SenderUserName = x.SenderUser.UserName,
-                       SenderNameSurname = x.SenderUser.NameSurname,
-                       SenderImageUrl = x.SenderUser.ImageUrl,
-                       SenderUserId = x.SenderUserId,
-                       ReceiverUserId = x.ReceiverUserId
-                   });
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
-            query = filter == null ?
-               query : query.Where(filter);
+    public async Task<List<MessageSenderUserDto>> GetInboxWithMessageListAsync(int id, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
+    {
+        var query = Context.Messages
+           .Include(x => x.SenderUser)
+               .Where(x => x.ReceiverUserId == id)
+               .Select(x => new MessageSenderUserDto
+               {
+                   MessageID = x.MessageID,
+                   Subject = x.Subject,
+                   Details = x.Details,
+                   MessageDate = x.MessageDate,
+                   MessageStatus = x.MessageStatus,
+                   SenderUserName = x.SenderUser.UserName,
+                   SenderNameSurname = x.SenderUser.NameSurname,
+                   SenderImageUrl = x.SenderUser.ImageUrl,
+                   SenderUserId = x.SenderUserId,
+                   ReceiverUserId = x.ReceiverUserId
+               });
 
-            query = query.OrderByDescending(x => x.MessageID).AsQueryable();
+        query = filter == null ?
+           query : query.Where(filter);
 
-            query = take > 0 ? query.Skip(skip).Take(take) : query;
+        query = query.OrderByDescending(x => x.MessageID).AsQueryable();
 
-            return await query.ToListAsync();
-        }
-        public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
-        {
-            return filter == null ?
-                await Context.Messages.Include(x => x.SenderUser)
-            .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync() :
+        query = take > 0 ? query.Skip(skip).Take(take) : query;
+
+        return await query.ToListAsync(CancellationToken);
+    }
+    public async Task<Message> GetReceivedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
+    {
+        return filter == null ?
             await Context.Messages.Include(x => x.SenderUser)
-            .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync(filter);
-        }
-        public async Task<Message> GetSendedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
-        {
-            return filter == null ?
-               await Context.Messages.Include(x => x.ReceiverUser)
-            .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync() :
-            await Context.Messages.Include(x => x.ReceiverUser)
-            .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync(filter);
-        }
+        .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync() :
+        await Context.Messages.Include(x => x.SenderUser)
+        .Where(x => x.ReceiverUser.Id == id).FirstOrDefaultAsync(filter, CancellationToken);
+    }
+    public async Task<Message> GetSendedMessageAsync(int id, Expression<Func<Message, bool>> filter = null)
+    {
+        return filter == null ?
+           await Context.Messages.Include(x => x.ReceiverUser)
+        .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync() :
+        await Context.Messages.Include(x => x.ReceiverUser)
+        .Where(x => x.SenderUser.Id == id).FirstOrDefaultAsync(filter, CancellationToken);
+    }
 
-        public async Task<List<MessageReceiverUserDto>> GetSendBoxWithMessageListAsync(int id, Expression<Func<MessageReceiverUserDto, bool>> filter = null, int take = 0, int skip = 0)
-        {
-            var query = Context.Messages
-               .Include(x => x.ReceiverUser)
-                   .Where(x => x.SenderUserId == id)
-                   .Select(x => new MessageReceiverUserDto
-                   {
-                       MessageID = x.MessageID,
-                       Subject = x.Subject,
-                       Details = x.Details,
-                       MessageDate = x.MessageDate,
-                       MessageStatus = x.MessageStatus,
-                       ReceiverUserName = x.ReceiverUser.UserName,
-                       ReceiverNameSurname = x.ReceiverUser.NameSurname,
-                       ReceiverImageUrl = x.ReceiverUser.ImageUrl,
-                       SenderUserId = x.SenderUserId,
-                       ReceiverUserId = x.ReceiverUserId
-                   });
+    public async Task<List<MessageReceiverUserDto>> GetSendBoxWithMessageListAsync(int id, Expression<Func<MessageReceiverUserDto, bool>> filter = null, int take = 0, int skip = 0)
+    {
+        var query = Context.Messages
+           .Include(x => x.ReceiverUser)
+               .Where(x => x.SenderUserId == id)
+               .Select(x => new MessageReceiverUserDto
+               {
+                   MessageID = x.MessageID,
+                   Subject = x.Subject,
+                   Details = x.Details,
+                   MessageDate = x.MessageDate,
+                   MessageStatus = x.MessageStatus,
+                   ReceiverUserName = x.ReceiverUser.UserName,
+                   ReceiverNameSurname = x.ReceiverUser.NameSurname,
+                   ReceiverImageUrl = x.ReceiverUser.ImageUrl,
+                   SenderUserId = x.SenderUserId,
+                   ReceiverUserId = x.ReceiverUserId
+               });
 
-            query = filter == null ?
-               query : query.Where(filter);
+        query = filter == null ?
+           query : query.Where(filter);
 
-            query = query.OrderByDescending(x => x.MessageID).AsQueryable();
+        query = query.OrderByDescending(x => x.MessageID).AsQueryable();
 
-            query = take > 0 ? query.Skip(skip).Take(take) : query;
+        query = take > 0 ? query.Skip(skip).Take(take) : query;
 
-            return await query.ToListAsync();
-        }
+        return await query.ToListAsync(CancellationToken);
     }
 }
