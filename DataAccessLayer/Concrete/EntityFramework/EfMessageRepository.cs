@@ -15,17 +15,16 @@ namespace DataAccessLayer.Concrete.EntityFramework;
 
 public class EfMessageRepository : EfEntityRepositoryBase<Message>, IMessageDal
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public EfMessageRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
+    public EfMessageRepository(Context context) : base(context)
     {
         Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     private Context Context => _context as Context;
 
-    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+    private CancellationToken CancellationToken =>
+        base.HttpContextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task<List<MessageSenderUserDto>> GetInboxWithMessageListAsync(int id, Expression<Func<MessageSenderUserDto, bool>> filter = null, int take = 0, int skip = 0)
     {

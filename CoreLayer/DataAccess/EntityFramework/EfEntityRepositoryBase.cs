@@ -3,6 +3,7 @@
 using CoreLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -20,21 +21,21 @@ public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
 {
 
     protected readonly DbContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public EfEntityRepositoryBase(DbContext context,IHttpContextAccessor httpContextAccessor)
-    {
-        _context = context;
-        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        _httpContextAccessor = httpContextAccessor;
-    }
+    private IHttpContextAccessor _httpContextAccessor;
+    
 
     public EfEntityRepositoryBase(DbContext context)
     {
         _context = context;
+        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+    protected IHttpContextAccessor HttpContextAccessor =>
+    _httpContextAccessor ??= _context.Database.GetService<IHttpContextAccessor>();
+
+    // CancellationToken'ı da HttpContextAccessor property'si üzerinden çağırın
+    private CancellationToken CancellationToken =>
+        HttpContextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task DeleteAsync(TEntity t)
     {

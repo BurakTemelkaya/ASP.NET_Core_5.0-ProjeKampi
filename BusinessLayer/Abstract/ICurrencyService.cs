@@ -1,11 +1,11 @@
 ﻿using BusinessLayer.Models;
 using CoreLayer.Utilities.Results;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace BusinessLayer.Abstract
+namespace BusinessLayer.Abstract;
+
+public interface ICurrencyService
 {
-    public interface ICurrencyService
-    {
-        public IDataResult<List<CurrencysModel>> GetCurrencys(params string[] currencys);
-    }
+    Task<IDataResult<List<CurrencysModel>>> GetCurrencyDataAsync(params string[] currencys);
 }

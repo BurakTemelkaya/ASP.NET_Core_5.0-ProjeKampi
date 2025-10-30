@@ -3,33 +3,67 @@ using BusinessLayer.Constants;
 using BusinessLayer.Models;
 using CoreLayer.Aspects.AutoFac.Caching;
 using CoreLayer.Utilities.Results;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace BusinessLayer.Concrete;
 
 public class CurrencyManager : ICurrencyService
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public CurrencyManager(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClientFactory)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _httpClientFactory = httpClientFactory;
+    }
+
+    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+    /// <summary>
+    /// Dövizlerin verisini tek tek çekmektense hepsini bi anda çekmemin sebebi sitenin ard arda istek atmasını engellemek.
+    /// Aksi taktirde aynı anda çok fazla istek atınca TCMB tarafında 429 hatası alınıyor.
+    /// </summary>
+    /// <param name="currencys"></param>
+    /// <returns></returns>
     [CacheAspect(60)]
-    public IDataResult<List<CurrencysModel>> GetCurrencys(params string[] currencys)
+    public async Task<IDataResult<List<CurrencysModel>>> GetCurrencyDataAsync(params string[] currencys)
     {
         try
         {
             string exchangeRate = "https://www.tcmb.gov.tr/kurlar/today.xml";
             var xmlDoc = new XmlDocument();
-            xmlDoc.Load(exchangeRate);
-            var model = new List<CurrencysModel>();
+
+            using HttpClient client = _httpClientFactory.CreateClient();
+
+            Stream stream = await client.GetStreamAsync(exchangeRate, CancellationToken);
+
+            xmlDoc.Load(stream);
+
+            List<CurrencysModel> model = [];
+
             foreach (var currency in currencys)
             {
+                string xpathQuery = $"Tarih_Date/Currency[@Kod='{currency}']/BanknoteSelling";
+
+                string value = xmlDoc.SelectSingleNode(xpathQuery)?.InnerXml;
+
                 model.Add(new CurrencysModel
                 {
                     Code = currency,
-                    Value = xmlDoc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{currency}']/BanknoteSelling").InnerXml[..5].ToString()
+                    Value = value?[..5]?.ToString()
                 });
             }
             return new SuccessDataResult<List<CurrencysModel>>(model);
         }
-        catch
+        catch (Exception ex)
         {
             return new ErrorDataResult<List<CurrencysModel>>(Messages.ErrorFetchingCurrencyData);
         }

@@ -17,17 +17,16 @@ namespace DataAccessLayer.Concrete.EntityFramework;
 
 public class EfBlogRepository : EfEntityRepositoryBase<Blog>, IBlogDal
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public EfBlogRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
+    public EfBlogRepository(Context context) : base(context)
     {
         Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     private Context Context => _context as Context;
 
-    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+    private CancellationToken CancellationToken =>
+        HttpContextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task<IPagedList<BlogCategoryandCommentCountDto>> GetBlogListWithCategoryandCommentCountAsync(
     Expression<Func<BlogCategoryandCommentCountDto, bool>> filter = null,

@@ -1,53 +1,53 @@
 ﻿
 using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
+using BusinessLayer.Models;
+using CoreLayer.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace CoreDemo.Areas.Admin.ViewComponents.Statistic
+namespace CoreDemo.Areas.Admin.ViewComponents.Statistic;
+
+public class Statistic3 : ViewComponent
 {
-    public class Statistic3 : ViewComponent
+    private readonly IUserBusinessService _userService;
+    private readonly INewsLetterService _newsLetterService;
+    private readonly ICommentService _commentService;
+    private readonly ICategoryService _categoryService;
+    private readonly ICurrencyService _currencyService;
+    public Statistic3(IUserBusinessService userService, INewsLetterService newsLetterService, ICommentService commentService,
+        ICategoryService categoryService, ICurrencyService currencyService)
     {
-        private readonly IUserBusinessService _userService;
-        private readonly INewsLetterService _newsLetterService;
-        private readonly ICommentService _commentService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        public Statistic3(IUserBusinessService userService, INewsLetterService newsLetterService, ICommentService commentService,
-            ICategoryService categoryService, ICurrencyService currencyService)
+        _userService = userService;
+        _newsLetterService = newsLetterService;
+        _commentService = commentService;
+        _categoryService = categoryService;
+        _currencyService = currencyService;
+    }
+
+
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        ViewBag.UserCount = _userService.GetByUserCountAsync().Result.Data;
+        ViewBag.LikeCommentCount = _commentService.GetCountAsync(2).Result.Data;
+        ViewBag.NewsLetterCount = _newsLetterService.GetCountAsync().Result.Data;
+        ViewBag.CategoryCount = _categoryService.GetCountAsync().Result.Data;
+
+        IDataResult<List<CurrencysModel>> currencies = await _currencyService.GetCurrencyDataAsync(CurrencyCodes.Euro, CurrencyCodes.Dollar);
+
+        if (currencies.Success)
         {
-            _userService = userService;
-            _newsLetterService = newsLetterService;
-            _commentService = commentService;
-            _categoryService = categoryService;
-            _currencyService = currencyService;
+            ViewBag.Euro = currencies.Data.First(x => x.Code == CurrencyCodes.Euro).Value;
+            ViewBag.Dolar = currencies.Data.First(x => x.Code == CurrencyCodes.Dollar).Value;
+        }
+        else
+        {
+            ViewBag.Euro = currencies.Message;
+            ViewBag.Dolar = currencies.Message;
         }
 
-        /// <summary>
-        /// Dövizlerin verisini tek tek çekmektense hepsini bi anda çekmemin sebebi sitenin ard arda istek atınca çalışmaması
-        /// </summary>
-        /// <returns></returns>
-        public IViewComponentResult Invoke()
-        {
-            ViewBag.UserCount = _userService.GetByUserCountAsync().Result.Data;
-            ViewBag.LikeCommentCount = _commentService.GetCountAsync(2).Result.Data;
-            ViewBag.NewsLetterCount = _newsLetterService.GetCountAsync().Result.Data;
-            ViewBag.CategoryCount = _categoryService.GetCountAsync().Result.Data;
-
-
-            var currencies = _currencyService.GetCurrencys(CurrencyCodes.Euro, CurrencyCodes.Dollar);
-            if (currencies.Success)
-            {
-                ViewBag.Euro = currencies.Data.First(x => x.Code == CurrencyCodes.Euro).Value;
-                ViewBag.Dolar = currencies.Data.First(x => x.Code == CurrencyCodes.Dollar).Value;
-            }
-            else
-            {
-                ViewBag.Euro = currencies.Message;
-                ViewBag.Dolar = currencies.Message;
-            }
-
-            return View();
-        }
+        return View();
     }
 }

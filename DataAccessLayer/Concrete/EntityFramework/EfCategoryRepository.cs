@@ -15,17 +15,15 @@ namespace DataAccessLayer.Concrete.EntityFramework;
 
 public class EfCategoryRepository : EfEntityRepositoryBase<Category>, ICategoryDal
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public EfCategoryRepository(Context context, IHttpContextAccessor httpContextAccessor) : base(context)
+    public EfCategoryRepository(Context context) : base(context)
     {
         Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     private Context Context => _context as Context;
 
-    private CancellationToken CancellationToken => _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+    private CancellationToken CancellationToken =>
+        base.HttpContextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
     public async Task<List<CategoryBlogandBlogCountDto>> GetListWithCategoryByBlog(Expression<Func<CategoryBlogandBlogCountDto, bool>> filter = null)
     {
